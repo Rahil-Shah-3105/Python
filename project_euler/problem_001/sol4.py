@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 1: https://projecteuler.net/problem=1
 
@@ -23,14 +25,18 @@ def solution(n: int = 1000) -> int:
     >>> solution(600)
     83700
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     xmulti = []
+    logger.debug("solution(n=%s): xmulti → %s", n, xmulti)
     zmulti = []
+    logger.debug("solution(n=%s): zmulti → %s", n, zmulti)
     z = 3
     x = 5
     temp = 1
     while True:
         result = z * temp
+        logger.debug("solution(n=%s): result → %s", n, result)
         if result < n:
             zmulti.append(result)
             temp += 1
@@ -45,6 +51,8 @@ def solution(n: int = 1000) -> int:
         else:
             break
     collection = list(set(xmulti + zmulti))
+    logger.debug("solution(n=%s): collection → %s", n, collection)
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return sum(collection)
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 BITS_TO_HEX = {
     "0000": "0",
     "0001": "1",
@@ -37,6 +39,7 @@ def bin_to_hexadecimal(binary_str: str) -> str:
         ...
     ValueError: Empty string was passed to the function
     """
+    logger.debug(">>> Entering bin_to_hexadecimal(binary_str=%s)", binary_str)
     # Sanitising parameter
     binary_str = str(binary_str).strip()
 
@@ -44,6 +47,7 @@ def bin_to_hexadecimal(binary_str: str) -> str:
     if not binary_str:
         raise ValueError("Empty string was passed to the function")
     is_negative = binary_str[0] == "-"
+    logger.debug("bin_to_hexadecimal(binary_str=%s): is_negative → %s", binary_str, is_negative)
     binary_str = binary_str[1:] if is_negative else binary_str
     if not all(char in "01" for char in binary_str):
         raise ValueError("Non-binary value was passed to the function")
@@ -53,10 +57,13 @@ def bin_to_hexadecimal(binary_str: str) -> str:
     )
 
     hexadecimal = []
+    logger.debug("bin_to_hexadecimal(binary_str=%s): hexadecimal → %s", binary_str, hexadecimal)
     for x in range(0, len(binary_str), 4):
         hexadecimal.append(BITS_TO_HEX[binary_str[x : x + 4]])
     hexadecimal_str = "0x" + "".join(hexadecimal)
+    logger.debug("bin_to_hexadecimal(binary_str=%s): hexadecimal_str → %s", binary_str, hexadecimal_str)
 
+    logger.debug("<<< Exiting bin_to_hexadecimal(binary_str=%s)", binary_str)
     return "-" + hexadecimal_str if is_negative else hexadecimal_str
 
 

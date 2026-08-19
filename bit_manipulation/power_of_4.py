@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 
 Task:
@@ -47,6 +49,7 @@ def power_of_4(number: int) -> bool:
     TypeError: number must be an integer
 
     """
+    logger.debug(">>> Entering power_of_4(number=%s)", number)
     if not isinstance(number, int):
         raise TypeError("number must be an integer")
     if number <= 0:
@@ -58,6 +61,7 @@ def power_of_4(number: int) -> bool:
             number >>= 1
         return c % 2 == 1
     else:
+        logger.debug("<<< Exiting power_of_4(number=%s)", number)
         return False
 
 

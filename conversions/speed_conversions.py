@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Convert speed units
 
@@ -56,12 +58,15 @@ def convert_speed(speed: float, unit_from: str, unit_to: str) -> float:
     >>> convert_speed(100, "knot", "mph")
     115.078
     """
+    logger.debug(">>> Entering convert_speed(speed=%s,unit_from=%s,unit_to=%s)", speed, unit_from, unit_to)
+    logger.debug("convert_speed(speed=%s,unit_from=%s,unit_to=%s): msg → %s", speed, unit_from, unit_to, msg)
     if unit_to not in speed_chart or unit_from not in speed_chart_inverse:
         msg = (
             f"Incorrect 'from_type' or 'to_type' value: {unit_from!r}, {unit_to!r}\n"
             f"Valid values are: {', '.join(speed_chart_inverse)}"
         )
         raise ValueError(msg)
+    logger.debug("<<< Exiting convert_speed(speed=%s,unit_from=%s,unit_to=%s)", speed, unit_from, unit_to)
     return round(speed * speed_chart[unit_from] * speed_chart_inverse[unit_to], 3)
 
 

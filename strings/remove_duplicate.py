@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def remove_duplicates(sentence: str) -> str:
     """
     Remove duplicates from sentence
@@ -6,6 +8,8 @@ def remove_duplicates(sentence: str) -> str:
     >>> remove_duplicates("Python   is      great and Java is also great")
     'Java Python also and great is'
     """
+    logger.debug(">>> Entering remove_duplicates(sentence=%s)", sentence)
+    logger.debug("<<< Exiting remove_duplicates(sentence=%s)", sentence)
     return " ".join(sorted(set(sentence.split())))
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # To get an insight into Greedy Algorithm through the Knapsack problem
 
 
@@ -30,6 +32,7 @@ def calc_profit(profit: list, weight: list, max_weight: int) -> int:
     >>> calc_profit([10, 9 , 8], [3 ,4 , 5], 25)
     27
     """
+    logger.debug(">>> Entering calc_profit(profit=%s,weight=%s,max_weight=%s)", profit, weight, max_weight)
     if len(profit) != len(weight):
         raise ValueError("The length of profit and weight must be same.")
     if max_weight <= 0:
@@ -42,20 +45,26 @@ def calc_profit(profit: list, weight: list, max_weight: int) -> int:
     # List created to store profit gained for the 1kg in case of each weight
     # respectively.  Calculate and append profit/weight for each element.
     profit_by_weight = [p / w for p, w in zip(profit, weight)]
+    logger.debug("calc_profit(profit=%s,weight=%s,max_weight=%s): profit_by_weight → %s", profit, weight, max_weight, profit_by_weight)
 
     # Creating a copy of the list and sorting profit/weight in ascending order
     sorted_profit_by_weight = sorted(profit_by_weight)
+    logger.debug("calc_profit(profit=%s,weight=%s,max_weight=%s): sorted_profit_by_weight → %s", profit, weight, max_weight, sorted_profit_by_weight)
 
     # declaring useful variables
     length = len(sorted_profit_by_weight)
+    logger.debug("calc_profit(profit=%s,weight=%s,max_weight=%s): length → %s", profit, weight, max_weight, length)
     limit = 0
+    logger.info("calc_profit(profit=%s,weight=%s,max_weight=%s): limit → %s", profit, weight, max_weight, limit)
     gain = 0
+    logger.debug("calc_profit(profit=%s,weight=%s,max_weight=%s): gain → %s", profit, weight, max_weight, gain)
     i = 0
 
     # loop till the total weight do not reach max limit e.g. 15 kg and till i<length
     while limit <= max_weight and i < length:
         # flag value for encountered greatest element in sorted_profit_by_weight
         biggest_profit_by_weight = sorted_profit_by_weight[length - i - 1]
+        logger.debug("calc_profit(profit=%s,weight=%s,max_weight=%s): biggest_profit_by_weight → %s", profit, weight, max_weight, biggest_profit_by_weight)
         """
         Calculate the index of the biggest_profit_by_weight in profit_by_weight list.
         This will give the index of the first encountered element which is same as of
@@ -65,6 +74,7 @@ def calc_profit(profit: list, weight: list, max_weight: int) -> int:
         here it is done to -1 because neither profit nor weight can be in negative.
         """
         index = profit_by_weight.index(biggest_profit_by_weight)
+        logger.debug("calc_profit(profit=%s,weight=%s,max_weight=%s): index → %s", profit, weight, max_weight, index)
         profit_by_weight[index] = -1
 
         # check if the weight encountered is less than the total weight
@@ -81,6 +91,7 @@ def calc_profit(profit: list, weight: list, max_weight: int) -> int:
             gain += (max_weight - limit) / weight[index] * profit[index]
             break
         i += 1
+    logger.debug("<<< Exiting calc_profit(profit=%s,weight=%s,max_weight=%s)", profit, weight, max_weight)
     return gain
 
 

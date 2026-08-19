@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 A hexagonal number sequence is a sequence of figurate numbers
 where the nth hexagonal number hₙ is the number of distinct dots
@@ -31,9 +33,11 @@ def hexagonal_numbers(length: int) -> list[int]:
       ...
     ValueError: Length must be a positive integer.
     """
+    logger.debug(">>> Entering hexagonal_numbers(length=%s)", length)
 
     if length <= 0 or not isinstance(length, int):
         raise ValueError("Length must be a positive integer.")
+    logger.debug("<<< Exiting hexagonal_numbers(length=%s)", length)
     return [n * (2 * n - 1) for n in range(length)]
 
 

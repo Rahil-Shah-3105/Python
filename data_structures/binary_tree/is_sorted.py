@@ -18,6 +18,8 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -38,11 +40,13 @@ class Node:
         >>> list(root)
         [2.0, 2.1, 2.2]
         """
+        logger.debug(">>> Entering __iter__()")
         if self.left:
             yield from self.left
         yield self.data
         if self.right:
             yield from self.right
+            logger.debug("<<< Exiting __iter__()")
 
     @property
     def is_sorted(self) -> bool:
@@ -78,7 +82,9 @@ class Node:
             ...
         TypeError: '<' not supported between instances of 'int' and 'list'
         """
+        logger.debug(">>> Entering is_sorted()")
         if self.left and (self.data < self.left.data or not self.left.is_sorted):
+            logger.debug("<<< Exiting is_sorted()")
             return False
         return not (
             self.right and (self.data > self.right.data or not self.right.is_sorted)

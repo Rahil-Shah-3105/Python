@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 A number container system that uses binary search to delete and insert values into
 arrays with O(log n) write times and O(1) read times.
@@ -11,11 +13,13 @@ Further explained in this leetcode problem
 
 class NumberContainer:
     def __init__(self) -> None:
+        logger.debug(">>> Entering __init__()")
         # numbermap keys are the number and its values are lists of indexes sorted
         # in ascending order
         self.numbermap: dict[int, list[int]] = {}
         # indexmap keys are an index and it's values are the number at that index
         self.indexmap: dict[int, int] = {}
+        logger.debug("<<< Exiting __init__()")
 
     def binary_search_delete(self, array: list | str | range, item: int) -> list[int]:
         """
@@ -51,20 +55,27 @@ class NumberContainer:
             ...
         TypeError: binary_search_delete() only accepts either a list, range or str
         """
+        logger.debug(">>> Entering binary_search_delete(array=%s,item=%s)", array, item)
         if isinstance(array, (range, str)):
             array = list(array)
+            logger.debug("binary_search_delete(array=%s,item=%s): array → %s", array, item, array)
         elif not isinstance(array, list):
             raise TypeError(
                 "binary_search_delete() only accepts either a list, range or str"
             )
 
         low = 0
+        logger.debug("binary_search_delete(self=%s,array=%s,item=%s): low → %s", self, array, item, low)
         high = len(array) - 1
+        logger.debug("binary_search_delete(self=%s,array=%s,item=%s): high → %s", self, array, item, high)
 
         while low <= high:
             mid = (low + high) // 2
+            logger.debug("binary_search_delete(self=%s,array=%s,item=%s): mid → %s", self, array, item, mid)
+            logger.debug("binary_search_delete(array=%s,item=%s): mid → %s", array, item, mid)
             if array[mid] == item:
                 array.pop(mid)
+                logger.debug("<<< Exiting binary_search_delete(array=%s,item=%s)", array, item)
                 return array
             elif array[mid] < item:
                 low = mid + 1
@@ -96,18 +107,24 @@ class NumberContainer:
             ...
         TypeError: binary_search_insert() only accepts either a list, range or str
         """
+        logger.debug(">>> Entering binary_search_insert(array=%s,index=%s)", array, index)
         if isinstance(array, (range, str)):
             array = list(array)
+            logger.debug("binary_search_insert(array=%s,index=%s): array → %s", array, index, array)
         elif not isinstance(array, list):
             raise TypeError(
                 "binary_search_insert() only accepts either a list, range or str"
             )
 
         low = 0
+        logger.debug("binary_search_insert(self=%s,array=%s,index=%s): low → %s", self, array, index, low)
         high = len(array) - 1
+        logger.debug("binary_search_insert(self=%s,array=%s,index=%s): high → %s", self, array, index, high)
 
         while low <= high:
             mid = (low + high) // 2
+            logger.debug("binary_search_insert(self=%s,array=%s,index=%s): mid → %s", self, array, index, mid)
+            logger.debug("binary_search_insert(array=%s,index=%s): mid → %s", array, index, mid)
             if array[mid] == index:
                 # If the item already exists in the array,
                 # insert it after the existing item
@@ -120,6 +137,7 @@ class NumberContainer:
 
         # If the item doesn't exist in the array, insert it at the appropriate position
         array.insert(low, index)
+        logger.debug("<<< Exiting binary_search_insert(array=%s,index=%s)", array, index)
         return array
 
     def change(self, index: int, number: int) -> None:
@@ -132,6 +150,7 @@ class NumberContainer:
         >>> cont.change(-13, 20)
         >>> cont.change(-100030, 20032903290)
         """
+        logger.debug(">>> Entering change(index=%s,number=%s)", index, number)
         # Remove previous index
         if index in self.indexmap:
             n = self.indexmap[index]
@@ -153,6 +172,7 @@ class NumberContainer:
             self.numbermap[number] = self.binary_search_insert(
                 self.numbermap[number], index
             )
+            logger.debug("<<< Exiting change(index=%s,number=%s)", index, number)
 
     def find(self, number: int) -> int:
         """
@@ -170,7 +190,9 @@ class NumberContainer:
         >>> cont.find(20)
         0
         """
+        logger.debug(">>> Entering find(number=%s)", number)
         # Simply return the 0th index (smallest) of the indexes found (or -1)
+        logger.debug("<<< Exiting find(number=%s)", number)
         return self.numbermap.get(number, [-1])[0]
 
 

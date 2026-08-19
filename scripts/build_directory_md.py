@@ -2,9 +2,12 @@
 
 import os
 from collections.abc import Iterator
+import logging
+logger = logging.getLogger(__name__)
 
 
 def good_file_paths(top_dir: str = ".") -> Iterator[str]:
+    logger.debug(">>> Entering good_file_paths(top_dir=%s)", top_dir)
     for dir_path, dir_names, filenames in os.walk(top_dir):
         dir_names[:] = [
             d
@@ -16,6 +19,7 @@ def good_file_paths(top_dir: str = ".") -> Iterator[str]:
                 continue
             if os.path.splitext(filename)[1] in (".py", ".ipynb"):
                 yield os.path.join(dir_path, filename).lstrip("./")
+                logger.debug("<<< Exiting good_file_paths(top_dir=%s)", top_dir)
 
 
 def md_prefix(indent: int) -> str:
@@ -31,27 +35,39 @@ def md_prefix(indent: int) -> str:
     >>> md_prefix(3)
     '      *'
     """
+    logger.debug(">>> Entering md_prefix(indent=%s)", indent)
+    logger.debug("<<< Exiting md_prefix(indent=%s)", indent)
     return f"{indent * '  '}*" if indent else "\n##"
 
 
 def print_path(old_path: str, new_path: str) -> str:
+    logger.debug(">>> Entering print_path(old_path=%s,new_path=%s)", old_path, new_path)
     old_parts = old_path.split(os.sep)
+    logger.debug("print_path(old_path=%s,new_path=%s): old_parts → %s", old_path, new_path, old_parts)
     for i, new_part in enumerate(new_path.split(os.sep)):
         if (i + 1 > len(old_parts) or old_parts[i] != new_part) and new_part:
             print(f"{md_prefix(i)} {new_part.replace('_', ' ').title()}")
+    logger.debug("<<< Exiting print_path(old_path=%s,new_path=%s)", old_path, new_path)
     return new_path
 
 
 def print_directory_md(top_dir: str = ".") -> None:
+    logger.debug(">>> Entering print_directory_md(top_dir=%s)", top_dir)
     old_path = ""
+    logger.debug("print_directory_md(top_dir=%s): old_path → %s", top_dir, old_path)
     for filepath in sorted(good_file_paths(top_dir)):
         filepath, filename = os.path.split(filepath)
         if filepath != old_path:
             old_path = print_path(old_path, filepath)
         indent = (filepath.count(os.sep) + 1) if filepath else 0
+        logger.debug("print_directory_md(top_dir=%s): indent → %s", top_dir, indent)
         url = f"{filepath}/{filename}".replace(" ", "%20")
+        logger.debug("print_directory_md(top_dir=%s): url → %s", top_dir, url)
+        logger.info("print_directory_md(top_dir=%s): url → %s", top_dir, url)
         filename = os.path.splitext(filename.replace("_", " ").title())[0]
+        logger.debug("print_directory_md(top_dir=%s): filename → %s", top_dir, filename)
         print(f"{md_prefix(indent)} [{filename}]({url})")
+        logger.debug("<<< Exiting print_directory_md(top_dir=%s)", top_dir)
 
 
 if __name__ == "__main__":

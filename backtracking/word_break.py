@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Word Break Problem is a well-known problem in computer science.
 Given a string and a dictionary of words, the task is to determine if
@@ -30,6 +32,7 @@ def backtrack(input_string: str, word_dict: set[str], start: int) -> bool:
     >>> backtrack("catsandog", {"cats", "dog", "sand", "and", "cat"}, 0)
     False
     """
+    logger.debug(">>> Entering backtrack(input_string=%s,word_dict=%s,start=%s)", input_string, word_dict, start)
 
     # Base case: if the starting index has reached the end of the string
     if start == len(input_string):
@@ -42,6 +45,7 @@ def backtrack(input_string: str, word_dict: set[str], start: int) -> bool:
         ):
             return True
 
+    logger.debug("<<< Exiting backtrack(input_string=%s,word_dict=%s,start=%s)", input_string, word_dict, start)
     return False
 
 
@@ -70,5 +74,7 @@ def word_break(input_string: str, word_dict: set[str]) -> bool:
     >>> word_break("applepenapple", {})
     False
     """
+    logger.debug(">>> Entering word_break(input_string=%s,word_dict=%s)", input_string, word_dict)
 
+    logger.debug("<<< Exiting word_break(input_string=%s,word_dict=%s)", input_string, word_dict)
     return backtrack(input_string, word_dict, 0)

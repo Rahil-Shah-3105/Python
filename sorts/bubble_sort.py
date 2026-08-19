@@ -1,4 +1,6 @@
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 def bubble_sort_iterative(collection: list[Any]) -> list[Any]:
@@ -59,7 +61,11 @@ def bubble_sort_iterative(collection: list[Any]) -> list[Any]:
     >>> bubble_sort_iterative(collection_arg) == sorted(collection_arg)
     True
     """
+    logger.debug(">>> Entering bubble_sort_iterative(collection=%s)", collection)
+    logger.debug("bubble_sort_iterative(collection=%s): swapped → %s", collection, swapped)
     length = len(collection)
+    logger.debug("bubble_sort_iterative(collection=%s): length → %s", collection, length)
+    logger.error("Exception in bubble_sort_iterative(collection=%s)", collection, exc_info=True)
     for i in reversed(range(length)):
         swapped = False
         for j in range(i):
@@ -68,6 +74,7 @@ def bubble_sort_iterative(collection: list[Any]) -> list[Any]:
                 collection[j], collection[j + 1] = collection[j + 1], collection[j]
         if not swapped:
             break  # Stop iteration if the collection is sorted.
+    logger.debug("<<< Exiting bubble_sort_iterative(collection=%s)", collection)
     return collection
 
 
@@ -125,13 +132,17 @@ def bubble_sort_recursive(collection: list[Any]) -> list[Any]:
     >>> bubble_sort_recursive(collection_arg) == sorted(collection_arg)
     True
     """
+    logger.debug(">>> Entering bubble_sort_recursive(collection=%s)", collection)
     length = len(collection)
+    logger.debug("bubble_sort_recursive(collection=%s): length → %s", collection, length)
     swapped = False
+    logger.debug("bubble_sort_recursive(collection=%s): swapped → %s", collection, swapped)
     for i in range(length - 1):
         if collection[i] > collection[i + 1]:
             collection[i], collection[i + 1] = collection[i + 1], collection[i]
             swapped = True
 
+    logger.debug("<<< Exiting bubble_sort_recursive(collection=%s)", collection)
     return collection if not swapped else bubble_sort_recursive(collection)
 
 

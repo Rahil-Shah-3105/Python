@@ -1,5 +1,7 @@
 import math
 from collections.abc import Generator
+import logging
+logger = logging.getLogger(__name__)
 
 
 def slow_primes(max_n: int) -> Generator[int]:
@@ -20,6 +22,8 @@ def slow_primes(max_n: int) -> Generator[int]:
     >>> list(slow_primes(1000))[-1]
     997
     """
+    logger.debug(">>> Entering slow_primes(max_n=%s)", max_n)
+    logger.debug("slow_primes(max_n=%s): numbers → %s", max_n, numbers)
     numbers: Generator = (i for i in range(1, (max_n + 1)))
     for i in (n for n in numbers if n > 1):
         for j in range(2, i):
@@ -27,6 +31,7 @@ def slow_primes(max_n: int) -> Generator[int]:
                 break
         else:
             yield i
+            logger.debug("<<< Exiting slow_primes(max_n=%s)", max_n)
 
 
 def primes(max_n: int) -> Generator[int]:
@@ -47,15 +52,19 @@ def primes(max_n: int) -> Generator[int]:
     >>> list(primes(1000))[-1]
     997
     """
+    logger.debug(">>> Entering primes(max_n=%s)", max_n)
+    logger.debug("primes(max_n=%s): numbers → %s", max_n, numbers)
     numbers: Generator = (i for i in range(1, (max_n + 1)))
     for i in (n for n in numbers if n > 1):
         # only need to check for factors up to sqrt(i)
         bound = int(math.sqrt(i)) + 1
+        logger.debug("primes(max_n=%s): bound → %s", max_n, bound)
         for j in range(2, bound):
             if (i % j) == 0:
                 break
         else:
             yield i
+            logger.debug("<<< Exiting primes(max_n=%s)", max_n)
 
 
 def fast_primes(max_n: int) -> Generator[int]:
@@ -76,30 +85,37 @@ def fast_primes(max_n: int) -> Generator[int]:
     >>> list(fast_primes(1000))[-1]
     997
     """
+    logger.debug(">>> Entering fast_primes(max_n=%s)", max_n)
+    logger.debug("fast_primes(max_n=%s): numbers → %s", max_n, numbers)
     numbers: Generator = (i for i in range(1, (max_n + 1), 2))
     # It's useless to test even numbers as they will not be prime
     if max_n > 2:
         yield 2  # Because 2 will not be tested, it's necessary to yield it now
     for i in (n for n in numbers if n > 1):
         bound = int(math.sqrt(i)) + 1
+        logger.debug("fast_primes(max_n=%s): bound → %s", max_n, bound)
         for j in range(3, bound, 2):
             # As we removed the even numbers, we don't need them now
             if (i % j) == 0:
                 break
         else:
             yield i
+            logger.debug("<<< Exiting fast_primes(max_n=%s)", max_n)
 
 
 def benchmark():
     """
     Let's benchmark our functions side-by-side...
     """
+    logger.debug(">>> Entering benchmark()")
     from timeit import timeit
 
     setup = "from __main__ import slow_primes, primes, fast_primes"
+    logger.debug("benchmark(): setup → %s", setup)
     print(timeit("slow_primes(1_000_000_000_000)", setup=setup, number=1_000_000))
     print(timeit("primes(1_000_000_000_000)", setup=setup, number=1_000_000))
     print(timeit("fast_primes(1_000_000_000_000)", setup=setup, number=1_000_000))
+    logger.debug("<<< Exiting benchmark()")
 
 
 if __name__ == "__main__":

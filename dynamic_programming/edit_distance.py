@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Author  : Turfa Auliarachman
 Date    : October 12, 2016
@@ -19,12 +21,20 @@ class EditDistance:
     """
 
     def __init__(self):
+        logger.debug(">>> Entering __init__()")
         self.word1 = ""
+        logger.debug("__init__(): self.word1 → %s", self.word1)
+        logger.debug("__init__(self=%s): self.word1 → %s", self, self.word1)
         self.word2 = ""
+        logger.debug("__init__(self=%s): self.word2 → %s", self, self.word2)
+        logger.debug("__init__(): self.word2 → %s", self.word2)
         self.dp = []
+        logger.debug("<<< Exiting __init__()")
 
     def __min_dist_top_down_dp(self, m: int, n: int) -> int:
         if m == -1:
+            logger.debug(">>> Entering __min_dist_top_down_dp(m=%s,n=%s)", m, n)
+            logger.debug("<<< Exiting __min_dist_top_down_dp(m=%s,n=%s)", m, n)
             return n + 1
         elif n == -1:
             return m + 1
@@ -35,8 +45,11 @@ class EditDistance:
                 self.dp[m][n] = self.__min_dist_top_down_dp(m - 1, n - 1)
             else:
                 insert = self.__min_dist_top_down_dp(m, n - 1)
+                logger.debug("__min_dist_top_down_dp(self=%s,m=%s,n=%s): insert → %s", self, m, n, insert)
                 delete = self.__min_dist_top_down_dp(m - 1, n)
+                logger.debug("__min_dist_top_down_dp(self=%s,m=%s,n=%s): delete → %s", self, m, n, delete)
                 replace = self.__min_dist_top_down_dp(m - 1, n - 1)
+                logger.debug("__min_dist_top_down_dp(self=%s,m=%s,n=%s): replace → %s", self, m, n, replace)
                 self.dp[m][n] = 1 + min(insert, delete, replace)
 
             return self.dp[m][n]
@@ -50,10 +63,15 @@ class EditDistance:
         >>> EditDistance().min_dist_top_down("", "")
         0
         """
+        logger.debug(">>> Entering min_dist_top_down(word1=%s,word2=%s)", word1, word2)
         self.word1 = word1
+        logger.debug("min_dist_top_down(self=%s,word1=%s,word2=%s): self.word1 → %s", self, word1, word2, self.word1)
         self.word2 = word2
+        logger.debug("min_dist_top_down(self=%s,word1=%s,word2=%s): self.word2 → %s", self, word1, word2, self.word2)
         self.dp = [[-1 for _ in range(len(word2))] for _ in range(len(word1))]
+        logger.debug("min_dist_top_down(word1=%s,word2=%s): self.dp → %s", word1, word2, self.dp)
 
+        logger.debug("<<< Exiting min_dist_top_down(word1=%s,word2=%s)", word1, word2)
         return self.__min_dist_top_down_dp(len(word1) - 1, len(word2) - 1)
 
     def min_dist_bottom_up(self, word1: str, word2: str) -> int:
@@ -65,11 +83,17 @@ class EditDistance:
         >>> EditDistance().min_dist_bottom_up("", "")
         0
         """
+        logger.debug(">>> Entering min_dist_bottom_up(word1=%s,word2=%s)", word1, word2)
         self.word1 = word1
+        logger.debug("min_dist_bottom_up(self=%s,word1=%s,word2=%s): self.word1 → %s", self, word1, word2, self.word1)
         self.word2 = word2
+        logger.debug("min_dist_bottom_up(self=%s,word1=%s,word2=%s): self.word2 → %s", self, word1, word2, self.word2)
         m = len(word1)
+        logger.debug("min_dist_bottom_up(word1=%s,word2=%s): m → %s", word1, word2, m)
         n = len(word2)
+        logger.debug("min_dist_bottom_up(word1=%s,word2=%s): n → %s", word1, word2, n)
         self.dp = [[0 for _ in range(n + 1)] for _ in range(m + 1)]
+        logger.debug("min_dist_bottom_up(word1=%s,word2=%s): self.dp → %s", word1, word2, self.dp)
 
         for i in range(m + 1):
             for j in range(n + 1):
@@ -81,9 +105,13 @@ class EditDistance:
                     self.dp[i][j] = self.dp[i - 1][j - 1]
                 else:
                     insert = self.dp[i][j - 1]
+                    logger.debug("min_dist_bottom_up(self=%s,word1=%s,word2=%s): insert → %s", self, word1, word2, insert)
                     delete = self.dp[i - 1][j]
+                    logger.debug("min_dist_bottom_up(self=%s,word1=%s,word2=%s): delete → %s", self, word1, word2, delete)
                     replace = self.dp[i - 1][j - 1]
+                    logger.debug("min_dist_bottom_up(self=%s,word1=%s,word2=%s): replace → %s", self, word1, word2, replace)
                     self.dp[i][j] = 1 + min(insert, delete, replace)
+        logger.debug("<<< Exiting min_dist_bottom_up(word1=%s,word2=%s)", word1, word2)
         return self.dp[m][n]
 
 

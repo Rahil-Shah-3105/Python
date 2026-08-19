@@ -3,6 +3,8 @@ from __future__ import annotations
 from decimal import Decimal
 
 from numpy import array
+import logging
+logger = logging.getLogger(__name__)
 
 
 def inverse_of_matrix(matrix: list[list[float]]) -> list[list[float]]:
@@ -60,6 +62,7 @@ def inverse_of_matrix(matrix: list[list[float]]) -> list[list[float]]:
     >>> inverse_of_matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
     [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
     """
+    logger.debug(">>> Entering inverse_of_matrix(matrix=%s)", matrix)
 
     d = Decimal
 
@@ -75,6 +78,7 @@ def inverse_of_matrix(matrix: list[list[float]]) -> list[list[float]]:
 
         # Creates a copy of the matrix with swapped positions of the elements
         swapped_matrix = [[0.0, 0.0], [0.0, 0.0]]
+        logger.debug("inverse_of_matrix(matrix=%s): swapped_matrix → %s", matrix, swapped_matrix)
         swapped_matrix[0][0], swapped_matrix[1][1] = matrix[1][1], matrix[0][0]
         swapped_matrix[1][0], swapped_matrix[0][1] = -matrix[1][0], -matrix[0][1]
 
@@ -106,6 +110,7 @@ def inverse_of_matrix(matrix: list[list[float]]) -> list[list[float]]:
 
         # Creating cofactor matrix
         cofactor_matrix = [
+        logger.debug("inverse_of_matrix(matrix=%s): cofactor_matrix → %s", matrix, cofactor_matrix)
             [d(0.0), d(0.0), d(0.0)],
             [d(0.0), d(0.0), d(0.0)],
             [d(0.0), d(0.0), d(0.0)],
@@ -140,16 +145,19 @@ def inverse_of_matrix(matrix: list[list[float]]) -> list[list[float]]:
 
         # Transpose the cofactor matrix (Adjoint matrix)
         adjoint_matrix = array(cofactor_matrix)
+        logger.debug("inverse_of_matrix(matrix=%s): adjoint_matrix → %s", matrix, adjoint_matrix)
         for i in range(3):
             for j in range(3):
                 adjoint_matrix[i][j] = cofactor_matrix[j][i]
 
         # Inverse of the matrix using the formula (1/determinant) * adjoint matrix
         inverse_matrix = array(cofactor_matrix)
+        logger.debug("inverse_of_matrix(matrix=%s): inverse_matrix → %s", matrix, inverse_matrix)
         for i in range(3):
             for j in range(3):
                 inverse_matrix[i][j] /= d(determinant)
 
         # Calculate the inverse of the matrix
+        logger.debug("<<< Exiting inverse_of_matrix(matrix=%s)", matrix)
         return [[float(d(n)) or 0.0 for n in row] for row in inverse_matrix]
     raise ValueError("Please provide a matrix of size 2x2 or 3x3.")

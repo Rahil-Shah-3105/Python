@@ -32,6 +32,8 @@ from __future__ import annotations
 
 import os
 from collections.abc import Mapping
+import logging
+logger = logging.getLogger(__name__)
 
 EdgeT = tuple[int, int]
 
@@ -42,10 +44,12 @@ class Graph:
     """
 
     def __init__(self, vertices: set[int], edges: Mapping[EdgeT, int]) -> None:
+        logger.debug(">>> Entering __init__(vertices=%s,edges=%s)", vertices, edges)
         self.vertices: set[int] = vertices
         self.edges: dict[EdgeT, int] = {
             (min(edge), max(edge)): weight for edge, weight in edges.items()
         }
+        logger.debug("<<< Exiting __init__(vertices=%s,edges=%s)", vertices, edges)
 
     def add_edge(self, edge: EdgeT, weight: int) -> None:
         """
@@ -57,9 +61,11 @@ class Graph:
         >>> sorted([(v,k) for k,v in graph.edges.items()])
         [(4, (1, 2)), (5, (1, 3))]
         """
+        logger.debug(">>> Entering add_edge(edge=%s,weight=%s)", edge, weight)
         self.vertices.add(edge[0])
         self.vertices.add(edge[1])
         self.edges[(min(edge), max(edge))] = weight
+        logger.debug("<<< Exiting add_edge(edge=%s,weight=%s)", edge, weight)
 
     def prims_algorithm(self) -> Graph:
         """
@@ -72,6 +78,8 @@ class Graph:
         >>> sorted(mst.edges)
         [(1, 2), (1, 3), (3, 4)]
         """
+        logger.debug(">>> Entering prims_algorithm()")
+        logger.debug("prims_algorithm(): subgraph → %s", subgraph)
         subgraph: Graph = Graph({min(self.vertices)}, {})
         min_edge: EdgeT
         min_weight: int
@@ -80,15 +88,18 @@ class Graph:
 
         while len(subgraph.vertices) < len(self.vertices):
             min_weight = max(self.edges.values()) + 1
+            logger.debug("prims_algorithm(self=%s): min_weight → %s", self, min_weight)
             for edge, weight in self.edges.items():
                 if (edge[0] in subgraph.vertices) ^ (
                     edge[1] in subgraph.vertices
                 ) and weight < min_weight:
                     min_edge = edge
+                    logger.debug("prims_algorithm(self=%s): min_edge → %s", self, min_edge)
                     min_weight = weight
 
             subgraph.add_edge(min_edge, min_weight)
 
+        logger.debug("<<< Exiting prims_algorithm()")
         return subgraph
 
 
@@ -99,6 +110,9 @@ def solution(filename: str = "p107_network.txt") -> int:
     >>> solution("test_network.txt")
     150
     """
+    logger.debug(">>> Entering solution(filename=%s)", filename)
+    logger.debug("solution(filename=%s): script_dir → %s", filename, script_dir)
+    logger.debug("solution(filename=%s): network_file → %s", filename, network_file)
     script_dir: str = os.path.abspath(os.path.dirname(__file__))
     network_file: str = os.path.join(script_dir, filename)
     edges: dict[EdgeT, int] = {}
@@ -107,9 +121,12 @@ def solution(filename: str = "p107_network.txt") -> int:
     edge2: int
 
     with open(network_file) as f:
+        logger.error("Exception in solution(filename=%s)", filename, exc_info=True)
         data = f.read().strip().split("\n")
+        logger.debug("solution(filename=%s): data → %s", filename, data)
 
     adjaceny_matrix = [line.split(",") for line in data]
+    logger.debug("solution(filename=%s): adjaceny_matrix → %s", filename, adjaceny_matrix)
 
     for edge1 in range(1, len(adjaceny_matrix)):
         for edge2 in range(edge1):
@@ -117,12 +134,17 @@ def solution(filename: str = "p107_network.txt") -> int:
                 edges[(edge2, edge1)] = int(adjaceny_matrix[edge1][edge2])
 
     graph: Graph = Graph(set(range(len(adjaceny_matrix))), edges)
+    logger.debug("solution(filename=%s): graph → %s", filename, graph)
 
     subgraph: Graph = graph.prims_algorithm()
+    logger.debug("solution(filename=%s): subgraph → %s", filename, subgraph)
 
     initial_total: int = sum(graph.edges.values())
+    logger.debug("solution(filename=%s): initial_total → %s", filename, initial_total)
+    logger.debug("solution(filename=%s): optimal_total → %s", filename, optimal_total)
     optimal_total: int = sum(subgraph.edges.values())
 
+    logger.debug("<<< Exiting solution(filename=%s)", filename)
     return initial_total - optimal_total
 
 

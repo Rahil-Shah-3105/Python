@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 An OR Gate is a logic gate in boolean algebra which results to 0 (False) if both the
 inputs are 0, and 1 (True) otherwise.
@@ -26,6 +28,8 @@ def or_gate(input_1: int, input_2: int) -> int:
     >>> or_gate(1, 1)
     1
     """
+    logger.debug(">>> Entering or_gate(input_1=%s,input_2=%s)", input_1, input_2)
+    logger.debug("<<< Exiting or_gate(input_1=%s,input_2=%s)", input_1, input_2)
     return int((input_1, input_2).count(1) != 0)
 
 

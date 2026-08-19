@@ -1,10 +1,14 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def print_distance(distance: list[float], src):
+    logger.debug(">>> Entering print_distance(distance=%s,src=%s)", distance, src)
     print(f"Vertex\tShortest Distance from vertex {src}")
     for i, d in enumerate(distance):
         print(f"{i}\t\t{d}")
+        logger.debug("<<< Exiting print_distance(distance=%s,src=%s)", distance, src)
 
 
 def check_negative_cycle(

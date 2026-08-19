@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def octal_to_hex(octal: str) -> str:
     """
     Convert an Octal number to Hexadecimal number.
@@ -20,6 +22,7 @@ def octal_to_hex(octal: str) -> str:
         ...
     ValueError: Empty string was passed to the function
     """
+    logger.debug(">>> Entering octal_to_hex(octal=%s)", octal)
 
     if not isinstance(octal, str):
         raise TypeError("Expected a string as input")
@@ -31,17 +34,21 @@ def octal_to_hex(octal: str) -> str:
         raise ValueError("Not a Valid Octal Number")
 
     decimal = 0
+    logger.debug("octal_to_hex(octal=%s): decimal → %s", octal, decimal)
     for char in octal:
         decimal <<= 3
         decimal |= int(char)
 
     hex_char = "0123456789ABCDEF"
+    logger.debug("octal_to_hex(octal=%s): hex_char → %s", octal, hex_char)
 
     revhex = ""
+    logger.debug("octal_to_hex(octal=%s): revhex → %s", octal, revhex)
     while decimal:
         revhex += hex_char[decimal & 15]
         decimal >>= 4
 
+    logger.debug("<<< Exiting octal_to_hex(octal=%s)", octal)
     return "0x" + revhex[::-1]
 
 

@@ -7,6 +7,8 @@
 #  Thank you!
 
 from data_structures.suffix_tree.suffix_tree_node import SuffixTreeNode
+import logging
+logger = logging.getLogger(__name__)
 
 
 class SuffixTree:
@@ -17,19 +19,26 @@ class SuffixTree:
         Args:
             text (str): The text for which the suffix tree is to be built.
         """
+        logger.debug(">>> Entering __init__(text=%s)", text)
         self.text: str = text
         self.root: SuffixTreeNode = SuffixTreeNode()
         self.build_suffix_tree()
+        logger.debug("<<< Exiting __init__(text=%s)", text)
 
     def build_suffix_tree(self) -> None:
         """
         Builds the suffix tree for the given text by adding all suffixes.
         """
+        logger.debug(">>> Entering build_suffix_tree()")
         text = self.text
+        logger.debug("build_suffix_tree(self=%s): text → %s", self, text)
         n = len(text)
+        logger.debug("build_suffix_tree(): n → %s", n)
         for i in range(n):
             suffix = text[i:]
+            logger.debug("build_suffix_tree(self=%s): suffix → %s", self, suffix)
             self._add_suffix(suffix, i)
+            logger.debug("<<< Exiting build_suffix_tree()")
 
     def _add_suffix(self, suffix: str, index: int) -> None:
         """
@@ -39,14 +48,19 @@ class SuffixTree:
             suffix (str): The suffix to add.
             index (int): The starting index of the suffix in the original text.
         """
+        logger.debug(">>> Entering _add_suffix(suffix=%s,index=%s)", suffix, index)
         node = self.root
+        logger.debug("_add_suffix(self=%s,suffix=%s,index=%s): node → %s", self, suffix, index, node)
         for char in suffix:
             if char not in node.children:
                 node.children[char] = SuffixTreeNode()
             node = node.children[char]
         node.is_end_of_string = True
+        logger.debug("_add_suffix(self=%s,suffix=%s,index=%s): node.is_end_of_string → %s", self, suffix, index, node.is_end_of_string)
         node.start = index
+        logger.debug("_add_suffix(self=%s,suffix=%s,index=%s): node.start → %s", self, suffix, index, node.start)
         node.end = index + len(suffix) - 1
+        logger.debug("<<< Exiting _add_suffix(suffix=%s,index=%s)", suffix, index)
 
     def search(self, pattern: str) -> bool:
         """
@@ -58,9 +72,12 @@ class SuffixTree:
         Returns:
             bool: True if the pattern is found, False otherwise.
         """
+        logger.debug(">>> Entering search(pattern=%s)", pattern)
         node = self.root
+        logger.debug("search(self=%s,pattern=%s): node → %s", self, pattern, node)
         for char in pattern:
             if char not in node.children:
                 return False
             node = node.children[char]
+        logger.debug("<<< Exiting search(pattern=%s)", pattern)
         return True

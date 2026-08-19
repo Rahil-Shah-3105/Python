@@ -3,6 +3,8 @@ wiki: https://en.wikipedia.org/wiki/Anagram
 """
 
 from collections import defaultdict
+import logging
+logger = logging.getLogger(__name__)
 
 
 def check_anagrams(first_str: str, second_str: str) -> bool:
@@ -18,8 +20,11 @@ def check_anagrams(first_str: str, second_str: str) -> bool:
     >>> check_anagrams('There', 'Their')
     False
     """
+    logger.debug(">>> Entering check_anagrams(first_str=%s,second_str=%s)", first_str, second_str)
     first_str = first_str.lower().strip()
+    logger.debug("check_anagrams(first_str=%s,second_str=%s): first_str → %s", first_str, second_str, first_str)
     second_str = second_str.lower().strip()
+    logger.debug("check_anagrams(first_str=%s,second_str=%s): second_str → %s", first_str, second_str, second_str)
 
     # Remove whitespace
     first_str = first_str.replace(" ", "")
@@ -38,6 +43,7 @@ def check_anagrams(first_str: str, second_str: str) -> bool:
         count[first_str[i]] += 1
         count[second_str[i]] -= 1
 
+    logger.debug("<<< Exiting check_anagrams(first_str=%s,second_str=%s)", first_str, second_str)
     return all(_count == 0 for _count in count.values())
 
 

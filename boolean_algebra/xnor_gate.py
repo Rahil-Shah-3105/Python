@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 A XNOR Gate is a logic gate in boolean algebra which results to 0 (False) if both the
 inputs are different, and 1 (True), if the inputs are same.
@@ -28,6 +30,8 @@ def xnor_gate(input_1: int, input_2: int) -> int:
     >>> xnor_gate(1, 1)
     1
     """
+    logger.debug(">>> Entering xnor_gate(input_1=%s,input_2=%s)", input_1, input_2)
+    logger.debug("<<< Exiting xnor_gate(input_1=%s,input_2=%s)", input_1, input_2)
     return 1 if input_1 == input_2 else 0
 
 

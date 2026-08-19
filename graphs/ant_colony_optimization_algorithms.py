@@ -13,6 +13,8 @@ Author: Clark
 
 import copy
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 cities = {
     0: [0, 0],
@@ -109,6 +111,8 @@ def distance(city1: list[int], city2: list[int]) -> float:
     >>> distance([0, 0], [-3, -4] )
     5.0
     """
+    logger.debug(">>> Entering distance(city1=%s,city2=%s)", city1, city2)
+    logger.debug("<<< Exiting distance(city1=%s,city2=%s)", city1, city2)
     return (((city1[0] - city2[0]) ** 2) + ((city1[1] - city2[1]) ** 2)) ** 0.5
 
 

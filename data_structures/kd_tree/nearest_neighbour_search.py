@@ -7,6 +7,8 @@
 #  Thank you!
 
 from data_structures.kd_tree.kd_node import KDNode
+import logging
+logger = logging.getLogger(__name__)
 
 
 def nearest_neighbour_search(
@@ -39,15 +41,19 @@ def nearest_neighbour_search(
             node: The current node in the KD-Tree.
             depth: The current depth in the KD-Tree.
         """
+        logger.debug(">>> Entering search(node=%s,depth=%s)", node, depth)
         nonlocal nearest_point, nearest_dist, nodes_visited
         if node is None:
+            logger.debug("<<< Exiting search(node=%s,depth=%s)", node, depth)
             return
 
         nodes_visited += 1
 
         # Calculate the current distance (squared distance)
         current_point = node.point
+        logger.debug("search(node=%s,depth=%s): current_point → %s", node, depth, current_point)
         current_dist = sum(
+        logger.debug("search(node=%s,depth=%s): current_dist → %s", node, depth, current_dist)
             (query_coord - point_coord) ** 2
             for query_coord, point_coord in zip(query_point, current_point)
         )
@@ -55,15 +61,20 @@ def nearest_neighbour_search(
         # Update nearest point if the current node is closer
         if nearest_point is None or current_dist < nearest_dist:
             nearest_point = current_point
+            logger.debug("search(node=%s,depth=%s): nearest_point → %s", node, depth, nearest_point)
             nearest_dist = current_dist
+            logger.debug("search(node=%s,depth=%s): nearest_dist → %s", node, depth, nearest_dist)
 
         # Determine which subtree to search first (based on axis and query point)
         k = len(query_point)  # Dimensionality of points
         axis = depth % k
+        logger.debug("search(node=%s,depth=%s): axis → %s", node, depth, axis)
 
         if query_point[axis] <= current_point[axis]:
             nearer_subtree = node.left
+            logger.debug("search(node=%s,depth=%s): nearer_subtree → %s", node, depth, nearer_subtree)
             further_subtree = node.right
+            logger.debug("search(node=%s,depth=%s): further_subtree → %s", node, depth, further_subtree)
         else:
             nearer_subtree = node.right
             further_subtree = node.left

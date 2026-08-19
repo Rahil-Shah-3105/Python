@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Program to check if a cycle is present in a given graph
 """
@@ -11,10 +13,12 @@ def check_cycle(graph: dict) -> bool:
     >>> check_cycle(graph={0:[1, 2], 1:[2], 2:[0, 3], 3:[3]})
     True
     """
+    logger.debug(">>> Entering check_cycle(graph=%s)", graph)
     # Keep track of visited nodes
     visited: set[int] = set()
     # To detect a back edge, keep track of vertices currently in the recursion stack
     rec_stk: set[int] = set()
+    logger.debug("<<< Exiting check_cycle(graph=%s)", graph)
     return any(
         node not in visited and depth_first_search(graph, node, visited, rec_stk)
         for node in graph
@@ -30,6 +34,7 @@ def depth_first_search(graph: dict, vertex: int, visited: set, rec_stk: set) -> 
     >>> depth_first_search(graph, vertex, visited, rec_stk)
     False
     """
+    logger.debug(">>> Entering depth_first_search(graph=%s,vertex=%s,visited=%s,rec_stk=%s)", graph, vertex, visited, rec_stk)
     # Mark current node as visited and add to recursion stack
     visited.add(vertex)
     rec_stk.add(vertex)
@@ -43,6 +48,7 @@ def depth_first_search(graph: dict, vertex: int, visited: set, rec_stk: set) -> 
 
     # The node needs to be removed from recursion stack before function ends
     rec_stk.remove(vertex)
+    logger.debug("<<< Exiting depth_first_search(graph=%s,vertex=%s,visited=%s,rec_stk=%s)", graph, vertex, visited, rec_stk)
     return False
 
 

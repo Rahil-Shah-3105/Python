@@ -39,6 +39,8 @@ a has 3 digits, etc...
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_9_pandigital(n: int) -> bool:
@@ -51,7 +53,10 @@ def is_9_pandigital(n: int) -> bool:
     >>> is_9_pandigital(1562849733)
     False
     """
+    logger.debug(">>> Entering is_9_pandigital(n=%s)", n)
     s = str(n)
+    logger.debug("is_9_pandigital(n=%s): s → %s", n, s)
+    logger.debug("<<< Exiting is_9_pandigital(n=%s)", n)
     return len(s) == 9 and set(s) == set("123456789")
 
 
@@ -60,8 +65,10 @@ def solution() -> int | None:
     Return the largest 1 to 9 pandigital 9-digital number that can be formed as the
     concatenated product of an integer with (1,2,...,n) where n > 1.
     """
+    logger.debug(">>> Entering solution()")
     for base_num in range(9999, 4999, -1):
         candidate = 100002 * base_num
+        logger.debug("solution(): candidate → %s", candidate)
         if is_9_pandigital(candidate):
             return candidate
 
@@ -70,6 +77,7 @@ def solution() -> int | None:
         if is_9_pandigital(candidate):
             return candidate
 
+    logger.debug("<<< Exiting solution()")
     return None
 
 

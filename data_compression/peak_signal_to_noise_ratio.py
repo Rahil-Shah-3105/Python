@@ -10,36 +10,48 @@ import os
 
 import cv2
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 PIXEL_MAX = 255.0
 
 
 def peak_signal_to_noise_ratio(original: float, contrast: float) -> float:
+    logger.debug(">>> Entering peak_signal_to_noise_ratio(original=%s,contrast=%s)", original, contrast)
     mse = np.mean((original - contrast) ** 2)
+    logger.debug("peak_signal_to_noise_ratio(original=%s,contrast=%s): mse → %s", original, contrast, mse)
     if mse == 0:
         return 100
 
+    logger.debug("<<< Exiting peak_signal_to_noise_ratio(original=%s,contrast=%s)", original, contrast)
     return 20 * math.log10(PIXEL_MAX / math.sqrt(mse))
 
 
 def main() -> None:
+    logger.debug(">>> Entering main()")
     dir_path = os.path.dirname(os.path.realpath(__file__))
+    logger.debug("main(): dir_path → %s", dir_path)
     # Loading images (original image and compressed image)
     original = cv2.imread(os.path.join(dir_path, "image_data/original_image.png"))
+    logger.debug("main(): original → %s", original)
     contrast = cv2.imread(os.path.join(dir_path, "image_data/compressed_image.png"), 1)
 
+    logger.debug("main(): contrast → %s", contrast)
     original2 = cv2.imread(os.path.join(dir_path, "image_data/PSNR-example-base.png"))
     contrast2 = cv2.imread(
         os.path.join(dir_path, "image_data/PSNR-example-comp-10.jpg"), 1
     )
+    logger.debug("main(): original2 → %s", original2)
 
     # Value expected: 29.73dB
+    logger.debug("main(): contrast2 → %s", contrast2)
     print("-- First Test --")
     print(f"PSNR value is {peak_signal_to_noise_ratio(original, contrast)} dB")
 
     # # Value expected: 31.53dB (Wikipedia Example)
     print("\n-- Second Test --")
     print(f"PSNR value is {peak_signal_to_noise_ratio(original2, contrast2)} dB")
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

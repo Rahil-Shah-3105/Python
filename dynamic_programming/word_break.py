@@ -22,6 +22,8 @@ Space: O(n)
 
 import functools
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 def word_break(string: str, words: list[str]) -> bool:
@@ -53,6 +55,7 @@ def word_break(string: str, words: list[str]) -> bool:
         ...
     ValueError: the words should be a list of non-empty strings
     """
+    logger.debug(">>> Entering word_break(string=%s,words=%s)", string, words)
 
     # Validation
     if not isinstance(string, str) or len(string) == 0:
@@ -66,9 +69,11 @@ def word_break(string: str, words: list[str]) -> bool:
     # Build trie
     trie: dict[str, Any] = {}
     word_keeper_key = "WORD_KEEPER"
+    logger.debug("word_break(string=%s,words=%s): word_keeper_key → %s", string, words, word_keeper_key)
 
     for word in words:
         trie_node = trie
+        logger.debug("word_break(string=%s,words=%s): trie_node → %s", string, words, trie_node)
         for c in word:
             if c not in trie_node:
                 trie_node[c] = {}
@@ -78,6 +83,7 @@ def word_break(string: str, words: list[str]) -> bool:
         trie_node[word_keeper_key] = True
 
     len_string = len(string)
+    logger.debug("word_break(string=%s,words=%s): len_string → %s", string, words, len_string)
 
     # Dynamic programming method
     @functools.cache
@@ -87,12 +93,14 @@ def word_break(string: str, words: list[str]) -> bool:
         >>> is_breakable(1)
         True
         """
+        logger.debug(">>> Entering is_breakable(index=%s)", index)
         if index == len_string:
             return True
 
         trie_node: Any = trie
         for i in range(index, len_string):
             trie_node = trie_node.get(string[i], None)
+            logger.debug("is_breakable(index=%s): trie_node → %s", index, trie_node)
 
             if trie_node is None:
                 return False
@@ -100,6 +108,7 @@ def word_break(string: str, words: list[str]) -> bool:
             if trie_node.get(word_keeper_key, False) and is_breakable(i + 1):
                 return True
 
+        logger.debug("<<< Exiting is_breakable(index=%s)", index)
         return False
 
     return is_breakable(0)

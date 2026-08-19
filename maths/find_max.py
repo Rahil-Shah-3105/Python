@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_max_iterative(nums: list[int | float]) -> int | float:
@@ -16,12 +18,15 @@ def find_max_iterative(nums: list[int | float]) -> int | float:
         ...
     ValueError: find_max_iterative() arg is an empty sequence
     """
+    logger.debug(">>> Entering find_max_iterative(nums=%s)", nums)
     if len(nums) == 0:
         raise ValueError("find_max_iterative() arg is an empty sequence")
     max_num = nums[0]
+    logger.debug("find_max_iterative(nums=%s): max_num → %s", nums, max_num)
     for x in nums:
         if x > max_num:  # noqa: PLR1730
             max_num = x
+    logger.debug("<<< Exiting find_max_iterative(nums=%s)", nums)
     return max_num
 
 
@@ -58,6 +63,7 @@ def find_max_recursive(nums: list[int | float], left: int, right: int) -> int | 
         ...
     IndexError: list index out of range
     """
+    logger.debug(">>> Entering find_max_recursive(nums=%s,left=%s,right=%s)", nums, left, right)
     if len(nums) == 0:
         raise ValueError("find_max_recursive() arg is an empty sequence")
     if (
@@ -68,6 +74,9 @@ def find_max_recursive(nums: list[int | float], left: int, right: int) -> int | 
     ):
         raise IndexError("list index out of range")
     if left == right:
+        logger.debug("find_max_recursive(nums=%s,left=%s,right=%s): right_max → %s", nums, left, right, right_max)
+        logger.debug("find_max_recursive(nums=%s,left=%s,right=%s): mid → %s", nums, left, right, mid)
+        logger.debug("find_max_recursive(nums=%s,left=%s,right=%s): left_max → %s", nums, left, right, left_max)
         return nums[left]
     mid = (left + right) >> 1  # the middle
     left_max = find_max_recursive(nums, left, mid)  # find max in range[left, mid]
@@ -75,6 +84,7 @@ def find_max_recursive(nums: list[int | float], left: int, right: int) -> int | 
         nums, mid + 1, right
     )  # find max in range[mid + 1, right]
 
+    logger.debug("<<< Exiting find_max_recursive(nums=%s,left=%s,right=%s)", nums, left, right)
     return left_max if left_max >= right_max else right_max
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 A NOT Gate is a logic gate in boolean algebra which results to 0 (False) if the
 input is high, and 1 (True) if the input is low.
@@ -20,7 +22,9 @@ def not_gate(input_1: int) -> int:
     >>> not_gate(1)
     0
     """
+    logger.debug(">>> Entering not_gate(input_1=%s)", input_1)
 
+    logger.debug("<<< Exiting not_gate(input_1=%s)", input_1)
     return 1 if input_1 == 0 else 0
 
 

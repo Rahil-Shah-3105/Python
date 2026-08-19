@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 https://en.wikipedia.org/wiki/Median
 """
@@ -22,13 +24,17 @@ def median(matrix: list[list[int]]) -> int:
         >>> median(matrix)
         3
     """
+    logger.debug(">>> Entering median(matrix=%s)", matrix)
     # Flatten the matrix into a sorted 1D list
     linear = sorted(num for row in matrix for num in row)
+    logger.debug("median(matrix=%s): linear → %s", matrix, linear)
 
     # Calculate the middle index
     mid = (len(linear) - 1) // 2
+    logger.debug("median(matrix=%s): mid → %s", matrix, mid)
 
     # Return the median
+    logger.debug("<<< Exiting median(matrix=%s)", matrix)
     return linear[mid]
 
 

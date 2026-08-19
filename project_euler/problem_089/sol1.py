@@ -29,6 +29,8 @@ consecutive identical units.
 """
 
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 SYMBOLS = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
 
@@ -42,13 +44,18 @@ def parse_roman_numerals(numerals: str) -> int:
     >>> parse_roman_numerals("IIII")
     4
     """
+    logger.debug(">>> Entering parse_roman_numerals(numerals=%s)", numerals)
 
     total_value = 0
+    logger.debug("parse_roman_numerals(numerals=%s): total_value → %s", numerals, total_value)
 
     index = 0
+    logger.debug("parse_roman_numerals(numerals=%s): index → %s", numerals, index)
     while index < len(numerals) - 1:
         current_value = SYMBOLS[numerals[index]]
+        logger.debug("parse_roman_numerals(numerals=%s): current_value → %s", numerals, current_value)
         next_value = SYMBOLS[numerals[index + 1]]
+        logger.debug("parse_roman_numerals(numerals=%s): next_value → %s", numerals, next_value)
         if current_value < next_value:
             total_value -= current_value
         else:
@@ -56,6 +63,7 @@ def parse_roman_numerals(numerals: str) -> int:
         index += 1
     total_value += SYMBOLS[numerals[index]]
 
+    logger.debug("<<< Exiting parse_roman_numerals(numerals=%s)", numerals)
     return total_value
 
 
@@ -68,10 +76,13 @@ def generate_roman_numerals(num: int) -> str:
     >>> generate_roman_numerals(4)
     'IV'
     """
+    logger.debug(">>> Entering generate_roman_numerals(num=%s)", num)
 
     numerals = ""
+    logger.debug("generate_roman_numerals(num=%s): numerals → %s", num, numerals)
 
     m_count = num // 1000
+    logger.debug("generate_roman_numerals(num=%s): m_count → %s", num, m_count)
     numerals += m_count * "M"
     num %= 1000
 
@@ -112,6 +123,7 @@ def generate_roman_numerals(num: int) -> str:
         num -= 5
     numerals += num * "I"
 
+    logger.debug("<<< Exiting generate_roman_numerals(num=%s)", num)
     return numerals
 
 
@@ -122,18 +134,26 @@ def solution(roman_numerals_filename: str = "/p089_roman.txt") -> int:
     >>> solution("/numeralcleanup_test.txt")
     16
     """
+    logger.debug(">>> Entering solution(roman_numerals_filename=%s)", roman_numerals_filename)
 
     savings = 0
+    logger.debug("solution(roman_numerals_filename=%s): savings → %s", roman_numerals_filename, savings)
 
     with open(os.path.dirname(__file__) + roman_numerals_filename) as file1:
+        logger.error("Exception in solution(roman_numerals_filename=%s)", roman_numerals_filename, exc_info=True)
         lines = file1.readlines()
+        logger.debug("solution(roman_numerals_filename=%s): lines → %s", roman_numerals_filename, lines)
 
     for line in lines:
         original = line.strip()
+        logger.debug("solution(roman_numerals_filename=%s): original → %s", roman_numerals_filename, original)
         num = parse_roman_numerals(original)
+        logger.debug("solution(roman_numerals_filename=%s): num → %s", roman_numerals_filename, num)
         shortened = generate_roman_numerals(num)
+        logger.debug("solution(roman_numerals_filename=%s): shortened → %s", roman_numerals_filename, shortened)
         savings += len(original) - len(shortened)
 
+    logger.debug("<<< Exiting solution(roman_numerals_filename=%s)", roman_numerals_filename)
     return savings
 
 

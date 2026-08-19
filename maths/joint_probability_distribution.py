@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Calculate joint probability distribution
 https://en.wikipedia.org/wiki/Joint_probability_distribution
@@ -34,6 +36,8 @@ def expectation(values: list, probabilities: list) -> float:
     >>> isclose(expectation([1, 2], [0.7, 0.3]), 1.3)
     True
     """
+    logger.debug(">>> Entering expectation(values=%s,probabilities=%s)", values, probabilities)
+    logger.debug("<<< Exiting expectation(values=%s,probabilities=%s)", values, probabilities)
     return sum(x * p for x, p in zip(values, probabilities))
 
 
@@ -44,7 +48,10 @@ def variance(values: list[int], probabilities: list[float]) -> float:
     >>> isclose(variance([1,2],[0.7,0.3]), 0.21)
     True
     """
+    logger.debug(">>> Entering variance(values=%s,probabilities=%s)", values, probabilities)
     mean = expectation(values, probabilities)
+    logger.debug("variance(values=%s,probabilities=%s): mean → %s", values, probabilities, mean)
+    logger.debug("<<< Exiting variance(values=%s,probabilities=%s)", values, probabilities)
     return sum((x - mean) ** 2 * p for x, p in zip(values, probabilities))
 
 
@@ -74,6 +81,8 @@ def standard_deviation(variance: float) -> float:
     >>> standard_deviation(0.21)
     0.458257569495584
     """
+    logger.debug(">>> Entering standard_deviation(variance=%s)", variance)
+    logger.debug("<<< Exiting standard_deviation(variance=%s)", variance)
     return variance**0.5
 
 

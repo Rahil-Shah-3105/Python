@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Binary Multiplication
 This is a method to find a*b in a time complexity of O(log b)
@@ -47,7 +49,9 @@ def binary_multiply(a: int, b: int) -> int:
     >>> binary_multiply(1, 10)
     10
     """
+    logger.debug(">>> Entering binary_multiply(a=%s,b=%s)", a, b)
     res = 0
+    logger.debug("binary_multiply(a=%s,b=%s): res → %s", a, b, res)
     while b > 0:
         if b & 1:
             res += a
@@ -55,6 +59,7 @@ def binary_multiply(a: int, b: int) -> int:
         a += a
         b >>= 1
 
+    logger.debug("<<< Exiting binary_multiply(a=%s,b=%s)", a, b)
     return res
 
 
@@ -84,7 +89,9 @@ def binary_mod_multiply(a: int, b: int, modulus: int) -> int:
     >>> binary_mod_multiply(1, 10, 3)
     1
     """
+    logger.debug(">>> Entering binary_mod_multiply(a=%s,b=%s,modulus=%s)", a, b, modulus)
     res = 0
+    logger.debug("binary_mod_multiply(a=%s,b=%s,modulus=%s): res → %s", a, b, modulus, res)
     while b > 0:
         if b & 1:
             res = ((res % modulus) + (a % modulus)) % modulus
@@ -92,6 +99,7 @@ def binary_mod_multiply(a: int, b: int, modulus: int) -> int:
         a += a
         b >>= 1
 
+    logger.debug("<<< Exiting binary_mod_multiply(a=%s,b=%s,modulus=%s)", a, b, modulus)
     return res
 
 

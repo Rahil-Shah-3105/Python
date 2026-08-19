@@ -14,6 +14,8 @@ of text compression algorithms, costing only some extra computation.
 from __future__ import annotations
 
 from typing import TypedDict
+import logging
+logger = logging.getLogger(__name__)
 
 
 class BWTTransformDict(TypedDict):
@@ -45,9 +47,11 @@ def all_rotations(s: str) -> list[str]:
         ...
     TypeError: The parameter s type must be str.
     """
+    logger.debug(">>> Entering all_rotations(s=%s)", s)
     if not isinstance(s, str):
         raise TypeError("The parameter s type must be str.")
 
+    logger.debug("<<< Exiting all_rotations(s=%s)", s)
     return [s[i:] + s[:i] for i in range(len(s))]
 
 
@@ -75,18 +79,22 @@ def bwt_transform(s: str) -> BWTTransformDict:
         ...
     ValueError: The parameter s must not be empty.
     """
+    logger.debug(">>> Entering bwt_transform(s=%s)", s)
     if not isinstance(s, str):
         raise TypeError("The parameter s type must be str.")
     if not s:
         raise ValueError("The parameter s must not be empty.")
 
     rotations = all_rotations(s)
+    logger.debug("bwt_transform(s=%s): rotations → %s", s, rotations)
     rotations.sort()  # sort the list of rotations in alphabetically order
     # make a string composed of the last char of each rotation
+    logger.debug("bwt_transform(s=%s): response → %s", s, response)
     response: BWTTransformDict = {
         "bwt_string": "".join([word[-1] for word in rotations]),
         "idx_original_string": rotations.index(s),
     }
+    logger.debug("<<< Exiting bwt_transform(s=%s)", s)
     return response
 
 
@@ -136,13 +144,16 @@ def reverse_bwt(bwt_string: str, idx_original_string: int) -> str:
     >>> reverse_bwt("mnpbnnaaaaaa", 11.4)
     'panamabanana'
     """
+    logger.debug(">>> Entering reverse_bwt(bwt_string=%s,idx_original_string=%s)", bwt_string, idx_original_string)
     if not isinstance(bwt_string, str):
         raise TypeError("The parameter bwt_string type must be str.")
     if not bwt_string:
         raise ValueError("The parameter bwt_string must not be empty.")
     try:
         idx_original_string = int(idx_original_string)
+        logger.debug("reverse_bwt(bwt_string=%s,idx_original_string=%s): idx_original_string → %s", bwt_string, idx_original_string, idx_original_string)
     except ValueError:
+        logger.error("Exception in reverse_bwt(bwt_string=%s,idx_original_string=%s)", bwt_string, idx_original_string, exc_info=True)
         raise TypeError(
             "The parameter idx_original_string type must be int or passive"
             " of cast to int."
@@ -155,10 +166,12 @@ def reverse_bwt(bwt_string: str, idx_original_string: int) -> str:
         )
 
     ordered_rotations = [""] * len(bwt_string)
+    logger.debug("reverse_bwt(bwt_string=%s,idx_original_string=%s): ordered_rotations → %s", bwt_string, idx_original_string, ordered_rotations)
     for _ in range(len(bwt_string)):
         for i in range(len(bwt_string)):
             ordered_rotations[i] = bwt_string[i] + ordered_rotations[i]
         ordered_rotations.sort()
+    logger.debug("<<< Exiting reverse_bwt(bwt_string=%s,idx_original_string=%s)", bwt_string, idx_original_string)
     return ordered_rotations[idx_original_string]
 
 

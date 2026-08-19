@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Conversion of length units.
 Available Units:
@@ -69,12 +71,15 @@ def length_conversion(value: float, from_type: str, to_type: str) -> float:
     ValueError: Invalid 'from_type' value: 'wrongUnit'.
     Conversion abbreviations are: m, km, Mm, Gm, Tm, Pm, Em, Zm, Ym
     """
+    logger.debug(">>> Entering length_conversion(value=%s,from_type=%s,to_type=%s)", value, from_type, to_type)
 
     from_sanitized = from_type.lower().strip("s")
     to_sanitized = to_type.lower().strip("s")
 
     from_sanitized = UNIT_SYMBOL.get(from_sanitized, from_sanitized)
+    logger.debug("length_conversion(value=%s,from_type=%s,to_type=%s): from_sanitized → %s", value, from_type, to_type, from_sanitized)
     to_sanitized = UNIT_SYMBOL.get(to_sanitized, to_sanitized)
+    logger.debug("length_conversion(value=%s,from_type=%s,to_type=%s): to_sanitized → %s", value, from_type, to_type, to_sanitized)
 
     if from_sanitized not in METRIC_CONVERSION:
         msg = (
@@ -89,14 +94,18 @@ def length_conversion(value: float, from_type: str, to_type: str) -> float:
         )
         raise ValueError(msg)
     from_exponent = METRIC_CONVERSION[from_sanitized]
+    logger.debug("length_conversion(value=%s,from_type=%s,to_type=%s): from_exponent → %s", value, from_type, to_type, from_exponent)
     to_exponent = METRIC_CONVERSION[to_sanitized]
+    logger.debug("length_conversion(value=%s,from_type=%s,to_type=%s): to_exponent → %s", value, from_type, to_type, to_exponent)
     exponent = 1
+    logger.debug("length_conversion(value=%s,from_type=%s,to_type=%s): exponent → %s", value, from_type, to_type, exponent)
 
     if from_exponent > to_exponent:
         exponent = from_exponent - to_exponent
     else:
         exponent = -(to_exponent - from_exponent)
 
+    logger.debug("<<< Exiting length_conversion(value=%s,from_type=%s,to_type=%s)", value, from_type, to_type)
     return value * pow(10, exponent)
 
 

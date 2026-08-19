@@ -1,5 +1,7 @@
 from decimal import Decimal, getcontext
 from math import ceil, factorial
+import logging
+logger = logging.getLogger(__name__)
 
 
 def pi(precision: int) -> str:
@@ -35,6 +37,8 @@ def pi(precision: int) -> str:
         ...
     ValueError: Undefined for non-natural numbers
     """
+    logger.debug(">>> Entering pi(precision=%s)", precision)
+    logger.debug("pi(precision=%s): PI → %s", precision, PI)
 
     if not isinstance(precision, int):
         raise TypeError("Undefined for non-integers")
@@ -43,15 +47,22 @@ def pi(precision: int) -> str:
 
     getcontext().prec = precision
     num_iterations = ceil(precision / 14)
+    logger.debug("pi(precision=%s): num_iterations → %s", precision, num_iterations)
     constant_term = 426880 * Decimal(10005).sqrt()
+    logger.debug("pi(precision=%s): constant_term → %s", precision, constant_term)
     exponential_term = 1
+    logger.debug("pi(precision=%s): exponential_term → %s", precision, exponential_term)
     linear_term = 13591409
+    logger.debug("pi(precision=%s): linear_term → %s", precision, linear_term)
     partial_sum = Decimal(linear_term)
+    logger.debug("pi(precision=%s): partial_sum → %s", precision, partial_sum)
     for k in range(1, num_iterations):
         multinomial_term = factorial(6 * k) // (factorial(3 * k) * factorial(k) ** 3)
+        logger.debug("pi(precision=%s): multinomial_term → %s", precision, multinomial_term)
         linear_term += 545140134
         exponential_term *= -262537412640768000
         partial_sum += Decimal(multinomial_term * linear_term) / exponential_term
+    logger.debug("<<< Exiting pi(precision=%s)", precision)
     return str(constant_term / partial_sum)[:-1]
 
 

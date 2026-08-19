@@ -36,6 +36,8 @@ References:
 
 import matplotlib.pyplot as plt
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 class PolynomialRegression:
@@ -45,10 +47,14 @@ class PolynomialRegression:
         """
         @raises ValueError: if the polynomial degree is negative
         """
+        logger.debug(">>> Entering __init__(degree=%s)", degree)
         if degree < 0:
             raise ValueError("Polynomial degree must be non-negative")
 
+            logger.debug("<<< Exiting __init__(degree=%s)", degree)
+            logger.debug("__init__(self=%s,degree=%s): self.params → %s", self, degree, self.params)
         self.degree = degree
+        logger.debug("__init__(self=%s,degree=%s): self.degree → %s", self, degree, self.degree)
         self.params = None
 
     @staticmethod
@@ -93,10 +99,12 @@ class PolynomialRegression:
         ...
         ValueError: Data must have dimensions N x 1
         """
+        logger.debug(">>> Entering _design_matrix(data=%s,degree=%s)", data, degree)
         _rows, *remaining = data.shape
         if remaining:
             raise ValueError("Data must have dimensions N x 1")
 
+        logger.debug("<<< Exiting _design_matrix(data=%s,degree=%s)", data, degree)
         return np.vander(data, N=degree + 1, increasing=True)
 
     def fit(self, x_train: np.ndarray, y_train: np.ndarray) -> None:
@@ -139,7 +147,9 @@ class PolynomialRegression:
         >>> np.allclose(poly_reg.params, coefs, atol=10e-3)
         True
         """
+        logger.debug(">>> Entering fit(x_train=%s,y_train=%s)", x_train, y_train)
         X = PolynomialRegression._design_matrix(x_train, self.degree)  # noqa: N806
+        logger.debug("fit(x_train=%s,y_train=%s): X → %s", x_train, y_train, X)
         _, cols = X.shape
         if np.linalg.matrix_rank(X) < cols:
             raise ArithmeticError(
@@ -147,7 +157,9 @@ class PolynomialRegression:
             )
 
         # np.linalg.pinv() computes the Moore-Penrose pseudoinverse using SVD
+        logger.debug("<<< Exiting fit(x_train=%s,y_train=%s)", x_train, y_train)
         self.params = np.linalg.pinv(X) @ y_train
+        logger.debug("fit(x_train=%s,y_train=%s): self.params → %s", x_train, y_train, self.params)
 
     def predict(self, data: np.ndarray) -> np.ndarray:
         """
@@ -174,9 +186,11 @@ class PolynomialRegression:
         ...
         ArithmeticError: Predictor hasn't been fit yet
         """
+        logger.debug(">>> Entering predict(data=%s)", data)
         if self.params is None:
             raise ArithmeticError("Predictor hasn't been fit yet")
 
+        logger.debug("<<< Exiting predict(data=%s)", data)
         return PolynomialRegression._design_matrix(data, self.degree) @ self.params
 
 
@@ -187,15 +201,20 @@ def main() -> None:
 
     >>> pass    # Placeholder, function is only for demo purposes
     """
+    logger.debug(">>> Entering main()")
     import seaborn as sns
 
     mpg_data = sns.load_dataset("mpg")
+    logger.debug("main(): mpg_data → %s", mpg_data)
 
     poly_reg = PolynomialRegression(degree=2)
+    logger.debug("main(): poly_reg → %s", poly_reg)
     poly_reg.fit(mpg_data.weight, mpg_data.mpg)
 
     weight_sorted = np.sort(mpg_data.weight)
+    logger.debug("main(): weight_sorted → %s", weight_sorted)
     predictions = poly_reg.predict(weight_sorted)
+    logger.debug("main(): predictions → %s", predictions)
 
     plt.scatter(mpg_data.weight, mpg_data.mpg, color="gray", alpha=0.5)
     plt.plot(weight_sorted, predictions, color="red", linewidth=3)
@@ -203,6 +222,7 @@ def main() -> None:
     plt.xlabel("Weight (lbs)")
     plt.ylabel("Fuel Efficiency (mpg)")
     plt.show()
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

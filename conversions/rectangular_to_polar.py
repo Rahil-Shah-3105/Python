@@ -1,4 +1,6 @@
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def rectangular_to_polar(real: float, img: float) -> tuple[float, float]:
@@ -20,9 +22,13 @@ def rectangular_to_polar(real: float, img: float) -> tuple[float, float]:
     >>> rectangular_to_polar(10000,99999)
     (100497.76, 84.29)
     """
+    logger.debug(">>> Entering rectangular_to_polar(real=%s,img=%s)", real, img)
 
     mod = round(math.sqrt((real**2) + (img**2)), 2)
+    logger.debug("rectangular_to_polar(real=%s,img=%s): mod → %s", real, img, mod)
     ang = round(math.degrees(math.atan2(img, real)), 2)
+    logger.debug("rectangular_to_polar(real=%s,img=%s): ang → %s", real, img, ang)
+    logger.debug("<<< Exiting rectangular_to_polar(real=%s,img=%s)", real, img)
     return (mod, ang)
 
 

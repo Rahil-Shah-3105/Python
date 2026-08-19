@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Reverse Polish Nation is also known as Polish postfix notation or simply postfix
 notation.
@@ -52,11 +54,15 @@ def parse_token(token: str | float) -> float | str:
     float or str
         Returns a float if `token` is a number or a str if `token` is an operator
     """
+    logger.debug(">>> Entering parse_token(token=<redacted>)")
     if token in OPERATORS:
         return token
     try:
+        logger.debug("<<< Exiting parse_token(token=<redacted>)")
+        logger.debug("parse_token(token=<redacted>): msg → %s", msg)
         return float(token)
     except ValueError:
+        logger.error("Exception in parse_token(token=<redacted>)", exc_info=True)
         msg = f"{token} is neither a number nor a valid operator"
         raise ValueError(msg)
 
@@ -107,20 +113,24 @@ def evaluate(post_fix: list[str], verbose: bool = False) -> float:
     float
         The evaluated value
     """
+    logger.debug(">>> Entering evaluate(post_fix=%s,verbose=%s)", post_fix, verbose)
     if not post_fix:
         return 0
     # Checking the list to find out whether the postfix expression is valid
     valid_expression = [parse_token(token) for token in post_fix]
+    logger.debug("evaluate(post_fix=%s,verbose=%s): valid_expression → %s", post_fix, verbose, valid_expression)
     if verbose:
         # print table header
         print("Symbol".center(8), "Action".center(12), "Stack", sep=" | ")
         print("-" * (30 + len(post_fix)))
     stack = []
+    logger.debug("evaluate(post_fix=%s,verbose=%s): stack → %s", post_fix, verbose, stack)
     for x in valid_expression:
         if x not in OPERATORS:
             stack.append(x)  # append x to stack
             if verbose:
                 # output in tabular format
+                logger.debug("evaluate(post_fix=%s,verbose=%s): sep → %s", post_fix, verbose, sep)
                 print(
                     f"{x}".rjust(8),
                     f"push({x})".ljust(12),
@@ -184,6 +194,7 @@ def evaluate(post_fix: list[str], verbose: bool = False) -> float:
     # only one element which is the result
     if len(stack) != 1:
         raise ArithmeticError("Input is not a valid postfix expression")
+    logger.debug("<<< Exiting evaluate(post_fix=%s,verbose=%s)", post_fix, verbose)
     return float(stack[0])
 
 

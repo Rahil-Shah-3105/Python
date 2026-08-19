@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Numerical integration or quadrature for a smooth function f with known values at x_i
 """
@@ -21,15 +23,19 @@ def trapezoidal_rule(boundary, steps):
     >>> abs(trapezoidal_rule([1, 2], 1000) - 2.33333) < 0.01
     True
     """
+    logger.debug(">>> Entering trapezoidal_rule(boundary=%s,steps=%s)", boundary, steps)
     h = (boundary[1] - boundary[0]) / steps
+    logger.debug("trapezoidal_rule(boundary=%s,steps=%s): h → %s", boundary, steps, h)
     a = boundary[0]
     b = boundary[1]
     x_i = make_points(a, b, h)
+    logger.debug("trapezoidal_rule(boundary=%s,steps=%s): x_i → %s", boundary, steps, x_i)
     y = 0.0
     y += (h / 2.0) * f(a)
     for i in x_i:
         y += h * f(i)
     y += (h / 2.0) * f(b)
+    logger.debug("<<< Exiting trapezoidal_rule(boundary=%s,steps=%s)", boundary, steps)
     return y
 
 
@@ -56,10 +62,12 @@ def make_points(a, b, h):
     >>> list(make_points(1, 4, 3))
     []
     """
+    logger.debug(">>> Entering make_points(a=%s,b=%s,h=%s)", a, b, h)
     x = a + h
     while x <= (b - h):
         yield x
         x += h
+        logger.debug("<<< Exiting make_points(a=%s,b=%s,h=%s)", a, b, h)
 
 
 def f(x):
@@ -76,6 +84,8 @@ def f(x):
     >>> f(0.5)
     0.25
     """
+    logger.debug(">>> Entering f(x=%s)", x)
+    logger.debug("<<< Exiting f(x=%s)", x)
     return x**2
 
 
@@ -90,12 +100,17 @@ def main():
     >>> main()
     y = 0.3349999999999999
     """
+    logger.debug(">>> Entering main()")
     a = 0.0
     b = 1.0
     steps = 10.0
+    logger.debug("main(): steps → %s", steps)
     boundary = [a, b]
+    logger.debug("main(): boundary → %s", boundary)
     y = trapezoidal_rule(boundary, steps)
+    logger.debug("main(): y → %s", y)
     print(f"y = {y}")
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

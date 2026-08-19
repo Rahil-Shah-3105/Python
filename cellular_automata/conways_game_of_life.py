@@ -6,6 +6,8 @@ https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 from __future__ import annotations
 
 from PIL import Image
+import logging
+logger = logging.getLogger(__name__)
 
 # Define glider example
 GLIDER = [
@@ -29,9 +31,12 @@ def new_generation(cells: list[list[int]]) -> list[list[int]]:
     >>> new_generation(BLINKER)
     [[0, 0, 0], [1, 1, 1], [0, 0, 0]]
     """
+    logger.debug(">>> Entering new_generation(cells=%s)", cells)
     next_generation = []
+    logger.debug("new_generation(cells=%s): next_generation → %s", cells, next_generation)
     for i in range(len(cells)):
         next_generation_row = []
+        logger.debug("new_generation(cells=%s): next_generation_row → %s", cells, next_generation_row)
         for j in range(len(cells[i])):
             # Get the number of live neighbours
             neighbour_count = 0
@@ -66,6 +71,7 @@ def new_generation(cells: list[list[int]]) -> list[list[int]]:
                 next_generation_row.append(0)
 
         next_generation.append(next_generation_row)
+    logger.debug("<<< Exiting new_generation(cells=%s)", cells)
     return next_generation
 
 
@@ -73,21 +79,28 @@ def generate_images(cells: list[list[int]], frames: int) -> list[Image.Image]:
     """
     Generates a list of images of subsequent Game of Life states.
     """
+    logger.debug(">>> Entering generate_images(cells=%s,frames=%s)", cells, frames)
     images = []
+    logger.debug("generate_images(cells=%s,frames=%s): images → %s", cells, frames, images)
     for _ in range(frames):
         # Create output image
         img = Image.new("RGB", (len(cells[0]), len(cells)))
+        logger.debug("generate_images(cells=%s,frames=%s): img → %s", cells, frames, img)
         pixels = img.load()
+        logger.debug("generate_images(cells=%s,frames=%s): pixels → %s", cells, frames, pixels)
 
         # Save cells to image
         for x in range(len(cells)):
             for y in range(len(cells[0])):
                 colour = 255 - cells[y][x] * 255
+                logger.debug("generate_images(cells=%s,frames=%s): colour → %s", cells, frames, colour)
                 pixels[x, y] = (colour, colour, colour)
 
         # Save image
         images.append(img)
         cells = new_generation(cells)
+        logger.debug("generate_images(cells=%s,frames=%s): cells → %s", cells, frames, cells)
+    logger.debug("<<< Exiting generate_images(cells=%s,frames=%s)", cells, frames)
     return images
 
 

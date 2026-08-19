@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 guess the number using lower,higher and the value to find or guess
 
@@ -73,6 +75,8 @@ def get_avg(number_1: int, number_2: int) -> int:
     >>> get_avg(10.5,50.25)
     30
     """
+    logger.debug(">>> Entering get_avg(number_1=%s,number_2=%s)", number_1, number_2)
+    logger.debug("<<< Exiting get_avg(number_1=%s,number_2=%s)", number_1, number_2)
     return int((number_1 + number_2) / 2)
 
 
@@ -106,6 +110,7 @@ def guess_the_number(lower: int, higher: int, to_guess: int) -> None:
         ...
     ValueError: argument value for lower and higher must be(lower > higher)
     """
+    logger.debug(">>> Entering guess_the_number(lower=%s,higher=%s,to_guess=%s)", lower, higher, to_guess)
     assert (
         isinstance(lower, int) and isinstance(higher, int) and isinstance(to_guess, int)
     ), 'argument values must be type of "int"'
@@ -117,16 +122,19 @@ def guess_the_number(lower: int, higher: int, to_guess: int) -> None:
         raise ValueError(
             "guess value must be within the range of lower and higher value"
         )
+        logger.debug("<<< Exiting guess_the_number(lower=%s,higher=%s,to_guess=%s)", lower, higher, to_guess)
 
     def answer(number: int) -> str:
         """
         Returns value by comparing with entered `to_guess` number
         """
+        logger.debug(">>> Entering answer(number=%s)", number)
         if number > to_guess:
             return "high"
         elif number < to_guess:
             return "low"
         else:
+            logger.debug("<<< Exiting answer(number=%s)", number)
             return "same"
 
     print("started...")
@@ -155,10 +163,15 @@ def main() -> None:
     """
     starting point or function of script
     """
+    logger.debug(">>> Entering main()")
     lower = int(input("Enter lower value : ").strip())
+    logger.debug("main(): lower → %s", lower)
     higher = int(input("Enter high value : ").strip())
+    logger.debug("main(): higher → %s", higher)
     guess = int(input("Enter value to guess : ").strip())
+    logger.debug("main(): guess → %s", guess)
     guess_the_number(lower, higher, guess)
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

@@ -16,6 +16,8 @@ so as to determine the shortest possible secret passcode of unknown length.
 
 import itertools
 from pathlib import Path
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_secret_passcode(logins: list[str]) -> int:
@@ -30,14 +32,18 @@ def find_secret_passcode(logins: list[str]) -> int:
     ...     "428", "209", "689", "019", "421", "469", "261", "681", "201"])
     4206819
     """
+    logger.debug(">>> Entering find_secret_passcode(logins=%s)", logins)
 
     # Split each login by character e.g. '319' -> ('3', '1', '9')
     split_logins = [tuple(login) for login in logins]
+    logger.debug("find_secret_passcode(logins=%s): split_logins → %s", logins, split_logins)
 
     unique_chars = {char for login in split_logins for char in login}
+    logger.debug("find_secret_passcode(logins=%s): unique_chars → %s", logins, unique_chars)
 
     for permutation in itertools.permutations(unique_chars):
         satisfied = True
+        logger.debug("find_secret_passcode(logins=%s): satisfied → %s", logins, satisfied)
         for login in logins:
             if not (
                 permutation.index(login[0])
@@ -48,6 +54,7 @@ def find_secret_passcode(logins: list[str]) -> int:
                 break
 
         if satisfied:
+            logger.debug("<<< Exiting find_secret_passcode(logins=%s)", logins)
             return int("".join(permutation))
 
     raise Exception("Unable to find the secret passcode")
@@ -61,8 +68,11 @@ def solution(input_file: str = "keylog.txt") -> int:
     >>> solution("keylog_test.txt")
     6312980
     """
+    logger.debug(">>> Entering solution(input_file=%s)", input_file)
     logins = Path(__file__).parent.joinpath(input_file).read_text().splitlines()
+    logger.debug("solution(input_file=%s): logins → %s", input_file, logins)
 
+    logger.debug("<<< Exiting solution(input_file=%s)", input_file)
     return find_secret_passcode(logins)
 
 

@@ -27,6 +27,8 @@ Additionally, a few rules of thumb are:
 """
 
 from statistics import mean, stdev
+import logging
+logger = logging.getLogger(__name__)
 
 
 def normalization(data: list, ndigits: int = 3) -> list:
@@ -41,10 +43,14 @@ def normalization(data: list, ndigits: int = 3) -> list:
     >>> normalization([5, 10, 15, 20, 25])
     [0.0, 0.25, 0.5, 0.75, 1.0]
     """
+    logger.debug(">>> Entering normalization(data=%s,ndigits=%s)", data, ndigits)
     # variables for calculation
     x_min = min(data)
+    logger.debug("normalization(data=%s,ndigits=%s): x_min → %s", data, ndigits, x_min)
     x_max = max(data)
+    logger.debug("normalization(data=%s,ndigits=%s): x_max → %s", data, ndigits, x_max)
     # normalize data
+    logger.debug("<<< Exiting normalization(data=%s,ndigits=%s)", data, ndigits)
     return [round((x - x_min) / (x_max - x_min), ndigits) for x in data]
 
 
@@ -60,8 +66,12 @@ def standardization(data: list, ndigits: int = 3) -> list:
     >>> standardization([5, 10, 15, 20, 25])
     [-1.265, -0.632, 0.0, 0.632, 1.265]
     """
+    logger.debug(">>> Entering standardization(data=%s,ndigits=%s)", data, ndigits)
     # variables for calculation
     mu = mean(data)
+    logger.debug("standardization(data=%s,ndigits=%s): mu → %s", data, ndigits, mu)
     sigma = stdev(data)
+    logger.debug("standardization(data=%s,ndigits=%s): sigma → %s", data, ndigits, sigma)
     # standardize data
+    logger.debug("<<< Exiting standardization(data=%s,ndigits=%s)", data, ndigits)
     return [round((x - mu) / (sigma), ndigits) for x in data]

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Highly divisible triangular numbers
 Problem 12
@@ -24,10 +26,13 @@ divisors?
 
 
 def count_divisors(n):
+    logger.debug(">>> Entering count_divisors(n=%s)", n)
     n_divisors = 1
+    logger.debug("count_divisors(n=%s): n_divisors → %s", n, n_divisors)
     i = 2
     while i * i <= n:
         multiplicity = 0
+        logger.debug("count_divisors(n=%s): multiplicity → %s", n, multiplicity)
         while n % i == 0:
             n //= i
             multiplicity += 1
@@ -35,6 +40,7 @@ def count_divisors(n):
         i += 1
     if n > 1:
         n_divisors *= 2
+    logger.debug("<<< Exiting count_divisors(n=%s)", n)
     return n_divisors
 
 
@@ -45,7 +51,9 @@ def solution():
     >>> solution()
     76576500
     """
+    logger.debug(">>> Entering solution()")
     t_num = 1
+    logger.debug("solution(): t_num → %s", t_num)
     i = 1
 
     while True:
@@ -55,6 +63,7 @@ def solution():
         if count_divisors(t_num) > 500:
             break
 
+    logger.debug("<<< Exiting solution()")
     return t_num
 
 

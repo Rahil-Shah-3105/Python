@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Assumption:
     - The values to compress are assumed to be comparable,
@@ -46,6 +48,7 @@ class CoordinateCompressor:
         >>> cc.decompress(1)
         52
         """
+        logger.debug(">>> Entering __init__(arr=%s)", arr)
 
         # A dictionary to store compressed coordinates
         self.coordinate_map: dict[int | float | str, int] = {}
@@ -54,8 +57,11 @@ class CoordinateCompressor:
         self.reverse_map: list[int | float | str] = [-1] * len(arr)
 
         self.arr = sorted(arr)  # The input list
+        logger.debug("__init__(arr=%s): arr → %s", arr, arr)
         self.n = len(arr)  # The length of the input list
+        logger.debug("__init__(arr=%s): self.n → %s", arr, self.n)
         self.compress_coordinates()
+        logger.debug("<<< Exiting __init__(arr=%s)", arr)
 
     def compress_coordinates(self) -> None:
         """
@@ -72,12 +78,16 @@ class CoordinateCompressor:
         >>> cc.reverse_map[2]
         83
         """
+        logger.debug(">>> Entering compress_coordinates()")
+        logger.warning("compress_coordinates(self=%s): key → %s", self, key)
         key = 0
+        logger.debug("compress_coordinates(): key → %s", key)
         for val in self.arr:
             if val not in self.coordinate_map:
                 self.coordinate_map[val] = key
                 self.reverse_map[key] = val
                 key += 1
+                logger.debug("<<< Exiting compress_coordinates()")
 
     def compress(self, original: float | str) -> int:
         """
@@ -96,6 +106,8 @@ class CoordinateCompressor:
         >>> cc.compress(7)  # Value not in the original list
         -1
         """
+        logger.debug(">>> Entering compress(original=%s)", original)
+        logger.debug("<<< Exiting compress(original=%s)", original)
         return self.coordinate_map.get(original, -1)
 
     def decompress(self, num: int) -> int | float | str:
@@ -115,6 +127,8 @@ class CoordinateCompressor:
         >>> cc.decompress(5)  # Compressed coordinate out of range
         -1
         """
+        logger.debug(">>> Entering decompress(num=%s)", num)
+        logger.debug("<<< Exiting decompress(num=%s)", num)
         return self.reverse_map[num] if 0 <= num < len(self.reverse_map) else -1
 
 

@@ -24,6 +24,8 @@ Description :
 
     Significant figures - The number of significant figures band in a resistor can vary
     from two to three.
+    import logging
+logger = logging.getLogger(__name__)
     Colors and values associated with significant figure bands -
     (Black = 0, Brown = 1, Red = 2, Orange = 3, Yellow = 4, Green = 5, Blue = 6,
     Violet = 7, Grey = 8, White = 9)
@@ -149,12 +151,16 @@ def get_significant_digits(colors: list) -> str:
     ValueError: Aqua is not a valid color for significant figure bands
 
     """
+    logger.debug(">>> Entering get_significant_digits(colors=%s)", colors)
     digit = ""
+    logger.debug("get_significant_digits(colors=%s): digit → %s", colors, digit)
     for color in colors:
         if color not in significant_figures_color_values:
             msg = f"{color} is not a valid color for significant figure bands"
+            logger.debug("get_significant_digits(colors=%s): msg → %s", colors, msg)
             raise ValueError(msg)
         digit = digit + str(significant_figures_color_values[color])
+    logger.debug("<<< Exiting get_significant_digits(colors=%s)", colors)
     return str(digit)
 
 
@@ -172,9 +178,12 @@ def get_multiplier(color: str) -> float:
     ValueError: Ivory is not a valid color for multiplier band
 
     """
+    logger.debug(">>> Entering get_multiplier(color=%s)", color)
     if color not in multiplier_color_values:
         msg = f"{color} is not a valid color for multiplier band"
+        logger.debug("get_multiplier(color=%s): msg → %s", color, msg)
         raise ValueError(msg)
+    logger.debug("<<< Exiting get_multiplier(color=%s)", color)
     return multiplier_color_values[color]
 
 
@@ -192,9 +201,12 @@ def get_tolerance(color: str) -> float:
     ValueError: Indigo is not a valid color for tolerance band
 
     """
+    logger.debug(">>> Entering get_tolerance(color=%s)", color)
     if color not in tolerance_color_values:
         msg = f"{color} is not a valid color for tolerance band"
+        logger.debug("get_tolerance(color=%s): msg → %s", color, msg)
         raise ValueError(msg)
+    logger.debug("<<< Exiting get_tolerance(color=%s)", color)
     return tolerance_color_values[color]
 
 
@@ -212,9 +224,12 @@ def get_temperature_coeffecient(color: str) -> int:
     ValueError: Cyan is not a valid color for temperature coeffecient band
 
     """
+    logger.debug(">>> Entering get_temperature_coeffecient(color=%s)", color)
     if color not in temperature_coeffecient_color_values:
         msg = f"{color} is not a valid color for temperature coeffecient band"
+        logger.debug("get_temperature_coeffecient(color=%s): msg → %s", color, msg)
         raise ValueError(msg)
+    logger.debug("<<< Exiting get_temperature_coeffecient(color=%s)", color)
     return temperature_coeffecient_color_values[color]
 
 
@@ -248,12 +263,15 @@ def get_band_type_count(total_number_of_bands: int, type_of_band: str) -> int:
     ValueError: temp_coeffecient is not valid for a 5 band resistor
 
     """
+    logger.debug(">>> Entering get_band_type_count(total_number_of_bands=%s,type_of_band=%s)", total_number_of_bands, type_of_band)
     if total_number_of_bands not in band_types:
         msg = f"{total_number_of_bands} is not a valid number of bands"
+        logger.debug("get_band_type_count(total_number_of_bands=%s,type_of_band=%s): msg → %s", total_number_of_bands, type_of_band, msg)
         raise ValueError(msg)
     if type_of_band not in band_types[total_number_of_bands]:
         msg = f"{type_of_band} is not valid for a {total_number_of_bands} band resistor"
         raise ValueError(msg)
+    logger.debug("<<< Exiting get_band_type_count(total_number_of_bands=%s,type_of_band=%s)", total_number_of_bands, type_of_band)
     return band_types[total_number_of_bands][type_of_band]
 
 
@@ -277,12 +295,15 @@ def check_validity(number_of_bands: int, colors: list) -> bool:
     ValueError: Cyan is not a valid color
 
     """
+    logger.debug(">>> Entering check_validity(number_of_bands=%s,colors=%s)", number_of_bands, colors)
     if number_of_bands >= 3 and number_of_bands <= 6:
         if number_of_bands == len(colors):
             for color in colors:
                 if color not in valid_colors:
                     msg = f"{color} is not a valid color"
+                    logger.debug("check_validity(number_of_bands=%s,colors=%s): msg → %s", number_of_bands, colors, msg)
                     raise ValueError(msg)
+            logger.debug("<<< Exiting check_validity(number_of_bands=%s,colors=%s)", number_of_bands, colors)
             return True
         else:
             msg = f"Expecting {number_of_bands} colors, provided {len(colors)} colors"

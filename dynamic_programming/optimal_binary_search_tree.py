@@ -18,20 +18,29 @@
 # reducing search time in the most frequent instances.
 import sys
 from random import randint
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
     """Binary Search Tree Node"""
 
     def __init__(self, key, freq):
+        logger.debug(">>> Entering __init__(key=%s,freq=%s)", key, freq)
         self.key = key
+        logger.debug("__init__(key=%s,freq=%s): self.key → %s", key, freq, self.key)
+        logger.debug("__init__(self=%s,key=%s,freq=%s): self.key → %s", self, key, freq, self.key)
         self.freq = freq
+        logger.debug("__init__(self=%s,key=%s,freq=%s): self.freq → %s", self, key, freq, self.freq)
+        logger.debug("<<< Exiting __init__(key=%s,freq=%s)", key, freq)
 
     def __str__(self):
         """
         >>> str(Node(1, 2))
         'Node(key=1, freq=2)'
         """
+        logger.debug(">>> Entering __str__()")
+        logger.debug("<<< Exiting __str__()")
         return f"Node(key={self.key}, freq={self.freq})"
 
 
@@ -50,10 +59,13 @@ def print_binary_search_tree(root, key, i, j, parent, is_left):
     21 is the right child of key 10.
     17 is the left child of key 21.
     """
+    logger.debug(">>> Entering print_binary_search_tree(root=%s,key=%s,i=%s,j=%s,parent=%s,is_left=%s)", root, key, i, j, parent, is_left)
     if i > j or i < 0 or j > len(root) - 1:
+        logger.debug("<<< Exiting print_binary_search_tree(root=%s,key=%s,i=%s,j=%s,parent=%s,is_left=%s)", root, key, i, j, parent, is_left)
         return
 
     node = root[i][j]
+    logger.debug("print_binary_search_tree(root=%s,key=%s,i=%s,j=%s,parent=%s,is_left=%s): node → %s", root, key, i, j, parent, is_left, node)
     if parent == -1:  # root does not have a parent
         print(f"{key[node]} is the root of the binary search tree.")
     elif is_left:
@@ -90,23 +102,30 @@ def find_optimal_binary_search_tree(nodes):
     37 is the right child of key 25.
     42 is the right child of key 37.
     """
+    logger.debug(">>> Entering find_optimal_binary_search_tree(nodes=%s)", nodes)
     # Tree nodes must be sorted first, the code below sorts the keys in
     # increasing order and rearrange its frequencies accordingly.
     nodes.sort(key=lambda node: node.key)
 
     n = len(nodes)
+    logger.debug("find_optimal_binary_search_tree(nodes=%s): n → %s", nodes, n)
 
     keys = [nodes[i].key for i in range(n)]
+    logger.debug("find_optimal_binary_search_tree(nodes=%s): keys → %s", nodes, keys)
     freqs = [nodes[i].freq for i in range(n)]
+    logger.debug("find_optimal_binary_search_tree(nodes=%s): freqs → %s", nodes, freqs)
 
     # This 2D array stores the overall tree cost (which's as minimized as possible);
     # for a single key, cost is equal to frequency of the key.
     dp = [[freqs[i] if i == j else 0 for j in range(n)] for i in range(n)]
+    logger.debug("find_optimal_binary_search_tree(nodes=%s): dp → %s", nodes, dp)
     # sum[i][j] stores the sum of key frequencies between i and j inclusive in nodes
     # array
     total = [[freqs[i] if i == j else 0 for j in range(n)] for i in range(n)]
+    logger.debug("find_optimal_binary_search_tree(nodes=%s): total → %s", nodes, total)
     # stores tree roots that will be used later for constructing binary search tree
     root = [[i if i == j else 0 for j in range(n)] for i in range(n)]
+    logger.debug("find_optimal_binary_search_tree(nodes=%s): root → %s", nodes, root)
 
     for interval_length in range(2, n + 1):
         for i in range(n - interval_length + 1):
@@ -121,6 +140,7 @@ def find_optimal_binary_search_tree(nodes):
                 left = dp[i][r - 1] if r != i else 0  # optimal cost for left subtree
                 right = dp[r + 1][j] if r != j else 0  # optimal cost for right subtree
                 cost = left + total[i][j] + right
+                logger.debug("find_optimal_binary_search_tree(nodes=%s): cost → %s", nodes, cost)
 
                 if dp[i][j] > cost:
                     dp[i][j] = cost
@@ -132,12 +152,16 @@ def find_optimal_binary_search_tree(nodes):
 
     print(f"\nThe cost of optimal BST for given tree nodes is {dp[0][n - 1]}.")
     print_binary_search_tree(root, keys, 0, n - 1, -1, False)
+    logger.debug("<<< Exiting find_optimal_binary_search_tree(nodes=%s)", nodes)
 
 
 def main():
+    logger.debug(">>> Entering main()")
     # A sample binary search tree
     nodes = [Node(i, randint(1, 50)) for i in range(10, 0, -1)]
+    logger.debug("main(): nodes → %s", nodes)
     find_optimal_binary_search_tree(nodes)
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

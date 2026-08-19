@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Ford-Fulkerson Algorithm for Maximum Flow Problem
 * https://en.wikipedia.org/wiki/Ford%E2%80%93Fulkerson_algorithm
@@ -37,8 +39,11 @@ def breadth_first_search(graph: list, source: int, sink: int, parents: list) -> 
         ...
     IndexError: list index out of range
     """
+    logger.debug(">>> Entering breadth_first_search(graph=%s,source=%s,sink=%s,parents=%s)", graph, source, sink, parents)
     visited = [False] * len(graph)  # Mark all nodes as not visited
+    logger.debug("breadth_first_search(graph=%s,source=%s,sink=%s,parents=%s): visited → %s", graph, source, sink, parents, visited)
     queue = []  # breadth-first search queue
+    logger.debug("breadth_first_search(graph=%s,source=%s,sink=%s,parents=%s): queue → %s", graph, source, sink, parents, queue)
 
     # Source node
     queue.append(source)
@@ -46,12 +51,14 @@ def breadth_first_search(graph: list, source: int, sink: int, parents: list) -> 
 
     while queue:
         u = queue.pop(0)  # Pop the front node
+        logger.debug("breadth_first_search(graph=%s,source=%s,sink=%s,parents=%s): u → %s", graph, source, sink, parents, u)
         # Traverse all adjacent nodes of u
         for ind, node in enumerate(graph[u]):
             if visited[ind] is False and node > 0:
                 queue.append(ind)
                 visited[ind] = True
                 parents[ind] = u
+    logger.debug("<<< Exiting breadth_first_search(graph=%s,source=%s,sink=%s,parents=%s)", graph, source, sink, parents)
     return visited[sink]
 
 
@@ -80,13 +87,17 @@ def ford_fulkerson(graph: list, source: int, sink: int) -> int:
     >>> ford_fulkerson(test_graph, 0, 5)
     23
     """
+    logger.debug(">>> Entering ford_fulkerson(graph=%s,source=%s,sink=%s)", graph, source, sink)
     # This array is filled by breadth-first search and to store path
     parent = [-1] * (len(graph))
+    logger.debug("ford_fulkerson(graph=%s,source=%s,sink=%s): parent → %s", graph, source, sink, parent)
     max_flow = 0
+    logger.debug("ford_fulkerson(graph=%s,source=%s,sink=%s): max_flow → %s", graph, source, sink, max_flow)
 
     # While there is a path from source to sink
     while breadth_first_search(graph, source, sink, parent):
         path_flow = int(1e9)  # Infinite value
+        logger.debug("ford_fulkerson(graph=%s,source=%s,sink=%s): path_flow → %s", graph, source, sink, path_flow)
         s = sink
 
         while s != source:
@@ -103,6 +114,7 @@ def ford_fulkerson(graph: list, source: int, sink: int) -> int:
             graph[v][u] += path_flow
             v = parent[v]
 
+    logger.debug("<<< Exiting ford_fulkerson(graph=%s,source=%s,sink=%s)", graph, source, sink)
     return max_flow
 
 

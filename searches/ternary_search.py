@@ -8,6 +8,8 @@ Space Complexity : O(1)
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 # This is the precision for this function which can be altered.
 # It is recommended for users to keep this number greater than or equal to 10.
@@ -53,9 +55,11 @@ def lin_search(left: int, right: int, array: list[int], target: int) -> int:
     >>> lin_search(0, 3, [.1, .4 , -.1], -.1)
     2
     """
+    logger.debug(">>> Entering lin_search(left=%s,right=%s,array=%s,target=%s)", left, right, array, target)
     for i in range(left, right):
         if array[i] == target:
             return i
+    logger.debug("<<< Exiting lin_search(left=%s,right=%s,array=%s,target=%s)", left, right, array, target)
     return -1
 
 
@@ -83,15 +87,20 @@ def ite_ternary_search(array: list[int], target: int) -> int:
     >>> ite_ternary_search([.1, .4 , -.1], .1)
     0
     """
+    logger.debug(">>> Entering ite_ternary_search(array=%s,target=%s)", array, target)
 
     left = 0
+    logger.debug("ite_ternary_search(array=%s,target=%s): left → %s", array, target, left)
     right = len(array)
+    logger.debug("ite_ternary_search(array=%s,target=%s): right → %s", array, target, right)
     while left <= right:
         if right - left < precision:
             return lin_search(left, right, array, target)
 
         one_third = (left + right) // 3 + 1
+        logger.debug("ite_ternary_search(array=%s,target=%s): one_third → %s", array, target, one_third)
         two_third = 2 * (left + right) // 3 + 1
+        logger.debug("ite_ternary_search(array=%s,target=%s): two_third → %s", array, target, two_third)
 
         if array[one_third] == target:
             return one_third
@@ -106,6 +115,7 @@ def ite_ternary_search(array: list[int], target: int) -> int:
         else:
             left = one_third + 1
             right = two_third - 1
+    logger.debug("<<< Exiting ite_ternary_search(array=%s,target=%s)", array, target)
     return -1
 
 
@@ -134,11 +144,14 @@ def rec_ternary_search(left: int, right: int, array: list[int], target: int) -> 
     >>> rec_ternary_search(0, 3, [.1, .4 , -.1], .1)
     0
     """
+    logger.debug(">>> Entering rec_ternary_search(left=%s,right=%s,array=%s,target=%s)", left, right, array, target)
     if left < right:
         if right - left < precision:
             return lin_search(left, right, array, target)
         one_third = (left + right) // 3 + 1
+        logger.debug("rec_ternary_search(left=%s,right=%s,array=%s,target=%s): one_third → %s", left, right, array, target, one_third)
         two_third = 2 * (left + right) // 3 + 1
+        logger.debug("rec_ternary_search(left=%s,right=%s,array=%s,target=%s): two_third → %s", left, right, array, target, two_third)
 
         if array[one_third] == target:
             return one_third
@@ -152,6 +165,7 @@ def rec_ternary_search(left: int, right: int, array: list[int], target: int) -> 
         else:
             return rec_ternary_search(one_third + 1, two_third - 1, array, target)
     else:
+        logger.debug("<<< Exiting rec_ternary_search(left=%s,right=%s,array=%s,target=%s)", left, right, array, target)
         return -1
 
 

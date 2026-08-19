@@ -48,6 +48,8 @@ Reference: https://en.wikipedia.org/wiki/Triangular_number
 from __future__ import annotations
 
 from math import ceil, floor, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(target: int = 2000000) -> int:
@@ -61,6 +63,7 @@ def solution(target: int = 2000000) -> int:
     >>> solution(2000000000)
     86595
     """
+    logger.debug(">>> Entering solution(target=%s)", target)
     triangle_numbers: list[int] = [0]
     idx: int
 
@@ -84,16 +87,23 @@ def solution(target: int = 2000000) -> int:
 
     for idx_a, triangle_a in enumerate(triangle_numbers[1:], 1):
         b_estimate = (-1 + sqrt(1 + 8 * target / triangle_a)) / 2
+        logger.debug("solution(target=%s): b_estimate → %s", target, b_estimate)
         b_floor = floor(b_estimate)
+        logger.debug("solution(target=%s): b_floor → %s", target, b_floor)
         b_ceil = ceil(b_estimate)
+        logger.debug("solution(target=%s): b_ceil → %s", target, b_ceil)
         triangle_b_first_guess = triangle_numbers[b_floor]
+        logger.debug("solution(target=%s): triangle_b_first_guess → %s", target, triangle_b_first_guess)
         triangle_b_second_guess = triangle_numbers[b_ceil]
+        logger.debug("solution(target=%s): triangle_b_second_guess → %s", target, triangle_b_second_guess)
 
         if abs(target - triangle_b_first_guess * triangle_a) < abs(
             target - best_product
         ):
             best_product = triangle_b_first_guess * triangle_a
+            logger.debug("solution(target=%s): best_product → %s", target, best_product)
             area = idx_a * b_floor
+            logger.debug("solution(target=%s): area → %s", target, area)
 
         if abs(target - triangle_b_second_guess * triangle_a) < abs(
             target - best_product
@@ -101,6 +111,7 @@ def solution(target: int = 2000000) -> int:
             best_product = triangle_b_second_guess * triangle_a
             area = idx_a * b_ceil
 
+    logger.debug("<<< Exiting solution(target=%s)", target)
     return area
 
 

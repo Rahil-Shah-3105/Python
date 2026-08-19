@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def rotate_array(arr: list[int], steps: int) -> list[int]:
     """
     Rotates a list to the right by steps positions.
@@ -19,9 +21,12 @@ def rotate_array(arr: list[int], steps: int) -> list[int]:
     >>> rotate_array([], 3)
     []
     """
+    logger.debug(">>> Entering rotate_array(arr=%s,steps=%s)", arr, steps)
 
     n = len(arr)
+    logger.debug("rotate_array(arr=%s,steps=%s): n → %s", arr, steps, n)
     if n == 0:
+        logger.debug("<<< Exiting rotate_array(arr=%s,steps=%s)", arr, steps)
         return arr
 
     steps = steps % n
@@ -54,11 +59,13 @@ def rotate_array(arr: list[int], steps: int) -> list[int]:
         >>> example
         [3, 2, 5, 4, 1]
         """
+        logger.debug(">>> Entering reverse(start=%s,end=%s)", start, end)
 
         while start < end:
             arr[start], arr[end] = arr[end], arr[start]
             start += 1
             end -= 1
+            logger.debug("<<< Exiting reverse(start=%s,end=%s)", start, end)
 
     reverse(0, n - 1)
     reverse(0, steps - 1)

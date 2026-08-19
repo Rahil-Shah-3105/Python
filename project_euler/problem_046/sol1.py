@@ -20,6 +20,8 @@ prime and twice a square?
 from __future__ import annotations
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -46,6 +48,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(67483)
     False
     """
+    logger.debug(">>> Entering is_prime(number=%s)", number)
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -58,6 +61,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.debug("<<< Exiting is_prime(number=%s)", number)
     return True
 
 
@@ -86,16 +90,19 @@ def compute_nums(n: int) -> list[int]:
     ValueError: n must be an integer
 
     """
+    logger.debug(">>> Entering compute_nums(n=%s)", n)
     if not isinstance(n, int):
         raise ValueError("n must be an integer")
     if n <= 0:
         raise ValueError("n must be >= 0")
 
     list_nums = []
+    logger.debug("compute_nums(n=%s): list_nums → %s", n, list_nums)
     for num in range(len(odd_composites)):
         i = 0
         while 2 * i * i <= odd_composites[num]:
             rem = odd_composites[num] - 2 * i * i
+            logger.debug("compute_nums(n=%s): rem → %s", n, rem)
             if is_prime(rem):
                 break
             i += 1
@@ -104,11 +111,14 @@ def compute_nums(n: int) -> list[int]:
             if len(list_nums) == n:
                 return list_nums
 
+    logger.debug("<<< Exiting compute_nums(n=%s)", n)
     return []
 
 
 def solution() -> int:
     """Return the solution to the problem"""
+    logger.debug(">>> Entering solution()")
+    logger.debug("<<< Exiting solution()")
     return compute_nums(1)[0]
 
 

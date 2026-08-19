@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 9: https://projecteuler.net/problem=9
 
@@ -27,7 +29,9 @@ def solution() -> int:
     >>> solution()
     31875000
     """
+    logger.debug(">>> Entering solution()")
 
+    logger.debug("<<< Exiting solution()")
     return next(
         iter(
             [

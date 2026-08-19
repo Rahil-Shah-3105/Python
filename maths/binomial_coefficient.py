@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def binomial_coefficient(n: int, r: int) -> int:
     """
     Find binomial coefficient using Pascal's triangle.
@@ -39,6 +41,7 @@ def binomial_coefficient(n: int, r: int) -> int:
         ...
     TypeError: 'float' object cannot be interpreted as an integer
     """
+    logger.debug(">>> Entering binomial_coefficient(n=%s,r=%s)", n, r)
     if n < 0 or r < 0:
         raise ValueError("n and r must be non-negative integers")
     if 0 in (n, r):
@@ -52,6 +55,7 @@ def binomial_coefficient(n: int, r: int) -> int:
         while j > 0:
             c[j] += c[j - 1]
             j -= 1
+    logger.debug("<<< Exiting binomial_coefficient(n=%s,r=%s)", n, r)
     return c[r]
 
 

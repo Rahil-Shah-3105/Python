@@ -6,6 +6,8 @@ from __future__ import annotations
 
 import time
 from math import sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 # 1 for manhattan, 0 for euclidean
 HEURISTIC = 0
@@ -59,19 +61,24 @@ class Node:
         self.parent = parent
         self.h_cost = self.calculate_heuristic()
         self.f_cost = self.g_cost + self.h_cost
+        logger.debug("__init__(self=%s,start=%s,goal=%s): self.reached → %s", self, start, goal, self.reached)
 
     def calculate_heuristic(self) -> float:
         """
         Heuristic for the A*
         """
+        logger.debug(">>> Entering calculate_heuristic()")
         dy = self.pos_x - self.goal_x
         dx = self.pos_y - self.goal_y
         if HEURISTIC == 1:
             return abs(dx) + abs(dy)
         else:
+            logger.debug("<<< Exiting calculate_heuristic()")
             return sqrt(dy**2 + dx**2)
 
     def __lt__(self, other: Node) -> bool:
+        logger.debug(">>> Entering __lt__(other=%s)", other)
+        logger.debug("<<< Exiting __lt__(other=%s)", other)
         return self.f_cost < other.f_cost
 
 
@@ -99,6 +106,7 @@ class AStar:
         self.closed_nodes: list[Node] = []
 
         self.reached = False
+        logger.debug("__init__(self=%s,start=%s,goal=%s): self.reached → %s", self, start, goal, self.reached)
 
     def search(self) -> list[TPosition]:
         while self.open_nodes:
@@ -127,16 +135,28 @@ class AStar:
                     else:
                         self.open_nodes.append(better_node)
 
+        logger.debug(">>> Entering search()")
+        logger.debug("search(): current_bwd_node → %s", current_bwd_node)
+        logger.debug("search(): current_fwd_node → %s", current_fwd_node)
+        logger.debug("search(self=%s): current_fwd_node → %s", self, current_fwd_node)
+        logger.debug("search(self=%s): current_bwd_node → %s", self, current_bwd_node)
+        logger.debug("search(self=%s): successors → %s", self, successors)
+        logger.debug("search(self=%s): better_node → %s", self, better_node)
+        logger.debug("<<< Exiting search()")
         return [self.start.pos]
 
     def get_successors(self, parent: Node) -> list[Node]:
         """
         Returns a list of successors (both in the grid and free spaces)
         """
+        logger.debug(">>> Entering get_successors(parent=%s)", parent)
         successors = []
+        logger.debug("get_successors(self=%s,parent=%s): successors → %s", self, parent, successors)
         for action in delta:
             pos_x = parent.pos_x + action[1]
+            logger.debug("get_successors(self=%s,parent=%s): pos_x → %s", self, parent, pos_x)
             pos_y = parent.pos_y + action[0]
+            logger.debug("get_successors(self=%s,parent=%s): pos_y → %s", self, parent, pos_y)
             if not (0 <= pos_x <= len(grid[0]) - 1 and 0 <= pos_y <= len(grid) - 1):
                 continue
 
@@ -153,18 +173,23 @@ class AStar:
                     parent,
                 )
             )
+        logger.debug("<<< Exiting get_successors(parent=%s)", parent)
         return successors
 
     def retrace_path(self, node: Node | None) -> list[TPosition]:
         """
         Retrace the path from parents to parents until start node
         """
+        logger.debug(">>> Entering retrace_path(node=%s)", node)
         current_node = node
+        logger.debug("retrace_path(self=%s,node=%s): current_node → %s", self, node, current_node)
         path = []
+        logger.debug("retrace_path(self=%s,node=%s): path → %s", self, node, path)
         while current_node is not None:
             path.append((current_node.pos_y, current_node.pos_x))
             current_node = current_node.parent
         path.reverse()
+        logger.debug("<<< Exiting retrace_path(node=%s)", node)
         return path
 
 

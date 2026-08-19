@@ -10,6 +10,8 @@ import doctest
 import numpy as np
 from numpy import ndarray
 from sklearn.datasets import load_iris
+import logging
+logger = logging.getLogger(__name__)
 
 
 def collect_dataset() -> tuple[ndarray, ndarray]:
@@ -25,7 +27,10 @@ def collect_dataset() -> tuple[ndarray, ndarray]:
     >>> targets.shape
     (150,)
     """
+    logger.debug(">>> Entering collect_dataset()")
     iris_dataset = load_iris()
+    logger.debug("collect_dataset(): iris_dataset → %s", iris_dataset)
+    logger.debug("<<< Exiting collect_dataset()")
     return np.array(iris_dataset.data), np.array(iris_dataset.target)
 
 
@@ -45,16 +50,21 @@ def compute_pairwise_affinities(data_matrix: ndarray, sigma: float = 1.0) -> nda
     >>> float(round(probabilities[0, 1], 3))
     0.25
     """
+    logger.debug(">>> Entering compute_pairwise_affinities(data_matrix=%s,sigma=%s)", data_matrix, sigma)
     n_samples = data_matrix.shape[0]
+    logger.debug("compute_pairwise_affinities(data_matrix=%s,sigma=%s): n_samples → %s", data_matrix, sigma, n_samples)
     squared_sum = np.sum(np.square(data_matrix), axis=1)
+    logger.debug("compute_pairwise_affinities(data_matrix=%s,sigma=%s): squared_sum → %s", data_matrix, sigma, squared_sum)
     squared_distance = np.add(
         np.add(-2 * np.dot(data_matrix, data_matrix.T), squared_sum).T, squared_sum
     )
 
     affinity_matrix = np.exp(-squared_distance / (2 * sigma**2))
+    logger.debug("compute_pairwise_affinities(data_matrix=%s,sigma=%s): affinity_matrix → %s", data_matrix, sigma, affinity_matrix)
     np.fill_diagonal(affinity_matrix, 0)
 
     affinity_matrix /= np.sum(affinity_matrix)
+    logger.debug("<<< Exiting compute_pairwise_affinities(data_matrix=%s,sigma=%s)", data_matrix, sigma)
     return (affinity_matrix + affinity_matrix.T) / (2 * n_samples)
 
 
@@ -73,7 +83,9 @@ def compute_low_dim_affinities(embedding_matrix: ndarray) -> tuple[ndarray, ndar
     >>> q_matrix.shape
     (2, 2)
     """
+    logger.debug(">>> Entering compute_low_dim_affinities(embedding_matrix=%s)", embedding_matrix)
     squared_sum = np.sum(np.square(embedding_matrix), axis=1)
+    logger.debug("compute_low_dim_affinities(embedding_matrix=%s): squared_sum → %s", embedding_matrix, squared_sum)
     numerator_matrix = 1 / (
         1
         + np.add(
@@ -84,6 +96,8 @@ def compute_low_dim_affinities(embedding_matrix: ndarray) -> tuple[ndarray, ndar
     np.fill_diagonal(numerator_matrix, 0)
 
     q_matrix = numerator_matrix / np.sum(numerator_matrix)
+    logger.debug("compute_low_dim_affinities(embedding_matrix=%s): q_matrix → %s", embedding_matrix, q_matrix)
+    logger.debug("<<< Exiting compute_low_dim_affinities(embedding_matrix=%s)", embedding_matrix)
     return q_matrix, numerator_matrix
 
 

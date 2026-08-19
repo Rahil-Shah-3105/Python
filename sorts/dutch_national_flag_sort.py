@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 A pure implementation of Dutch national flag (DNF) sort algorithm in Python.
 Dutch National Flag algorithm is an algorithm originally designed by Edsger Dijkstra.
@@ -65,13 +67,17 @@ def dutch_national_flag_sort(sequence: list) -> list:
       ...
     ValueError: The elements inside the sequence must contains only (0, 1, 2) values
     """
+    logger.debug(">>> Entering dutch_national_flag_sort(sequence=%s)", sequence)
     if not sequence:
         return []
     if len(sequence) == 1:
         return list(sequence)
     low = 0
+    logger.debug("dutch_national_flag_sort(sequence=%s): low → %s", sequence, low)
     high = len(sequence) - 1
+    logger.debug("dutch_national_flag_sort(sequence=%s): high → %s", sequence, high)
     mid = 0
+    logger.debug("dutch_national_flag_sort(sequence=%s): mid → %s", sequence, mid)
     while mid <= high:
         if sequence[mid] == colors[0]:
             sequence[low], sequence[mid] = sequence[mid], sequence[low]
@@ -84,7 +90,9 @@ def dutch_national_flag_sort(sequence: list) -> list:
             high -= 1
         else:
             msg = f"The elements inside the sequence must contains only {colors} values"
+            logger.debug("dutch_national_flag_sort(sequence=%s): msg → %s", sequence, msg)
             raise ValueError(msg)
+    logger.debug("<<< Exiting dutch_national_flag_sort(sequence=%s)", sequence)
     return sequence
 
 

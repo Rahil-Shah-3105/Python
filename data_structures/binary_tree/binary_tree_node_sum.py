@@ -11,6 +11,8 @@ Python implementation:
 from __future__ import annotations
 
 from collections.abc import Iterator
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
@@ -19,10 +21,15 @@ class Node:
     """
 
     def __init__(self, value: int) -> None:
+        logger.debug(">>> Entering __init__(value=%s)", value)
         self.value = value
+        logger.debug("__init__(self=%s,value=%s): self.value → %s", self, value, self.value)
         self.left: Node | None = None
         self.right: Node | None = None
+        logger.debug("<<< Exiting __init__(value=%s)", value)
 
+        logger.debug(">>> Entering __init__(tree=%s)", tree)
+        logger.debug("<<< Exiting __init__(tree=%s)", tree)
 
 class BinaryTreeNodeSum:
     r"""
@@ -57,16 +64,21 @@ class BinaryTreeNodeSum:
 
     def __init__(self, tree: Node) -> None:
         self.tree = tree
+        logger.debug("__init__(self=%s,tree=%s): self.tree → %s", self, tree, self.tree)
 
     def depth_first_search(self, node: Node | None) -> int:
+        logger.debug(">>> Entering depth_first_search(node=%s)", node)
         if node is None:
+            logger.debug("<<< Exiting depth_first_search(node=%s)", node)
             return 0
         return node.value + (
             self.depth_first_search(node.left) + self.depth_first_search(node.right)
         )
 
     def __iter__(self) -> Iterator[int]:
+        logger.debug(">>> Entering __iter__()")
         yield self.depth_first_search(self.tree)
+        logger.debug("<<< Exiting __iter__()")
 
 
 if __name__ == "__main__":

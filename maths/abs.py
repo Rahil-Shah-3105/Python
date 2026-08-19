@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """Absolute Value."""
 
 
@@ -12,6 +14,8 @@ def abs_val(num: float) -> float:
     >>> abs_val(0)
     0
     """
+    logger.debug(">>> Entering abs_val(num=%s)", num)
+    logger.debug("<<< Exiting abs_val(num=%s)", num)
     return -num if num < 0 else num
 
 
@@ -26,12 +30,14 @@ def abs_min(x: list[int]) -> int:
         ...
     ValueError: abs_min() arg is an empty sequence
     """
+    logger.debug(">>> Entering abs_min(x=%s)", x)
     if len(x) == 0:
         raise ValueError("abs_min() arg is an empty sequence")
     j = x[0]
     for i in x:
         if abs_val(i) < abs_val(j):
             j = i
+    logger.debug("<<< Exiting abs_min(x=%s)", x)
     return j
 
 
@@ -46,12 +52,14 @@ def abs_max(x: list[int]) -> int:
         ...
     ValueError: abs_max() arg is an empty sequence
     """
+    logger.debug(">>> Entering abs_max(x=%s)", x)
     if len(x) == 0:
         raise ValueError("abs_max() arg is an empty sequence")
     j = x[0]
     for i in x:
         if abs(i) > abs(j):
             j = i
+    logger.debug("<<< Exiting abs_max(x=%s)", x)
     return j
 
 
@@ -66,8 +74,10 @@ def abs_max_sort(x: list[int]) -> int:
         ...
     ValueError: abs_max_sort() arg is an empty sequence
     """
+    logger.debug(">>> Entering abs_max_sort(x=%s)", x)
     if len(x) == 0:
         raise ValueError("abs_max_sort() arg is an empty sequence")
+    logger.debug("<<< Exiting abs_max_sort(x=%s)", x)
     return sorted(x, key=abs)[-1]
 
 
@@ -75,6 +85,7 @@ def test_abs_val():
     """
     >>> test_abs_val()
     """
+    logger.debug(">>> Entering test_abs_val()")
     assert abs_val(0) == 0
     assert abs_val(34) == 34
     assert abs_val(-100000000000) == 100000000000
@@ -83,6 +94,7 @@ def test_abs_val():
     assert abs_max(a) == -11
     assert abs_max_sort(a) == -11
     assert abs_min(a) == -1
+    logger.debug("<<< Exiting test_abs_val()")
 
 
 if __name__ == "__main__":

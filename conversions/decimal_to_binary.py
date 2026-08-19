@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """Convert a Decimal Number to a Binary Number."""
 
 
@@ -26,6 +28,7 @@ def decimal_to_binary_iterative(num: int) -> str:
         ...
     TypeError: 'str' object cannot be interpreted as an integer
     """
+    logger.debug(">>> Entering decimal_to_binary_iterative(num=%s)", num)
 
     if isinstance(num, float):
         raise TypeError("'float' object cannot be interpreted as an integer")
@@ -36,6 +39,7 @@ def decimal_to_binary_iterative(num: int) -> str:
         return "0b0"
 
     negative = False
+    logger.debug("decimal_to_binary_iterative(num=%s): negative → %s", num, negative)
 
     if num < 0:
         negative = True
@@ -49,6 +53,7 @@ def decimal_to_binary_iterative(num: int) -> str:
     if negative:
         return "-0b" + "".join(str(e) for e in binary)
 
+    logger.debug("<<< Exiting decimal_to_binary_iterative(num=%s)", num)
     return "0b" + "".join(str(e) for e in binary)
 
 
@@ -64,10 +69,13 @@ def decimal_to_binary_recursive_helper(decimal: int) -> str:
         ...
     ValueError: invalid literal for int() with base 10: 'number'
     """
+    logger.debug(">>> Entering decimal_to_binary_recursive_helper(decimal=%s)", decimal)
     decimal = int(decimal)
+    logger.debug("decimal_to_binary_recursive_helper(decimal=%s): decimal → %s", decimal, decimal)
     if decimal in (0, 1):  # Exit cases for the recursion
         return str(decimal)
     div, mod = divmod(decimal, 2)
+    logger.debug("<<< Exiting decimal_to_binary_recursive_helper(decimal=%s)", decimal)
     return decimal_to_binary_recursive_helper(div) + str(mod)
 
 
@@ -91,13 +99,17 @@ def decimal_to_binary_recursive(number: str) -> str:
         ...
     ValueError: Input value is not an integer
     """
+    logger.debug(">>> Entering decimal_to_binary_recursive(number=%s)", number)
     number = str(number).strip()
+    logger.debug("decimal_to_binary_recursive(number=%s): number → %s", number, number)
     if not number:
         raise ValueError("No input value was provided")
     negative = "-" if number.startswith("-") else ""
+    logger.debug("decimal_to_binary_recursive(number=%s): negative → %s", number, negative)
     number = number.lstrip("-")
     if not number.isnumeric():
         raise ValueError("Input value is not an integer")
+    logger.debug("<<< Exiting decimal_to_binary_recursive(number=%s)", number)
     return f"{negative}0b{decimal_to_binary_recursive_helper(int(number))}"
 
 

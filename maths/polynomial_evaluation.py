@@ -1,4 +1,6 @@
 from collections.abc import Sequence
+import logging
+logger = logging.getLogger(__name__)
 
 
 def evaluate_poly(poly: Sequence[float], x: float) -> float:
@@ -12,6 +14,8 @@ def evaluate_poly(poly: Sequence[float], x: float) -> float:
     >>> evaluate_poly((0.0, 0.0, 5.0, 9.3, 7.0), 10.0)
     79800.0
     """
+    logger.debug(">>> Entering evaluate_poly(poly=%s,x=%s)", poly, x)
+    logger.debug("<<< Exiting evaluate_poly(poly=%s,x=%s)", poly, x)
     return sum(c * (x**i) for i, c in enumerate(poly))
 
 
@@ -33,9 +37,12 @@ def horner(poly: Sequence[float], x: float) -> float:
     >>> horner((0.0, 0.0, 5.0, 9.3, 7.0), 10.0)
     79800.0
     """
+    logger.debug(">>> Entering horner(poly=%s,x=%s)", poly, x)
     result = 0.0
+    logger.debug("horner(poly=%s,x=%s): result → %s", poly, x, result)
     for coeff in reversed(poly):
         result = result * x + coeff
+    logger.debug("<<< Exiting horner(poly=%s,x=%s)", poly, x)
     return result
 
 

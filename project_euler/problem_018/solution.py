@@ -29,6 +29,8 @@ Find the maximum total from top to bottom of the triangle below:
 """
 
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution():
@@ -39,19 +41,27 @@ def solution():
     >>> solution()
     1074
     """
+    logger.debug(">>> Entering solution()")
     script_dir = os.path.dirname(os.path.realpath(__file__))
+    logger.debug("solution(): script_dir → %s", script_dir)
     triangle = os.path.join(script_dir, "triangle.txt")
+    logger.debug("solution(): triangle → %s", triangle)
 
     with open(triangle) as f:
+        logger.error("Exception in solution()", exc_info=True)
         triangle = f.readlines()
 
     a = [[int(y) for y in x.rstrip("\r\n").split(" ")] for x in triangle]
+    logger.debug("solution(): a → %s", a)
 
     for i in range(1, len(a)):
         for j in range(len(a[i])):
             number1 = a[i - 1][j] if j != len(a[i - 1]) else 0
+            logger.debug("solution(): number1 → %s", number1)
             number2 = a[i - 1][j - 1] if j > 0 else 0
+            logger.debug("solution(): number2 → %s", number2)
             a[i][j] += max(number1, number2)
+    logger.debug("<<< Exiting solution()")
     return max(a[-1])
 
 

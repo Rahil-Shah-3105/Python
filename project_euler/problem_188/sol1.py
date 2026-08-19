@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 188: https://projecteuler.net/problem=188
 
@@ -32,6 +34,7 @@ def _modexpt(base: int, exponent: int, modulo_value: int) -> int:
     >>> _modexpt(13, 65535, 7)
     6
     """
+    logger.debug(">>> Entering _modexpt(base=%s,exponent=%s,modulo_value=%s)", base, exponent, modulo_value)
 
     if exponent == 1:
         return base

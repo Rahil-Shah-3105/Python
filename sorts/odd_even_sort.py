@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Odd even sort implementation.
 
@@ -25,7 +27,10 @@ def odd_even_sort(input_list: list) -> list:
     >>> odd_even_sort([1 ,2 ,3 ,4])
     [1, 2, 3, 4]
     """
+    logger.debug(">>> Entering odd_even_sort(input_list=%s)", input_list)
     is_sorted = False
+    logger.debug("odd_even_sort(input_list=%s): is_sorted → %s", input_list, is_sorted)
+    logger.error("Exception in odd_even_sort(input_list=%s)", input_list, exc_info=True)
     while is_sorted is False:  # Until all the indices are traversed keep looping
         is_sorted = True
         for i in range(0, len(input_list) - 1, 2):  # iterating over all even indices
@@ -39,6 +44,7 @@ def odd_even_sort(input_list: list) -> list:
                 input_list[i], input_list[i + 1] = input_list[i + 1], input_list[i]
                 # swapping if elements not in order
                 is_sorted = False
+    logger.debug("<<< Exiting odd_even_sort(input_list=%s)", input_list)
     return input_list
 
 

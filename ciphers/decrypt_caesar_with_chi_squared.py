@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def decrypt_caesar_with_chi_squared(
@@ -232,6 +234,8 @@ def decrypt_caesar_with_chi_squared(
     # Get the most likely cipher by finding the cipher with the smallest chi squared
     # statistic
     def chi_squared_statistic_values_sorting_key(key: int) -> tuple[float, str]:
+        logger.debug(">>> Entering chi_squared_statistic_values_sorting_key(key=%s)", key)
+        logger.debug("<<< Exiting chi_squared_statistic_values_sorting_key(key=%s)", key)
         return chi_squared_statistic_values[key]
 
     most_likely_cipher: int = min(

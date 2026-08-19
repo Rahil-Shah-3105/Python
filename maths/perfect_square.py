@@ -1,4 +1,6 @@
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def perfect_square(num: int) -> bool:
@@ -18,6 +20,8 @@ def perfect_square(num: int) -> bool:
     >>> perfect_square(10)
     False
     """
+    logger.debug(">>> Entering perfect_square(num=%s)", num)
+    logger.debug("<<< Exiting perfect_square(num=%s)", num)
     return math.sqrt(num) * math.sqrt(num) == num
 
 
@@ -54,16 +58,21 @@ def perfect_square_binary_search(n: int) -> bool:
         ...
     TypeError: '<=' not supported between instances of 'int' and 'list'
     """
+    logger.debug(">>> Entering perfect_square_binary_search(n=%s)", n)
     left = 0
+    logger.debug("perfect_square_binary_search(n=%s): left → %s", n, left)
     right = n
+    logger.debug("perfect_square_binary_search(n=%s): right → %s", n, right)
     while left <= right:
         mid = (left + right) // 2
+        logger.debug("perfect_square_binary_search(n=%s): mid → %s", n, mid)
         if mid**2 == n:
             return True
         elif mid**2 > n:
             right = mid - 1
         else:
             left = mid + 1
+    logger.debug("<<< Exiting perfect_square_binary_search(n=%s)", n)
     return False
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Given an array-like data structure A[1..n], how many pairs
 (i, j) for all 1 <= i < j <= n such that A[i] > A[j]? These pairs are
@@ -28,15 +30,19 @@ def count_inversions_bf(arr):
      >>> count_inversions_bf([])
      0
     """
+    logger.debug(">>> Entering count_inversions_bf(arr=%s)", arr)
 
     num_inversions = 0
+    logger.debug("count_inversions_bf(arr=%s): num_inversions → %s", arr, num_inversions)
     n = len(arr)
+    logger.debug("count_inversions_bf(arr=%s): n → %s", arr, n)
 
     for i in range(n - 1):
         for j in range(i + 1, n):
             if arr[i] > arr[j]:
                 num_inversions += 1
 
+    logger.debug("<<< Exiting count_inversions_bf(arr=%s)", arr)
     return num_inversions
 
 
@@ -60,9 +66,11 @@ def count_inversions_recursive(arr):
     >>> count_inversions_recursive([])
     ([], 0)
     """
+    logger.debug(">>> Entering count_inversions_recursive(arr=%s)", arr)
     if len(arr) <= 1:
         return arr, 0
     mid = len(arr) // 2
+    logger.debug("count_inversions_recursive(arr=%s): mid → %s", arr, mid)
     p = arr[0:mid]
     q = arr[mid:]
 
@@ -71,6 +79,8 @@ def count_inversions_recursive(arr):
     c, cross_inversions = _count_cross_inversions(a, b)
 
     num_inversions = inversion_p + inversions_q + cross_inversions
+    logger.debug("count_inversions_recursive(arr=%s): num_inversions → %s", arr, num_inversions)
+    logger.debug("<<< Exiting count_inversions_recursive(arr=%s)", arr)
     return c, num_inversions
 
 
@@ -95,6 +105,7 @@ def _count_cross_inversions(p, q):
     >>> _count_cross_inversions([1, 2, 3], [3, 4, 5])
     ([1, 2, 3, 3, 4, 5], 0)
     """
+    logger.debug(">>> Entering _count_cross_inversions(p=%s,q=%s)", p, q)
 
     r = []
     i = j = num_inversion = 0
@@ -115,16 +126,20 @@ def _count_cross_inversions(p, q):
     else:
         r.extend(q[j:])
 
+    logger.debug("<<< Exiting _count_cross_inversions(p=%s,q=%s)", p, q)
     return r, num_inversion
 
 
 def main():
+    logger.debug(">>> Entering main()")
     arr_1 = [10, 2, 1, 5, 5, 2, 11]
+    logger.debug("main(): arr_1 → %s", arr_1)
 
     # this arr has 8 inversions:
     # (10, 2), (10, 1), (10, 5), (10, 5), (10, 2), (2, 1), (5, 2), (5, 2)
 
     num_inversions_bf = count_inversions_bf(arr_1)
+    logger.debug("main(): num_inversions_bf → %s", num_inversions_bf)
     _, num_inversions_recursive = count_inversions_recursive(arr_1)
 
     assert num_inversions_bf == num_inversions_recursive == 8
@@ -147,6 +162,7 @@ def main():
 
     assert num_inversions_bf == num_inversions_recursive == 0
     print("number of inversions = ", num_inversions_bf)
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

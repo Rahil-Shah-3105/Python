@@ -8,6 +8,8 @@ Find the volume of various shapes.
 from __future__ import annotations
 
 from math import pi, pow  # noqa: A004
+import logging
+logger = logging.getLogger(__name__)
 
 
 def vol_cube(side_length: float) -> float:
@@ -27,8 +29,10 @@ def vol_cube(side_length: float) -> float:
         ...
     ValueError: vol_cube() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_cube(side_length=%s)", side_length)
     if side_length < 0:
         raise ValueError("vol_cube() only accepts non-negative values")
+    logger.debug("<<< Exiting vol_cube(side_length=%s)", side_length)
     return pow(side_length, 3)
 
 
@@ -51,9 +55,11 @@ def vol_spherical_cap(height: float, radius: float) -> float:
         ...
     ValueError: vol_spherical_cap() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_spherical_cap(height=%s,radius=%s)", height, radius)
     if height < 0 or radius < 0:
         raise ValueError("vol_spherical_cap() only accepts non-negative values")
     # Volume is 1/3 pi * height squared * (3 * radius - height)
+    logger.debug("<<< Exiting vol_spherical_cap(height=%s,radius=%s)", height, radius)
     return 1 / 3 * pi * pow(height, 2) * (3 * radius - height)
 
 
@@ -197,8 +203,10 @@ def vol_cuboid(width: float, height: float, length: float) -> float:
         ...
     ValueError: vol_cuboid() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_cuboid(width=%s,height=%s,length=%s)", width, height, length)
     if width < 0 or height < 0 or length < 0:
         raise ValueError("vol_cuboid() only accepts non-negative values")
+    logger.debug("<<< Exiting vol_cuboid(width=%s,height=%s,length=%s)", width, height, length)
     return float(width * height * length)
 
 
@@ -226,8 +234,10 @@ def vol_cone(area_of_base: float, height: float) -> float:
         ...
     ValueError: vol_cone() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_cone(area_of_base=%s,height=%s)", area_of_base, height)
     if height < 0 or area_of_base < 0:
         raise ValueError("vol_cone() only accepts non-negative values")
+    logger.debug("<<< Exiting vol_cone(area_of_base=%s,height=%s)", area_of_base, height)
     return area_of_base * height / 3.0
 
 
@@ -253,8 +263,10 @@ def vol_right_circ_cone(radius: float, height: float) -> float:
         ...
     ValueError: vol_right_circ_cone() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_right_circ_cone(radius=%s,height=%s)", radius, height)
     if height < 0 or radius < 0:
         raise ValueError("vol_right_circ_cone() only accepts non-negative values")
+    logger.debug("<<< Exiting vol_right_circ_cone(radius=%s,height=%s)", radius, height)
     return pi * pow(radius, 2) * height / 3.0
 
 
@@ -282,8 +294,10 @@ def vol_prism(area_of_base: float, height: float) -> float:
         ...
     ValueError: vol_prism() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_prism(area_of_base=%s,height=%s)", area_of_base, height)
     if height < 0 or area_of_base < 0:
         raise ValueError("vol_prism() only accepts non-negative values")
+    logger.debug("<<< Exiting vol_prism(area_of_base=%s,height=%s)", area_of_base, height)
     return float(area_of_base * height)
 
 
@@ -311,8 +325,10 @@ def vol_pyramid(area_of_base: float, height: float) -> float:
         ...
     ValueError: vol_pyramid() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_pyramid(area_of_base=%s,height=%s)", area_of_base, height)
     if height < 0 or area_of_base < 0:
         raise ValueError("vol_pyramid() only accepts non-negative values")
+    logger.debug("<<< Exiting vol_pyramid(area_of_base=%s,height=%s)", area_of_base, height)
     return area_of_base * height / 3.0
 
 
@@ -336,9 +352,11 @@ def vol_sphere(radius: float) -> float:
         ...
     ValueError: vol_sphere() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_sphere(radius=%s)", radius)
     if radius < 0:
         raise ValueError("vol_sphere() only accepts non-negative values")
     # Volume is 4/3 * pi * radius cubed
+    logger.debug("<<< Exiting vol_sphere(radius=%s)", radius)
     return 4 / 3 * pi * pow(radius, 3)
 
 
@@ -363,9 +381,11 @@ def vol_hemisphere(radius: float) -> float:
         ...
     ValueError: vol_hemisphere() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_hemisphere(radius=%s)", radius)
     if radius < 0:
         raise ValueError("vol_hemisphere() only accepts non-negative values")
     # Volume is radius cubed * pi * 2/3
+    logger.debug("<<< Exiting vol_hemisphere(radius=%s)", radius)
     return pow(radius, 3) * pi * 2 / 3
 
 
@@ -393,9 +413,11 @@ def vol_circular_cylinder(radius: float, height: float) -> float:
         ...
     ValueError: vol_circular_cylinder() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_circular_cylinder(radius=%s,height=%s)", radius, height)
     if height < 0 or radius < 0:
         raise ValueError("vol_circular_cylinder() only accepts non-negative values")
     # Volume is radius squared * height * pi
+    logger.debug("<<< Exiting vol_circular_cylinder(radius=%s,height=%s)", radius, height)
     return pow(radius, 2) * height * pi
 
 
@@ -466,10 +488,12 @@ def vol_conical_frustum(height: float, radius_1: float, radius_2: float) -> floa
         ...
     ValueError: vol_conical_frustum() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_conical_frustum(height=%s,radius_1=%s,radius_2=%s)", height, radius_1, radius_2)
     # Volume is 1/3 * pi * height *
     #           (radius_1 squared + radius_2 squared + radius_1 * radius_2)
     if radius_1 < 0 or radius_2 < 0 or height < 0:
         raise ValueError("vol_conical_frustum() only accepts non-negative values")
+        logger.debug("<<< Exiting vol_conical_frustum(height=%s,radius_1=%s,radius_2=%s)", height, radius_1, radius_2)
     return (
         1
         / 3
@@ -505,8 +529,10 @@ def vol_torus(torus_radius: float, tube_radius: float) -> float:
         ...
     ValueError: vol_torus() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_torus(torus_radius=%s,tube_radius=%s)", torus_radius, tube_radius)
     if torus_radius < 0 or tube_radius < 0:
         raise ValueError("vol_torus() only accepts non-negative values")
+    logger.debug("<<< Exiting vol_torus(torus_radius=%s,tube_radius=%s)", torus_radius, tube_radius)
     return 2 * pow(pi, 2) * torus_radius * pow(tube_radius, 2)
 
 
@@ -535,13 +561,16 @@ def vol_icosahedron(tri_side: float) -> float:
         ...
     ValueError: vol_icosahedron() only accepts non-negative values
     """
+    logger.debug(">>> Entering vol_icosahedron(tri_side=%s)", tri_side)
     if tri_side < 0:
         raise ValueError("vol_icosahedron() only accepts non-negative values")
+    logger.debug("<<< Exiting vol_icosahedron(tri_side=%s)", tri_side)
     return tri_side**3 * (3 + 5**0.5) * 5 / 12
 
 
 def main():
     """Print the Results of Various Volume Calculations."""
+    logger.debug(">>> Entering main()")
     print("Volumes:")
     print(f"Cube: {vol_cube(2) = }")  # = 8
     print(f"Cuboid: {vol_cuboid(2, 2, 2) = }")  # = 8
@@ -561,6 +590,7 @@ def main():
         f"Hollow Circular Cylinder: {vol_hollow_circular_cylinder(1, 2, 3) = }"
     )  # ~= 28.3
     print(f"Icosahedron: {vol_icosahedron(2.5) = }")  # ~=34.09
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

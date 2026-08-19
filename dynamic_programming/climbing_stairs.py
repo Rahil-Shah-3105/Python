@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 #!/usr/bin/env python3
 
 
@@ -25,6 +27,7 @@ def climb_stairs(number_of_steps: int) -> int:
         ...
     AssertionError: number_of_steps needs to be positive integer, your input -7
     """
+    logger.debug(">>> Entering climb_stairs(number_of_steps=%s)", number_of_steps)
     assert isinstance(number_of_steps, int) and number_of_steps > 0, (
         f"number_of_steps needs to be positive integer, your input {number_of_steps}"
     )
@@ -33,6 +36,7 @@ def climb_stairs(number_of_steps: int) -> int:
     previous, current = 1, 1
     for _ in range(number_of_steps - 1):
         current, previous = current + previous, current
+    logger.debug("<<< Exiting climb_stairs(number_of_steps=%s)", number_of_steps)
     return current
 
 

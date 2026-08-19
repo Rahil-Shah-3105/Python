@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Given an array of integers and an integer k, find the kth largest element in the array.
 
@@ -31,13 +33,16 @@ def partition(arr: list[int], low: int, high: int) -> int:
         >>> partition([3.1, 1.2, 5.6, 4.7], 0, 3)
         1
     """
+    logger.debug(">>> Entering partition(arr=%s,low=%s,high=%s)", arr, low, high)
     pivot = arr[high]
+    logger.debug("partition(arr=%s,low=%s,high=%s): pivot → %s", arr, low, high, pivot)
     i = low - 1
     for j in range(low, high):
         if arr[j] >= pivot:
             i += 1
             arr[i], arr[j] = arr[j], arr[i]
     arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    logger.debug("<<< Exiting partition(arr=%s,low=%s,high=%s)", arr, low, high)
     return i + 1
 
 
@@ -46,6 +51,7 @@ def kth_largest_element(arr: list[int], position: int) -> int:
     Finds the kth largest element in a list.
     Should deliver similar results to:
     ```python
+    logger.debug(">>> Entering kth_largest_element(arr=%s,position=%s)", arr, position)
     def kth_largest_element(arr, position):
         return sorted(arr)[-position]
     ```
@@ -106,8 +112,11 @@ def kth_largest_element(arr: list[int], position: int) -> int:
             return arr[pivot_index]
         elif pivot_index > position - 1:
             high = pivot_index - 1
+            logger.debug("kth_largest_element(arr=%s,position=%s): high → %s", arr, position, high)
         else:
             low = pivot_index + 1
+            logger.debug("kth_largest_element(arr=%s,position=%s): low → %s", arr, position, low)
+    logger.debug("<<< Exiting kth_largest_element(arr=%s,position=%s)", arr, position)
     return -1
 
 

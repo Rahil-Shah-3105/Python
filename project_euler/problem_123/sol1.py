@@ -41,6 +41,8 @@ So it could be simplified as,
 from __future__ import annotations
 
 from collections.abc import Generator
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sieve() -> Generator[int]:
@@ -62,10 +64,13 @@ def sieve() -> Generator[int]:
     >>> next(primes)
     13
     """
+    logger.debug(">>> Entering sieve()")
     factor_map: dict[int, int] = {}
     prime = 2
+    logger.debug("sieve(): prime → %s", prime)
     while True:
         factor = factor_map.pop(prime, None)
+        logger.debug("sieve(): factor → %s", factor)
         if factor:
             x = factor + prime
             while x in factor_map:
@@ -75,6 +80,7 @@ def sieve() -> Generator[int]:
             factor_map[prime * prime] = prime
             yield prime
         prime += 1
+        logger.debug("<<< Exiting sieve()")
 
 
 def solution(limit: float = 1e10) -> int:
@@ -85,12 +91,16 @@ def solution(limit: float = 1e10) -> int:
     >>> solution(1e9)
     7037
     """
+    logger.debug(">>> Entering solution(limit=%s)", limit)
     primes = sieve()
+    logger.debug("solution(limit=%s): primes → %s", limit, primes)
 
     n = 1
     while True:
         prime = next(primes)
+        logger.debug("solution(limit=%s): prime → %s", limit, prime)
         if (2 * prime * n) > limit:
+            logger.debug("<<< Exiting solution(limit=%s)", limit)
             return n
         # Ignore the next prime as the reminder will be 2.
         next(primes)

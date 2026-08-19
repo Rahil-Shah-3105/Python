@@ -54,6 +54,8 @@ Solution:
 """
 
 from itertools import combinations_with_replacement
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(limit: int = 100) -> int:
@@ -65,6 +67,7 @@ def solution(limit: int = 100) -> int:
     >>> solution(50)
     12577
     """
+    logger.debug(">>> Entering solution(limit=%s)", limit)
     singles: list[int] = [*list(range(1, 21)), 25]
     doubles: list[int] = [2 * x for x in range(1, 21)] + [50]
     triples: list[int] = [3 * x for x in range(1, 21)]
@@ -79,9 +82,11 @@ def solution(limit: int = 100) -> int:
     for double in doubles:
         for throw1, throw2 in combinations_with_replacement(all_values, 2):
             checkout_total = double + throw1 + throw2
+            logger.debug("solution(limit=%s): checkout_total → %s", limit, checkout_total)
             if checkout_total < limit:
                 num_checkouts += 1
 
+    logger.debug("<<< Exiting solution(limit=%s)", limit)
     return num_checkouts
 
 

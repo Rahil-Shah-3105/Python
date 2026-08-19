@@ -16,6 +16,8 @@ from collections.abc import Callable
 from random import randint, shuffle
 from time import sleep
 from typing import Literal
+import logging
+logger = logging.getLogger(__name__)
 
 WIDTH = 50  # Width of the Wa-Tor planet
 HEIGHT = 50  # Height of the Wa-Tor planet
@@ -49,15 +51,26 @@ class Entity:
     """
 
     def __init__(self, prey: bool, coords: tuple[int, int]) -> None:
+        logger.debug(">>> Entering __init__(prey=%s,coords=%s)", prey, coords)
         self.prey = prey
+        logger.debug("__init__(self=%s,prey=%s,coords=%s): self.prey → %s", self, prey, coords, self.prey)
         # The (row, col) pos of the entity
         self.coords = coords
+        logger.debug("__init__(self=%s,prey=%s,coords=%s): self.coords → %s", self, prey, coords, self.coords)
 
         self.remaining_reproduction_time = (
             PREY_REPRODUCTION_TIME if prey else PREDATOR_REPRODUCTION_TIME
         )
+        logger.debug("<<< Exiting __init__(prey=%s,coords=%s)", prey, coords)
         self.energy_value = None if prey is True else PREDATOR_INITIAL_ENERGY_VALUE
+        logger.debug("__init__(self=%s,prey=%s,coords=%s): self.energy_value → %s", self, prey, coords, self.energy_value)
         self.alive = True
+        logger.debug("__init__(self=%s,prey=%s,coords=%s): self.alive → %s", self, prey, coords, self.alive)
+        logger.debug(">>> Entering __init__(width=%s,height=%s)", width, height)
+        logger.debug("__init__(self=%s,width=%s,height=%s): self.width → %s", self, width, height, self.width)
+        logger.debug("__init__(self=%s,width=%s,height=%s): self.height → %s", self, width, height, self.height)
+        logger.debug("__init__(self=%s,width=%s,height=%s): self.time_passed → %s", self, width, height, self.time_passed)
+        logger.debug("<<< Exiting __init__(width=%s,height=%s)", width, height)
 
     def reset_reproduction_time(self) -> None:
         """
@@ -70,9 +83,11 @@ class Entity:
         >>> e.remaining_reproduction_time == PREDATOR_REPRODUCTION_TIME
         True
         """
+        logger.debug(">>> Entering reset_reproduction_time()")
         self.remaining_reproduction_time = (
             PREY_REPRODUCTION_TIME if self.prey is True else PREDATOR_REPRODUCTION_TIME
         )
+        logger.debug("<<< Exiting reset_reproduction_time()")
 
     def __repr__(self) -> str:
         """
@@ -82,12 +97,15 @@ class Entity:
         Entity(prey=False, coords=(2, 1),
         remaining_reproduction_time=20, energy_value=15)
         """
+        logger.debug(">>> Entering __repr__()")
+        logger.debug("__repr__(self=%s): remaining_reproduction_time → %s", self, remaining_reproduction_time)
         repr_ = (
             f"Entity(prey={self.prey}, coords={self.coords}, "
             f"remaining_reproduction_time={self.remaining_reproduction_time}"
         )
         if self.energy_value is not None:
             repr_ += f", energy_value={self.energy_value}"
+        logger.debug("<<< Exiting __repr__()")
         return f"{repr_})"
 
 
@@ -146,9 +164,14 @@ class WaTor:
         >>> wt.height
         2
         """
+        logger.debug(">>> Entering set_planet(planet=%s)", planet)
         self.planet = planet
+        logger.debug("set_planet(self=%s,planet=%s): self.planet → %s", self, planet, self.planet)
         self.width = len(planet[0])
+        logger.debug("set_planet(planet=%s): self.width → %s", planet, self.width)
+        logger.debug("<<< Exiting set_planet(planet=%s)", planet)
         self.height = len(planet)
+        logger.debug("set_planet(planet=%s): self.height → %s", planet, self.height)
 
     def add_entity(self, prey: bool) -> None:
         """
@@ -164,10 +187,12 @@ class WaTor:
         >>> len(wt.get_entities())
         2
         """
+        logger.debug(">>> Entering add_entity(prey=%s)", prey)
         while True:
             row, col = randint(0, self.height - 1), randint(0, self.width - 1)
             if self.planet[row][col] is None:
                 self.planet[row][col] = Entity(prey=prey, coords=(row, col))
+                logger.debug("<<< Exiting add_entity(prey=%s)", prey)
                 return
 
     def get_entities(self) -> list[Entity]:
@@ -178,6 +203,8 @@ class WaTor:
         >>> len(wt.get_entities()) == PREDATOR_INITIAL_COUNT + PREY_INITIAL_COUNT
         True
         """
+        logger.debug(">>> Entering get_entities()")
+        logger.debug("<<< Exiting get_entities()")
         return [entity for column in self.planet for entity in column if entity]
 
     def balance_predators_and_prey(self) -> None:
@@ -195,12 +222,17 @@ class WaTor:
         >>> len(wt.get_entities()) == entities
         False
         """
+        logger.debug(">>> Entering balance_predators_and_prey()")
         entities = self.get_entities()
+        logger.debug("balance_predators_and_prey(): entities → %s", entities)
+        logger.debug("balance_predators_and_prey(self=%s): entities → %s", self, entities)
         shuffle(entities)
 
         if len(entities) >= MAX_ENTITIES - MAX_ENTITIES / 10:
             prey = [entity for entity in entities if entity.prey]
+            logger.debug("balance_predators_and_prey(self=%s): prey → %s", self, prey)
             predators = [entity for entity in entities if not entity.prey]
+            logger.debug("balance_predators_and_prey(self=%s): predators → %s", self, predators)
 
             prey_count, predator_count = len(prey), len(predators)
 
@@ -211,6 +243,7 @@ class WaTor:
             )
             for entity in entities_to_purge:
                 self.planet[entity.coords[0]][entity.coords[1]] = None
+                logger.debug("<<< Exiting balance_predators_and_prey()")
 
     def get_surrounding_prey(self, entity: Entity) -> list[Entity]:
         """
@@ -237,6 +270,7 @@ class WaTor:
         >>> wt.get_surrounding_prey(Entity(False, (1, 0)))
         [Entity(prey=True, coords=(0, 0), remaining_reproduction_time=5)]
         """
+        logger.debug(">>> Entering get_surrounding_prey(entity=%s)", entity)
         row, col = entity.coords
         adjacent: list[tuple[int, int]] = [
             (row - 1, col),  # North
@@ -245,6 +279,7 @@ class WaTor:
             (row, col + 1),  # East
         ]
 
+        logger.debug("<<< Exiting get_surrounding_prey(entity=%s)", entity)
         return [
             ent
             for r, c in adjacent
@@ -438,15 +473,20 @@ class WaTor:
         ... wt.get_entities()))) >= PREDATOR_INITIAL_COUNT
         True
         """
+        logger.debug(">>> Entering run(iteration_count=%s)", iteration_count)
         for iter_num in range(iteration_count):
             # Generate list of all entities in order to randomly
             # pop an entity at a time to simulate true randomness
             # This removes the systematic approach of iterating
             # through each entity width by height
             all_entities = self.get_entities()
+            logger.debug("run(self=%s,iteration_count=%s): all_entities → %s", self, iteration_count, all_entities)
+            logger.debug("run(iteration_count=%s): all_entities → %s", iteration_count, all_entities)
 
             for __ in range(len(all_entities)):
                 entity = all_entities.pop(randint(0, len(all_entities) - 1))
+                logger.debug("run(self=%s,iteration_count=%s): entity → %s", self, iteration_count, entity)
+                logger.debug("run(iteration_count=%s): entity → %s", iteration_count, entity)
                 if entity.alive is False:
                     continue
 
@@ -458,7 +498,10 @@ class WaTor:
                 else:
                     # Create list of surrounding prey
                     surrounding_prey = self.get_surrounding_prey(entity)
+                    logger.debug("run(self=%s,iteration_count=%s): surrounding_prey → %s", self, iteration_count, surrounding_prey)
+                    logger.debug("run(iteration_count=%s): surrounding_prey → %s", iteration_count, surrounding_prey)
                     surrounding_prey_coords = None
+                    logger.debug("run(self=%s,iteration_count=%s): surrounding_prey_coords → %s", self, iteration_count, surrounding_prey_coords)
 
                     if surrounding_prey:
                         # Again, randomly shuffle directions
@@ -476,6 +519,7 @@ class WaTor:
                 # Call time_passed function for Wa-Tor planet
                 # visualisation in a terminal or a graph.
                 self.time_passed(self, iter_num)
+                logger.debug("<<< Exiting run(iteration_count=%s)", iteration_count)
 
 
 def visualise(wt: WaTor, iter_number: int, *, colour: bool = True) -> None:
@@ -501,15 +545,20 @@ def visualise(wt: WaTor, iter_number: int, *, colour: bool = True) -> None:
     <BLANKLINE>
     Iteration: 0 | Prey count: 2 | Predator count: 3 |
     """
+    logger.debug(">>> Entering visualise(wt=%s,iter_number=%s,colour=%s)", wt, iter_number, colour)
     if colour:
         __import__("os").system("")
         print("\x1b[0;0H\x1b[2J\x1b[?25l")
 
     reprint = "\x1b[0;0H" if colour else ""
+    logger.debug("visualise(wt=%s,iter_number=%s,colour=%s): reprint → %s", wt, iter_number, colour, reprint)
     ansi_colour_end = "\x1b[0m " if colour else " "
+    logger.debug("visualise(wt=%s,iter_number=%s,colour=%s): ansi_colour_end → %s", wt, iter_number, colour, ansi_colour_end)
 
     planet = wt.planet
+    logger.debug("visualise(wt=%s,iter_number=%s,colour=%s): planet → %s", wt, iter_number, colour, planet)
     output = ""
+    logger.debug("visualise(wt=%s,iter_number=%s,colour=%s): output → %s", wt, iter_number, colour, output)
 
     # Iterate over every entity in the planet
     for row in planet:
@@ -528,7 +577,9 @@ def visualise(wt: WaTor, iter_number: int, *, colour: bool = True) -> None:
         output += "\n"
 
     entities = wt.get_entities()
+    logger.debug("visualise(wt=%s,iter_number=%s,colour=%s): entities → %s", wt, iter_number, colour, entities)
     prey_count = sum(entity.prey for entity in entities)
+    logger.debug("visualise(wt=%s,iter_number=%s,colour=%s): prey_count → %s", wt, iter_number, colour, prey_count)
 
     print(
         f"{output}\n Iteration: {iter_number} | Prey count: {prey_count} | "
@@ -536,6 +587,7 @@ def visualise(wt: WaTor, iter_number: int, *, colour: bool = True) -> None:
     )
     # Block the thread to be able to visualise seeing the algorithm
     sleep(0.05)
+    logger.debug("<<< Exiting visualise(wt=%s,iter_number=%s,colour=%s)", wt, iter_number, colour)
 
 
 if __name__ == "__main__":

@@ -9,6 +9,8 @@ For more info: https://www.nku.edu/~christensen/1402%20permutation%20ciphers.pdf
 """
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 def generate_valid_block_size(message_length: int) -> int:
@@ -26,11 +28,13 @@ def generate_valid_block_size(message_length: int) -> int:
         >>> generate_valid_block_size(12)
         3
     """
+    logger.debug(">>> Entering generate_valid_block_size(message_length=%s)", message_length)
     block_sizes = [
         block_size
         for block_size in range(2, message_length + 1)
         if message_length % block_size == 0
     ]
+    logger.debug("<<< Exiting generate_valid_block_size(message_length=%s)", message_length)
     return random.choice(block_sizes)
 
 
@@ -49,8 +53,11 @@ def generate_permutation_key(block_size: int) -> list[int]:
         >>> generate_permutation_key(4)
         [2, 0, 1, 3]
     """
+    logger.debug(">>> Entering generate_permutation_key(block_size=%s)", block_size)
     digits = list(range(block_size))
+    logger.debug("generate_permutation_key(block_size=%s): digits → %s", block_size, digits)
     random.shuffle(digits)
+    logger.debug("<<< Exiting generate_permutation_key(block_size=%s)", block_size)
     return digits
 
 
@@ -108,16 +115,22 @@ def decrypt(encrypted_message: str, key: list[int]) -> str:
         >>> decrypted_message
         'HELLO WORLD'
     """
+    logger.debug(">>> Entering decrypt(encrypted_message=%s,key=%s)", encrypted_message, key)
     key_length = len(key)
+    logger.debug("decrypt(encrypted_message=%s,key=%s): key_length → %s", encrypted_message, key, key_length)
     decrypted_message = ""
+    logger.debug("decrypt(encrypted_message=%s,key=%s): decrypted_message → %s", encrypted_message, key, decrypted_message)
 
     for i in range(0, len(encrypted_message), key_length):
         block = encrypted_message[i : i + key_length]
+        logger.debug("decrypt(encrypted_message=%s,key=%s): block → %s", encrypted_message, key, block)
         original_block = [""] * key_length
+        logger.debug("decrypt(encrypted_message=%s,key=%s): original_block → %s", encrypted_message, key, original_block)
         for j, digit in enumerate(key):
             original_block[digit] = block[j]
         decrypted_message += "".join(original_block)
 
+    logger.debug("<<< Exiting decrypt(encrypted_message=%s,key=%s)", encrypted_message, key)
     return decrypted_message
 
 
@@ -129,11 +142,15 @@ def main() -> None:
     >>> main()
     Decrypted message: HELLO WORLD
     """
+    logger.debug(">>> Entering main()")
     message = "HELLO WORLD"
+    logger.debug("main(): message → %s", message)
     encrypted_message, key = encrypt(message)
 
     decrypted_message = decrypt(encrypted_message, key)
+    logger.debug("main(): decrypted_message → %s", decrypted_message)
     print(f"Decrypted message: {decrypted_message}")
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

@@ -8,6 +8,8 @@ Time complexity: O(C(n,k)) which is O(n choose k) = O((n!/(k! * (n - k)!))),
 from __future__ import annotations
 
 from itertools import combinations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def combination_lists(n: int, k: int) -> list[list[int]]:
@@ -17,6 +19,8 @@ def combination_lists(n: int, k: int) -> list[list[int]]:
     >>> combination_lists(n=4, k=2)
     [[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]
     """
+    logger.debug(">>> Entering combination_lists(n=%s,k=%s)", n, k)
+    logger.debug("<<< Exiting combination_lists(n=%s,k=%s)", n, k)
     return [list(x) for x in combinations(range(1, n + 1), k)]
 
 
@@ -51,6 +55,7 @@ def generate_all_combinations(n: int, k: int) -> list[list[int]]:
     ...     for n in range(1, 6) for k in range(1, 6))
     True
     """
+    logger.debug(">>> Entering generate_all_combinations(n=%s,k=%s)", n, k)
     if k < 0:
         raise ValueError("k must not be negative")
     if n < 0:
@@ -58,6 +63,7 @@ def generate_all_combinations(n: int, k: int) -> list[list[int]]:
 
     result: list[list[int]] = []
     create_all_state(1, n, k, [], result)
+    logger.debug("<<< Exiting generate_all_combinations(n=%s,k=%s)", n, k)
     return result
 
 

@@ -15,6 +15,8 @@ This algorithm does not account for an N-body problem.
 from math import pow, sqrt  # noqa: A004
 
 from scipy.constants import G, c, pi
+import logging
+logger = logging.getLogger(__name__)
 
 
 def capture_radii(
@@ -83,10 +85,13 @@ def capture_area(capture_radius: float) -> float:
     ------------------
     meters*meters | m**2
     """
+    logger.debug(">>> Entering capture_area(capture_radius=%s)", capture_radius)
 
     if capture_radius < 0:
         raise ValueError("Cannot have a capture radius less than 0")
     sigma = pi * pow(capture_radius, 2)
+    logger.debug("capture_area(capture_radius=%s): sigma → %s", capture_radius, sigma)
+    logger.debug("<<< Exiting capture_area(capture_radius=%s)", capture_radius)
     return round(sigma, 0)
 
 

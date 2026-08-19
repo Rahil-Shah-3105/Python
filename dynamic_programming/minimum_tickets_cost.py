@@ -23,6 +23,8 @@ Dynamic Programming: up -> down.
 """
 
 import functools
+import logging
+logger = logging.getLogger(__name__)
 
 
 def mincost_tickets(days: list[int], costs: list[int]) -> int:
@@ -87,6 +89,7 @@ def mincost_tickets(days: list[int], costs: list[int]) -> int:
      ...
     ValueError: The parameter costs should be a list of three integers
     """
+    logger.debug(">>> Entering mincost_tickets(days=%s,costs=%s)", days, costs)
 
     # Validation
     if not isinstance(days, list) or not all(isinstance(day, int) for day in days):
@@ -96,6 +99,7 @@ def mincost_tickets(days: list[int], costs: list[int]) -> int:
         raise ValueError("The parameter costs should be a list of three integers")
 
     if len(days) == 0:
+        logger.debug("<<< Exiting mincost_tickets(days=%s,costs=%s)", days, costs)
         return 0
 
     if min(days) <= 0:
@@ -105,13 +109,16 @@ def mincost_tickets(days: list[int], costs: list[int]) -> int:
         raise ValueError("All days elements should be less than 366")
 
     days_set = set(days)
+    logger.debug("mincost_tickets(days=%s,costs=%s): days_set → %s", days, costs, days_set)
 
     @functools.cache
     def dynamic_programming(index: int) -> int:
+        logger.debug(">>> Entering dynamic_programming(index=%s)", index)
         if index > 365:
             return 0
 
         if index not in days_set:
+            logger.debug("<<< Exiting dynamic_programming(index=%s)", index)
             return dynamic_programming(index + 1)
 
         return min(

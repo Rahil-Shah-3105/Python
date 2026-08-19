@@ -18,6 +18,8 @@ https://en.wikipedia.org/wiki/SHA-2
 import argparse
 import struct
 import unittest
+import logging
+logger = logging.getLogger(__name__)
 
 
 class SHA256:
@@ -32,7 +34,11 @@ class SHA256:
     """
 
     def __init__(self, data: bytes) -> None:
+        logger.debug(">>> Entering __init__(data=%s)", data)
+        logger.debug("__init__(self=%s,data=%s): self.hashes → %s", self, data, self.hashes)
         self.data = data
+        logger.debug("__init__(data=%s): self.data → %s", data, self.data)
+        logger.debug("__init__(self=%s,data=%s): self.data → %s", self, data, self.data)
 
         # Initialize hash values
         self.hashes = [
@@ -115,15 +121,23 @@ class SHA256:
         ]
 
         self.preprocessed_data = self.preprocessing(self.data)
+        logger.debug("__init__(data=%s): self.preprocessed_data → %s", data, self.preprocessed_data)
         self.final_hash()
+        logger.debug("<<< Exiting __init__(data=%s)", data)
 
     @staticmethod
     def preprocessing(data: bytes) -> bytes:
+        logger.debug(">>> Entering preprocessing(data=%s)", data)
         padding = b"\x80" + (b"\x00" * (63 - (len(data) + 8) % 64))
+        logger.debug("preprocessing(data=%s): padding → %s", data, padding)
         big_endian_integer = struct.pack(">Q", (len(data) * 8))
+        logger.debug("preprocessing(data=%s): big_endian_integer → %s", data, big_endian_integer)
+        logger.debug("<<< Exiting preprocessing(data=%s)", data)
         return data + padding + big_endian_integer
 
     def final_hash(self) -> None:
+        logger.debug(">>> Entering final_hash()")
+        logger.debug("final_hash(self=%s): self.blocks → %s", self, self.blocks)
         # Convert into blocks of 64 bytes
         self.blocks = [
             self.preprocessed_data[x : x + 64]
@@ -133,6 +147,8 @@ class SHA256:
         for block in self.blocks:
             # Convert the given block into a list of 4 byte integers
             words = list(struct.unpack(">16L", block))
+            logger.debug("final_hash(self=%s): words → %s", self, words)
+            logger.debug("final_hash(): words → %s", words)
             # add 48 0-ed integers
             words += [0] * 48
 
@@ -159,12 +175,16 @@ class SHA256:
                 # Compression
                 s1 = self.ror(e, 6) ^ self.ror(e, 11) ^ self.ror(e, 25)
                 ch = (e & f) ^ ((~e & (0xFFFFFFFF)) & g)
+                logger.debug("final_hash(): ch → %s", ch)
                 temp1 = (
                     h + s1 + ch + self.round_constants[index] + words[index]
                 ) % 0x100000000
                 s0 = self.ror(a, 2) ^ self.ror(a, 13) ^ self.ror(a, 22)
                 maj = (a & b) ^ (a & c) ^ (b & c)
+                logger.debug("final_hash(): maj → %s", maj)
+                logger.debug("final_hash(self=%s): maj → %s", self, maj)
                 temp2 = (s0 + maj) % 0x100000000
+                logger.debug("final_hash(self=%s): temp2 → %s", self, temp2)
 
                 h, g, f, e, d, c, b, a = (
                     g,
@@ -178,19 +198,25 @@ class SHA256:
                 )
 
             mutated_hash_values = [a, b, c, d, e, f, g, h]
+            logger.debug("final_hash(self=%s): mutated_hash_values → %s", self, mutated_hash_values)
 
             # Modify final values
             self.hashes = [
+            logger.debug("final_hash(self=%s): self.hashes → %s", self, self.hashes)
                 ((element + mutated_hash_values[index]) % 0x100000000)
                 for index, element in enumerate(self.hashes)
             ]
 
+            logger.debug("<<< Exiting final_hash()")
         self.hash = "".join([hex(value)[2:].zfill(8) for value in self.hashes])
+        logger.debug("final_hash(): self.hash → %s", self.hash)
 
     def ror(self, value: int, rotations: int) -> int:
         """
         Right rotate a given unsigned number by a certain amount of rotations
         """
+        logger.debug(">>> Entering ror(value=%s,rotations=%s)", value, rotations)
+        logger.debug("<<< Exiting ror(value=%s,rotations=%s)", value, rotations)
         return 0xFFFFFFFF & (value << (32 - rotations)) | (value >> rotations)
 
 
@@ -200,10 +226,14 @@ class SHA256HashTest(unittest.TestCase):
     """
 
     def test_match_hashes(self) -> None:
+        logger.debug(">>> Entering test_match_hashes()")
         import hashlib
 
         msg = bytes("Test String", "utf-8")
+        logger.debug("test_match_hashes(self=%s): msg → %s", self, msg)
+        logger.debug("test_match_hashes(): msg → %s", msg)
         assert SHA256(msg).hash == hashlib.sha256(msg).hexdigest()
+        logger.debug("<<< Exiting test_match_hashes()")
 
 
 def main() -> None:
@@ -211,14 +241,19 @@ def main() -> None:
     Provides option 'string' or 'file' to take input
     and prints the calculated SHA-256 hash
     """
+    logger.debug(">>> Entering main()")
 
     # unittest.main()
+    logger.debug("main(): help → %s", help)
 
     import doctest
+    logger.debug("main(): default → %s", default)
 
     doctest.testmod()
+    logger.debug("main(): dest → %s", dest)
 
     parser = argparse.ArgumentParser()
+    logger.debug("main(): parser → %s", parser)
     parser.add_argument(
         "-s",
         "--string",
@@ -231,17 +266,21 @@ def main() -> None:
     )
 
     args = parser.parse_args()
+    logger.debug("main(): args → %s", args)
 
     input_string = args.input_string
+    logger.debug("main(): input_string → %s", input_string)
 
     # hash input should be a bytestring
     if args.input_file:
         with open(args.input_file, "rb") as f:
             hash_input = f.read()
+            logger.debug("main(): hash_input → %s", hash_input)
     else:
         hash_input = bytes(input_string, "utf-8")
 
     print(SHA256(hash_input).hash)
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

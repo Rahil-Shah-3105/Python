@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 87: https://projecteuler.net/problem=87
 
@@ -22,10 +24,14 @@ def solution(limit: int = 50000000) -> int:
     >>> solution(50)
     4
     """
+    logger.debug(">>> Entering solution(limit=%s)", limit)
     ret = set()
+    logger.debug("solution(limit=%s): ret → %s", limit, ret)
     prime_square_limit = int((limit - 24) ** (1 / 2))
+    logger.debug("solution(limit=%s): prime_square_limit → %s", limit, prime_square_limit)
 
     primes = set(range(3, prime_square_limit + 1, 2))
+    logger.debug("solution(limit=%s): primes → %s", limit, primes)
     primes.add(2)
     for p in range(3, prime_square_limit + 1, 2):
         if p not in primes:
@@ -34,17 +40,22 @@ def solution(limit: int = 50000000) -> int:
 
     for prime1 in primes:
         square = prime1 * prime1
+        logger.debug("solution(limit=%s): square → %s", limit, square)
         for prime2 in primes:
             cube = prime2 * prime2 * prime2
+            logger.debug("solution(limit=%s): cube → %s", limit, cube)
             if square + cube >= limit - 16:
                 break
             for prime3 in primes:
                 tetr = prime3 * prime3 * prime3 * prime3
+                logger.debug("solution(limit=%s): tetr → %s", limit, tetr)
                 total = square + cube + tetr
+                logger.debug("solution(limit=%s): total → %s", limit, total)
                 if total >= limit:
                     break
                 ret.add(total)
 
+    logger.debug("<<< Exiting solution(limit=%s)", limit)
     return len(ret)
 
 

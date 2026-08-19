@@ -49,6 +49,8 @@ temperature and molar mass of the gas.
 
 # import the constants R and pi from the scipy.constants library
 from scipy.constants import R, pi
+import logging
+logger = logging.getLogger(__name__)
 
 
 def avg_speed_of_molecule(temperature: float, molar_mass: float) -> float:
@@ -71,11 +73,13 @@ def avg_speed_of_molecule(temperature: float, molar_mass: float) -> float:
         ...
     Exception: Molar mass should be greater than 0 kg/mol
     """
+    logger.debug(">>> Entering avg_speed_of_molecule(temperature=%s,molar_mass=%s)", temperature, molar_mass)
 
     if temperature < 0:
         raise Exception("Absolute temperature cannot be less than 0 K")
     if molar_mass <= 0:
         raise Exception("Molar mass should be greater than 0 kg/mol")
+    logger.debug("<<< Exiting avg_speed_of_molecule(temperature=%s,molar_mass=%s)", temperature, molar_mass)
     return (8 * R * temperature / (pi * molar_mass)) ** 0.5
 
 
@@ -99,11 +103,13 @@ def mps_speed_of_molecule(temperature: float, molar_mass: float) -> float:
         ...
     Exception: Molar mass should be greater than 0 kg/mol
     """
+    logger.debug(">>> Entering mps_speed_of_molecule(temperature=%s,molar_mass=%s)", temperature, molar_mass)
 
     if temperature < 0:
         raise Exception("Absolute temperature cannot be less than 0 K")
     if molar_mass <= 0:
         raise Exception("Molar mass should be greater than 0 kg/mol")
+    logger.debug("<<< Exiting mps_speed_of_molecule(temperature=%s,molar_mass=%s)", temperature, molar_mass)
     return (2 * R * temperature / molar_mass) ** 0.5
 
 

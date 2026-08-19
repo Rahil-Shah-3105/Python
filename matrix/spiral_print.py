@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This program print the matrix in spiral form.
 This problem has been solved through recursive way.
@@ -8,15 +10,19 @@ This problem has been solved through recursive way.
 
 
 def check_matrix(matrix: list[list[int]]) -> bool:
+    logger.debug(">>> Entering check_matrix(matrix=%s)", matrix)
     # must be
     matrix = [list(row) for row in matrix]
+    logger.debug("check_matrix(matrix=%s): matrix → %s", matrix, matrix)
     if matrix and isinstance(matrix, list):
         if isinstance(matrix[0], list):
             prev_len = 0
+            logger.debug("check_matrix(matrix=%s): prev_len → %s", matrix, prev_len)
             for row in matrix:
                 if prev_len == 0:
                     prev_len = len(row)
                     result = True
+                    logger.debug("check_matrix(matrix=%s): result → %s", matrix, result)
                 else:
                     result = prev_len == len(row)
         else:
@@ -24,6 +30,7 @@ def check_matrix(matrix: list[list[int]]) -> bool:
     else:
         result = False
 
+    logger.debug("<<< Exiting check_matrix(matrix=%s)", matrix)
     return result
 
 
@@ -43,11 +50,15 @@ def spiral_print_clockwise(a: list[list[int]]) -> None:
     6
     7
     """
+    logger.debug(">>> Entering spiral_print_clockwise(a=%s)", a)
     if check_matrix(a) and len(a) > 0:
         a = [list(row) for row in a]
+        logger.debug("spiral_print_clockwise(a=%s): a → %s", a, a)
         mat_row = len(a)
+        logger.debug("spiral_print_clockwise(a=%s): mat_row → %s", a, mat_row)
         if isinstance(a[0], list):
             mat_col = len(a[0])
+            logger.debug("spiral_print_clockwise(a=%s): mat_col → %s", a, mat_col)
         else:
             for dat in a:
                 print(dat)
@@ -67,12 +78,14 @@ def spiral_print_clockwise(a: list[list[int]]) -> None:
         for i in range(mat_row - 2, 0, -1):
             print(a[i][0])
         remain_mat = [row[1 : mat_col - 1] for row in a[1 : mat_row - 1]]
+        logger.debug("spiral_print_clockwise(a=%s): remain_mat → %s", a, remain_mat)
         if len(remain_mat) > 0:
             spiral_print_clockwise(remain_mat)
         else:
             return
     else:
         print("Not a valid matrix")
+        logger.debug("<<< Exiting spiral_print_clockwise(a=%s)", a)
         return
 
 
@@ -115,11 +128,13 @@ def spiral_traversal(matrix: list[list]) -> list[int]:
     Stage 6.
     [1, 2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7] + spiral_traversal([])
     """
+    logger.debug(">>> Entering spiral_traversal(matrix=%s)", matrix)
     if matrix:
         return list(matrix.pop(0)) + spiral_traversal(
             [list(row) for row in zip(*matrix)][::-1]
         )
     else:
+        logger.debug("<<< Exiting spiral_traversal(matrix=%s)", matrix)
         return []
 
 

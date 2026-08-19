@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 author: Sanket Kittad
 Given a string s, find the longest palindromic subsequence's length in s.
@@ -16,10 +18,15 @@ def longest_palindromic_subsequence(input_string: str) -> int:
     >>> longest_palindromic_subsequence("bbabcbcab")
     7
     """
+    logger.debug(">>> Entering longest_palindromic_subsequence(input_string=%s)", input_string)
     n = len(input_string)
+    logger.debug("longest_palindromic_subsequence(input_string=%s): n → %s", input_string, n)
     rev = input_string[::-1]
+    logger.debug("longest_palindromic_subsequence(input_string=%s): rev → %s", input_string, rev)
     m = len(rev)
+    logger.debug("longest_palindromic_subsequence(input_string=%s): m → %s", input_string, m)
     dp = [[-1] * (m + 1) for i in range(n + 1)]
+    logger.debug("longest_palindromic_subsequence(input_string=%s): dp → %s", input_string, dp)
     for i in range(n + 1):
         dp[i][0] = 0
     for i in range(m + 1):
@@ -35,6 +42,7 @@ def longest_palindromic_subsequence(input_string: str) -> int:
             else:
                 dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
 
+    logger.debug("<<< Exiting longest_palindromic_subsequence(input_string=%s)", input_string)
     return dp[n][m]
 
 

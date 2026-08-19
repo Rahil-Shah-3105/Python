@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Question:
 Given a binary matrix mat of size n * m, find out the maximum size square
@@ -59,19 +61,25 @@ def largest_square_area_in_matrix_top_down_approch(
     """
 
     def update_area_of_max_square(row: int, col: int) -> int:
+        logger.debug(">>> Entering update_area_of_max_square(row=%s,col=%s)", row, col)
         # BASE CASE
         if row >= rows or col >= cols:
             return 0
 
         right = update_area_of_max_square(row, col + 1)
+        logger.debug("update_area_of_max_square(row=%s,col=%s): right → %s", row, col, right)
         diagonal = update_area_of_max_square(row + 1, col + 1)
+        logger.debug("update_area_of_max_square(row=%s,col=%s): diagonal → %s", row, col, diagonal)
         down = update_area_of_max_square(row + 1, col)
+        logger.debug("update_area_of_max_square(row=%s,col=%s): down → %s", row, col, down)
 
         if mat[row][col]:
             sub_problem_sol = 1 + min([right, diagonal, down])
+            logger.debug("update_area_of_max_square(row=%s,col=%s): sub_problem_sol → %s", row, col, sub_problem_sol)
             largest_square_area[0] = max(largest_square_area[0], sub_problem_sol)
             return sub_problem_sol
         else:
+            logger.debug("<<< Exiting update_area_of_max_square(row=%s,col=%s)", row, col)
             return 0
 
     largest_square_area = [0]

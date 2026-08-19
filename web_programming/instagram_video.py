@@ -8,11 +8,17 @@
 from datetime import UTC, datetime
 
 import httpx
+import logging
+logger = logging.getLogger(__name__)
 
 
 def download_video(url: str) -> bytes:
+    logger.debug(">>> Entering download_video(url=%s)", url)
     base_url = "https://downloadgram.net/wp-json/wppress/video-downloader/video?url="
+    logger.debug("download_video(url=%s): base_url → %s", url, base_url)
     video_url = httpx.get(base_url + url, timeout=10)
+    logger.debug("download_video(url=%s): video_url → %s", url, video_url)
+    logger.debug("<<< Exiting download_video(url=%s)", url)
     return httpx.get(video_url, timeout=10).content
 
 

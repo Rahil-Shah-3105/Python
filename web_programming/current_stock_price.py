@@ -8,6 +8,8 @@
 
 import httpx
 from bs4 import BeautifulSoup
+import logging
+logger = logging.getLogger(__name__)
 
 """
 Get the HTML code of finance yahoo and select the current qsp-price
@@ -27,7 +29,12 @@ def stock_price(symbol: str = "AAPL") -> str:
     >>> isinstance(float(stock_price("GOOG")),float)
     True
     """
+    logger.debug(">>> Entering stock_price(symbol=%s)", symbol)
+    logger.debug("stock_price(symbol=%s): url → %s", symbol, url)
+    logger.info("stock_price(symbol)=%s: external service call took %s ms", symbol, int((time.time() - __log_start) * 1000))
+    logger.debug("stock_price(symbol=%s): soup → %s", symbol, soup)
     url = f"https://finance.yahoo.com/quote/{symbol}?p={symbol}"
+    logger.info("stock_price(symbol=%s): url → %s", symbol, url)
     yahoo_finance_source = httpx.get(
         url, headers={"USER-AGENT": "Mozilla/5.0"}, timeout=10, follow_redirects=True
     ).text
@@ -35,6 +42,7 @@ def stock_price(symbol: str = "AAPL") -> str:
 
     if specific_fin_streamer_tag := soup.find("span", {"data-testid": "qsp-price"}):
         return specific_fin_streamer_tag.get_text()
+    logger.debug("<<< Exiting stock_price(symbol=%s)", symbol)
     return "No <fin-streamer> tag with the specified data-testid attribute found."
 
 

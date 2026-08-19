@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Illustrate how to add the integer without arithmetic operation
 Author: suraj Kumar
@@ -22,10 +24,12 @@ def add(first: int, second: int) -> int:
     >>> add(-321, 0)
     -321
     """
+    logger.debug(">>> Entering add(first=%s,second=%s)", first, second)
     while second != 0:
         c = first & second
         first ^= second
         second = c << 1
+    logger.debug("<<< Exiting add(first=%s,second=%s)", first, second)
     return first
 
 

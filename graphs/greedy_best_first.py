@@ -3,6 +3,8 @@ https://en.wikipedia.org/wiki/Best-first_search#Greedy_BFS
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 Path = list[tuple[int, int]]
 
@@ -76,14 +78,22 @@ class Node:
         The heuristic here is the Manhattan Distance
         Could elaborate to offer more than one choice
         """
+        logger.debug(">>> Entering calculate_heuristic()")
         dx = abs(self.pos_x - self.goal_x)
+        logger.debug("calculate_heuristic(): dx → %s", dx)
         dy = abs(self.pos_y - self.goal_y)
+        logger.debug("calculate_heuristic(): dy → %s", dy)
+        logger.debug("<<< Exiting calculate_heuristic()")
         return dx + dy
 
     def __lt__(self, other) -> bool:
+        logger.debug(">>> Entering __lt__(other=%s)", other)
+        logger.debug("<<< Exiting __lt__(other=%s)", other)
         return self.f_cost < other.f_cost
 
     def __eq__(self, other) -> bool:
+        logger.debug(">>> Entering __eq__(other=%s)", other)
+        logger.debug("<<< Exiting __eq__(other=%s)", other)
         return self.pos == other.pos
 
 
@@ -121,17 +131,22 @@ class GreedyBestFirst:
         Search for the path,
         if a path is not found, only the starting position is returned
         """
+        logger.debug(">>> Entering search()")
         while self.open_nodes:
             # Open Nodes are sorted using __lt__
             self.open_nodes.sort()
             current_node = self.open_nodes.pop(0)
+            logger.debug("search(self=%s): current_node → %s", self, current_node)
+            logger.debug("search(): current_node → %s", current_node)
 
             if current_node.pos == self.target.pos:
                 self.reached = True
+                logger.debug("search(self=%s): self.reached → %s", self, self.reached)
                 return self.retrace_path(current_node)
 
             self.closed_nodes.append(current_node)
             successors = self.get_successors(current_node)
+            logger.debug("search(self=%s): successors → %s", self, successors)
 
             for child_node in successors:
                 if child_node in self.closed_nodes:
@@ -142,12 +157,15 @@ class GreedyBestFirst:
 
         if not self.reached:
             return [self.start.pos]
+        logger.debug("<<< Exiting search()")
         return None
 
     def get_successors(self, parent: Node) -> list[Node]:
         """
         Returns a list of successors (both in the grid and free spaces)
         """
+        logger.debug(">>> Entering get_successors(parent=%s)", parent)
+        logger.debug("<<< Exiting get_successors(parent=%s)", parent)
         return [
             Node(
                 pos_x,
@@ -169,12 +187,16 @@ class GreedyBestFirst:
         """
         Retrace the path from parents to parents until start node
         """
+        logger.debug(">>> Entering retrace_path(node=%s)", node)
         current_node = node
+        logger.debug("retrace_path(self=%s,node=%s): current_node → %s", self, node, current_node)
         path = []
+        logger.debug("retrace_path(self=%s,node=%s): path → %s", self, node, path)
         while current_node is not None:
             path.append((current_node.pos_y, current_node.pos_x))
             current_node = current_node.parent
         path.reverse()
+        logger.debug("<<< Exiting retrace_path(node=%s)", node)
         return path
 
 

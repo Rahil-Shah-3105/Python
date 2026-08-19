@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This is a pure Python implementation of the linear search algorithm.
 
@@ -27,9 +29,11 @@ def linear_search(sequence: list, target: int) -> int:
     >>> linear_search([0, 5, 7, 10, 15], 6)
     -1
     """
+    logger.debug(">>> Entering linear_search(sequence=%s,target=%s)", sequence, target)
     for index, item in enumerate(sequence):
         if item == target:
             return index
+    logger.debug("<<< Exiting linear_search(sequence=%s,target=%s)", sequence, target)
     return -1
 
 
@@ -54,6 +58,7 @@ def rec_linear_search(sequence: list, low: int, high: int, target: int) -> int:
     >>> rec_linear_search([0, 30, 500, 100, 700], 0, 4, -6)
     -1
     """
+    logger.debug(">>> Entering rec_linear_search(sequence=%s,low=%s,high=%s,target=%s)", sequence, low, high, target)
     if not (0 <= high < len(sequence) and 0 <= low < len(sequence)):
         raise Exception("Invalid upper or lower bound!")
     if high < low:
@@ -62,6 +67,7 @@ def rec_linear_search(sequence: list, low: int, high: int, target: int) -> int:
         return low
     if sequence[high] == target:
         return high
+    logger.debug("<<< Exiting rec_linear_search(sequence=%s,low=%s,high=%s,target=%s)", sequence, low, high, target)
     return rec_linear_search(sequence, low + 1, high - 1, target)
 
 

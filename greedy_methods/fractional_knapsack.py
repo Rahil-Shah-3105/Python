@@ -1,5 +1,7 @@
 from bisect import bisect
 from itertools import accumulate
+import logging
+logger = logging.getLogger(__name__)
 
 
 def frac_knapsack(vl, wt, w, n):
@@ -31,11 +33,15 @@ def frac_knapsack(vl, wt, w, n):
         ...
     TypeError: unsupported operand type(s) for /: 'str' and 'int'
     """
+    logger.debug(">>> Entering frac_knapsack(vl=%s,wt=%s,w=%s,n=%s)", vl, wt, w, n)
 
     r = sorted(zip(vl, wt), key=lambda x: x[0] / x[1], reverse=True)
+    logger.debug("frac_knapsack(vl=%s,wt=%s,w=%s,n=%s): r → %s", vl, wt, w, n, r)
     vl, wt = [i[0] for i in r], [i[1] for i in r]
     acc = list(accumulate(wt))
+    logger.debug("frac_knapsack(vl=%s,wt=%s,w=%s,n=%s): acc → %s", vl, wt, w, n, acc)
     k = bisect(acc, w)
+    logger.debug("<<< Exiting frac_knapsack(vl=%s,wt=%s,w=%s,n=%s)", vl, wt, w, n)
     return (
         0
         if k == 0

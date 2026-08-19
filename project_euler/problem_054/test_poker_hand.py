@@ -5,6 +5,8 @@ from random import randrange, shuffle
 import pytest
 
 from .sol1 import PokerHand
+import logging
+logger = logging.getLogger(__name__)
 
 SORTED_HANDS = (
     "4S 3H 2C 7S 5H",
@@ -137,92 +139,133 @@ TEST_TYPES = (
 
 
 def generate_random_hand():
+    logger.debug(">>> Entering generate_random_hand()")
     play, oppo = randrange(len(SORTED_HANDS)), randrange(len(SORTED_HANDS))
     expected = ["Loss", "Tie", "Win"][(play >= oppo) + (play > oppo)]
+    logger.debug("generate_random_hand(): expected → %s", expected)
     hand, other = SORTED_HANDS[play], SORTED_HANDS[oppo]
+    logger.debug("<<< Exiting generate_random_hand()")
     return hand, other, expected
 
 
 def generate_random_hands(number_of_hands: int = 100):
+    logger.debug(">>> Entering generate_random_hands(number_of_hands=%s)", number_of_hands)
+    logger.debug("<<< Exiting generate_random_hands(number_of_hands=%s)", number_of_hands)
     return (generate_random_hand() for _ in range(number_of_hands))
 
 
 @pytest.mark.parametrize(("hand", "expected"), TEST_FLUSH)
 def test_hand_is_flush(hand, expected):
+    logger.debug(">>> Entering test_hand_is_flush(hand=%s,expected=%s)", hand, expected)
     assert PokerHand(hand)._is_flush() == expected
+    logger.debug("<<< Exiting test_hand_is_flush(hand=%s,expected=%s)", hand, expected)
 
 
 @pytest.mark.parametrize(("hand", "expected"), TEST_STRAIGHT)
 def test_hand_is_straight(hand, expected):
+    logger.debug(">>> Entering test_hand_is_straight(hand=%s,expected=%s)", hand, expected)
     assert PokerHand(hand)._is_straight() == expected
+    logger.debug("<<< Exiting test_hand_is_straight(hand=%s,expected=%s)", hand, expected)
 
 
 @pytest.mark.parametrize(("hand", "expected", "card_values"), TEST_FIVE_HIGH_STRAIGHT)
 def test_hand_is_five_high_straight(hand, expected, card_values):
+    logger.debug(">>> Entering test_hand_is_five_high_straight(hand=%s,expected=%s,card_values=%s)", hand, expected, card_values)
     player = PokerHand(hand)
+    logger.debug("test_hand_is_five_high_straight(hand=%s,expected=%s,card_values=%s): player → %s", hand, expected, card_values, player)
     assert player._is_five_high_straight() == expected
     assert player._card_values == card_values
+    logger.debug("<<< Exiting test_hand_is_five_high_straight(hand=%s,expected=%s,card_values=%s)", hand, expected, card_values)
 
 
 @pytest.mark.parametrize(("hand", "expected"), TEST_KIND)
 def test_hand_is_same_kind(hand, expected):
+    logger.debug(">>> Entering test_hand_is_same_kind(hand=%s,expected=%s)", hand, expected)
     assert PokerHand(hand)._is_same_kind() == expected
+    logger.debug("<<< Exiting test_hand_is_same_kind(hand=%s,expected=%s)", hand, expected)
 
 
 @pytest.mark.parametrize(("hand", "expected"), TEST_TYPES)
 def test_hand_values(hand, expected):
+    logger.debug(">>> Entering test_hand_values(hand=%s,expected=%s)", hand, expected)
     assert PokerHand(hand)._hand_type == expected
+    logger.debug("<<< Exiting test_hand_values(hand=%s,expected=%s)", hand, expected)
 
 
 @pytest.mark.parametrize(("hand", "other", "expected"), TEST_COMPARE)
 def test_compare_simple(hand, other, expected):
+    logger.debug(">>> Entering test_compare_simple(hand=%s,other=%s,expected=%s)", hand, other, expected)
     assert PokerHand(hand).compare_with(PokerHand(other)) == expected
+    logger.debug("<<< Exiting test_compare_simple(hand=%s,other=%s,expected=%s)", hand, other, expected)
 
 
 @pytest.mark.parametrize(("hand", "other", "expected"), generate_random_hands())
 def test_compare_random(hand, other, expected):
+    logger.debug(">>> Entering test_compare_random(hand=%s,other=%s,expected=%s)", hand, other, expected)
     assert PokerHand(hand).compare_with(PokerHand(other)) == expected
+    logger.debug("<<< Exiting test_compare_random(hand=%s,other=%s,expected=%s)", hand, other, expected)
 
 
 def test_hand_sorted():
+    logger.debug(">>> Entering test_hand_sorted()")
     poker_hands = [PokerHand(hand) for hand in SORTED_HANDS]
+    logger.debug("test_hand_sorted(): poker_hands → %s", poker_hands)
     list_copy = poker_hands.copy()
     shuffle(list_copy)
+    logger.debug("test_hand_sorted(): list_copy → %s", list_copy)
     user_sorted = chain(sorted(list_copy))
     for index, hand in enumerate(user_sorted):
+        logger.debug("test_hand_sorted(): user_sorted → %s", user_sorted)
         assert hand == poker_hands[index]
+        logger.debug("<<< Exiting test_hand_sorted()")
 
 
 def test_custom_sort_five_high_straight():
+    logger.debug(">>> Entering test_custom_sort_five_high_straight()")
     # Test that five high straights are compared correctly.
     pokerhands = [PokerHand("2D AC 3H 4H 5S"), PokerHand("2S 3H 4H 5S 6C")]
+    logger.debug("test_custom_sort_five_high_straight(): pokerhands → %s", pokerhands)
     pokerhands.sort(reverse=True)
     assert pokerhands[0].__str__() == "2S 3H 4H 5S 6C"
+    logger.debug("<<< Exiting test_custom_sort_five_high_straight()")
 
 
 def test_multiple_calls_five_high_straight():
+    logger.debug(">>> Entering test_multiple_calls_five_high_straight()")
     # Multiple calls to five_high_straight function should still return True
     # and shouldn't mutate the list in every call other than the first.
     pokerhand = PokerHand("2C 4S AS 3D 5C")
+    logger.debug("test_multiple_calls_five_high_straight(): pokerhand → %s", pokerhand)
     expected = True
+    logger.debug("test_multiple_calls_five_high_straight(): expected → %s", expected)
     expected_card_values = [5, 4, 3, 2, 14]
+    logger.debug("test_multiple_calls_five_high_straight(): expected_card_values → %s", expected_card_values)
     for _ in range(10):
         assert pokerhand._is_five_high_straight() == expected
         assert pokerhand._card_values == expected_card_values
+        logger.debug("<<< Exiting test_multiple_calls_five_high_straight()")
 
 
 def test_euler_project():
+    logger.debug(">>> Entering test_euler_project()")
     # Problem number 54 from Project Euler
     # Testing from poker_hands.txt file
     answer = 0
     script_dir = os.path.abspath(os.path.dirname(__file__))
+    logger.debug("test_euler_project(): script_dir → %s", script_dir)
     poker_hands = os.path.join(script_dir, "poker_hands.txt")
+    logger.debug("test_euler_project(): poker_hands → %s", poker_hands)
     with open(poker_hands) as file_hand:
+        logger.error("Exception in test_euler_project()", exc_info=True)
         for line in file_hand:
             player_hand = line[:14].strip()
+            logger.debug("test_euler_project(): player_hand → %s", player_hand)
             opponent_hand = line[15:].strip()
+            logger.debug("test_euler_project(): opponent_hand → %s", opponent_hand)
             player, opponent = PokerHand(player_hand), PokerHand(opponent_hand)
             output = player.compare_with(opponent)
+            logger.debug("test_euler_project(): output → %s", output)
             if output == "Win":
                 answer += 1
+    logger.debug("<<< Exiting test_euler_project()")
     assert answer == 376
