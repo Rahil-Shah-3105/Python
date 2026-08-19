@@ -4,6 +4,8 @@ import sys
 from maths.greatest_common_divisor import gcd_by_iterative
 
 from . import cryptomath_module as cryptomath
+import logging
+logger = logging.getLogger(__name__)
 
 SYMBOLS = (
     r""" !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`"""
@@ -37,6 +39,7 @@ def check_keys(key_a: int, key_b: int, mode: str) -> None:
 
 def encrypt_message(key: int, message: str) -> str:
     """
+    logger.debug(">>> Entering encrypt_message(key=%s,message=%s)", key, message)
     >>> encrypt_message(4545, 'The affine cipher is a type of monoalphabetic '
     ...                       'substitution cipher.')
     'VL}p MM{I}p~{HL}Gp{vp pFsH}pxMpyxIx JHL O}F{~pvuOvF{FuF{xIp~{HL}Gi'
@@ -55,6 +58,7 @@ def encrypt_message(key: int, message: str) -> str:
 
 def decrypt_message(key: int, message: str) -> str:
     """
+    logger.debug(">>> Entering decrypt_message(key=%s,message=%s)", key, message)
     >>> decrypt_message(4545, 'VL}p MM{I}p~{HL}Gp{vp pFsH}pxMpyxIx JHL O}F{~pvuOvF{FuF'
     ...                       '{xIp~{HL}Gi')
     'The affine cipher is a type of monoalphabetic substitution cipher.'
@@ -84,8 +88,11 @@ def get_random_key() -> int:
 
 def main() -> None:
     """
+    logger.debug(">>> Entering main()")
     >>> key = get_random_key()
     >>> msg = "This is a test!"
+    logger.debug("main(): translated → %s", translated)
+    logger.debug("main(): key → %s", key)
     >>> decrypt_message(key, encrypt_message(key, msg)) == msg
     True
     """

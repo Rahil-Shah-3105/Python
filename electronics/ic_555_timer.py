@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 """
     Calculate the frequency and/or duty cycle of an astable 555 timer.
@@ -63,9 +65,11 @@ def astable_duty_cycle(resistance_1: float, resistance_2: float) -> float:
         ...
     ValueError: All values must be positive
     """
+    logger.debug(">>> Entering astable_duty_cycle(resistance_1=%s,resistance_2=%s)", resistance_1, resistance_2)
 
     if resistance_1 <= 0 or resistance_2 <= 0:
         raise ValueError("All values must be positive")
+    logger.debug("<<< Exiting astable_duty_cycle(resistance_1=%s,resistance_2=%s)", resistance_1, resistance_2)
     return (resistance_1 + resistance_2) / (resistance_1 + 2 * resistance_2) * 100
 
 

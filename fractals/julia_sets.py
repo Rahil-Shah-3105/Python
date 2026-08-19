@@ -27,6 +27,8 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 c_cauliflower = 0.25 + 0.0j
 c_polynomial_1 = -0.4 + 0.6j
@@ -47,6 +49,8 @@ def eval_exponential(c_parameter: complex, z_values: np.ndarray) -> np.ndarray:
     >>> bool(abs(eval_exponential(1.j, 0)-1-1.j) < 1e-15)
     True
     """
+    logger.debug(">>> Entering eval_exponential(c_parameter=%s,z_values=%s)", c_parameter, z_values)
+    logger.debug("<<< Exiting eval_exponential(c_parameter=%s,z_values=%s)", c_parameter, z_values)
     return np.exp(z_values) + c_parameter
 
 
@@ -61,6 +65,8 @@ def eval_quadratic_polynomial(c_parameter: complex, z_values: np.ndarray) -> np.
     >>> round(eval_quadratic_polynomial(1.j, 0).real)
     0
     """
+    logger.debug(">>> Entering eval_quadratic_polynomial(c_parameter=%s,z_values=%s)", c_parameter, z_values)
+    logger.debug("<<< Exiting eval_quadratic_polynomial(c_parameter=%s,z_values=%s)", c_parameter, z_values)
     return z_values * z_values + c_parameter
 
 
@@ -75,10 +81,14 @@ def prepare_grid(window_size: float, nb_pixels: int) -> np.ndarray:
            [ 0.-1.j,  0.+0.j,  0.+1.j],
            [ 1.-1.j,  1.+0.j,  1.+1.j]])
     """
+    logger.debug(">>> Entering prepare_grid(window_size=%s,nb_pixels=%s)", window_size, nb_pixels)
     x = np.linspace(-window_size, window_size, nb_pixels)
     x = x.reshape((nb_pixels, 1))
+    logger.debug("prepare_grid(window_size=%s,nb_pixels=%s): x → %s", window_size, nb_pixels, x)
     y = np.linspace(-window_size, window_size, nb_pixels)
     y = y.reshape((1, nb_pixels))
+    logger.debug("prepare_grid(window_size=%s,nb_pixels=%s): y → %s", window_size, nb_pixels, y)
+    logger.debug("<<< Exiting prepare_grid(window_size=%s,nb_pixels=%s)", window_size, nb_pixels)
     return x + 1.0j * y
 
 
@@ -151,9 +161,12 @@ def ignore_overflow_warnings() -> None:
 
     >>> ignore_overflow_warnings()
     """
+    logger.debug(">>> Entering ignore_overflow_warnings()")
+    logger.debug("ignore_overflow_warnings(): message → %s", message)
     warnings.filterwarnings(
         "ignore", category=RuntimeWarning, message="overflow encountered in multiply"
     )
+    logger.debug("ignore_overflow_warnings(): category → %s", category)
     warnings.filterwarnings(
         "ignore",
         category=RuntimeWarning,
@@ -165,6 +178,7 @@ def ignore_overflow_warnings() -> None:
     warnings.filterwarnings(
         "ignore", category=RuntimeWarning, message="overflow encountered in exp"
     )
+    logger.debug("<<< Exiting ignore_overflow_warnings()")
 
 
 if __name__ == "__main__":

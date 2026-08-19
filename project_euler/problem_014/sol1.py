@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Problem 14: https://projecteuler.net/problem=14
 
@@ -34,13 +36,19 @@ def solution(n: int = 1000000) -> int:
     >>> solution(15000)
     13255
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     largest_number = 1
+    logger.debug("solution(n=%s): largest_number → %s", n, largest_number)
     pre_counter = 1
+    logger.debug("solution(n=%s): pre_counter → %s", n, pre_counter)
     counters = {1: 1}
+    logger.debug("solution(n=%s): counters → %s", n, counters)
 
     for input1 in range(2, n):
         counter = 0
+        logger.debug("solution(n=%s): counter → %s", n, counter)
         number = input1
+        logger.debug("solution(n=%s): number → %s", n, number)
 
         while True:
             if number in counters:
@@ -59,6 +67,7 @@ def solution(n: int = 1000000) -> int:
         if counter > pre_counter:
             largest_number = input1
             pre_counter = counter
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return largest_number
 
 

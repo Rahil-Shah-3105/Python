@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The first known prime found to exceed one million digits was discovered in 1999,
 and is a Mersenne prime of the form 2**6972593 - 1; it contains exactly 2,098,960
@@ -32,10 +34,14 @@ def solution(n: int = 10) -> str:
         ...
     ValueError: Invalid input
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     if not isinstance(n, int) or n < 0:
         raise ValueError("Invalid input")
     modulus = 10**n
+    logger.debug("solution(n=%s): modulus → %s", n, modulus)
     number = 28433 * (pow(2, 7830457, modulus)) + 1
+    logger.debug("solution(n=%s): number → %s", n, number)
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return str(number % modulus)
 
 

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from math import gcd
+import logging
+logger = logging.getLogger(__name__)
 
 
 def pollard_rho(
@@ -71,6 +73,8 @@ def pollard_rho(
         >>> rand_fn(1234, 1, 17)
         16
         """
+        logger.debug(">>> Entering rand_fn(value=%s,step=%s,modulus=%s)", value, step, modulus)
+        logger.debug("<<< Exiting rand_fn(value=%s,step=%s,modulus=%s)", value, step, modulus)
         return (pow(value, 2) + step) % modulus
 
     for _ in range(attempts):

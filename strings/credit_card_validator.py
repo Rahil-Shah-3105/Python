@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Functions for testing the validity of credit card numbers.
 
@@ -15,6 +17,8 @@ def validate_initial_digits(credit_card_number: str) -> bool:
     >>> all(validate_initial_digits(cc) is False for cc in invalid.split())
     True
     """
+    logger.debug(">>> Entering validate_initial_digits(credit_card_number=<redacted>)")
+    logger.debug("<<< Exiting validate_initial_digits(credit_card_number=<redacted>)")
     return credit_card_number.startswith(("34", "35", "37", "4", "5", "6"))
 
 
@@ -28,12 +32,17 @@ def luhn_validation(credit_card_number: str) -> bool:
     >>> luhn_validation('41111111111111')
     False
     """
+    logger.debug(">>> Entering luhn_validation(credit_card_number=<redacted>)")
     cc_number = credit_card_number
+    logger.debug("luhn_validation(credit_card_number=<redacted>): cc_number → %s", cc_number)
     total = 0
+    logger.debug("luhn_validation(credit_card_number=<redacted>): total → %s", total)
     half_len = len(cc_number) - 2
+    logger.debug("luhn_validation(credit_card_number=<redacted>): half_len → %s", half_len)
     for i in range(half_len, -1, -2):
         #  double the value of every second digit
         digit = int(cc_number[i])
+        logger.debug("luhn_validation(credit_card_number=<redacted>): digit → %s", digit)
         digit *= 2
         # If doubling of a number results in a two digit number
         # i.e greater than 9(e.g., 6 x 2 = 12),
@@ -49,6 +58,7 @@ def luhn_validation(credit_card_number: str) -> bool:
     for i in range(len(cc_number) - 1, -1, -2):
         total += int(cc_number[i])
 
+    logger.debug("<<< Exiting luhn_validation(credit_card_number=<redacted>)")
     return total % 10 == 0
 
 
@@ -74,7 +84,9 @@ def validate_credit_card_number(credit_card_number: str) -> bool:
     41111111111111 is an invalid credit card number because it fails the Luhn check.
     False
     """
+    logger.debug(">>> Entering validate_credit_card_number(credit_card_number=<redacted>)")
     error_message = f"{credit_card_number} is an invalid credit card number because"
+    logger.debug("validate_credit_card_number(credit_card_number=<redacted>): error_message → %s", error_message)
     if not credit_card_number.isdigit():
         print(f"{error_message} it has nonnumerical characters.")
         return False
@@ -92,6 +104,7 @@ def validate_credit_card_number(credit_card_number: str) -> bool:
         return False
 
     print(f"{credit_card_number} is a valid credit card number.")
+    logger.debug("<<< Exiting validate_credit_card_number(credit_card_number=<redacted>)")
     return True
 
 

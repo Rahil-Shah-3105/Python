@@ -14,6 +14,8 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -23,13 +25,17 @@ class Node:
     right: Node | None = None
 
     def __iter__(self) -> Iterator[int]:
+        logger.debug(">>> Entering __iter__()")
         if self.left:
             yield from self.left
         yield self.key
         if self.right:
             yield from self.right
+            logger.debug("<<< Exiting __iter__()")
 
     def __len__(self) -> int:
+        logger.debug(">>> Entering __len__()")
+        logger.debug("<<< Exiting __len__()")
         return sum(1 for _ in self)
 
 
@@ -63,8 +69,11 @@ def floor_ceiling(root: Node | None, key: int) -> tuple[int | None, int | None]:
         >>> floor_ceiling(root, 30)
         (25, None)
     """
+    logger.debug(">>> Entering floor_ceiling(root=%s,key=%s)", root, key)
     floor_val = None
+    logger.debug("floor_ceiling(root=%s,key=%s): floor_val → %s", root, key, floor_val)
     ceiling_val = None
+    logger.debug("floor_ceiling(root=%s,key=%s): ceiling_val → %s", root, key, ceiling_val)
 
     while root:
         if root.key == key:
@@ -79,6 +88,7 @@ def floor_ceiling(root: Node | None, key: int) -> tuple[int | None, int | None]:
             floor_val = root.key
             root = root.right
 
+    logger.debug("<<< Exiting floor_ceiling(root=%s,key=%s)", root, key)
     return floor_val, ceiling_val
 
 

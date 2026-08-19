@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 2: https://projecteuler.net/problem=2
 
@@ -32,15 +34,18 @@ def solution(n: int = 4000000) -> int:
     >>> solution(34)
     44
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     if n <= 1:
         return 0
     a = 0
     b = 2
     count = 0
+    logger.debug("solution(n=%s): count → %s", n, count)
     while 4 * b + a <= n:
         a, b = b, 4 * b + a
         count += a
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return count + b
 
 

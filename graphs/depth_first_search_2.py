@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 #!/usr/bin/python
 
 """Author: OMKAR PATHAK"""
@@ -5,7 +7,10 @@
 
 class Graph:
     def __init__(self):
+        logger.debug(">>> Entering __init__()")
         self.vertex = {}
+        logger.debug("__init__(self=%s): self.vertex → %s", self, self.vertex)
+        logger.debug("<<< Exiting __init__()")
 
     # for printing the Graph vertices
     def print_graph(self) -> None:
@@ -27,9 +32,11 @@ class Graph:
         2  ->  0 -> 3
         3  ->  3
         """
+        logger.debug(">>> Entering print_graph()")
         print(self.vertex)
         for i in self.vertex:
             print(i, " -> ", " -> ".join([str(j) for j in self.vertex[i]]))
+            logger.debug("<<< Exiting print_graph()")
 
     # for adding the edge between two vertices
     def add_edge(self, from_vertex: int, to_vertex: int) -> None:
@@ -47,12 +54,14 @@ class Graph:
         {0: [1, 2]}
         0  ->  1 -> 2
         """
+        logger.debug(">>> Entering add_edge(from_vertex=%s,to_vertex=%s)", from_vertex, to_vertex)
         # check if vertex is already present,
         if from_vertex in self.vertex:
             self.vertex[from_vertex].append(to_vertex)
         else:
             # else make a new vertex
             self.vertex[from_vertex] = [to_vertex]
+            logger.debug("<<< Exiting add_edge(from_vertex=%s,to_vertex=%s)", from_vertex, to_vertex)
 
     def dfs(self) -> None:
         """
@@ -70,13 +79,16 @@ class Graph:
         >>> g.dfs()
         0 1 2 3
         """
+        logger.debug(">>> Entering dfs()")
         # visited array for storing already visited nodes
         visited = [False] * len(self.vertex)
+        logger.debug("dfs(self=%s): visited → %s", self, visited)
 
         # call the recursive helper function
         for i in range(len(self.vertex)):
             if not visited[i]:
                 self.dfs_recursive(i, visited)
+                logger.debug("<<< Exiting dfs()")
 
     def dfs_recursive(self, start_vertex: int, visited: list) -> None:
         """
@@ -97,6 +109,7 @@ class Graph:
         >>> g.dfs_recursive(0, visited)
         0 1 2 3
         """
+        logger.debug(">>> Entering dfs_recursive(start_vertex=%s,visited=%s)", start_vertex, visited)
         # mark start vertex as visited
         visited[start_vertex] = True
 
@@ -107,6 +120,7 @@ class Graph:
             if not visited[i]:
                 print(" ", end="")
                 self.dfs_recursive(i, visited)
+                logger.debug("<<< Exiting dfs_recursive(start_vertex=%s,visited=%s)", start_vertex, visited)
 
 
 if __name__ == "__main__":

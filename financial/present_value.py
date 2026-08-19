@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Reference: https://www.investopedia.com/terms/p/presentvalue.asp
 
@@ -26,6 +28,7 @@ def present_value(discount_rate: float, cash_flows: list[float]) -> float:
         ...
     ValueError: Cash flows list cannot be empty
     """
+    logger.debug(">>> Entering present_value(discount_rate=%s,cash_flows=%s)", discount_rate, cash_flows)
     if discount_rate < 0:
         raise ValueError("Discount rate cannot be negative")
     if not cash_flows:
@@ -33,6 +36,7 @@ def present_value(discount_rate: float, cash_flows: list[float]) -> float:
     present_value = sum(
         cash_flow / ((1 + discount_rate) ** i) for i, cash_flow in enumerate(cash_flows)
     )
+    logger.debug("<<< Exiting present_value(discount_rate=%s,cash_flows=%s)", discount_rate, cash_flows)
     return round(present_value, ndigits=2)
 
 

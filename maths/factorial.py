@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Factorial of a positive integer -- https://en.wikipedia.org/wiki/Factorial
 """
@@ -25,13 +27,16 @@ def factorial(number: int) -> int:
     >>> factorial(0)
     1
     """
+    logger.debug(">>> Entering factorial(number=%s)", number)
     if number != int(number):
         raise ValueError("factorial() only accepts integral values")
     if number < 0:
         raise ValueError("factorial() not defined for negative values")
     value = 1
+    logger.debug("factorial(number=%s): value → %s", number, value)
     for i in range(1, number + 1):
         value *= i
+    logger.debug("<<< Exiting factorial(number=%s)", number)
     return value
 
 
@@ -52,10 +57,12 @@ def factorial_recursive(n: int) -> int:
         ...
     ValueError: factorial_recursive() not defined for negative values
     """
+    logger.debug(">>> Entering factorial_recursive(n=%s)", n)
     if not isinstance(n, int):
         raise ValueError("factorial_recursive() only accepts integral values")
     if n < 0:
         raise ValueError("factorial_recursive() not defined for negative values")
+    logger.debug("<<< Exiting factorial_recursive(n=%s)", n)
     return 1 if n in {0, 1} else n * factorial_recursive(n - 1)
 
 

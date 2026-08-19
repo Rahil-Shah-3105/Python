@@ -1,6 +1,8 @@
 # Youtube Explanation: https://www.youtube.com/watch?v=lBRtnuxg-gU
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def minimum_cost_path(matrix: list[list[int]]) -> int:
@@ -14,6 +16,7 @@ def minimum_cost_path(matrix: list[list[int]]) -> int:
     >>> minimum_cost_path([[2, 1, 4], [2, 1, 3], [3, 2, 1]])
     7
     """
+    logger.debug(">>> Entering minimum_cost_path(matrix=%s)", matrix)
 
     # preprocessing the first row
     for i in range(1, len(matrix[0])):
@@ -28,6 +31,7 @@ def minimum_cost_path(matrix: list[list[int]]) -> int:
         for j in range(1, len(matrix[0])):
             matrix[i][j] += min(matrix[i - 1][j], matrix[i][j - 1])
 
+    logger.debug("<<< Exiting minimum_cost_path(matrix=%s)", matrix)
     return matrix[-1][-1]
 
 

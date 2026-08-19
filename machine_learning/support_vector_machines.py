@@ -1,6 +1,8 @@
 import numpy as np
 from numpy import ndarray
 from scipy.optimize import Bounds, LinearConstraint, minimize
+import logging
+logger = logging.getLogger(__name__)
 
 
 def norm_squared(vector: ndarray) -> float:
@@ -21,6 +23,8 @@ def norm_squared(vector: ndarray) -> float:
     >>> int(norm_squared([0, 0]))
     0
     """
+    logger.debug(">>> Entering norm_squared(vector=%s)", vector)
+    logger.debug("<<< Exiting norm_squared(vector=%s)", vector)
     return np.dot(vector, vector)
 
 
@@ -80,6 +84,8 @@ class SVC:
     # kernels
     def __linear(self, vector1: ndarray, vector2: ndarray) -> float:
         """Linear kernel (as if no kernel used at all)"""
+        logger.debug(">>> Entering __linear(vector1=%s,vector2=%s)", vector1, vector2)
+        logger.debug("<<< Exiting __linear(vector1=%s,vector2=%s)", vector1, vector2)
         return np.dot(vector1, vector2)
 
     def __rbf(self, vector1: ndarray, vector2: ndarray) -> float:
@@ -96,6 +102,8 @@ class SVC:
         Returns:
             float: exp(-(gamma * norm_squared(vector1 - vector2)))
         """
+        logger.debug(">>> Entering __rbf(vector1=%s,vector2=%s)", vector1, vector2)
+        logger.debug("<<< Exiting __rbf(vector1=%s,vector2=%s)", vector1, vector2)
         return np.exp(-(self.gamma * norm_squared(vector1 - vector2)))
 
     def fit(self, observations: list[ndarray], classes: ndarray) -> None:
@@ -137,6 +145,7 @@ class SVC:
             Return:
                 float: Wolfe's Dual result to minimize
             """
+            logger.debug(">>> Entering to_minimize(candidate=%s)", candidate)
             s = 0
             (n,) = np.shape(candidate)
             for i in range(n):
@@ -148,6 +157,7 @@ class SVC:
                         * classes[j]
                         * self.kernel(observations[i], observations[j])
                     )
+            logger.debug("<<< Exiting to_minimize(candidate=%s)", candidate)
             return 1 / 2 * s - sum(candidate)
 
         ly_contraint = LinearConstraint(classes, 0, 0)
@@ -191,12 +201,14 @@ class SVC:
         >>> s.predict(np.asarray([2, 2]))
         -1
         """
+        logger.debug(">>> Entering predict(observation=%s)", observation)
         s = sum(
             self.optimum[n]
             * self.classes[n]
             * self.kernel(self.observations[n], observation)
             for n in range(len(self.classes))
         )
+        logger.debug("<<< Exiting predict(observation=%s)", observation)
         return 1 if s + self.offset >= 0 else -1
 
 

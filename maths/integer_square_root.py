@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Integer Square Root Algorithm -- An efficient method to calculate the square root of a
 non-negative integer 'num' rounded down to the nearest integer. It uses a binary search
@@ -44,6 +46,7 @@ def integer_square_root(num: int) -> int:
         ...
     ValueError: num must be non-negative integer
     """
+    logger.debug(">>> Entering integer_square_root(num=%s)", num)
     if not isinstance(num, int) or num < 0:
         raise ValueError("num must be non-negative integer")
 
@@ -51,10 +54,13 @@ def integer_square_root(num: int) -> int:
         return num
 
     left_bound = 0
+    logger.debug("integer_square_root(num=%s): left_bound → %s", num, left_bound)
     right_bound = num // 2
+    logger.debug("integer_square_root(num=%s): right_bound → %s", num, right_bound)
 
     while left_bound <= right_bound:
         mid = left_bound + (right_bound - left_bound) // 2
+        logger.debug("integer_square_root(num=%s): mid → %s", num, mid)
         mid_squared = mid * mid
         if mid_squared == num:
             return mid
@@ -64,6 +70,7 @@ def integer_square_root(num: int) -> int:
         else:
             right_bound = mid - 1
 
+    logger.debug("<<< Exiting integer_square_root(num=%s)", num)
     return right_bound
 
 

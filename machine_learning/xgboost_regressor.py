@@ -4,6 +4,8 @@ from sklearn.datasets import fetch_california_housing
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
+import logging
+logger = logging.getLogger(__name__)
 
 
 def data_handling(data: dict) -> tuple:
@@ -47,16 +49,20 @@ def main() -> None:
     Mean Absolute Error: 0.30957163379906033
     Mean Square Error: 0.22611560196662744
     """
+    logger.debug(">>> Entering main()")
     # Load California house price dataset
     california = fetch_california_housing()
+    logger.debug("main(): california → %s", california)
     data, target = data_handling(california)
     x_train, x_test, y_train, y_test = train_test_split(
         data, target, test_size=0.25, random_state=1
     )
     predictions = xgboost(x_train, y_train, x_test)
+    logger.debug("main(): predictions → %s", predictions)
     # Error printing
     print(f"Mean Absolute Error: {mean_absolute_error(y_test, predictions)}")
     print(f"Mean Square Error: {mean_squared_error(y_test, predictions)}")
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

@@ -35,6 +35,8 @@ After generating each chain, the length is checked and the counter increases.
 """
 
 from math import factorial
+import logging
+logger = logging.getLogger(__name__)
 
 DIGIT_FACTORIAL: dict[str, int] = {str(digit): factorial(digit) for digit in range(10)}
 
@@ -59,6 +61,7 @@ def digit_factorial_sum(number: int) -> int:
     >>> digit_factorial_sum(69)
     363600
     """
+    logger.debug(">>> Entering digit_factorial_sum(number=%s)", number)
     if not isinstance(number, int):
         raise TypeError("Parameter number must be int")
 
@@ -66,6 +69,7 @@ def digit_factorial_sum(number: int) -> int:
         raise ValueError("Parameter number must be greater than or equal to 0")
 
     # Converts number in string to iterate on its digits and adds its factorial.
+    logger.debug("<<< Exiting digit_factorial_sum(number=%s)", number)
     return sum(DIGIT_FACTORIAL[digit] for digit in str(number))
 
 
@@ -97,6 +101,7 @@ def solution(chain_length: int = 60, number_limit: int = 1000000) -> int:
     >>> solution(10, 1000)
     26
     """
+    logger.debug(">>> Entering solution(chain_length=%s,number_limit=%s)", chain_length, number_limit)
 
     if not isinstance(chain_length, int) or not isinstance(number_limit, int):
         raise TypeError("Parameters chain_length and number_limit must be int")
@@ -108,17 +113,20 @@ def solution(chain_length: int = 60, number_limit: int = 1000000) -> int:
 
     # the counter for the chains with the exact desired length
     chains_counter = 0
+    logger.debug("solution(chain_length=%s,number_limit=%s): chains_counter → %s", chain_length, number_limit, chains_counter)
     # the cached sizes of the previous chains
     chain_sets_lengths: dict[int, int] = {}
 
     for start_chain_element in range(1, number_limit):
         # The temporary set will contain the elements of the chain
         chain_set = set()
+        logger.debug("solution(chain_length=%s,number_limit=%s): chain_set → %s", chain_length, number_limit, chain_set)
         chain_set_length = 0
 
         # Stop computing the chain when you find a cached size, a repeating item or the
         # length is greater then the desired one.
         chain_element = start_chain_element
+        logger.debug("solution(chain_length=%s,number_limit=%s): chain_element → %s", chain_length, number_limit, chain_element)
         while (
             chain_element not in chain_sets_lengths
             and chain_element not in chain_set
@@ -137,6 +145,7 @@ def solution(chain_length: int = 60, number_limit: int = 1000000) -> int:
         if chain_set_length == chain_length:
             chains_counter += 1
 
+    logger.debug("<<< Exiting solution(chain_length=%s,number_limit=%s)", chain_length, number_limit)
     return chains_counter
 
 

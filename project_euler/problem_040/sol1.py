@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Champernowne's constant
 Problem 40
@@ -21,7 +23,9 @@ def solution():
     >>> solution()
     210
     """
+    logger.debug(">>> Entering solution()")
     constant = []
+    logger.debug("solution(): constant → %s", constant)
     i = 1
 
     while len(constant) < 1e6:
@@ -30,6 +34,7 @@ def solution():
 
     constant = "".join(constant)
 
+    logger.debug("<<< Exiting solution()")
     return (
         int(constant[0])
         * int(constant[9])

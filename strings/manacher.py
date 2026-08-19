@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def palindromic_string(input_string: str) -> str:
     """
     >>> palindromic_string('abbbaba')
@@ -15,11 +17,15 @@ def palindromic_string(input_string: str) -> str:
 
     3. return corresponding output_string by removing all "|"
     """
+    logger.debug(">>> Entering palindromic_string(input_string=%s)", input_string)
     max_length = 0
+    logger.debug("palindromic_string(input_string=%s): max_length → %s", input_string, max_length)
 
     # if input_string is "aba" than new_input_string become "a|b|a"
     new_input_string = ""
+    logger.debug("palindromic_string(input_string=%s): new_input_string → %s", input_string, new_input_string)
     output_string = ""
+    logger.debug("palindromic_string(input_string=%s): output_string → %s", input_string, output_string)
 
     # append each character + "|" in new_string for range(0, length-1)
     for i in input_string[: len(input_string) - 1]:
@@ -33,9 +39,11 @@ def palindromic_string(input_string: str) -> str:
 
     # length[i] shows the length of palindromic substring with center i
     length = [1 for i in range(len(new_input_string))]
+    logger.debug("palindromic_string(input_string=%s): length → %s", input_string, length)
 
     # for each character in new_string find corresponding palindromic string
     start = 0
+    logger.debug("palindromic_string(input_string=%s): start → %s", input_string, start)
     for j in range(len(new_input_string)):
         k = 1 if j > right else min(length[left + right - j] // 2, right - j + 1)
         while (

@@ -13,6 +13,8 @@ Examples: https://www.javatpoint.com/fp-growth-algorithm-in-data-mining
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -41,15 +43,21 @@ class TreeNode:
     node_link: TreeNode | None = None
 
     def __repr__(self) -> str:
+        logger.debug(">>> Entering __repr__()")
+        logger.debug("<<< Exiting __repr__()")
         return f"TreeNode({self.name!r}, {self.count!r}, {self.parent!r})"
 
     def inc(self, num_occur: int) -> None:
+        logger.debug(">>> Entering inc(num_occur=%s)", num_occur)
         self.count += num_occur
+        logger.debug("<<< Exiting inc(num_occur=%s)", num_occur)
 
     def disp(self, ind: int = 1) -> None:
+        logger.debug(">>> Entering disp(ind=%s)", ind)
         print(f"{'  ' * ind} {self.name}  {self.count}")
         for child in self.children.values():
             child.disp(ind + 1)
+            logger.debug("<<< Exiting disp(ind=%s)", ind)
 
 
 def create_tree(data_set: list, min_sup: int = 1) -> tuple[TreeNode, dict]:
@@ -94,6 +102,7 @@ def create_tree(data_set: list, min_sup: int = 1) -> tuple[TreeNode, dict]:
     >>> sorted(fp_tree.children['A'].children)
     ['B', 'C']
     """
+    logger.debug(">>> Entering create_tree(data_set=%s,min_sup=%s)", data_set, min_sup)
     header_table: dict = {}
     for trans in data_set:
         for item in trans:
@@ -111,6 +120,8 @@ def create_tree(data_set: list, min_sup: int = 1) -> tuple[TreeNode, dict]:
         header_table[key] = [value, None]
 
     fp_tree = TreeNode("Null Set", 1, None)  # Parent is None for the root node
+    logger.debug("create_tree(data_set=%s,min_sup=%s): fp_tree → %s", data_set, min_sup, fp_tree)
+    logger.debug("create_tree(data_set=%s,min_sup=%s): local_d → %s", data_set, min_sup, local_d)
     for tran_set in data_set:
         local_d = {
             item: header_table[item][0] for item in tran_set if item in freq_item_set
@@ -120,8 +131,10 @@ def create_tree(data_set: list, min_sup: int = 1) -> tuple[TreeNode, dict]:
                 local_d.items(), key=lambda item_info: item_info[1], reverse=True
             )
             ordered_items = [item[0] for item in sorted_items]
+            logger.debug("create_tree(data_set=%s,min_sup=%s): ordered_items → %s", data_set, min_sup, ordered_items)
             update_tree(ordered_items, fp_tree, header_table, 1)
 
+    logger.debug("<<< Exiting create_tree(data_set=%s,min_sup=%s)", data_set, min_sup)
     return fp_tree, header_table
 
 
@@ -158,6 +171,7 @@ def update_tree(items: list, in_tree: TreeNode, header_table: dict, count: int) 
     >>> header_table['E'][1].name
     'E'
     """
+    logger.debug(">>> Entering update_tree(items=%s,in_tree=%s,header_table=%s,count=%s)", items, in_tree, header_table, count)
     if items[0] in in_tree.children:
         in_tree.children[items[0]].inc(count)
     else:
@@ -168,6 +182,7 @@ def update_tree(items: list, in_tree: TreeNode, header_table: dict, count: int) 
             update_header(header_table[items[0]][1], in_tree.children[items[0]])
     if len(items) > 1:
         update_tree(items[1:], in_tree.children[items[0]], header_table, count)
+        logger.debug("<<< Exiting update_tree(items=%s,in_tree=%s,header_table=%s,count=%s)", items, in_tree, header_table, count)
 
 
 def update_header(node_to_test: TreeNode, target_node: TreeNode) -> TreeNode:
@@ -202,11 +217,14 @@ def update_header(node_to_test: TreeNode, target_node: TreeNode) -> TreeNode:
     >>> node2.node_link is None
     True
     """
+    logger.debug(">>> Entering update_header(node_to_test=%s,target_node=%s)", node_to_test, target_node)
     while node_to_test.node_link is not None:
         node_to_test = node_to_test.node_link
     if node_to_test.node_link is None:
         node_to_test.node_link = target_node
+        logger.debug("update_header(node_to_test=%s,target_node=%s): node_to_test.node_link → %s", node_to_test, target_node, node_to_test.node_link)
     # Return the updated node
+    logger.debug("<<< Exiting update_header(node_to_test=%s,target_node=%s)", node_to_test, target_node)
     return node_to_test
 
 
@@ -235,9 +253,11 @@ def ascend_tree(leaf_node: TreeNode, prefix_path: list[str]) -> None:
     >>> path # ascending from a leaf node 'A'
     ['A']
     """
+    logger.debug(">>> Entering ascend_tree(leaf_node=%s,prefix_path=%s)", leaf_node, prefix_path)
     if leaf_node.parent is not None:
         prefix_path.append(leaf_node.name)
         ascend_tree(leaf_node.parent, prefix_path)
+        logger.debug("<<< Exiting ascend_tree(leaf_node=%s,prefix_path=%s)", leaf_node, prefix_path)
 
 
 def find_prefix_path(base_pat: frozenset, tree_node: TreeNode | None) -> dict:  # noqa: ARG001
@@ -266,6 +286,7 @@ def find_prefix_path(base_pat: frozenset, tree_node: TreeNode | None) -> dict:  
     >>> sorted(find_prefix_path(base_pattern, fp_tree.children['A']))
     []
     """
+    logger.debug(">>> Entering find_prefix_path(base_pat=%s,tree_node=%s)", base_pat, tree_node)
     cond_pats: dict = {}
     while tree_node is not None:
         prefix_path: list = []
@@ -273,6 +294,7 @@ def find_prefix_path(base_pat: frozenset, tree_node: TreeNode | None) -> dict:  
         if len(prefix_path) > 1:
             cond_pats[frozenset(prefix_path[1:])] = tree_node.count
         tree_node = tree_node.node_link
+    logger.debug("<<< Exiting find_prefix_path(base_pat=%s,tree_node=%s)", base_pat, tree_node)
     return cond_pats
 
 

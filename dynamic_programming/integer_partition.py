@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The number of partitions of a number n into at least k parts equals the number of
 partitions into exactly k parts plus the number of partitions into at least k-1 parts.
@@ -31,6 +33,7 @@ def partition(m: int) -> int:
         ...
     TypeError: 'float' object cannot be interpreted as an integer
     """
+    logger.debug(">>> Entering partition(m=%s)", m)
     memo: list[list[int]] = [[0 for _ in range(m)] for _ in range(m + 1)]
     for i in range(m + 1):
         memo[i][0] = 1
@@ -41,6 +44,7 @@ def partition(m: int) -> int:
             if n - k > 0:
                 memo[n][k] += memo[n - k - 1][k]
 
+    logger.debug("<<< Exiting partition(m=%s)", m)
     return memo[m][m - 1]
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def is_sum_subset(arr: list[int], required_sum: int) -> bool:
     """
     >>> is_sum_subset([2, 4, 6, 8], 5)
@@ -5,10 +7,13 @@ def is_sum_subset(arr: list[int], required_sum: int) -> bool:
     >>> is_sum_subset([2, 4, 6, 8], 14)
     True
     """
+    logger.debug(">>> Entering is_sum_subset(arr=%s,required_sum=%s)", arr, required_sum)
     # a subset value says 1 if that subset sum can be formed else 0
     # initially no subsets can be formed hence False/0
     arr_len = len(arr)
+    logger.debug("is_sum_subset(arr=%s,required_sum=%s): arr_len → %s", arr, required_sum, arr_len)
     subset = [[False] * (required_sum + 1) for _ in range(arr_len + 1)]
+    logger.debug("is_sum_subset(arr=%s,required_sum=%s): subset → %s", arr, required_sum, subset)
 
     # for each arr value, a sum of zero(0) can be formed by not taking any element
     # hence True/1
@@ -26,6 +31,7 @@ def is_sum_subset(arr: list[int], required_sum: int) -> bool:
             if arr[i - 1] <= j:
                 subset[i][j] = subset[i - 1][j] or subset[i - 1][j - arr[i - 1]]
 
+    logger.debug("<<< Exiting is_sum_subset(arr=%s,required_sum=%s)", arr, required_sum)
     return subset[arr_len][required_sum]
 
 

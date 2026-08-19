@@ -10,6 +10,8 @@ python3 p_series.py
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def p_series(nth_term: float | str, power: float | str) -> list[str]:
@@ -30,6 +32,7 @@ def p_series(nth_term: float | str, power: float | str) -> list[str]:
     >>> p_series(1, 1)
     ['1']
     """
+    logger.debug(">>> Entering p_series(nth_term=%s,power=%s)", nth_term, power)
     if nth_term == "":
         return [""]
     nth_term = int(nth_term)
@@ -37,6 +40,7 @@ def p_series(nth_term: float | str, power: float | str) -> list[str]:
     series: list[str] = []
     for temp in range(int(nth_term)):
         series.append(f"1 / {pow(temp + 1, int(power))}" if series else "1")
+    logger.debug("<<< Exiting p_series(nth_term=%s,power=%s)", nth_term, power)
     return series
 
 

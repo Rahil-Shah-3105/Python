@@ -11,6 +11,8 @@ python3 quick_sort.py
 from __future__ import annotations
 
 from random import randrange
+import logging
+logger = logging.getLogger(__name__)
 
 
 def quick_sort(collection: list) -> list:
@@ -27,19 +29,24 @@ def quick_sort(collection: list) -> list:
     >>> quick_sort([-2, 5, 0, -45])
     [-45, -2, 0, 5]
     """
+    logger.debug(">>> Entering quick_sort(collection=%s)", collection)
     # Base case: if the collection has 0 or 1 elements, it is already sorted
     if len(collection) < 2:
         return collection
 
     # Randomly select a pivot index and remove the pivot element from the collection
     pivot_index = randrange(len(collection))
+    logger.debug("quick_sort(collection=%s): pivot_index → %s", collection, pivot_index)
     pivot = collection.pop(pivot_index)
+    logger.debug("quick_sort(collection=%s): pivot → %s", collection, pivot)
 
     # Partition the remaining elements into two groups: lesser or equal, and greater
     lesser = [item for item in collection if item <= pivot]
     greater = [item for item in collection if item > pivot]
+    logger.debug("quick_sort(collection=%s): greater → %s", collection, greater)
 
     # Recursively sort the lesser and greater groups, and combine with the pivot
+    logger.debug("<<< Exiting quick_sort(collection=%s)", collection)
     return [*quick_sort(lesser), pivot, *quick_sort(greater)]
 
 

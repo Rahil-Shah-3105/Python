@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 57: https://projecteuler.net/problem=57
 It is possible to show that the square root of two can be expressed as an infinite
@@ -31,16 +33,23 @@ def solution(n: int = 1000) -> int:
     >>> solution(10000)
     1508
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     prev_numerator, prev_denominator = 1, 1
     result = []
+    logger.debug("solution(n=%s): result → %s", n, result)
     for i in range(1, n + 1):
         numerator = prev_numerator + 2 * prev_denominator
+        logger.debug("solution(n=%s): numerator → %s", n, numerator)
         denominator = prev_numerator + prev_denominator
+        logger.debug("solution(n=%s): denominator → %s", n, denominator)
         if len(str(numerator)) > len(str(denominator)):
             result.append(i)
         prev_numerator = numerator
+        logger.debug("solution(n=%s): prev_numerator → %s", n, prev_numerator)
         prev_denominator = denominator
+        logger.debug("solution(n=%s): prev_denominator → %s", n, prev_denominator)
 
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return len(result)
 
 

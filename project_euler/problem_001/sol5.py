@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 1: https://projecteuler.net/problem=1
 
@@ -24,7 +26,9 @@ def solution(n: int = 1000) -> int:
     >>> solution(600)
     83700
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return sum(i for i in range(n) if i % 3 == 0 or i % 5 == 0)
 
 

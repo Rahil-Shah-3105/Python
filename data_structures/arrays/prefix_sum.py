@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Author  : Alexander Pantyukhin
 Date    : November 3, 2022
@@ -9,14 +11,19 @@ Implement the class of prefix sum with useful functions based on it.
 
 class PrefixSum:
     def __init__(self, array: list[int]) -> None:
+        logger.debug(">>> Entering __init__(array=%s)", array)
         len_array = len(array)
+        logger.debug("__init__(array=%s): len_array → %s", array, len_array)
+        logger.debug("__init__(self=%s,array=%s): len_array → %s", self, array, len_array)
         self.prefix_sum = [0] * len_array
+        logger.debug("__init__(self=%s,array=%s): self.prefix_sum → %s", self, array, self.prefix_sum)
 
         if len_array > 0:
             self.prefix_sum[0] = array[0]
 
         for i in range(1, len_array):
             self.prefix_sum[i] = self.prefix_sum[i - 1] + array[i]
+            logger.debug("<<< Exiting __init__(array=%s)", array)
 
     def get_sum(self, start: int, end: int) -> int:
         """
@@ -47,6 +54,7 @@ class PrefixSum:
         ...
         ValueError: Invalid range specified.
         """
+        logger.debug(">>> Entering get_sum(start=%s,end=%s)", start, end)
         if not self.prefix_sum:
             raise ValueError("The array is empty.")
 
@@ -56,6 +64,7 @@ class PrefixSum:
         if start == 0:
             return self.prefix_sum[end]
 
+        logger.debug("<<< Exiting get_sum(start=%s,end=%s)", start, end)
         return self.prefix_sum[end] - self.prefix_sum[start - 1]
 
     def contains_sum(self, target_sum: int) -> bool:
@@ -79,14 +88,17 @@ class PrefixSum:
         >>> PrefixSum([1,-2,3]).contains_sum(2)
         True
         """
+        logger.debug(">>> Entering contains_sum(target_sum=%s)", target_sum)
 
         sums = {0}
+        logger.debug("contains_sum(self=%s,target_sum=%s): sums → %s", self, target_sum, sums)
         for sum_item in self.prefix_sum:
             if sum_item - target_sum in sums:
                 return True
 
             sums.add(sum_item)
 
+        logger.debug("<<< Exiting contains_sum(target_sum=%s)", target_sum)
         return False
 
 

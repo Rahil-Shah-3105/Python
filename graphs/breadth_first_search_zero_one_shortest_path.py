@@ -9,6 +9,8 @@ from __future__ import annotations
 from collections import deque
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -23,15 +25,22 @@ class AdjacencyList:
     """Graph adjacency list."""
 
     def __init__(self, size: int):
+        logger.debug(">>> Entering __init__(size=%s)", size)
+        logger.debug("__init__(self=%s,size=%s): self._size → %s", self, size, self._size)
         self._graph: list[list[Edge]] = [[] for _ in range(size)]
+        logger.debug("<<< Exiting __init__(size=%s)", size)
         self._size = size
 
     def __getitem__(self, vertex: int) -> Iterator[Edge]:
         """Get all the vertices adjacent to the given one."""
+        logger.debug(">>> Entering __getitem__(vertex=%s)", vertex)
+        logger.debug("<<< Exiting __getitem__(vertex=%s)", vertex)
         return iter(self._graph[vertex])
 
     @property
     def size(self):
+        logger.debug(">>> Entering size()")
+        logger.debug("<<< Exiting size()")
         return self._size
 
     def add_edge(self, from_vertex: int, to_vertex: int, weight: int):
@@ -52,6 +61,7 @@ class AdjacencyList:
             ...
         ValueError: Vertex indexes must be in [0; size).
         """
+        logger.debug(">>> Entering add_edge(from_vertex=%s,to_vertex=%s,weight=%s)", from_vertex, to_vertex, weight)
         if weight not in (0, 1):
             raise ValueError("Edge weight must be either 0 or 1.")
 
@@ -59,6 +69,7 @@ class AdjacencyList:
             raise ValueError("Vertex indexes must be in [0; size).")
 
         self._graph[from_vertex].append(Edge(to_vertex, weight))
+        logger.debug("<<< Exiting add_edge(from_vertex=%s,to_vertex=%s,weight=%s)", from_vertex, to_vertex, weight)
 
     def get_shortest_path(self, start_vertex: int, finish_vertex: int) -> int | None:
         """
@@ -107,19 +118,27 @@ class AdjacencyList:
             ...
         ValueError: No path from start_vertex to finish_vertex.
         """
+        logger.debug(">>> Entering get_shortest_path(start_vertex=%s,finish_vertex=%s)", start_vertex, finish_vertex)
         queue = deque([start_vertex])
+        logger.debug("get_shortest_path(self=%s,start_vertex=%s,finish_vertex=%s): queue → %s", self, start_vertex, finish_vertex, queue)
+        logger.debug("get_shortest_path(start_vertex=%s,finish_vertex=%s): queue → %s", start_vertex, finish_vertex, queue)
         distances: list[int | None] = [None] * self.size
         distances[start_vertex] = 0
 
         while queue:
             current_vertex = queue.popleft()
+            logger.debug("get_shortest_path(self=%s,start_vertex=%s,finish_vertex=%s): current_vertex → %s", self, start_vertex, finish_vertex, current_vertex)
+            logger.debug("get_shortest_path(start_vertex=%s,finish_vertex=%s): current_vertex → %s", start_vertex, finish_vertex, current_vertex)
             current_distance = distances[current_vertex]
+            logger.debug("get_shortest_path(self=%s,start_vertex=%s,finish_vertex=%s): current_distance → %s", self, start_vertex, finish_vertex, current_distance)
             if current_distance is None:
                 continue
 
             for edge in self[current_vertex]:
                 new_distance = current_distance + edge.weight
+                logger.debug("get_shortest_path(self=%s,start_vertex=%s,finish_vertex=%s): new_distance → %s", self, start_vertex, finish_vertex, new_distance)
                 dest_vertex_distance = distances[edge.destination_vertex]
+                logger.debug("get_shortest_path(self=%s,start_vertex=%s,finish_vertex=%s): dest_vertex_distance → %s", self, start_vertex, finish_vertex, dest_vertex_distance)
                 if (
                     isinstance(dest_vertex_distance, int)
                     and new_distance >= dest_vertex_distance
@@ -134,6 +153,7 @@ class AdjacencyList:
         if distances[finish_vertex] is None:
             raise ValueError("No path from start_vertex to finish_vertex.")
 
+        logger.debug("<<< Exiting get_shortest_path(start_vertex=%s,finish_vertex=%s)", start_vertex, finish_vertex)
         return distances[finish_vertex]
 
 

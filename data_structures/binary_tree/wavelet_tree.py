@@ -9,17 +9,21 @@ such as the with segment trees or fenwick trees. You can read more about them he
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 test_array = [2, 1, 4, 5, 6, 0, 8, 9, 1, 2, 0, 6, 4, 2, 0, 6, 5, 3, 2, 7]
 
 
 class Node:
     def __init__(self, length: int) -> None:
+        logger.debug(">>> Entering __init__(length=%s)", length)
         self.minn: int = -1
         self.maxx: int = -1
         self.map_left: list[int] = [-1] * length
         self.left: Node | None = None
         self.right: Node | None = None
+        logger.debug("<<< Exiting __init__(length=%s)", length)
 
     def __repr__(self) -> str:
         """
@@ -29,6 +33,8 @@ class Node:
         >>> repr(node) == str(node)
         True
         """
+        logger.debug(">>> Entering __repr__()")
+        logger.debug("<<< Exiting __repr__()")
         return f"Node(min_value={self.minn} max_value={self.maxx})"
 
 
@@ -40,7 +46,10 @@ def build_tree(arr: list[int]) -> Node | None:
     >>> build_tree(test_array)
     Node(min_value=0 max_value=9)
     """
+    logger.debug(">>> Entering build_tree(arr=%s)", arr)
     root = Node(len(arr))
+    logger.debug("build_tree(arr=%s): root → %s", arr, root)
+    logger.warning("build_tree(arr=%s): root → %s", arr, root)
     root.minn, root.maxx = min(arr), max(arr)
     # Leaf node case where the node contains only one unique value
     if root.minn == root.maxx:
@@ -52,6 +61,7 @@ def build_tree(arr: list[int]) -> Node | None:
     then recursively build trees for left_arr and right_arr
     """
     pivot = (root.minn + root.maxx) // 2
+    logger.debug("build_tree(arr=%s): pivot → %s", arr, pivot)
 
     left_arr: list[int] = []
     right_arr: list[int] = []
@@ -64,6 +74,7 @@ def build_tree(arr: list[int]) -> Node | None:
         root.map_left[index] = len(left_arr)
     root.left = build_tree(left_arr)
     root.right = build_tree(right_arr)
+    logger.debug("<<< Exiting build_tree(arr=%s)", arr)
     return root
 
 
@@ -83,17 +94,20 @@ def rank_till_index(node: Node | None, num: int, index: int) -> int:
     >>> rank_till_index(root, 0, 9)
     1
     """
+    logger.debug(">>> Entering rank_till_index(node=%s,num=%s,index=%s)", node, num, index)
     if index < 0 or node is None:
         return 0
     # Leaf node cases
     if node.minn == node.maxx:
         return index + 1 if node.minn == num else 0
     pivot = (node.minn + node.maxx) // 2
+    logger.debug("rank_till_index(node=%s,num=%s,index=%s): pivot → %s", node, num, index, pivot)
     if num <= pivot:
         # go the left subtree and map index to the left subtree
         return rank_till_index(node.left, num, node.map_left[index] - 1)
     else:
         # go to the right subtree and map index to the right subtree
+        logger.debug("<<< Exiting rank_till_index(node=%s,num=%s,index=%s)", node, num, index)
         return rank_till_index(node.right, num, index - node.map_left[index])
 
 
@@ -111,10 +125,14 @@ def rank(node: Node | None, num: int, start: int, end: int) -> int:
     >>> rank(root, 0, 5, 10)
     2
     """
+    logger.debug(">>> Entering rank(node=%s,num=%s,start=%s,end=%s)", node, num, start, end)
     if start > end:
         return 0
     rank_till_end = rank_till_index(node, num, end)
+    logger.debug("rank(node=%s,num=%s,start=%s,end=%s): rank_till_end → %s", node, num, start, end, rank_till_end)
     rank_before_start = rank_till_index(node, num, start - 1)
+    logger.debug("rank(node=%s,num=%s,start=%s,end=%s): rank_before_start → %s", node, num, start, end, rank_before_start)
+    logger.debug("<<< Exiting rank(node=%s,num=%s,start=%s,end=%s)", node, num, start, end)
     return rank_till_end - rank_before_start
 
 
@@ -133,6 +151,7 @@ def quantile(node: Node | None, index: int, start: int, end: int) -> int:
     >>> quantile(root, 4, 2, 5)
     -1
     """
+    logger.debug(">>> Entering quantile(node=%s,index=%s,start=%s,end=%s)", node, index, start, end)
     if index > (end - start) or start > end or node is None:
         return -1
     # Leaf node case
@@ -150,6 +169,7 @@ def quantile(node: Node | None, index: int, start: int, end: int) -> int:
             node.map_left[end] - 1,
         )
     else:
+        logger.debug("<<< Exiting quantile(node=%s,index=%s,start=%s,end=%s)", node, index, start, end)
         return quantile(
             node.right,
             index - num_elements_in_left_tree,

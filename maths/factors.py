@@ -1,5 +1,7 @@
 from doctest import testmod
 from math import sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def factors_of_a_number(num: int) -> list:
@@ -13,6 +15,7 @@ def factors_of_a_number(num: int) -> list:
     >>> factors_of_a_number(-24)
     []
     """
+    logger.debug(">>> Entering factors_of_a_number(num=%s)", num)
     facs: list[int] = []
     if num < 1:
         return facs
@@ -27,6 +30,7 @@ def factors_of_a_number(num: int) -> list:
             if d != i:  # If d and i are distinct
                 facs.append(d)  # we have found another factor
     facs.sort()
+    logger.debug("<<< Exiting factors_of_a_number(num=%s)", num)
     return facs
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Code contributed by Honey Sharma
 Source: https://en.wikipedia.org/wiki/Cycle_sort
@@ -18,7 +20,9 @@ def cycle_sort(array: list) -> list:
     >>> cycle_sort([])
     []
     """
+    logger.debug(">>> Entering cycle_sort(array=%s)", array)
     array_len = len(array)
+    logger.debug("cycle_sort(array=%s): array_len → %s", array, array_len)
     for cycle_start in range(array_len - 1):
         item = array[cycle_start]
 
@@ -45,6 +49,7 @@ def cycle_sort(array: list) -> list:
 
             array[pos], item = item, array[pos]
 
+    logger.debug("<<< Exiting cycle_sort(array=%s)", array)
     return array
 
 

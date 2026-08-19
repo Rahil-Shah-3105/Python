@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 class BinaryHeap:
     """
     A max-heap implementation in Python
@@ -17,8 +19,12 @@ class BinaryHeap:
     """
 
     def __init__(self):
+        logger.debug(">>> Entering __init__()")
         self.__heap = [0]
+        logger.debug("__init__(self=%s): self.__heap → %s", self, self.__heap)
         self.__size = 0
+        logger.debug("__init__(self=%s): self.__size → %s", self, self.__size)
+        logger.debug("<<< Exiting __init__()")
 
     def __swap_up(self, i: int) -> None:
         """Swap the element up"""

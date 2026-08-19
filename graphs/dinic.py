@@ -1,12 +1,20 @@
+import logging
+logger = logging.getLogger(__name__)
 INF = float("inf")
 
 
 class Dinic:
     def __init__(self, n):
+        logger.debug(">>> Entering __init__(n=%s)", n)
         self.lvl = [0] * n
+        logger.debug("__init__(self=%s,n=%s): self.lvl → %s", self, n, self.lvl)
         self.ptr = [0] * n
+        logger.debug("__init__(self=%s,n=%s): self.ptr → %s", self, n, self.ptr)
         self.q = [0] * n
+        logger.debug("__init__(self=%s,n=%s): self.q → %s", self, n, self.q)
         self.adj = [[] for _ in range(n)]
+        logger.debug("__init__(n=%s): self.adj → %s", n, self.adj)
+        logger.debug("<<< Exiting __init__(n=%s)", n)
 
     """
     Here we will add our edges containing with the following parameters:
@@ -15,11 +23,14 @@ class Dinic:
     """
 
     def add_edge(self, a, b, c, rcap=0):
+        logger.debug(">>> Entering add_edge(a=%s,b=%s,c=%s,rcap=%s)", a, b, c, rcap)
         self.adj[a].append([b, len(self.adj[b]), c, 0])
         self.adj[b].append([a, len(self.adj[a]) - 1, rcap, 0])
+        logger.debug("<<< Exiting add_edge(a=%s,b=%s,c=%s,rcap=%s)", a, b, c, rcap)
 
     # This is a sample depth first search to be used at max_flow
     def depth_first_search(self, vertex, sink, flow):
+        logger.debug(">>> Entering depth_first_search(vertex=%s,sink=%s,flow=%s)", vertex, sink, flow)
         if vertex == sink or not flow:
             return flow
 
@@ -32,10 +43,12 @@ class Dinic:
                     self.adj[e[0]][e[1]][3] -= p
                     return p
             self.ptr[vertex] = self.ptr[vertex] + 1
+        logger.debug("<<< Exiting depth_first_search(vertex=%s,sink=%s,flow=%s)", vertex, sink, flow)
         return 0
 
     # Here we calculate the flow that reaches the sink
     def max_flow(self, source, sink):
+        logger.debug(">>> Entering max_flow(source=%s,sink=%s)", source, sink)
         flow, self.q[0] = 0, source
         for l in range(31):  # l = 30 maybe faster for random data  # noqa: E741
             while True:
@@ -51,6 +64,7 @@ class Dinic:
                             self.lvl[e[0]] = self.lvl[v] + 1
 
                 p = self.depth_first_search(source, sink, INF)
+                logger.debug("max_flow(source=%s,sink=%s): p → %s", source, sink, p)
                 while p:
                     flow += p
                     p = self.depth_first_search(source, sink, INF)
@@ -58,6 +72,7 @@ class Dinic:
                 if not self.lvl[sink]:
                     break
 
+        logger.debug("<<< Exiting max_flow(source=%s,sink=%s)", source, sink)
         return flow
 
 

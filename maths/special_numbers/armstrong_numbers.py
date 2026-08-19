@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 An Armstrong number is equal to the sum of its own digits each raised to the
 power of the number of digits.
@@ -22,12 +24,15 @@ def armstrong_number(n: int) -> bool:
     >>> any(armstrong_number(n) for n in FAILING)
     False
     """
+    logger.debug(">>> Entering armstrong_number(n=%s)", n)
     if not isinstance(n, int) or n < 1:
         return False
 
     # Initialization of sum and number of digits.
     total = 0
+    logger.debug("armstrong_number(n=%s): total → %s", n, total)
     number_of_digits = 0
+    logger.debug("armstrong_number(n=%s): number_of_digits → %s", n, number_of_digits)
     temp = n
     # Calculation of digits of the number
     number_of_digits = len(str(n))
@@ -35,8 +40,10 @@ def armstrong_number(n: int) -> bool:
     temp = n
     while temp > 0:
         rem = temp % 10
+        logger.debug("armstrong_number(n=%s): rem → %s", n, rem)
         total += rem**number_of_digits
         temp //= 10
+    logger.debug("<<< Exiting armstrong_number(n=%s)", n)
     return n == total
 
 
@@ -48,13 +55,17 @@ def pluperfect_number(n: int) -> bool:
     >>> any(pluperfect_number(n) for n in FAILING)
     False
     """
+    logger.debug(">>> Entering pluperfect_number(n=%s)", n)
     if not isinstance(n, int) or n < 1:
         return False
 
     # Init a "histogram" of the digits
     digit_histogram = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    logger.debug("pluperfect_number(n=%s): digit_histogram → %s", n, digit_histogram)
     digit_total = 0
+    logger.debug("pluperfect_number(n=%s): digit_total → %s", n, digit_total)
     total = 0
+    logger.debug("pluperfect_number(n=%s): total → %s", n, total)
     temp = n
     while temp > 0:
         temp, rem = divmod(temp, 10)
@@ -64,6 +75,7 @@ def pluperfect_number(n: int) -> bool:
     for cnt, i in zip(digit_histogram, range(len(digit_histogram))):
         total += cnt * i**digit_total
 
+    logger.debug("<<< Exiting pluperfect_number(n=%s)", n)
     return n == total
 
 
@@ -75,10 +87,13 @@ def narcissistic_number(n: int) -> bool:
     >>> any(narcissistic_number(n) for n in FAILING)
     False
     """
+    logger.debug(">>> Entering narcissistic_number(n=%s)", n)
     if not isinstance(n, int) or n < 1:
         return False
     expo = len(str(n))  # the power that all digits will be raised to
+    logger.debug("narcissistic_number(n=%s): expo → %s", n, expo)
     # check if sum of each digit multiplied expo times is equal to number
+    logger.debug("<<< Exiting narcissistic_number(n=%s)", n)
     return n == sum(int(i) ** expo for i in str(n))
 
 
@@ -86,10 +101,13 @@ def main():
     """
     Request that user input an integer and tell them if it is Armstrong number.
     """
+    logger.debug(">>> Entering main()")
     num = int(input("Enter an integer to see if it is an Armstrong number: ").strip())
+    logger.debug("main(): num → %s", num)
     print(f"{num} is {'' if armstrong_number(num) else 'not '}an Armstrong number.")
     print(f"{num} is {'' if narcissistic_number(num) else 'not '}an Armstrong number.")
     print(f"{num} is {'' if pluperfect_number(num) else 'not '}an Armstrong number.")
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

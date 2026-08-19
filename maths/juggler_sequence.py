@@ -10,6 +10,8 @@ https://en.wikipedia.org/wiki/Juggler_sequence
 
 # Author : Akshay Dubey (https://github.com/itsAkshayDubey)
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def juggler_sequence(number: int) -> list[int]:
@@ -39,13 +41,16 @@ def juggler_sequence(number: int) -> list[int]:
         ...
     ValueError: Input value of [number=-1] must be a positive integer
     """
+    logger.debug(">>> Entering juggler_sequence(number=%s)", number)
     if not isinstance(number, int):
         msg = f"Input value of [number={number}] must be an integer"
+        logger.debug("juggler_sequence(number=%s): msg → %s", number, msg)
         raise TypeError(msg)
     if number < 1:
         msg = f"Input value of [number={number}] must be a positive integer"
         raise ValueError(msg)
     sequence = [number]
+    logger.debug("juggler_sequence(number=%s): sequence → %s", number, sequence)
     while number != 1:
         if number % 2 == 0:
             number = math.floor(math.sqrt(number))
@@ -54,6 +59,7 @@ def juggler_sequence(number: int) -> list[int]:
                 math.sqrt(number) * math.sqrt(number) * math.sqrt(number)
             )
         sequence.append(number)
+    logger.debug("<<< Exiting juggler_sequence(number=%s)", number)
     return sequence
 
 

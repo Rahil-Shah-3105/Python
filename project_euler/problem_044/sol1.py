@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Problem 44: https://projecteuler.net/problem=44
 
@@ -22,7 +24,11 @@ def is_pentagonal(n: int) -> bool:
     >>> is_pentagonal(2380)
     True
     """
+    logger.debug(">>> Entering is_pentagonal(n=%s)", n)
+    logger.warning("is_pentagonal(n=%s): root → %s", n, root)
     root = (1 + 24 * n) ** 0.5
+    logger.debug("is_pentagonal(n=%s): root → %s", n, root)
+    logger.debug("<<< Exiting is_pentagonal(n=%s)", n)
     return ((1 + root) / 6) % 1 == 0
 
 
@@ -33,7 +39,9 @@ def solution(limit: int = 5000) -> int:
     >>> solution(5000)
     5482660
     """
+    logger.debug(">>> Entering solution(limit=%s)", limit)
     pentagonal_nums = [(i * (3 * i - 1)) // 2 for i in range(1, limit)]
+    logger.debug("solution(limit=%s): pentagonal_nums → %s", limit, pentagonal_nums)
     for i, pentagonal_i in enumerate(pentagonal_nums):
         for j in range(i, len(pentagonal_nums)):
             pentagonal_j = pentagonal_nums[j]

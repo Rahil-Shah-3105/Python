@@ -1,4 +1,6 @@
 from math import gcd
+import logging
+logger = logging.getLogger(__name__)
 
 
 def proper_fractions(denominator: int) -> list[str]:
@@ -22,11 +24,13 @@ def proper_fractions(denominator: int) -> list[str]:
         ...
     ValueError: The Denominator must be an integer
     """
+    logger.debug(">>> Entering proper_fractions(denominator=%s)", denominator)
 
     if denominator < 0:
         raise ValueError("The Denominator Cannot be less than 0")
     elif isinstance(denominator, float):
         raise ValueError("The Denominator must be an integer")
+        logger.debug("<<< Exiting proper_fractions(denominator=%s)", denominator)
     return [
         f"{numerator}/{denominator}"
         for numerator in range(1, denominator)

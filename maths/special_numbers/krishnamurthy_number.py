@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
  == Krishnamurthy Number ==
 It is also known as Peterson Number
@@ -19,7 +21,9 @@ def factorial(digit: int) -> int:
     >>> factorial(5)
     120
     """
+    logger.debug(">>> Entering factorial(digit=%s)", digit)
 
+    logger.debug("<<< Exiting factorial(digit=%s)", digit)
     return 1 if digit in (0, 1) else (digit * factorial(digit - 1))
 
 
@@ -32,12 +36,15 @@ def krishnamurthy(number: int) -> bool:
     >>> krishnamurthy(1)
     True
     """
+    logger.debug(">>> Entering krishnamurthy(number=%s)", number)
 
     fact_sum = 0
     duplicate = number
+    logger.debug("krishnamurthy(number=%s): duplicate → %s", number, duplicate)
     while duplicate > 0:
         duplicate, digit = divmod(duplicate, 10)
         fact_sum += factorial(digit)
+    logger.debug("<<< Exiting krishnamurthy(number=%s)", number)
     return fact_sum == number
 
 

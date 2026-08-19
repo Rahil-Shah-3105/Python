@@ -14,6 +14,8 @@ import math
 
 import numpy as np
 from numpy.linalg import norm
+import logging
+logger = logging.getLogger(__name__)
 
 
 def euclidean(input_a: np.ndarray, input_b: np.ndarray) -> float:
@@ -31,6 +33,8 @@ def euclidean(input_a: np.ndarray, input_b: np.ndarray) -> float:
     >>> euclidean(np.array([0, 0, 0]), np.array([0, 0, 1]))
     1.0
     """
+    logger.debug(">>> Entering euclidean(input_a=%s,input_b=%s)", input_a, input_b)
+    logger.debug("<<< Exiting euclidean(input_a=%s,input_b=%s)", input_a, input_b)
     return math.sqrt(sum(pow(a - b, 2) for a, b in zip(input_a, input_b)))
 
 
@@ -153,6 +157,8 @@ def cosine_similarity(input_a: np.ndarray, input_b: np.ndarray) -> float:
     >>> cosine_similarity(np.array([1, 2]), np.array([6, 32]))
     0.9615239476408232
     """
+    logger.debug(">>> Entering cosine_similarity(input_a=%s,input_b=%s)", input_a, input_b)
+    logger.debug("<<< Exiting cosine_similarity(input_a=%s,input_b=%s)", input_a, input_b)
     return float(np.dot(input_a, input_b) / (norm(input_a) * norm(input_b)))
 
 

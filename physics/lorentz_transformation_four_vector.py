@@ -28,6 +28,8 @@ from math import sqrt
 
 import numpy as np
 from sympy import symbols
+import logging
+logger = logging.getLogger(__name__)
 
 # Coefficient
 # Speed of light (m/s)
@@ -52,12 +54,14 @@ def beta(velocity: float) -> float:
       ...
     ValueError: Speed must be greater than or equal to 1!
     """
+    logger.debug(">>> Entering beta(velocity=%s)", velocity)
     if velocity > c:
         raise ValueError("Speed must not exceed light speed 299,792,458 [m/s]!")
     elif velocity < 1:
         # Usually the speed should be much higher than 1 (c order of magnitude)
         raise ValueError("Speed must be greater than or equal to 1!")
 
+    logger.debug("<<< Exiting beta(velocity=%s)", velocity)
     return velocity / c
 
 
@@ -83,6 +87,8 @@ def gamma(velocity: float) -> float:
       ...
     ValueError: Speed must not exceed light speed 299,792,458 [m/s]!
     """
+    logger.debug(">>> Entering gamma(velocity=%s)", velocity)
+    logger.debug("<<< Exiting gamma(velocity=%s)", velocity)
     return 1 / sqrt(1 - beta(velocity) ** 2)
 
 
@@ -124,6 +130,8 @@ def transformation_matrix(velocity: float) -> np.ndarray:
       ...
     ValueError: Speed must not exceed light speed 299,792,458 [m/s]!
     """
+    logger.debug(">>> Entering transformation_matrix(velocity=%s)", velocity)
+    logger.debug("<<< Exiting transformation_matrix(velocity=%s)", velocity)
     return np.array(
         [
             [gamma(velocity), -gamma(velocity) * beta(velocity), 0, 0],
@@ -160,12 +168,17 @@ def transform(velocity: float, event: np.ndarray | None = None) -> np.ndarray:
       ...
     ValueError: Speed must be greater than or equal to 1!
     """
+    logger.debug(">>> Entering transform(velocity=%s,event=%s)", velocity, event)
+    logger.debug("transform(velocity=%s,event=%s): dtype → %s", velocity, event, dtype)
+    logger.debug("transform(velocity=%s,event=%s): event → %s", velocity, event, event)
     # Ensure event is not empty
     if event is None:
+        logger.error("Exception in transform(velocity=%s,event=%s)", velocity, event, exc_info=True)
         event = np.array([ct, x, y, z])  # Symbolic four vector
     else:
         event[0] *= c  # x0 is ct (speed of light * time)
 
+    logger.debug("<<< Exiting transform(velocity=%s,event=%s)", velocity, event)
     return transformation_matrix(velocity) @ event
 
 

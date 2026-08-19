@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Totient maximum
 Problem 69: https://projecteuler.net/problem=69
@@ -43,11 +45,13 @@ def solution(n: int = 10**6) -> int:
     2310
 
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     if n <= 0:
         raise ValueError("Please enter an integer greater than 0")
 
     phi = list(range(n + 1))
+    logger.debug("solution(n=%s): phi → %s", n, phi)
     for number in range(2, n + 1):
         if phi[number] == number:
             phi[number] -= 1

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Task:
 Given an array of integers citations where citations[i] is the number of
@@ -48,6 +50,7 @@ def h_index(citations: list[int]) -> int:
         ...
     ValueError: The citations should be a list of non negative integers.
     """
+    logger.debug(">>> Entering h_index(citations=%s)", citations)
 
     # validate:
     if not isinstance(citations, list) or not all(
@@ -57,11 +60,13 @@ def h_index(citations: list[int]) -> int:
 
     citations.sort()
     len_citations = len(citations)
+    logger.debug("h_index(citations=%s): len_citations → %s", citations, len_citations)
 
     for i in range(len_citations):
         if citations[len_citations - 1 - i] <= i:
             return i
 
+    logger.debug("<<< Exiting h_index(citations=%s)", citations)
     return len_citations
 
 

@@ -14,6 +14,8 @@ python3 exponential_search.py
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binary_search_by_recursion(
@@ -82,6 +84,7 @@ def exponential_search(sorted_collection: list[int], item: int) -> int:
     >>> exponential_search([0, 5, 7, 10, 15], 6)
     -1
     """
+    logger.debug(">>> Entering exponential_search(sorted_collection=%s,item=%s)", sorted_collection, item)
     if list(sorted_collection) != sorted(sorted_collection):
         raise ValueError("sorted_collection must be sorted in ascending order")
 
@@ -89,11 +92,15 @@ def exponential_search(sorted_collection: list[int], item: int) -> int:
         return 0
 
     bound = 1
+    logger.debug("exponential_search(sorted_collection=%s,item=%s): bound → %s", sorted_collection, item, bound)
     while bound < len(sorted_collection) and sorted_collection[bound] < item:
         bound *= 2
 
     left = bound // 2
+    logger.debug("exponential_search(sorted_collection=%s,item=%s): left → %s", sorted_collection, item, left)
     right = min(bound, len(sorted_collection) - 1)
+    logger.debug("exponential_search(sorted_collection=%s,item=%s): right → %s", sorted_collection, item, right)
+    logger.debug("<<< Exiting exponential_search(sorted_collection=%s,item=%s)", sorted_collection, item)
     return binary_search_by_recursion(sorted_collection, item, left, right)
 
 

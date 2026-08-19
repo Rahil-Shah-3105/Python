@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Isolate the Decimal part of a Number
 https://stackoverflow.com/questions/3886402/how-to-get-numbers-after-decimal-point
@@ -27,8 +29,10 @@ def decimal_isolate(number: float, digit_amount: int) -> float:
     >>> decimal_isolate(-14.123, 3)
     -0.123
     """
+    logger.debug(">>> Entering decimal_isolate(number=%s,digit_amount=%s)", number, digit_amount)
     if digit_amount > 0:
         return round(number - int(number), digit_amount)
+    logger.debug("<<< Exiting decimal_isolate(number=%s,digit_amount=%s)", number, digit_amount)
     return number - int(number)
 
 

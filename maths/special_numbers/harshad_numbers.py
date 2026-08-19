@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 A harshad number (or more specifically an n-harshad number) is a number that's
 divisible by the sum of its digits in some given base n.
@@ -33,12 +35,15 @@ def int_to_base(number: int, base: int) -> str:
         ...
     ValueError: number must be a positive integer
     """
+    logger.debug(">>> Entering int_to_base(number=%s,base=%s)", number, base)
 
     if base < 2 or base > 36:
         raise ValueError("'base' must be between 2 and 36 inclusive")
 
     digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    logger.debug("int_to_base(number=%s,base=%s): digits → %s", number, base, digits)
     result = ""
+    logger.debug("int_to_base(number=%s,base=%s): result → %s", number, base, result)
 
     if number < 0:
         raise ValueError("number must be a positive integer")
@@ -50,6 +55,7 @@ def int_to_base(number: int, base: int) -> str:
     if result == "":
         result = "0"
 
+    logger.debug("<<< Exiting int_to_base(number=%s,base=%s)", number, base)
     return result
 
 
@@ -76,13 +82,18 @@ def sum_of_digits(num: int, base: int) -> str:
         ...
     ValueError: 'base' must be between 2 and 36 inclusive
     """
+    logger.debug(">>> Entering sum_of_digits(num=%s,base=%s)", num, base)
 
     if base < 2 or base > 36:
         raise ValueError("'base' must be between 2 and 36 inclusive")
 
     num_str = int_to_base(num, base)
+    logger.debug("sum_of_digits(num=%s,base=%s): num_str → %s", num, base, num_str)
     res = sum(int(char, base) for char in num_str)
+    logger.debug("sum_of_digits(num=%s,base=%s): res → %s", num, base, res)
     res_str = int_to_base(res, base)
+    logger.debug("sum_of_digits(num=%s,base=%s): res_str → %s", num, base, res_str)
+    logger.debug("<<< Exiting sum_of_digits(num=%s,base=%s)", num, base)
     return res_str
 
 
@@ -110,11 +121,13 @@ def harshad_numbers_in_base(limit: int, base: int) -> list[str]:
     >>> harshad_numbers_in_base(-12, 6)
     []
     """
+    logger.debug(">>> Entering harshad_numbers_in_base(limit=%s,base=%s)", limit, base)
 
     if base < 2 or base > 36:
         raise ValueError("'base' must be between 2 and 36 inclusive")
 
     if limit < 0:
+        logger.debug("harshad_numbers_in_base(limit=%s,base=%s): numbers → %s", limit, base, numbers)
         return []
 
     numbers = [
@@ -123,6 +136,7 @@ def harshad_numbers_in_base(limit: int, base: int) -> list[str]:
         if i % int(sum_of_digits(i, base), base) == 0
     ]
 
+    logger.debug("<<< Exiting harshad_numbers_in_base(limit=%s,base=%s)", limit, base)
     return numbers
 
 
@@ -148,6 +162,7 @@ def is_harshad_number_in_base(num: int, base: int) -> bool:
         ...
     ValueError: 'base' must be between 2 and 36 inclusive
     """
+    logger.debug(">>> Entering is_harshad_number_in_base(num=%s,base=%s)", num, base)
 
     if base < 2 or base > 36:
         raise ValueError("'base' must be between 2 and 36 inclusive")
@@ -157,6 +172,7 @@ def is_harshad_number_in_base(num: int, base: int) -> bool:
 
     n = int_to_base(num, base)
     d = sum_of_digits(num, base)
+    logger.debug("<<< Exiting is_harshad_number_in_base(num=%s,base=%s)", num, base)
     return int(n, base) % int(d, base) == 0
 
 

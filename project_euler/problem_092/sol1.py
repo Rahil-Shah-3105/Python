@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 092: https://projecteuler.net/problem=92
 Square digit chains
@@ -27,13 +29,16 @@ def next_number(number: int) -> int:
     >>> next_number(32)
     13
     """
+    logger.debug(">>> Entering next_number(number=%s)", number)
 
     sum_of_digits_squared = 0
+    logger.debug("next_number(number=%s): sum_of_digits_squared → %s", number, sum_of_digits_squared)
     while number:
         # Increased Speed Slightly by checking every 5 digits together.
         sum_of_digits_squared += DIGITS_SQUARED[number % 100000]
         number //= 100000
 
+    logger.debug("<<< Exiting next_number(number=%s)", number)
     return sum_of_digits_squared
 
 
@@ -66,17 +71,20 @@ def chain(number: int) -> bool:
     >>> chain(1)
     True
     """
+    logger.debug(">>> Entering chain(number=%s)", number)
 
     if CHAINS[number - 1] is not None:
         return CHAINS[number - 1]  # type: ignore[return-value]
 
     number_chain = chain(next_number(number))
+    logger.debug("chain(number=%s): number_chain → %s", number, number_chain)
     CHAINS[number - 1] = number_chain
 
     while number < 10000000:
         CHAINS[number - 1] = number_chain
         number *= 10
 
+    logger.debug("<<< Exiting chain(number=%s)", number)
     return number_chain
 
 
@@ -91,10 +99,12 @@ def solution(number: int = 10000000) -> int:
     >>> solution(10000000)
     8581146
     """
+    logger.debug(">>> Entering solution(number=%s)", number)
     for i in range(1, number):
         if CHAINS[i] is None:
             chain(i + 1)
 
+    logger.debug("<<< Exiting solution(number=%s)", number)
     return CHAINS[:number].count(False)
 
 

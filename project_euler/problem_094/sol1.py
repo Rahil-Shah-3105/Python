@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 94: https://projecteuler.net/problem=94
 
@@ -21,13 +23,18 @@ def solution(max_perimeter: int = 10**9) -> int:
     >>> solution(20)
     16
     """
+    logger.debug(">>> Entering solution(max_perimeter=%s)", max_perimeter)
 
     prev_value = 1
+    logger.debug("solution(max_perimeter=%s): prev_value → %s", max_perimeter, prev_value)
     value = 2
+    logger.debug("solution(max_perimeter=%s): value → %s", max_perimeter, value)
 
     perimeters_sum = 0
+    logger.debug("solution(max_perimeter=%s): perimeters_sum → %s", max_perimeter, perimeters_sum)
     i = 0
     perimeter = 0
+    logger.debug("solution(max_perimeter=%s): perimeter → %s", max_perimeter, perimeter)
     while perimeter <= max_perimeter:
         perimeters_sum += perimeter
 
@@ -37,6 +44,7 @@ def solution(max_perimeter: int = 10**9) -> int:
         perimeter = 2 * value + 2 if i % 2 == 0 else 2 * value - 2
         i += 1
 
+    logger.debug("<<< Exiting solution(max_perimeter=%s)", max_perimeter)
     return perimeters_sum
 
 

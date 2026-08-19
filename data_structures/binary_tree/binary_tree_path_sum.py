@@ -8,6 +8,8 @@ Leetcode reference: https://leetcode.com/problems/path-sum-iii/
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
@@ -16,10 +18,15 @@ class Node:
     """
 
     def __init__(self, value: int) -> None:
+        logger.debug(">>> Entering __init__(value=%s)", value)
         self.value = value
+        logger.debug("__init__(self=%s,value=%s): self.value → %s", self, value, self.value)
         self.left: Node | None = None
         self.right: Node | None = None
+        logger.debug("<<< Exiting __init__(value=%s)", value)
 
+        logger.debug(">>> Entering __init__()")
+        logger.debug("<<< Exiting __init__()")
 
 class BinaryTreePathSum:
     r"""
@@ -76,9 +83,12 @@ class BinaryTreePathSum:
 
     def __init__(self) -> None:
         self.paths = 0
+        logger.debug("__init__(self=%s): self.paths → %s", self, self.paths)
 
     def depth_first_search(self, node: Node | None, path_sum: int) -> None:
+        logger.debug(">>> Entering depth_first_search(node=%s,path_sum=%s)", node, path_sum)
         if node is None:
+            logger.debug("<<< Exiting depth_first_search(node=%s,path_sum=%s)", node, path_sum)
             return
 
         if path_sum == self.target:
@@ -90,15 +100,18 @@ class BinaryTreePathSum:
             self.depth_first_search(node.right, path_sum + node.right.value)
 
     def path_sum(self, node: Node | None, target: int | None = None) -> int:
+        logger.debug(">>> Entering path_sum(node=%s,target=%s)", node, target)
         if node is None:
             return 0
         if target is not None:
             self.target = target
+            logger.debug("path_sum(self=%s,node=%s,target=%s): self.target → %s", self, node, target, self.target)
 
         self.depth_first_search(node, node.value)
         self.path_sum(node.left)
         self.path_sum(node.right)
 
+        logger.debug("<<< Exiting path_sum(node=%s,target=%s)", node, target)
         return self.paths
 
 

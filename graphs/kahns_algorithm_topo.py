@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def topological_sort(graph: dict[int, list[int]]) -> list[int] | None:
     """
     Perform topological sorting of a Directed Acyclic Graph (DAG)
@@ -22,11 +24,16 @@ def topological_sort(graph: dict[int, list[int]]) -> list[int] | None:
     >>> graph_with_cycle = {0: [1], 1: [2], 2: [0]}
     >>> topological_sort(graph_with_cycle)
     """
+    logger.debug(">>> Entering topological_sort(graph=%s)", graph)
 
     indegree = [0] * len(graph)
+    logger.debug("topological_sort(graph=%s): indegree → %s", graph, indegree)
     queue = []
+    logger.debug("topological_sort(graph=%s): queue → %s", graph, queue)
     topo_order = []
+    logger.debug("topological_sort(graph=%s): topo_order → %s", graph, topo_order)
     processed_vertices_count = 0
+    logger.debug("topological_sort(graph=%s): processed_vertices_count → %s", graph, processed_vertices_count)
 
     # Calculate the indegree of each vertex
     for values in graph.values():
@@ -41,6 +48,7 @@ def topological_sort(graph: dict[int, list[int]]) -> list[int] | None:
     # Perform BFS
     while queue:
         vertex = queue.pop(0)
+        logger.debug("topological_sort(graph=%s): vertex → %s", graph, vertex)
         processed_vertices_count += 1
         topo_order.append(vertex)
 
@@ -52,6 +60,7 @@ def topological_sort(graph: dict[int, list[int]]) -> list[int] | None:
 
     if processed_vertices_count != len(graph):
         return None  # no topological ordering exists due to cycle
+    logger.debug("<<< Exiting topological_sort(graph=%s)", graph)
     return topo_order  # valid topological ordering
 
 

@@ -1,4 +1,6 @@
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def escape_velocity(mass: float, radius: float) -> float:
@@ -39,12 +41,20 @@ def escape_velocity(mass: float, radius: float) -> float:
             ...
         ZeroDivisionError: Radius cannot be zero.
     """
+    logger.debug(">>> Entering escape_velocity(mass=%s,radius=%s)", mass, radius)
+    logger.debug("escape_velocity(mass=%s,radius=%s): v → %s", mass, radius, v)
+    logger.debug("escape_velocity(mass=%s,radius=%s): R → %s", mass, radius, R)
+    logger.debug("escape_velocity(mass=%s,radius=%s): G → %s", mass, radius, G)
+    logger.debug("escape_velocity(mass=%s,radius=%s): M → %s", mass, radius, M)
+    logger.debug("escape_velocity(mass=%s,radius=%s): velocity → %s", mass, radius, velocity)
     gravitational_constant = 6.67430e-11  # m^3 kg^-1 s^-2
+    logger.debug("escape_velocity(mass=%s,radius=%s): gravitational_constant → %s", mass, radius, gravitational_constant)
 
     if radius == 0:
         raise ZeroDivisionError("Radius cannot be zero.")
 
     velocity = math.sqrt(2 * gravitational_constant * mass / radius)
+    logger.debug("<<< Exiting escape_velocity(mass=%s,radius=%s)", mass, radius)
     return round(velocity, 3)
 
 

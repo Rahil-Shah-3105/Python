@@ -12,6 +12,8 @@ https://en.wikipedia.org/wiki/Bidirectional_search
 """
 
 from collections import deque
+import logging
+logger = logging.getLogger(__name__)
 
 
 def expand_search(
@@ -39,10 +41,12 @@ def expand_search(
 
 
 def construct_path(current: int | None, parents: dict[int, int | None]) -> list[int]:
+    logger.debug(">>> Entering construct_path(current=%s,parents=%s)", current, parents)
     path: list[int] = []
     while current is not None:
         path.append(current)
         current = parents[current]
+    logger.debug("<<< Exiting construct_path(current=%s,parents=%s)", current, parents)
     return path
 
 
@@ -158,6 +162,8 @@ def main() -> None:
         Path from 5 to 5: [5]
         Path from 0 to 3: None
     """
+    logger.debug(">>> Entering main()")
+    logger.debug("main(): example_graph → %s", example_graph)
     # Example graph represented as an adjacency list
     example_graph = {
         0: [1, 2],
@@ -177,6 +183,7 @@ def main() -> None:
     # Test case 1: Path exists
     start, goal = 0, 11
     path = bidirectional_search(graph=example_graph, start=start, goal=goal)
+    logger.debug("main(): path → %s", path)
     print(f"Path from {start} to {goal}: {path}")
 
     # Test case 2: Start and goal are the same
@@ -195,6 +202,7 @@ def main() -> None:
     start, goal = 0, 3
     path = bidirectional_search(graph=disconnected_graph, start=start, goal=goal)
     print(f"Path from {start} to {goal}: {path}")
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

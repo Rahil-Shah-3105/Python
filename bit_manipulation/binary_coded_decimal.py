@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def binary_coded_decimal(number: int) -> str:
     """
     Find binary coded decimal (bcd) of integer base 10.
@@ -18,6 +20,7 @@ def binary_coded_decimal(number: int) -> str:
     >>> binary_coded_decimal(987)
     '0b100110000111'
     """
+    logger.debug(">>> Entering binary_coded_decimal(number=%s)", number)
     return "0b" + "".join(
         str(bin(int(digit)))[2:].zfill(4) for digit in str(max(0, number))
     )

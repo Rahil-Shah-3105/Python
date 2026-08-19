@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Heap's algorithm returns the list of all permutations possible from a list.
 It minimizes movement by generating each permutation from the previous one
@@ -26,15 +28,20 @@ def heaps(arr: list) -> list:
     ...     for x in ([], [0], [-1, 1], [1, 2, 3]))
     True
     """
+    logger.debug(">>> Entering heaps(arr=%s)", arr)
 
     if len(arr) <= 1:
+        logger.debug("<<< Exiting heaps(arr=%s)", arr)
         return [tuple(arr)]
 
     res = []
+    logger.debug("heaps(arr=%s): res → %s", arr, res)
 
     def generate(k: int, arr: list):
+        logger.debug(">>> Entering generate(k=%s,arr=%s)", k, arr)
         if k == 1:
             res.append(tuple(arr[:]))
+            logger.debug("<<< Exiting generate(k=%s,arr=%s)", k, arr)
             return
 
         generate(k - 1, arr)

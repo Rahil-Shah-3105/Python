@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Author  : Alexander Pantyukhin
 Date    : November 24, 2022
@@ -40,7 +42,9 @@ def get_point_key(len_board: int, len_board_column: int, row: int, column: int) 
     >>> get_point_key(10, 20, 1, 0)
     200
     """
+    logger.debug(">>> Entering get_point_key(len_board=%s,len_board_column=%s,row=%s,column=%s)", len_board, len_board_column, row, column)
 
+    logger.debug("<<< Exiting get_point_key(len_board=%s,len_board_column=%s,row=%s,column=%s)", len_board, len_board_column, row, column)
     return len_board * len_board_column * row + column
 
 
@@ -121,6 +125,7 @@ def word_exists(board: list[list[str]], word: str) -> bool:
         ...
     ValueError: The board should be a non empty matrix of single chars strings.
     """
+    logger.debug(">>> Entering word_exists(board=%s,word=%s)", board, word)
 
     # Validate board
     board_error_message = (
@@ -128,6 +133,7 @@ def word_exists(board: list[list[str]], word: str) -> bool:
     )
 
     len_board = len(board)
+    logger.debug("word_exists(board=%s,word=%s): len_board → %s", board, word, len_board)
     if not isinstance(board, list) or len(board) == 0:
         raise ValueError(board_error_message)
 
@@ -146,6 +152,7 @@ def word_exists(board: list[list[str]], word: str) -> bool:
         )
 
     len_board_column = len(board[0])
+    logger.debug("word_exists(board=%s,word=%s): len_board_column → %s", board, word, len_board_column)
     for i in range(len_board):
         for j in range(len_board_column):
             if exits_word(
@@ -153,6 +160,7 @@ def word_exists(board: list[list[str]], word: str) -> bool:
             ):
                 return True
 
+    logger.debug("<<< Exiting word_exists(board=%s,word=%s)", board, word)
     return False
 
 

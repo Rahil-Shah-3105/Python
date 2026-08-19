@@ -38,6 +38,8 @@ Algorithm:
 So, first we calculate the prefix sum (dp) of the array.
 The prefix sum of the index i is the sum of all elements indexed
 from 0 to i (inclusive).
+import logging
+logger = logging.getLogger(__name__)
 The prefix sum of the index i is the prefix sum of index (i - 1) + the current element.
 So, the state of the dp is dp[i] = dp[i - 1] + a[i].
 
@@ -68,21 +70,26 @@ def prefix_sum(array: list[int], queries: list[tuple[int, int]]) -> list[int]:
     >>> prefix_sum([4, 2, 1, 6, 3], [(3, 4), (1, 3), (0, 2)])
     [9, 9, 7]
     """
+    logger.debug(">>> Entering prefix_sum(array=%s,queries=%s)", array, queries)
     # The prefix sum array
     dp = [0] * len(array)
+    logger.debug("prefix_sum(array=%s,queries=%s): dp → %s", array, queries, dp)
     dp[0] = array[0]
     for i in range(1, len(array)):
         dp[i] = dp[i - 1] + array[i]
 
     # See Algorithm section (Line 44)
     result = []
+    logger.debug("prefix_sum(array=%s,queries=%s): result → %s", array, queries, result)
     for query in queries:
         left, right = query
         res = dp[right]
+        logger.debug("prefix_sum(array=%s,queries=%s): res → %s", array, queries, res)
         if left > 0:
             res -= dp[left - 1]
         result.append(res)
 
+    logger.debug("<<< Exiting prefix_sum(array=%s,queries=%s)", array, queries)
     return result
 
 

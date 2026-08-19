@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Hey, we are going to find an exciting number called Catalan number which is use to find
 the number of possible binary search trees from tree of a given number of nodes.
@@ -29,13 +31,16 @@ def binomial_coefficient(n: int, k: int) -> int:
     >>> binomial_coefficient(4, 2)
     6
     """
+    logger.debug(">>> Entering binomial_coefficient(n=%s,k=%s)", n, k)
     result = 1  # To kept the Calculated Value
+    logger.debug("binomial_coefficient(n=%s,k=%s): result → %s", n, k, result)
     # Since C(n, k) = C(n, n-k)
     k = min(k, n - k)
     # Calculate C(n,k)
     for i in range(k):
         result *= n - i
         result //= i + 1
+    logger.debug("<<< Exiting binomial_coefficient(n=%s,k=%s)", n, k)
     return result
 
 
@@ -53,6 +58,8 @@ def catalan_number(node_count: int) -> int:
     >>> catalan_number(6)
     132
     """
+    logger.debug(">>> Entering catalan_number(node_count=%s)", node_count)
+    logger.debug("<<< Exiting catalan_number(node_count=%s)", node_count)
     return binomial_coefficient(2 * node_count, node_count) // (node_count + 1)
 
 
@@ -70,11 +77,14 @@ def factorial(n: int) -> int:
         ...
     ValueError: factorial() not defined for negative values
     """
+    logger.debug(">>> Entering factorial(n=%s)", n)
     if n < 0:
         raise ValueError("factorial() not defined for negative values")
     result = 1
+    logger.debug("factorial(n=%s): result → %s", n, result)
     for i in range(1, n + 1):
         result *= i
+    logger.debug("<<< Exiting factorial(n=%s)", n)
     return result
 
 
@@ -89,6 +99,8 @@ def binary_tree_count(node_count: int) -> int:
     >>> binary_tree_count(6)
     95040
     """
+    logger.debug(">>> Entering binary_tree_count(node_count=%s)", node_count)
+    logger.debug("<<< Exiting binary_tree_count(node_count=%s)", node_count)
     return catalan_number(node_count) * factorial(node_count)
 
 

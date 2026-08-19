@@ -1,20 +1,36 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
     def __init__(self, data: int) -> None:
+        logger.debug(">>> Entering __init__(data=%s)", data)
         self.data = data
+        logger.debug("__init__(data=%s): self.data → %s", data, self.data)
+        logger.debug("__init__(self=%s,data=%s): self.data → %s", self, data, self.data)
         self.next = None
+        logger.debug("__init__(self=%s,data=%s): self.next → %s", self, data, self.next)
 
+        logger.debug("<<< Exiting __init__(data=%s)", data)
+        logger.debug(">>> Entering __init__()")
+        logger.debug("<<< Exiting __init__()")
 
 class LinkedList:
     def __init__(self):
         self.head = None
+        logger.debug("__init__(self=%s): self.head → %s", self, self.head)
 
     def push(self, new_data: int) -> int:
+        logger.debug(">>> Entering push(new_data=%s)", new_data)
         new_node = Node(new_data)
+        logger.debug("push(new_data=%s): new_node → %s", new_data, new_node)
+        logger.debug("push(self=%s,new_data=%s): new_node → %s", self, new_data, new_node)
         new_node.next = self.head
+        logger.debug("push(self=%s,new_data=%s): new_node.next → %s", self, new_data, new_node.next)
         self.head = new_node
+        logger.debug("push(self=%s,new_data=%s): self.head → %s", self, new_data, self.head)
+        logger.debug("<<< Exiting push(new_data=%s)", new_data)
         return self.head.data
 
     def middle_element(self) -> int | None:
@@ -48,8 +64,11 @@ class LinkedList:
         12
         >>>
         """
+        logger.debug(">>> Entering middle_element()")
         slow_pointer = self.head
+        logger.debug("middle_element(self=%s): slow_pointer → %s", self, slow_pointer)
         fast_pointer = self.head
+        logger.debug("middle_element(self=%s): fast_pointer → %s", self, fast_pointer)
         if self.head:
             while fast_pointer and fast_pointer.next:
                 fast_pointer = fast_pointer.next.next
@@ -57,6 +76,7 @@ class LinkedList:
             return slow_pointer.data
         else:
             print("No element found.")
+            logger.debug("<<< Exiting middle_element()")
             return None
 
 

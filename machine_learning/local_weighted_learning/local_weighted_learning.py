@@ -33,6 +33,8 @@ References:
 
 import matplotlib.pyplot as plt
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def weight_matrix(point: np.ndarray, x_train: np.ndarray, tau: float) -> np.ndarray:
@@ -58,12 +60,17 @@ def weight_matrix(point: np.ndarray, x_train: np.ndarray, tau: float) -> np.ndar
            [0.00000000e+000, 0.00000000e+000, 0.00000000e+000],
            [0.00000000e+000, 0.00000000e+000, 0.00000000e+000]])
     """
+    logger.debug(">>> Entering weight_matrix(point=%s,x_train=%s,tau=%s)", point, x_train, tau)
     m = len(x_train)  # Number of training samples
+    logger.debug("weight_matrix(point=%s,x_train=%s,tau=%s): m → %s", point, x_train, tau, m)
     weights = np.eye(m)  # Initialize weights as identity matrix
+    logger.debug("weight_matrix(point=%s,x_train=%s,tau=%s): weights → %s", point, x_train, tau, weights)
     for j in range(m):
         diff = point - x_train[j]
+        logger.debug("weight_matrix(point=%s,x_train=%s,tau=%s): diff → %s", point, x_train, tau, diff)
         weights[j, j] = np.exp(diff @ diff.T / (-2.0 * tau**2))
 
+    logger.debug("<<< Exiting weight_matrix(point=%s,x_train=%s,tau=%s)", point, x_train, tau)
     return weights
 
 

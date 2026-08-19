@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def search(list_data: list, key: int, left: int = 0, right: int = 0) -> int:
     """
     Iterate through the array to find the index of key using recursion.
@@ -18,7 +20,9 @@ def search(list_data: list, key: int, left: int = 0, right: int = 0) -> int:
     >>> search([], 1)
     -1
     """
+    logger.debug(">>> Entering search(list_data=%s,key=%s,left=%s,right=%s)", list_data, key, left, right)
     right = right or len(list_data) - 1
+    logger.debug("search(list_data=%s,key=%s,left=%s,right=%s): right → %s", list_data, key, left, right, right)
     if left > right:
         return -1
     elif list_data[left] == key:
@@ -26,6 +30,7 @@ def search(list_data: list, key: int, left: int = 0, right: int = 0) -> int:
     elif list_data[right] == key:
         return right
     else:
+        logger.debug("<<< Exiting search(list_data=%s,key=%s,left=%s,right=%s)", list_data, key, left, right)
         return search(list_data, key, left + 1, right - 1)
 
 

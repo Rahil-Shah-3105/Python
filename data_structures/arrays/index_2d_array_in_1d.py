@@ -22,6 +22,8 @@ python3 -m doctest -v index_2d_array_in_1d.py
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -55,8 +57,10 @@ class Index2DArrayIterator:
         >>> next(t)
         -523
         """
+        logger.debug(">>> Entering __iter__()")
         for row in self.matrix:
             yield from row
+            logger.debug("<<< Exiting __iter__()")
 
 
 def index_2d_array_in_1d(array: list[list[int]], index: int) -> int:
@@ -87,8 +91,11 @@ def index_2d_array_in_1d(array: list[list[int]], index: int) -> int:
         ...
     ValueError: no items in array
     """
+    logger.debug(">>> Entering index_2d_array_in_1d(array=%s,index=%s)", array, index)
     rows = len(array)
+    logger.debug("index_2d_array_in_1d(array=%s,index=%s): rows → %s", array, index, rows)
     cols = len(array[0])
+    logger.debug("index_2d_array_in_1d(array=%s,index=%s): cols → %s", array, index, cols)
 
     if rows == 0 or cols == 0:
         raise ValueError("no items in array")

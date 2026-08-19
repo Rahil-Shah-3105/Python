@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 class CircularQueueLinkedList:
@@ -20,21 +22,34 @@ class CircularQueueLinkedList:
     """
 
     def __init__(self, initial_capacity: int = 6) -> None:
+        logger.debug(">>> Entering __init__(initial_capacity=%s)", initial_capacity)
         self.front: Node | None = None
         self.rear: Node | None = None
         self.create_linked_list(initial_capacity)
+        logger.debug("<<< Exiting __init__(initial_capacity=%s)", initial_capacity)
+        logger.debug(">>> Entering __init__()")
+        logger.debug("<<< Exiting __init__()")
 
     def create_linked_list(self, initial_capacity: int) -> None:
+        logger.debug(">>> Entering create_linked_list(initial_capacity=%s)", initial_capacity)
         current_node = Node()
+        logger.debug("create_linked_list(initial_capacity=%s): current_node → %s", initial_capacity, current_node)
+        logger.debug("create_linked_list(self=%s,initial_capacity=%s): current_node → %s", self, initial_capacity, current_node)
         self.front = current_node
+        logger.debug("create_linked_list(self=%s,initial_capacity=%s): self.front → %s", self, initial_capacity, self.front)
         self.rear = current_node
+        logger.debug("create_linked_list(self=%s,initial_capacity=%s): self.rear → %s", self, initial_capacity, self.rear)
         previous_node = current_node
+        logger.debug("create_linked_list(self=%s,initial_capacity=%s): previous_node → %s", self, initial_capacity, previous_node)
         for _ in range(1, initial_capacity):
             current_node = Node()
             previous_node.next = current_node
             current_node.prev = previous_node
+            logger.debug("create_linked_list(self=%s,initial_capacity=%s): current_node.prev → %s", self, initial_capacity, current_node.prev)
             previous_node = current_node
         previous_node.next = self.front
+        logger.debug("create_linked_list(self=%s,initial_capacity=%s): previous_node.next → %s", self, initial_capacity, previous_node.next)
+        logger.debug("<<< Exiting create_linked_list(initial_capacity=%s)", initial_capacity)
         self.front.prev = previous_node
 
     def is_empty(self) -> bool:
@@ -51,7 +66,9 @@ class CircularQueueLinkedList:
         >>> cq.is_empty()
         True
         """
+        logger.debug(">>> Entering is_empty()")
 
+        logger.debug("<<< Exiting is_empty()")
         return (
             self.front == self.rear
             and self.front is not None
@@ -80,7 +97,9 @@ class CircularQueueLinkedList:
         >>> cq.first()
         'b'
         """
+        logger.debug(">>> Entering first()")
         self.check_can_perform_operation()
+        logger.debug("<<< Exiting first()")
         return self.front.data if self.front else None
 
     def enqueue(self, data: Any) -> None:
@@ -99,12 +118,15 @@ class CircularQueueLinkedList:
            ...
         Exception: Empty Queue
         """
+        logger.debug(">>> Entering enqueue(data=%s)", data)
         if self.rear is None:
+            logger.debug("<<< Exiting enqueue(data=%s)", data)
             return
 
         self.check_is_full()
         if not self.is_empty():
             self.rear = self.rear.next
+            logger.debug("enqueue(self=%s,data=%s): self.rear → %s", self, data, self.rear)
         if self.rear:
             self.rear.data = data
 
@@ -125,6 +147,7 @@ class CircularQueueLinkedList:
            ...
         Exception: Empty Queue
         """
+        logger.debug(">>> Entering dequeue()")
         self.check_can_perform_operation()
         if self.rear is None or self.front is None:
             return None
@@ -134,18 +157,26 @@ class CircularQueueLinkedList:
             return data
 
         old_front = self.front
+        logger.debug("dequeue(self=%s): old_front → %s", self, old_front)
         self.front = old_front.next
+        logger.debug("dequeue(self=%s): self.front → %s", self, self.front)
         data = old_front.data
         old_front.data = None
+        logger.debug("dequeue(self=%s): old_front.data → %s", self, old_front.data)
+        logger.debug("<<< Exiting dequeue()")
         return data
 
     def check_can_perform_operation(self) -> None:
+        logger.debug(">>> Entering check_can_perform_operation()")
         if self.is_empty():
             raise Exception("Empty Queue")
+            logger.debug("<<< Exiting check_can_perform_operation()")
 
     def check_is_full(self) -> None:
+        logger.debug(">>> Entering check_is_full()")
         if self.rear and self.rear.next == self.front:
             raise Exception("Full Queue")
+            logger.debug("<<< Exiting check_is_full()")
 
 
 class Node:

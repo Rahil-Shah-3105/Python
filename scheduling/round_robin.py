@@ -7,6 +7,8 @@ https://en.wikipedia.org/wiki/Round-robin_scheduling
 from __future__ import annotations
 
 from statistics import mean
+import logging
+logger = logging.getLogger(__name__)
 
 
 def calculate_waiting_times(burst_times: list[int]) -> list[int]:
@@ -21,12 +23,17 @@ def calculate_waiting_times(burst_times: list[int]) -> list[int]:
     >>> calculate_waiting_times([12, 2, 10])
     [12, 2, 12]
     """
+    logger.debug(">>> Entering calculate_waiting_times(burst_times=%s)", burst_times)
     quantum = 2
+    logger.debug("calculate_waiting_times(burst_times=%s): quantum → %s", burst_times, quantum)
     rem_burst_times = list(burst_times)
+    logger.debug("calculate_waiting_times(burst_times=%s): rem_burst_times → %s", burst_times, rem_burst_times)
     waiting_times = [0] * len(burst_times)
+    logger.debug("calculate_waiting_times(burst_times=%s): waiting_times → %s", burst_times, waiting_times)
     t = 0
     while True:
         done = True
+        logger.debug("calculate_waiting_times(burst_times=%s): done → %s", burst_times, done)
         for i, burst_time in enumerate(burst_times):
             if rem_burst_times[i] > 0:
                 done = False
@@ -38,6 +45,7 @@ def calculate_waiting_times(burst_times: list[int]) -> list[int]:
                     waiting_times[i] = t - burst_time
                     rem_burst_times[i] = 0
         if done is True:
+            logger.debug("<<< Exiting calculate_waiting_times(burst_times=%s)", burst_times)
             return waiting_times
 
 

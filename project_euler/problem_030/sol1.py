@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """Problem Statement (Digit Fifth Powers): https://projecteuler.net/problem=30
 
 Surprisingly there are only three numbers that can be written as the sum of fourth
@@ -29,10 +31,14 @@ def digits_fifth_powers_sum(number: int) -> int:
     >>> digits_fifth_powers_sum(1234)
     1300
     """
+    logger.debug(">>> Entering digits_fifth_powers_sum(number=%s)", number)
+    logger.debug("<<< Exiting digits_fifth_powers_sum(number=%s)", number)
     return sum(DIGITS_FIFTH_POWER[digit] for digit in str(number))
 
 
 def solution() -> int:
+    logger.debug(">>> Entering solution()")
+    logger.debug("<<< Exiting solution()")
     return sum(
         number
         for number in range(1000, 1000000)

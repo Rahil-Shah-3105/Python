@@ -5,6 +5,8 @@ https://en.wikipedia.org/wiki/Bidirectional_search
 from __future__ import annotations
 
 import time
+import logging
+logger = logging.getLogger(__name__)
 
 Path = list[tuple[int, int]]
 
@@ -58,6 +60,7 @@ class BreadthFirstSearch:
 
         self.node_queue = [self.start]
         self.reached = False
+        logger.debug("__init__(self=%s,start=%s,goal=%s): self.reached → %s", self, start, goal, self.reached)
 
     def search(self) -> Path | None:
         while self.node_queue:
@@ -74,16 +77,28 @@ class BreadthFirstSearch:
 
         if not self.reached:
             return [self.start.pos]
+        logger.debug(">>> Entering search()")
+        logger.debug("search(): current_fwd_node → %s", current_fwd_node)
+        logger.debug("search(self=%s): current_fwd_node → %s", self, current_fwd_node)
+        logger.debug("search(self=%s): current_bwd_node → %s", self, current_bwd_node)
+        logger.debug("search(): current_bwd_node → %s", current_bwd_node)
+        logger.debug("search(self=%s): self.reached → %s", self, self.reached)
+        logger.debug("search(self=%s): successors → %s", self, successors)
+        logger.debug("<<< Exiting search()")
         return None
 
     def get_successors(self, parent: Node) -> list[Node]:
         """
         Returns a list of successors (both in the grid and free spaces)
         """
+        logger.debug(">>> Entering get_successors(parent=%s)", parent)
         successors = []
+        logger.debug("get_successors(self=%s,parent=%s): successors → %s", self, parent, successors)
         for action in delta:
             pos_x = parent.pos_x + action[1]
+            logger.debug("get_successors(self=%s,parent=%s): pos_x → %s", self, parent, pos_x)
             pos_y = parent.pos_y + action[0]
+            logger.debug("get_successors(self=%s,parent=%s): pos_y → %s", self, parent, pos_y)
             if not (0 <= pos_x <= len(grid[0]) - 1 and 0 <= pos_y <= len(grid) - 1):
                 continue
 
@@ -93,18 +108,23 @@ class BreadthFirstSearch:
             successors.append(
                 Node(pos_x, pos_y, self.target.pos_y, self.target.pos_x, parent)
             )
+        logger.debug("<<< Exiting get_successors(parent=%s)", parent)
         return successors
 
     def retrace_path(self, node: Node | None) -> Path:
         """
         Retrace the path from parents to parents until start node
         """
+        logger.debug(">>> Entering retrace_path(node=%s)", node)
         current_node = node
+        logger.debug("retrace_path(self=%s,node=%s): current_node → %s", self, node, current_node)
         path = []
+        logger.debug("retrace_path(self=%s,node=%s): path → %s", self, node, path)
         while current_node is not None:
             path.append((current_node.pos_y, current_node.pos_x))
             current_node = current_node.parent
         path.reverse()
+        logger.debug("<<< Exiting retrace_path(node=%s)", node)
         return path
 
 
@@ -155,11 +175,18 @@ class BidirectionalBreadthFirstSearch:
         return None
 
     def retrace_bidirectional_path(self, fwd_node: Node, bwd_node: Node) -> Path:
+        logger.debug(">>> Entering retrace_bidirectional_path(fwd_node=%s,bwd_node=%s)", fwd_node, bwd_node)
+        logger.debug("retrace_bidirectional_path(self=%s,fwd_node=%s,bwd_node=%s): path → %s", self, fwd_node, bwd_node, path)
         fwd_path = self.fwd_bfs.retrace_path(fwd_node)
+        logger.debug("retrace_bidirectional_path(fwd_node=%s,bwd_node=%s): fwd_path → %s", fwd_node, bwd_node, fwd_path)
+        logger.debug("retrace_bidirectional_path(self=%s,fwd_node=%s,bwd_node=%s): fwd_path → %s", self, fwd_node, bwd_node, fwd_path)
         bwd_path = self.bwd_bfs.retrace_path(bwd_node)
+        logger.debug("retrace_bidirectional_path(fwd_node=%s,bwd_node=%s): bwd_path → %s", fwd_node, bwd_node, bwd_path)
+        logger.debug("retrace_bidirectional_path(self=%s,fwd_node=%s,bwd_node=%s): bwd_path → %s", self, fwd_node, bwd_node, bwd_path)
         bwd_path.pop()
         bwd_path.reverse()
         path = fwd_path + bwd_path
+        logger.debug("<<< Exiting retrace_bidirectional_path(fwd_node=%s,bwd_node=%s)", fwd_node, bwd_node)
         return path
 
 

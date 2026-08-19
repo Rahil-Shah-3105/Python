@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This is pure Python implementation of comb sort algorithm.
 Comb sort is a relatively simple sorting algorithm originally designed by Wlodzimierz
@@ -31,9 +33,13 @@ def comb_sort(data: list) -> list:
     >>> comb_sort([99, 45, -7, 8, 2, 0, -15, 3])
     [-15, -7, 0, 2, 3, 8, 45, 99]
     """
+    logger.debug(">>> Entering comb_sort(data=%s)", data)
     shrink_factor = 1.3
+    logger.debug("comb_sort(data=%s): shrink_factor → %s", data, shrink_factor)
     gap = len(data)
+    logger.debug("comb_sort(data=%s): gap → %s", data, gap)
     completed = False
+    logger.debug("comb_sort(data=%s): completed → %s", data, completed)
 
     while not completed:
         # Update the gap value for a next comb
@@ -42,6 +48,7 @@ def comb_sort(data: list) -> list:
             completed = True
 
         index = 0
+        logger.debug("comb_sort(data=%s): index → %s", data, index)
         while index + gap < len(data):
             if data[index] > data[index + gap]:
                 # Swap values
@@ -49,6 +56,7 @@ def comb_sort(data: list) -> list:
                 completed = False
             index += 1
 
+    logger.debug("<<< Exiting comb_sort(data=%s)", data)
     return data
 
 

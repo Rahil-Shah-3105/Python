@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 You have m types of coins available in infinite quantities
 where the value of each coins is given in the array S=[S0,... Sm-1]
@@ -22,10 +24,12 @@ def dp_count(s, n):
     >>> dp_count([1, 2, 3], -5)
     0
     """
+    logger.debug(">>> Entering dp_count(s=%s,n=%s)", s, n)
     if n < 0:
         return 0
     # table[i] represents the number of ways to get to amount i
     table = [0] * (n + 1)
+    logger.debug("dp_count(s=%s,n=%s): table → %s", s, n, table)
 
     # There is exactly 1 way to get to zero(You pick no coins).
     table[0] = 1
@@ -37,6 +41,7 @@ def dp_count(s, n):
         for j in range(coin_val, n + 1):
             table[j] += table[j - coin_val]
 
+    logger.debug("<<< Exiting dp_count(s=%s,n=%s)", s, n)
     return table[n]
 
 

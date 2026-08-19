@@ -19,6 +19,8 @@ For more info: https://en.wikipedia.org/wiki/Projectile_motion
 # Importing packages
 from math import radians as deg_to_rad
 from math import sin
+import logging
+logger = logging.getLogger(__name__)
 
 # Acceleration Constant on Earth (unit m/s^2)
 g = 9.80665
@@ -28,6 +30,7 @@ def check_args(init_velocity: float, angle: float) -> None:
     """
     Check that the arguments are valid
     """
+    logger.debug(">>> Entering check_args(init_velocity=%s,angle=%s)", init_velocity, angle)
 
     # Ensure valid instance
     if not isinstance(init_velocity, (int, float)):
@@ -43,6 +46,7 @@ def check_args(init_velocity: float, angle: float) -> None:
     # Ensure valid velocity
     if init_velocity < 0:
         raise ValueError("Invalid velocity. Should be a positive number.")
+        logger.debug("<<< Exiting check_args(init_velocity=%s,angle=%s)", init_velocity, angle)
 
 
 def horizontal_distance(init_velocity: float, angle: float) -> float:
@@ -141,10 +145,12 @@ def test_motion() -> None:
 
     >>> test_motion()
     """
+    logger.debug(">>> Entering test_motion()")
     v0, angle = 25, 20
     assert horizontal_distance(v0, angle) == 40.97
     assert max_height(v0, angle) == 3.73
     assert total_time(v0, angle) == 1.74
+    logger.debug("<<< Exiting test_motion()")
 
 
 if __name__ == "__main__":

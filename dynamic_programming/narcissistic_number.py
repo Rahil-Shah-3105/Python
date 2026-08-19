@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Find all narcissistic numbers up to a given limit using dynamic programming.
 
@@ -53,10 +55,13 @@ def find_narcissistic_numbers(limit: int) -> list[int]:
         >>> find_narcissistic_numbers(0)
         []
     """
+    logger.debug(">>> Entering find_narcissistic_numbers(limit=%s)", limit)
     if limit <= 0:
+        logger.debug("<<< Exiting find_narcissistic_numbers(limit=%s)", limit)
         return []
 
     narcissistic_nums = []
+    logger.debug("find_narcissistic_numbers(limit=%s): narcissistic_nums → %s", limit, narcissistic_nums)
 
     # Memoization: cache[(power, digit)] = digit^power
     # This avoids recalculating the same power for different numbers
@@ -64,8 +69,10 @@ def find_narcissistic_numbers(limit: int) -> list[int]:
 
     def get_digit_power(digit: int, power: int) -> int:
         """Get digit^power using memoization (DP optimization)."""
+        logger.debug(">>> Entering get_digit_power(digit=%s,power=%s)", digit, power)
         if (power, digit) not in power_cache:
             power_cache[(power, digit)] = digit**power
+        logger.debug("<<< Exiting get_digit_power(digit=%s,power=%s)", digit, power)
         return power_cache[(power, digit)]
 
     # Check each number up to the limit

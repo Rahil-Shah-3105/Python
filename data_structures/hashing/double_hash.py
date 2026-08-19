@@ -14,6 +14,8 @@ Reference: https://en.wikipedia.org/wiki/Double_hashing
 
 from .hash_table import HashTable
 from .number_theory.prime_numbers import is_prime, next_prime
+import logging
+logger = logging.getLogger(__name__)
 
 
 class DoubleHash(HashTable):
@@ -23,16 +25,23 @@ class DoubleHash(HashTable):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        logger.debug(">>> Entering __init__()")
+        logger.debug("<<< Exiting __init__()")
 
     def __hash_function_2(self, value, data):
+        logger.debug(">>> Entering __hash_function_2(value=%s,data=%s)", value, data)
         next_prime_gt = (
             next_prime(value % self.size_table)
             if not is_prime(value % self.size_table)
             else value % self.size_table
         )  # gt = bigger than
+        logger.debug("__hash_function_2(self=%s,value=%s,data=%s): next_prime_gt → %s", self, value, data, next_prime_gt)
+        logger.debug("<<< Exiting __hash_function_2(value=%s,data=%s)", value, data)
         return next_prime_gt - (data % next_prime_gt)
 
     def __hash_double_function(self, key, data, increment):
+        logger.debug(">>> Entering __hash_double_function(key=%s,data=%s,increment=%s)", key, data, increment)
+        logger.debug("<<< Exiting __hash_double_function(key=%s,data=%s,increment=%s)", key, data, increment)
         return (increment * self.__hash_function_2(key, data)) % self.size_table
 
     def _collision_resolution(self, key, data=None):
@@ -63,8 +72,10 @@ class DoubleHash(HashTable):
         >>> dh.keys()
         {9: 20, 10: 10, 8: 30}
         """
+        logger.debug(">>> Entering _collision_resolution(key=%s,data=%s)", key, data)
         i = 1
         new_key = self.hash_function(data)
+        logger.debug("_collision_resolution(self=%s,key=%s,data=%s): new_key → %s", self, key, data, new_key)
 
         while self.values[new_key] is not None and self.values[new_key] != key:
             new_key = (
@@ -77,6 +88,7 @@ class DoubleHash(HashTable):
             else:
                 i += 1
 
+        logger.debug("<<< Exiting _collision_resolution(key=%s,data=%s)", key, data)
         return new_key
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Counting Sundays
 Problem 19
@@ -28,13 +30,17 @@ def solution():
     >>> solution()
     171
     """
+    logger.debug(">>> Entering solution()")
     days_per_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    logger.debug("solution(): days_per_month → %s", days_per_month)
 
     day = 6
     month = 1
     year = 1901
+    logger.debug("solution(): year → %s", year)
 
     sundays = 0
+    logger.debug("solution(): sundays → %s", sundays)
 
     while year < 2001:
         day += 7
@@ -56,6 +62,7 @@ def solution():
 
         if year < 2001 and day == 1:
             sundays += 1
+    logger.debug("<<< Exiting solution()")
     return sundays
 
 

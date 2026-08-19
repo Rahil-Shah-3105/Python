@@ -19,6 +19,8 @@ REFERENCES :
 """
 
 from typing import NamedTuple
+import logging
+logger = logging.getLogger(__name__)
 
 
 class FromTo(NamedTuple):
@@ -60,6 +62,7 @@ def volume_conversion(value: float, from_type: str, to_type: str) -> float:
     ValueError: Invalid 'from_type' value: 'wrongUnit'  Supported values are:
     cubic meter, litre, kilolitre, gallon, cubic yard, cubic foot, cup
     """
+    logger.debug(">>> Entering volume_conversion(value=%s,from_type=%s,to_type=%s)", value, from_type, to_type)
     if from_type not in METRIC_CONVERSION:
         raise ValueError(
             f"Invalid 'from_type' value: {from_type!r}  Supported values are:\n"
@@ -70,6 +73,7 @@ def volume_conversion(value: float, from_type: str, to_type: str) -> float:
             f"Invalid 'to_type' value: {to_type!r}.  Supported values are:\n"
             + ", ".join(METRIC_CONVERSION)
         )
+        logger.debug("<<< Exiting volume_conversion(value=%s,from_type=%s,to_type=%s)", value, from_type, to_type)
     return (
         value
         * METRIC_CONVERSION[from_type].from_factor

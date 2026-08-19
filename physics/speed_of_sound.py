@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Title : Calculating the speed of sound
 
@@ -33,12 +35,14 @@ def speed_of_sound_in_a_fluid(density: float, bulk_modulus: float) -> float:
     >>> speed_of_sound_in_a_fluid(bulk_modulus=28.5e9, density=13600)
     1447.614670861731
     """
+    logger.debug(">>> Entering speed_of_sound_in_a_fluid(density=%s,bulk_modulus=%s)", density, bulk_modulus)
 
     if density <= 0:
         raise ValueError("Impossible fluid density")
     if bulk_modulus <= 0:
         raise ValueError("Impossible bulk modulus")
 
+    logger.debug("<<< Exiting speed_of_sound_in_a_fluid(density=%s,bulk_modulus=%s)", density, bulk_modulus)
     return (bulk_modulus / density) ** 0.5
 
 

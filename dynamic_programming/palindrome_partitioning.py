@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Given a string s, partition s such that every substring of the
 partition is a palindrome.
@@ -20,16 +22,22 @@ def find_minimum_partitions(string: str) -> int:
     >>> find_minimum_partitions("ababbbabbababa")
     3
     """
+    logger.debug(">>> Entering find_minimum_partitions(string=%s)", string)
     length = len(string)
+    logger.debug("find_minimum_partitions(string=%s): length → %s", string, length)
     cut = [0] * length
+    logger.debug("find_minimum_partitions(string=%s): cut → %s", string, cut)
     is_palindromic = [[False for i in range(length)] for j in range(length)]
+    logger.debug("find_minimum_partitions(string=%s): is_palindromic → %s", string, is_palindromic)
     for i, c in enumerate(string):
         mincut = i
+        logger.debug("find_minimum_partitions(string=%s): mincut → %s", string, mincut)
         for j in range(i + 1):
             if c == string[j] and (i - j < 2 or is_palindromic[j + 1][i - 1]):
                 is_palindromic[j][i] = True
                 mincut = min(mincut, 0 if j == 0 else (cut[j - 1] + 1))
         cut[i] = mincut
+    logger.debug("<<< Exiting find_minimum_partitions(string=%s)", string)
     return cut[length - 1]
 
 

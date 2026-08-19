@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def max_product_subarray(numbers: list[int]) -> int:
     """
     Returns the maximum product that can be obtained by multiplying a
@@ -30,6 +32,7 @@ def max_product_subarray(numbers: list[int]) -> int:
         ...
     ValueError: numbers must be an iterable of integers
     """
+    logger.debug(">>> Entering max_product_subarray(numbers=%s)", numbers)
     if not numbers:
         return 0
 
@@ -39,16 +42,21 @@ def max_product_subarray(numbers: list[int]) -> int:
         raise ValueError("numbers must be an iterable of integers")
 
     max_till_now = min_till_now = max_prod = numbers[0]
+    logger.debug("max_product_subarray(numbers=%s): max_till_now → %s", numbers, max_till_now)
 
     for i in range(1, len(numbers)):
         # update the maximum and minimum subarray products
         number = numbers[i]
+        logger.debug("max_product_subarray(numbers=%s): number → %s", numbers, number)
         if number < 0:
             max_till_now, min_till_now = min_till_now, max_till_now
         max_till_now = max(number, max_till_now * number)
         min_till_now = min(number, min_till_now * number)
+        logger.debug("max_product_subarray(numbers=%s): min_till_now → %s", numbers, min_till_now)
 
         # update the maximum product found till now
         max_prod = max(max_prod, max_till_now)
+        logger.debug("max_product_subarray(numbers=%s): max_prod → %s", numbers, max_prod)
 
+    logger.debug("<<< Exiting max_product_subarray(numbers=%s)", numbers)
     return max_prod

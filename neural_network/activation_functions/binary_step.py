@@ -9,6 +9,8 @@ https://en.wikipedia.org/wiki/Activation_function
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binary_step(vector: np.ndarray) -> np.ndarray:
@@ -25,7 +27,9 @@ def binary_step(vector: np.ndarray) -> np.ndarray:
     >>> binary_step(vector)
     array([0, 1, 1, 1, 0, 1])
     """
+    logger.debug(">>> Entering binary_step(vector=%s)", vector)
 
+    logger.debug("<<< Exiting binary_step(vector=%s)", vector)
     return np.where(vector >= 0, 1, 0)
 
 

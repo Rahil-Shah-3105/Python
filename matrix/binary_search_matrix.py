@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def binary_search(array: list, lower_bound: int, upper_bound: int, value: int) -> int:
     """
     This function carries out Binary search on a 1d array and
@@ -10,6 +12,7 @@ def binary_search(array: list, lower_bound: int, upper_bound: int, value: int) -
     >>> binary_search(matrix, 0, len(matrix) - 1, 23)
     -1
     """
+    logger.debug(">>> Entering binary_search(array=%s,lower_bound=%s,upper_bound=%s,value=%s)", array, lower_bound, upper_bound, value)
 
     r = int((lower_bound + upper_bound) // 2)
     if array[r] == value:

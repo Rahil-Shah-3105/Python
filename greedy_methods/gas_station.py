@@ -25,6 +25,8 @@ start checking from the next station.
 """
 
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -77,18 +79,24 @@ def can_complete_journey(gas_stations: tuple[GasStation, ...]) -> int:
     >>> can_complete_journey(get_gas_stations([2, 3, 4], [3, 4, 3]))
     -1
     """
+    logger.debug(">>> Entering can_complete_journey(gas_stations=%s)", gas_stations)
     total_gas = sum(gas_station.gas_quantity for gas_station in gas_stations)
+    logger.debug("can_complete_journey(gas_stations=%s): total_gas → %s", gas_stations, total_gas)
     total_cost = sum(gas_station.cost for gas_station in gas_stations)
+    logger.debug("can_complete_journey(gas_stations=%s): total_cost → %s", gas_stations, total_cost)
     if total_gas < total_cost:
         return -1
 
     start = 0
+    logger.debug("can_complete_journey(gas_stations=%s): start → %s", gas_stations, start)
     net = 0
+    logger.debug("can_complete_journey(gas_stations=%s): net → %s", gas_stations, net)
     for i, gas_station in enumerate(gas_stations):
         net += gas_station.gas_quantity - gas_station.cost
         if net < 0:
             start = i + 1
             net = 0
+    logger.debug("<<< Exiting can_complete_journey(gas_stations=%s)", gas_stations)
     return start
 
 

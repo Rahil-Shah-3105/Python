@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Graph Coloring also called "m coloring problem"
 consists of coloring a given graph with at most m colors
@@ -113,7 +115,9 @@ def color(graph: list[list[int]], max_colors: int) -> list[int]:
     >>> color([[0, 1], [1, 0]], 2)  # 2 nodes, 2 colors (possible)
     [0, 1]
     """
+    logger.debug(">>> Entering color(graph=%s,max_colors=%s)", graph, max_colors)
     colored_vertices = [-1] * len(graph)
+    logger.debug("color(graph=%s,max_colors=%s): colored_vertices → %s", graph, max_colors, colored_vertices)
 
     if util_color(graph, max_colors, colored_vertices, 0):
         return colored_vertices

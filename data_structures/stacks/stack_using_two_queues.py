@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass, field
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -35,15 +37,21 @@ class StackWithQueues:
     temp_queue: deque[int] = field(default_factory=deque)
 
     def push(self, item: int) -> None:
+        logger.debug(">>> Entering push(item=%s)", item)
         self.temp_queue.append(item)
         while self.main_queue:
             self.temp_queue.append(self.main_queue.popleft())
         self.main_queue, self.temp_queue = self.temp_queue, self.main_queue
+        logger.debug("<<< Exiting push(item=%s)", item)
 
     def pop(self) -> int:
+        logger.debug(">>> Entering pop()")
+        logger.debug("<<< Exiting pop()")
         return self.main_queue.popleft()
 
     def peek(self) -> int | None:
+        logger.debug(">>> Entering peek()")
+        logger.debug("<<< Exiting peek()")
         return self.main_queue[0] if self.main_queue else None
 
 

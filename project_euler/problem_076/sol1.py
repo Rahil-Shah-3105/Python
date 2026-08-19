@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Counting Summations
 Problem 76: https://projecteuler.net/problem=76
@@ -38,7 +40,9 @@ def solution(m: int = 100) -> int:
     >>> solution(1)
     0
     """
+    logger.debug(">>> Entering solution(m=%s)", m)
     memo = [[0 for _ in range(m)] for _ in range(m + 1)]
+    logger.debug("solution(m=%s): memo → %s", m, memo)
     for i in range(m + 1):
         memo[i][0] = 1
 
@@ -48,6 +52,7 @@ def solution(m: int = 100) -> int:
             if n > k:
                 memo[n][k] += memo[n - k - 1][k]
 
+    logger.debug("<<< Exiting solution(m=%s)", m)
     return memo[m][m - 1] - 1
 
 

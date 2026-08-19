@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import math
 from collections.abc import Callable
+import logging
+logger = logging.getLogger(__name__)
 
 
 def line_length(
@@ -19,6 +21,7 @@ def line_length(
     :param steps: an accuracy gauge; more steps increases accuracy
     :return: a float representing the length of the curve
 
+    logger.debug("<<< Exiting f(x=%s)", x)
     >>> def f(x):
     ...    return x
     >>> f"{line_length(f, 0, 1, 10):.6f}"
@@ -29,6 +32,7 @@ def line_length(
     >>> f"{line_length(f, -5.5, 4.5):.6f}"
     '10.000000'
 
+    logger.debug(">>> Entering f(x=%s)", x)
     >>> def f(x):
     ...    return math.sin(5 * x) + math.cos(10 * x) + x * x/10
     >>> f"{line_length(f, 0.0, 10.0, 10000):.6f}"

@@ -13,6 +13,8 @@ For more info, see https://en.wikipedia.org/wiki/MD5
 
 from collections.abc import Generator
 from math import sin
+import logging
+logger = logging.getLogger(__name__)
 
 
 def to_little_endian(string_32: bytes) -> bytes:
@@ -77,13 +79,17 @@ def reformat_hex(i: int) -> bytes:
     ...
     ValueError: Input must be non-negative
     """
+    logger.debug(">>> Entering reformat_hex(i=%s)", i)
     if i < 0:
         raise ValueError("Input must be non-negative")
 
     hex_rep = format(i, "08x")[-8:]
+    logger.debug("reformat_hex(i=%s): hex_rep → %s", i, hex_rep)
     little_endian_hex = b""
+    logger.debug("reformat_hex(i=%s): little_endian_hex → %s", i, little_endian_hex)
     for j in [3, 2, 1, 0]:
         little_endian_hex += hex_rep[2 * j : 2 * j + 2].encode("utf-8")
+    logger.debug("<<< Exiting reformat_hex(i=%s)", i)
     return little_endian_hex
 
 
@@ -117,10 +123,14 @@ def preprocess(message: bytes) -> bytes:
     >>> preprocess(b"") == b"1" + (b"0" * 447) + (b"0" * 64)
     True
     """
+    logger.debug(">>> Entering preprocess(message=%s)", message)
+    logger.debug("preprocess(message=%s): message → %s", message, message)
     bit_string = b""
+    logger.debug("preprocess(message=%s): bit_string → %s", message, bit_string)
     for char in message:
         bit_string += format(char, "08b").encode("utf-8")
     start_len = format(len(bit_string), "064b").encode("utf-8")
+    logger.debug("preprocess(message=%s): start_len → %s", message, start_len)
 
     # Pad bit_string to a multiple of 512 chars
     bit_string += b"1"
@@ -128,6 +138,7 @@ def preprocess(message: bytes) -> bytes:
         bit_string += b"0"
     bit_string += to_little_endian(start_len[32:]) + to_little_endian(start_len[:32])
 
+    logger.debug("<<< Exiting preprocess(message=%s)", message)
     return bit_string
 
 

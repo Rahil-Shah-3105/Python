@@ -16,6 +16,8 @@ leading zeros.)
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_palindrome(n: int | str) -> bool:
@@ -32,7 +34,10 @@ def is_palindrome(n: int | str) -> bool:
     >>> is_palindrome('10111')
     False
     """
+    logger.debug(">>> Entering is_palindrome(n=%s)", n)
     n = str(n)
+    logger.debug("is_palindrome(n=%s): n → %s", n, n)
+    logger.debug("<<< Exiting is_palindrome(n=%s)", n)
     return n == n[::-1]
 
 
@@ -57,11 +62,14 @@ def solution(n: int = 1000000):
     >>> solution(1)
     0
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     total = 0
+    logger.debug("solution(n=%s): total → %s", n, total)
 
     for i in range(1, n):
         if is_palindrome(i) and is_palindrome(bin(i).split("b")[1]):
             total += i
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return total
 
 

@@ -38,6 +38,8 @@ Source :
 from __future__ import annotations
 
 from math import pi
+import logging
+logger = logging.getLogger(__name__)
 
 # Define the Reduced Planck Constant ℏ (H bar), speed of light C, value of
 # Pi and the function
@@ -86,6 +88,7 @@ def casimir_force(force: float, area: float, distance: float) -> dict[str, float
         ...
     ValueError: Magnitude of force can not be negative
     """
+    logger.debug(">>> Entering casimir_force(force=%s,area=%s,distance=%s)", force, area, distance)
 
     if (force, area, distance).count(0) != 1:
         raise ValueError("One and only one argument must be 0")
@@ -109,6 +112,7 @@ def casimir_force(force: float, area: float, distance: float) -> dict[str, float
         distance = (
             (REDUCED_PLANCK_CONSTANT * SPEED_OF_LIGHT * pi**2 * area) / (240 * force)
         ) ** (1 / 4)
+        logger.debug("<<< Exiting casimir_force(force=%s,area=%s,distance=%s)", force, area, distance)
         return {"distance": distance}
     raise ValueError("One and only one argument must be 0")
 

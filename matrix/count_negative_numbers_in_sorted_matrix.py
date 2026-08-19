@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Given an matrix of numbers in which all rows and all columns are sorted in decreasing
 order, return the number of negative numbers in grid.
@@ -11,6 +13,8 @@ def generate_large_matrix() -> list[list[int]]:
     >>> generate_large_matrix() # doctest: +ELLIPSIS
     [[1000, ..., -999], [999, ..., -1001], ..., [2, ..., -1998]]
     """
+    logger.debug(">>> Entering generate_large_matrix()")
+    logger.debug("<<< Exiting generate_large_matrix()")
     return [list(range(1000 - i, -1000 - i, -1)) for i in range(1000)]
 
 
@@ -30,8 +34,10 @@ def validate_grid(grid: list[list[int]]) -> None:
     >>> for grid in test_grids:
     ...     validate_grid(grid)
     """
+    logger.debug(">>> Entering validate_grid(grid=%s)", grid)
     assert all(row == sorted(row, reverse=True) for row in grid)
     assert all(list(col) == sorted(col, reverse=True) for col in zip(*grid))
+    logger.debug("<<< Exiting validate_grid(grid=%s)", grid)
 
 
 def find_negative_index(array: list[int]) -> int:
@@ -59,8 +65,11 @@ def find_negative_index(array: list[int]) -> int:
     >>> find_negative_index([])
     0
     """
+    logger.debug(">>> Entering find_negative_index(array=%s)", array)
     left = 0
+    logger.debug("find_negative_index(array=%s): left → %s", array, left)
     right = len(array) - 1
+    logger.debug("find_negative_index(array=%s): right → %s", array, right)
 
     # Edge cases such as no values or all numbers are negative.
     if not array or array[0] < 0:
@@ -68,7 +77,9 @@ def find_negative_index(array: list[int]) -> int:
 
     while right + 1 > left:
         mid = (left + right) // 2
+        logger.debug("find_negative_index(array=%s): mid → %s", array, mid)
         num = array[mid]
+        logger.debug("find_negative_index(array=%s): num → %s", array, num)
 
         # Num must be negative and the index must be greater than or equal to 0.
         if num < 0 and array[mid - 1] >= 0:
@@ -79,6 +90,7 @@ def find_negative_index(array: list[int]) -> int:
         else:
             right = mid - 1
     # No negative numbers so return the last index of the array + 1 which is the length.
+    logger.debug("<<< Exiting find_negative_index(array=%s)", array)
     return len(array)
 
 
@@ -90,12 +102,16 @@ def count_negatives_binary_search(grid: list[list[int]]) -> int:
     >>> [count_negatives_binary_search(grid) for grid in test_grids]
     [8, 0, 0, 3, 1498500]
     """
+    logger.debug(">>> Entering count_negatives_binary_search(grid=%s)", grid)
     total = 0
+    logger.debug("count_negatives_binary_search(grid=%s): total → %s", grid, total)
     bound = len(grid[0])
+    logger.debug("count_negatives_binary_search(grid=%s): bound → %s", grid, bound)
 
     for i in range(len(grid)):
         bound = find_negative_index(grid[i][:bound])
         total += bound
+    logger.debug("<<< Exiting count_negatives_binary_search(grid=%s)", grid)
     return (len(grid) * len(grid[0])) - total
 
 
@@ -106,6 +122,8 @@ def count_negatives_brute_force(grid: list[list[int]]) -> int:
     >>> [count_negatives_brute_force(grid) for grid in test_grids]
     [8, 0, 0, 3, 1498500]
     """
+    logger.debug(">>> Entering count_negatives_brute_force(grid=%s)", grid)
+    logger.debug("<<< Exiting count_negatives_brute_force(grid=%s)", grid)
     return len([number for row in grid for number in row if number < 0])
 
 
@@ -117,17 +135,21 @@ def count_negatives_brute_force_with_break(grid: list[list[int]]) -> int:
     >>> [count_negatives_brute_force_with_break(grid) for grid in test_grids]
     [8, 0, 0, 3, 1498500]
     """
+    logger.debug(">>> Entering count_negatives_brute_force_with_break(grid=%s)", grid)
     total = 0
+    logger.debug("count_negatives_brute_force_with_break(grid=%s): total → %s", grid, total)
     for row in grid:
         for i, number in enumerate(row):
             if number < 0:
                 total += len(row) - i
                 break
+    logger.debug("<<< Exiting count_negatives_brute_force_with_break(grid=%s)", grid)
     return total
 
 
 def benchmark() -> None:
     """Benchmark our functions next to each other"""
+    logger.debug(">>> Entering benchmark()")
     from timeit import timeit
 
     print("Running benchmarks")
@@ -141,7 +163,9 @@ def benchmark() -> None:
         "count_negatives_brute_force",  # took 12.8160 seconds
     ):
         time = timeit(f"{func}(grid=grid)", setup=setup, number=500)
+        logger.debug("benchmark(): time → %s", time)
         print(f"{func}() took {time:0.4f} seconds")
+        logger.debug("<<< Exiting benchmark()")
 
 
 if __name__ == "__main__":

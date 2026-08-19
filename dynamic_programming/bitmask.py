@@ -10,11 +10,15 @@ Find the total no of ways in which the tasks can be distributed.
 """
 
 from collections import defaultdict
+import logging
+logger = logging.getLogger(__name__)
 
 
 class AssignmentUsingBitmask:
     def __init__(self, task_performed, total):
+        logger.debug(">>> Entering __init__(task_performed=%s,total=%s)", task_performed, total)
         self.total_tasks = total  # total no of tasks (N)
+        logger.debug("__init__(task_performed=%s,total=%s): self.total_tasks → %s", task_performed, total, self.total_tasks)
 
         # DP table will have a dimension of (2^M)*N
         # initially all values are set to -1
@@ -23,12 +27,16 @@ class AssignmentUsingBitmask:
         ]
 
         self.task = defaultdict(list)  # stores the list of persons for each task
+        logger.debug("__init__(task_performed=%s,total=%s): self.task → %s", task_performed, total, self.task)
 
         # final_mask is used to check if all persons are included by setting all bits
         # to 1
+        logger.debug("<<< Exiting __init__(task_performed=%s,total=%s)", task_performed, total)
         self.final_mask = (1 << len(task_performed)) - 1
+        logger.debug("__init__(task_performed=%s,total=%s): self.final_mask → %s", task_performed, total, self.final_mask)
 
     def count_ways_until(self, mask, task_no):
+        logger.debug(">>> Entering count_ways_until(mask=%s,task_no=%s)", mask, task_no)
         # if mask == self.finalmask all persons are distributed tasks, return 1
         if mask == self.final_mask:
             return 1
@@ -43,6 +51,7 @@ class AssignmentUsingBitmask:
 
         # Number of ways when we don't this task in the arrangement
         total_ways_until = self.count_ways_until(mask, task_no + 1)
+        logger.debug("count_ways_until(self=%s,mask=%s,task_no=%s): total_ways_until → %s", self, mask, task_no, total_ways_until)
 
         # now assign the tasks one by one to all possible persons and recursively
         # assign for the remaining tasks.
@@ -59,15 +68,18 @@ class AssignmentUsingBitmask:
         # save the value.
         self.dp[mask][task_no] = total_ways_until
 
+        logger.debug("<<< Exiting count_ways_until(mask=%s,task_no=%s)", mask, task_no)
         return self.dp[mask][task_no]
 
     def count_no_of_ways(self, task_performed):
+        logger.debug(">>> Entering count_no_of_ways(task_performed=%s)", task_performed)
         # Store the list of persons for each task
         for i in range(len(task_performed)):
             for j in task_performed[i]:
                 self.task[j].append(i)
 
         # call the function to fill the DP table, final answer is stored in dp[0][1]
+        logger.debug("<<< Exiting count_no_of_ways(task_performed=%s)", task_performed)
         return self.count_ways_until(0, 1)
 
 

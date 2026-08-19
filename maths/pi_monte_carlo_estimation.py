@@ -1,16 +1,24 @@
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Point:
     def __init__(self, x: float, y: float) -> None:
+        logger.debug(">>> Entering __init__(x=%s,y=%s)", x, y)
         self.x = x
+        logger.debug("__init__(self=%s,x=%s,y=%s): self.x → %s", self, x, y, self.x)
         self.y = y
+        logger.debug("__init__(self=%s,x=%s,y=%s): self.y → %s", self, x, y, self.y)
+        logger.debug("<<< Exiting __init__(x=%s,y=%s)", x, y)
 
     def is_in_unit_circle(self) -> bool:
         """
         True, if the point lies in the unit circle
         False, otherwise
         """
+        logger.debug(">>> Entering is_in_unit_circle()")
+        logger.debug("<<< Exiting is_in_unit_circle()")
         return (self.x**2 + self.y**2) <= 1
 
     @classmethod
@@ -18,6 +26,8 @@ class Point:
         """
         Generates a point randomly drawn from the unit square [0, 1) x [0, 1).
         """
+        logger.debug(">>> Entering random_unit_square()")
+        logger.debug("<<< Exiting random_unit_square()")
         return cls(x=random.random(), y=random.random())
 
 
@@ -43,16 +53,20 @@ def estimate_pi(number_of_simulations: int) -> float:
             circle, which is called m.
         3. An estimate of P[U in unit circle] is m/n
     """
+    logger.debug(">>> Entering estimate_pi(number_of_simulations=%s)", number_of_simulations)
     if number_of_simulations < 1:
         raise ValueError("At least one simulation is necessary to estimate PI.")
 
     number_in_unit_circle = 0
+    logger.debug("estimate_pi(number_of_simulations=%s): number_in_unit_circle → %s", number_of_simulations, number_in_unit_circle)
     for _ in range(number_of_simulations):
         random_point = Point.random_unit_square()
+        logger.debug("estimate_pi(number_of_simulations=%s): random_point → %s", number_of_simulations, random_point)
 
         if random_point.is_in_unit_circle():
             number_in_unit_circle += 1
 
+    logger.debug("<<< Exiting estimate_pi(number_of_simulations=%s)", number_of_simulations)
     return 4 * number_in_unit_circle / number_of_simulations
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 An implementation of the cocktail shaker sort algorithm in pure Python.
 
@@ -29,10 +31,12 @@ def cocktail_shaker_sort(arr: list[int]) -> list[int]:
         ...
     TypeError: 'tuple' object does not support item assignment
     """
+    logger.debug(">>> Entering cocktail_shaker_sort(arr=%s)", arr)
     start, end = 0, len(arr) - 1
 
     while start < end:
         swapped = False
+        logger.debug("cocktail_shaker_sort(arr=%s): swapped → %s", arr, swapped)
 
         # Pass from left to right
         for i in range(start, end):
@@ -56,6 +60,7 @@ def cocktail_shaker_sort(arr: list[int]) -> list[int]:
 
         start += 1  # Increase the start pointer after each pass
 
+    logger.debug("<<< Exiting cocktail_shaker_sort(arr=%s)", arr)
     return arr
 
 

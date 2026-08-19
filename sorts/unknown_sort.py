@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Python implementation of a sort algorithm.
 Best Case Scenario : O(n)
@@ -23,6 +25,7 @@ def merge_sort(collection: list) -> list:
     >>> merge_sort([-2, -5, -45])
     [-45, -5, -2]
     """
+    logger.debug(">>> Entering merge_sort(collection=%s)", collection)
     start, end = [], []
     while len(collection) > 1:
         min_one, max_one = min(collection), max(collection)
@@ -31,6 +34,7 @@ def merge_sort(collection: list) -> list:
         collection.remove(min_one)
         collection.remove(max_one)
     end.reverse()
+    logger.debug("<<< Exiting merge_sort(collection=%s)", collection)
     return start + collection + end
 
 

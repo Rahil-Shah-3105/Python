@@ -32,6 +32,8 @@ vertex.
 """
 
 import heapq
+import logging
+logger = logging.getLogger(__name__)
 
 
 def dijkstra(graph, start, end):
@@ -47,6 +49,7 @@ def dijkstra(graph, start, end):
 
     heap = [(0, start)]  # cost from start node,end node
     visited = set()
+    logger.debug("dijkstra(graph=%s,start=%s,end=%s): visited → %s", graph, start, end, visited)
     while heap:
         (cost, u) = heapq.heappop(heap)
         if u in visited:
@@ -58,6 +61,7 @@ def dijkstra(graph, start, end):
             if v in visited:
                 continue
             next_item = cost + c
+            logger.debug("dijkstra(graph=%s,start=%s,end=%s): next_item → %s", graph, start, end, next_item)
             heapq.heappush(heap, (next_item, v))
     return -1
 
