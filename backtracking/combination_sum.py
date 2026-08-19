@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 In the Combination Sum problem, we are given a list consisting of distinct integers.
 We need to find all the combinations whose sum equals to target given.
@@ -53,6 +55,7 @@ def combination_sum(candidates: list, target: int) -> list:
         ...
     ValueError: Candidates list should not be empty
     """
+    logger.debug(">>> Entering combination_sum(candidates=%s,target=%s)", candidates, target)
     if not candidates:
         raise ValueError("Candidates list should not be empty")
 
@@ -60,13 +63,18 @@ def combination_sum(candidates: list, target: int) -> list:
         raise ValueError("All elements in candidates must be non-negative")
 
     path = []  # type: list[int]
+    logger.debug("combination_sum(candidates=%s,target=%s): path → %s", candidates, target, path)
     answer = []  # type: list[int]
+    logger.debug("combination_sum(candidates=%s,target=%s): answer → %s", candidates, target, answer)
     backtrack(candidates, path, answer, target, 0)
+    logger.debug("<<< Exiting combination_sum(candidates=%s,target=%s)", candidates, target)
     return answer
 
 
 def main() -> None:
+    logger.debug(">>> Entering main()")
     print(combination_sum([-8, 2.3, 0], 1))
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

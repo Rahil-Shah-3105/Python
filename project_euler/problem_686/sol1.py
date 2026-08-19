@@ -15,6 +15,8 @@ Find p(123, 678910).
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def log_difference(number: int) -> float:
@@ -36,10 +38,14 @@ def log_difference(number: int) -> float:
     0.090368356648852
 
     """
+    logger.debug(">>> Entering log_difference(number=%s)", number)
 
     log_number = math.log(2, 10) * number
+    logger.debug("log_difference(number=%s): log_number → %s", number, log_number)
     difference = round((log_number - int(log_number)), 15)
+    logger.debug("log_difference(number=%s): difference → %s", number, difference)
 
+    logger.debug("<<< Exiting log_difference(number=%s)", number)
     return difference
 
 
@@ -127,16 +133,24 @@ def solution(number: int = 678910) -> int:
     193060223
 
     """
+    logger.debug(">>> Entering solution(number=%s)", number)
+    logger.debug("solution(number=%s): lowerbound → %s", number, lowerbound)
 
     power_iterator = 90
+    logger.debug("solution(number=%s): power_iterator → %s", number, power_iterator)
     position = 0
+    logger.debug("solution(number=%s): position → %s", number, position)
 
     lower_limit = math.log(1.23, 10)
+    logger.debug("solution(number=%s): lower_limit → %s", number, lower_limit)
     upper_limit = math.log(1.24, 10)
+    logger.debug("solution(number=%s): upper_limit → %s", number, upper_limit)
     previous_power = 0
+    logger.debug("solution(number=%s): previous_power → %s", number, previous_power)
 
     while position < number:
         difference = log_difference(power_iterator)
+        logger.debug("solution(number=%s): difference → %s", number, difference)
 
         if difference >= upper_limit:
             power_iterator += 93
@@ -149,6 +163,7 @@ def solution(number: int = 678910) -> int:
             power_iterator += 196
             position += 1
 
+    logger.debug("<<< Exiting solution(number=%s)", number)
     return previous_power
 
 

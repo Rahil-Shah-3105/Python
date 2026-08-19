@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Wiggle Sort.
 
@@ -22,10 +24,12 @@ def wiggle_sort(nums: list) -> list:
     >>> wiggle_sort([-2.1, -5.68, -45.11])
     [-45.11, -2.1, -5.68]
     """
+    logger.debug(">>> Entering wiggle_sort(nums=%s)", nums)
     for i, _ in enumerate(nums):
         if (i % 2 == 1) == (nums[i - 1] > nums[i]):
             nums[i - 1], nums[i] = nums[i], nums[i - 1]
 
+    logger.debug("<<< Exiting wiggle_sort(nums=%s)", nums)
     return nums
 
 

@@ -1,4 +1,6 @@
 from math import factorial
+import logging
+logger = logging.getLogger(__name__)
 
 """
 https://en.wikipedia.org/wiki/Automatic_differentiation#Automatic_differentiation_using_dual_numbers
@@ -10,42 +12,63 @@ Note this only works for basic functions, f(x) where the power of x is positive.
 
 class Dual:
     def __init__(self, real, rank):
+        logger.debug(">>> Entering __init__(real=%s,rank=%s)", real, rank)
         self.real = real
+        logger.debug("__init__(self=%s,real=%s,rank=%s): self.real → %s", self, real, rank, self.real)
         if isinstance(rank, int):
             self.duals = [1] * rank
+            logger.debug("__init__(self=%s,real=%s,rank=%s): self.duals → %s", self, real, rank, self.duals)
         else:
+            logger.debug("<<< Exiting __init__(real=%s,rank=%s)", real, rank)
             self.duals = rank
 
     def __repr__(self):
+        logger.debug(">>> Entering __repr__()")
         s = "+".join(f"{dual}E{n}" for n, dual in enumerate(self.duals, 1))
+        logger.debug("__repr__(): s → %s", s)
+        logger.debug("<<< Exiting __repr__()")
         return f"{self.real}+{s}"
 
     def reduce(self):
+        logger.debug(">>> Entering reduce()")
         cur = self.duals.copy()
+        logger.debug("reduce(): cur → %s", cur)
+        logger.debug("reduce(self=%s): cur → %s", self, cur)
         while cur[-1] == 0:
             cur.pop(-1)
+        logger.debug("<<< Exiting reduce()")
         return Dual(self.real, cur)
 
     def __add__(self, other):
+        logger.debug(">>> Entering __add__(other=%s)", other)
         if not isinstance(other, Dual):
             return Dual(self.real + other, self.duals)
         s_dual = self.duals.copy()
+        logger.debug("__add__(self=%s,other=%s): s_dual → %s", self, other, s_dual)
         o_dual = other.duals.copy()
+        logger.debug("__add__(self=%s,other=%s): o_dual → %s", self, other, o_dual)
         if len(s_dual) > len(o_dual):
             o_dual.extend([1] * (len(s_dual) - len(o_dual)))
         elif len(s_dual) < len(o_dual):
             s_dual.extend([1] * (len(o_dual) - len(s_dual)))
         new_duals = []
+        logger.debug("__add__(self=%s,other=%s): new_duals → %s", self, other, new_duals)
         for i in range(len(s_dual)):
             new_duals.append(s_dual[i] + o_dual[i])
+        logger.debug("<<< Exiting __add__(other=%s)", other)
         return Dual(self.real + other.real, new_duals)
 
     __radd__ = __add__
 
     def __sub__(self, other):
+        logger.debug(">>> Entering __sub__(other=%s)", other)
+        logger.debug("<<< Exiting __sub__(other=%s)", other)
         return self + other * -1
 
     def __mul__(self, other):
+        logger.debug(">>> Entering __mul__(other=%s)", other)
+        logger.debug("__mul__(other=%s): new_duals → %s", other, new_duals)
+        logger.debug("__mul__(self=%s,other=%s): new_duals → %s", self, other, new_duals)
         if not isinstance(other, Dual):
             new_duals = []
             for i in self.duals:
@@ -59,21 +82,27 @@ class Dual:
             new_duals[k] += self.duals[k] * other.real
         for index in range(len(other.duals)):
             new_duals[index] += other.duals[index] * self.real
+        logger.debug("<<< Exiting __mul__(other=%s)", other)
         return Dual(self.real * other.real, new_duals)
 
     __rmul__ = __mul__
 
     def __truediv__(self, other):
+        logger.debug(">>> Entering __truediv__(other=%s)", other)
         if not isinstance(other, Dual):
             new_duals = []
+            logger.debug("__truediv__(self=%s,other=%s): new_duals → %s", self, other, new_duals)
             for i in self.duals:
                 new_duals.append(i / other)
+            logger.debug("<<< Exiting __truediv__(other=%s)", other)
             return Dual(self.real / other, new_duals)
         raise ValueError
 
     def __floordiv__(self, other):
+        logger.debug(">>> Entering __floordiv__(other=%s)", other)
         if not isinstance(other, Dual):
             new_duals = []
+            logger.debug("__floordiv__(self=%s,other=%s): new_duals → %s", self, other, new_duals)
             for i in self.duals:
                 new_duals.append(i // other)
             return Dual(self.real // other, new_duals)

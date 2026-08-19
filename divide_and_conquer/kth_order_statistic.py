@@ -12,6 +12,8 @@ https://web.stanford.edu/class/archive/cs/cs161/cs161.1138/lectures/08/Small08.p
 from __future__ import annotations
 
 from random import choice
+import logging
+logger = logging.getLogger(__name__)
 
 
 def random_pivot(lst):
@@ -20,6 +22,8 @@ def random_pivot(lst):
     We can use a more sophisticated algorithm here, such as the median-of-medians
     algorithm.
     """
+    logger.debug(">>> Entering random_pivot(lst=%s)", lst)
+    logger.debug("<<< Exiting random_pivot(lst=%s)", lst)
     return choice(lst)
 
 
@@ -37,13 +41,17 @@ def kth_number(lst: list[int], k: int) -> int:
     >>> kth_number([25, 21, 98, 100, 76, 22, 43, 60, 89, 87], 4)
     43
     """
+    logger.debug(">>> Entering kth_number(lst=%s,k=%s)", lst, k)
     # pick a pivot and separate into list based on pivot.
     pivot = random_pivot(lst)
+    logger.debug("kth_number(lst=%s,k=%s): pivot → %s", lst, k, pivot)
 
     # partition based on pivot
     # linear time
     small = [e for e in lst if e < pivot]
+    logger.debug("kth_number(lst=%s,k=%s): small → %s", lst, k, small)
     big = [e for e in lst if e > pivot]
+    logger.debug("kth_number(lst=%s,k=%s): big → %s", lst, k, big)
 
     # if we get lucky, pivot might be the element we want.
     # we can easily see this:
@@ -57,6 +65,7 @@ def kth_number(lst: list[int], k: int) -> int:
         return kth_number(big, k - len(small) - 1)
     # pivot is in elements smaller than k
     else:
+        logger.debug("<<< Exiting kth_number(lst=%s,k=%s)", lst, k)
         return kth_number(small, k)
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 A unit of time is any particular time interval, used as a standard way of measuring or
 expressing duration.  The base unit of time in the International System of Units (SI),
@@ -59,15 +61,21 @@ def convert_time(time_value: float, unit_from: str, unit_to: str) -> float:
         ...
     ValueError: Invalid unit hot is not in seconds, minutes, hours, days, weeks, ...
     """
+    logger.debug(">>> Entering convert_time(time_value=%s,unit_from=%s,unit_to=%s)", time_value, unit_from, unit_to)
     if not isinstance(time_value, (int, float)) or time_value < 0:
         msg = "'time_value' must be a non-negative number."
+        logger.debug("convert_time(time_value=%s,unit_from=%s,unit_to=%s): msg → %s", time_value, unit_from, unit_to, msg)
         raise ValueError(msg)
 
     unit_from = unit_from.lower()
+    logger.debug("convert_time(time_value=%s,unit_from=%s,unit_to=%s): unit_from → %s", time_value, unit_from, unit_to, unit_from)
     unit_to = unit_to.lower()
+    logger.debug("convert_time(time_value=%s,unit_from=%s,unit_to=%s): unit_to → %s", time_value, unit_from, unit_to, unit_to)
     if unit_from not in time_chart or unit_to not in time_chart:
         invalid_unit = unit_from if unit_from not in time_chart else unit_to
+        logger.debug("convert_time(time_value=%s,unit_from=%s,unit_to=%s): invalid_unit → %s", time_value, unit_from, unit_to, invalid_unit)
         msg = f"Invalid unit {invalid_unit} is not in {', '.join(time_chart)}."
+        logger.debug("<<< Exiting convert_time(time_value=%s,unit_from=%s,unit_to=%s)", time_value, unit_from, unit_to)
         raise ValueError(msg)
 
     return round(

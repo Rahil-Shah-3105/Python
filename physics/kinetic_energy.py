@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Find the kinetic energy of an object, given its mass and velocity.
 
@@ -39,8 +41,10 @@ def kinetic_energy(mass: float, velocity: float) -> float:
     >>> kinetic_energy(100,100)
     500000.0
     """
+    logger.debug(">>> Entering kinetic_energy(mass=%s,velocity=%s)", mass, velocity)
     if mass < 0:
         raise ValueError("The mass of a body cannot be negative")
+    logger.debug("<<< Exiting kinetic_energy(mass=%s,velocity=%s)", mass, velocity)
     return 0.5 * mass * abs(velocity) * abs(velocity)
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Problem 31: https://projecteuler.net/problem=31
 
@@ -45,13 +47,17 @@ def solution(pence: int = 200) -> int:
     >>> solution(10)
     11
     """
+    logger.debug(">>> Entering solution(pence=%s)", pence)
     coins = [1, 2, 5, 10, 20, 50, 100, 200]
+    logger.debug("solution(pence=%s): coins → %s", pence, coins)
     number_of_ways = [0] * (pence + 1)
+    logger.debug("solution(pence=%s): number_of_ways → %s", pence, number_of_ways)
     number_of_ways[0] = 1  # base case: 1 way to make 0 pence
 
     for coin in coins:
         for i in range(coin, pence + 1, 1):
             number_of_ways[i] += number_of_ways[i - coin]
+    logger.debug("<<< Exiting solution(pence=%s)", pence)
     return number_of_ways[pence]
 
 

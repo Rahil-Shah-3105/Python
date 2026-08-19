@@ -2,6 +2,8 @@
 # will be approximately log(log(n)) for most natural numbers n
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def exact_prime_factor_count(n: int) -> int:
@@ -9,11 +11,14 @@ def exact_prime_factor_count(n: int) -> int:
     >>> exact_prime_factor_count(51242183)
     3
     """
+    logger.debug(">>> Entering exact_prime_factor_count(n=%s)", n)
     count = 0
+    logger.debug("exact_prime_factor_count(n=%s): count → %s", n, count)
     if n % 2 == 0:
         count += 1
         while n % 2 == 0:
             n = int(n / 2)
+            logger.debug("exact_prime_factor_count(n=%s): n → %s", n, n)
     # the n input value must be odd so that
     # we can skip one element (ie i += 2)
 
@@ -31,6 +36,7 @@ def exact_prime_factor_count(n: int) -> int:
 
     if n > 2:
         count += 1
+    logger.debug("<<< Exiting exact_prime_factor_count(n=%s)", n)
     return count
 
 

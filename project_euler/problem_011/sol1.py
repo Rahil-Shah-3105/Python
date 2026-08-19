@@ -25,22 +25,32 @@ vertically, or diagonally) in this 20x20 array?
 """
 
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 
 def largest_product(grid):
+    logger.debug(">>> Entering largest_product(grid=%s)", grid)
     n_columns = len(grid[0])
+    logger.debug("largest_product(grid=%s): n_columns → %s", grid, n_columns)
     n_rows = len(grid)
 
+    logger.debug("largest_product(grid=%s): n_rows → %s", grid, n_rows)
     largest = 0
     lr_diag_product = 0
+    logger.debug("largest_product(grid=%s): largest → %s", grid, largest)
     rl_diag_product = 0
 
+    logger.debug("largest_product(grid=%s): lr_diag_product → %s", grid, lr_diag_product)
+    logger.debug("largest_product(grid=%s): rl_diag_product → %s", grid, rl_diag_product)
     # Check vertically, horizontally, diagonally at the same time (only works
     # for nxn grid)
     for i in range(n_columns):
         for j in range(n_rows - 3):
             vert_product = grid[j][i] * grid[j + 1][i] * grid[j + 2][i] * grid[j + 3][i]
+            logger.debug("largest_product(grid=%s): vert_product → %s", grid, vert_product)
             horz_product = grid[i][j] * grid[i][j + 1] * grid[i][j + 2] * grid[i][j + 3]
+            logger.debug("largest_product(grid=%s): horz_product → %s", grid, horz_product)
 
             # Left-to-right diagonal (\) product
             if i < n_columns - 3:
@@ -65,6 +75,7 @@ def largest_product(grid):
             )
             largest = max(largest, max_product)
 
+    logger.debug("<<< Exiting largest_product(grid=%s)", grid)
     return largest
 
 
@@ -75,13 +86,17 @@ def solution():
     >>> solution()
     70600674
     """
+    logger.debug(">>> Entering solution()")
     grid = []
+    logger.debug("solution(): grid → %s", grid)
     with open(os.path.dirname(__file__) + "/grid.txt") as file:
+        logger.error("Exception in solution()", exc_info=True)
         for line in file:
             grid.append(line.strip("\n").split(" "))
 
     grid = [[int(i) for i in grid[j]] for j in range(len(grid))]
 
+    logger.debug("<<< Exiting solution()")
     return largest_product(grid)
 
 

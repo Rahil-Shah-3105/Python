@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # https://en.wikipedia.org/wiki/Fizz_buzz#Programming
 
 
@@ -34,6 +36,7 @@ def fizz_buzz(number: int, iterations: int) -> str:
         ...
     ValueError: iterations must be defined as integers
     """
+    logger.debug(">>> Entering fizz_buzz(number=%s,iterations=%s)", number, iterations)
     if not isinstance(iterations, int):
         raise ValueError("iterations must be defined as integers")
     if not isinstance(number, int) or not number >= 1:
@@ -45,6 +48,7 @@ def fizz_buzz(number: int, iterations: int) -> str:
         raise ValueError("Iterations must be done more than 0 times to play FizzBuzz")
 
     out = ""
+    logger.debug("fizz_buzz(number=%s,iterations=%s): out → %s", number, iterations, out)
     while number <= iterations:
         if number % 3 == 0:
             out += "Fizz"
@@ -56,6 +60,7 @@ def fizz_buzz(number: int, iterations: int) -> str:
         # print(out)
         number += 1
         out += " "
+    logger.debug("<<< Exiting fizz_buzz(number=%s,iterations=%s)", number, iterations)
     return out
 
 

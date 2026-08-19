@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def get_1s_count(number: int) -> int:
     """
     Count the number of set bits in a 32 bit integer using Brian Kernighan's way.
@@ -27,16 +29,19 @@ def get_1s_count(number: int) -> int:
         ...
     ValueError: Input must be a non-negative integer
     """
+    logger.debug(">>> Entering get_1s_count(number=%s)", number)
     if not isinstance(number, int) or number < 0:
         raise ValueError("Input must be a non-negative integer")
 
     count = 0
+    logger.debug("get_1s_count(number=%s): count → %s", number, count)
     while number:
         # This way we arrive at next set bit (next 1) instead of looping
         # through each bit and checking for 1s hence the
         # loop won't run 32 times it will only run the number of `1` times
         number &= number - 1
         count += 1
+    logger.debug("<<< Exiting get_1s_count(number=%s)", number)
     return count
 
 

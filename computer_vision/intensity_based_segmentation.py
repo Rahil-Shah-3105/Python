@@ -4,6 +4,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
+import logging
+logger = logging.getLogger(__name__)
 
 
 def segment_image(image: np.ndarray, thresholds: list[int]) -> np.ndarray:
@@ -24,13 +26,16 @@ def segment_image(image: np.ndarray, thresholds: list[int]) -> np.ndarray:
                [0, 1, 2],
                [0, 1, 1]], dtype=int32)
     """
+    logger.debug(">>> Entering segment_image(image=%s,thresholds=%s)", image, thresholds)
     # Initialize segmented array with zeros
     segmented = np.zeros_like(image, dtype=np.int32)
+    logger.debug("segment_image(image=%s,thresholds=%s): segmented → %s", image, thresholds, segmented)
 
     # Assign labels based on thresholds
     for i, threshold in enumerate(thresholds):
         segmented[image > threshold] = i + 1
 
+    logger.debug("<<< Exiting segment_image(image=%s,thresholds=%s)", image, thresholds)
     return segmented
 
 

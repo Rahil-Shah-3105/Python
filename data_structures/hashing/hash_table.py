@@ -2,6 +2,8 @@
 from abc import abstractmethod
 
 from .number_theory.prime_numbers import next_prime
+import logging
+logger = logging.getLogger(__name__)
 
 
 class HashTable:
@@ -46,9 +48,13 @@ class HashTable:
         >>> ht.keys()
         {0: 5, 4: 4, 3: 3, 2: 2, 1: 1}
         """
+        logger.debug(">>> Entering keys()")
+        logger.debug("<<< Exiting keys()")
         return self._keys
 
     def balanced_factor(self):
+        logger.debug(">>> Entering balanced_factor()")
+        logger.debug("<<< Exiting balanced_factor()")
         return sum(1 for slot in self.values if slot is not None) / (
             self.size_table * self.charge_factor
         )
@@ -78,12 +84,16 @@ class HashTable:
         >>> ht.hash_function(-0)
         0
         """
+        logger.debug(">>> Entering hash_function(key=%s)", key)
+        logger.debug("<<< Exiting hash_function(key=%s)", key)
         return key % self.size_table
 
     def _step_by_step(self, step_ord):
+        logger.debug(">>> Entering _step_by_step(step_ord=%s)", step_ord)
         print(f"step {step_ord}")
         print(list(range(len(self.values))))
         print(self.values)
+        logger.debug("<<< Exiting _step_by_step(step_ord=%s)", step_ord)
 
     def bulk_insert(self, values):
         """
@@ -123,12 +133,15 @@ class HashTable:
         [0, 1, 2, 3, 4]
         [5, 1, 2, 3, 4]
         """
+        logger.debug(">>> Entering bulk_insert(values=%s)", values)
         i = 1
         self.__aux_list = values
+        logger.debug("bulk_insert(self=%s,values=%s): self.__aux_list → %s", self, values, self.__aux_list)
         for value in values:
             self.insert_data(value)
             self._step_by_step(i)
             i += 1
+            logger.debug("<<< Exiting bulk_insert(values=%s)", values)
 
     def _set_value(self, key, data):
         """
@@ -172,8 +185,10 @@ class HashTable:
         >>> ht.keys()
         {3: 18, 2: 17, 4: 99, 0: 15, 1: 20}
         """
+        logger.debug(">>> Entering _set_value(key=%s,data=%s)", key, data)
         self.values[key] = data
         self._keys[key] = data
+        logger.debug("<<< Exiting _set_value(key=%s,data=%s)", key, data)
 
     @abstractmethod
     def _collision_resolution(self, key, data=None):
@@ -225,7 +240,9 @@ class HashTable:
         ...
         TypeError: list indices must be integers or slices, not float
         """
+        logger.debug(">>> Entering _collision_resolution(key=%s,data=%s)", key, data)
         new_key = self.hash_function(key + 1)
+        logger.debug("_collision_resolution(self=%s,key=%s,data=%s): new_key → %s", self, key, data, new_key)
 
         while self.values[new_key] is not None and self.values[new_key] != key:
             if self.values.count(None) > 0:
@@ -234,15 +251,22 @@ class HashTable:
                 new_key = None
                 break
 
+        logger.debug("<<< Exiting _collision_resolution(key=%s,data=%s)", key, data)
         return new_key
 
     def rehashing(self):
+        logger.debug(">>> Entering rehashing()")
+        logger.debug("rehashing(): self.values → %s", self.values)
+        logger.debug("rehashing(self=%s): self.values → %s", self, self.values)
         survivor_values = [value for value in self.values if value is not None]
+        logger.debug("rehashing(self=%s): survivor_values → %s", self, survivor_values)
         self.size_table = next_prime(self.size_table, factor=2)
+        logger.debug("rehashing(): self.size_table → %s", self.size_table)
         self._keys.clear()
         self.values = [None] * self.size_table  # hell's pointers D: don't DRY ;/
         for value in survivor_values:
             self.insert_data(value)
+            logger.debug("<<< Exiting rehashing()")
 
     def insert_data(self, data):
         """
@@ -260,7 +284,10 @@ class HashTable:
         >>> ht.keys()
         {0: 30, 1: 50}
         """
+        logger.debug(">>> Entering insert_data(data=%s)", data)
+        logger.warning("insert_data(self=%s,data=%s): key → %s", self, data, key)
         key = self.hash_function(data)
+        logger.debug("insert_data(data=%s): key → %s", data, key)
 
         if self.values[key] is None:
             self._set_value(key, data)
@@ -270,11 +297,14 @@ class HashTable:
 
         else:
             collision_resolution = self._collision_resolution(key, data)
+            logger.debug("insert_data(self=%s,data=%s): collision_resolution → %s", self, data, collision_resolution)
+            logger.debug("insert_data(data=%s): collision_resolution → %s", data, collision_resolution)
             if collision_resolution is not None:
                 self._set_value(collision_resolution, data)
             else:
                 self.rehashing()
                 self.insert_data(data)
+                logger.debug("<<< Exiting insert_data(data=%s)", data)
 
 
 if __name__ == "__main__":

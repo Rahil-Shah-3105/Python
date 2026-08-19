@@ -1,6 +1,8 @@
 # https://byjus.com/equivalent-resistance-formula/
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def resistor_parallel(resistors: list[float]) -> float:
@@ -18,13 +20,18 @@ def resistor_parallel(resistors: list[float]) -> float:
         ...
     ValueError: Resistor at index 2 has a negative or zero value!
     """
+    logger.debug(">>> Entering resistor_parallel(resistors=%s)", resistors)
+    logger.debug("resistor_parallel(resistors=%s): Req → %s", resistors, Req)
 
     first_sum = 0.00
+    logger.debug("resistor_parallel(resistors=%s): first_sum → %s", resistors, first_sum)
     for index, resistor in enumerate(resistors):
         if resistor <= 0:
             msg = f"Resistor at index {index} has a negative or zero value!"
+            logger.debug("resistor_parallel(resistors=%s): msg → %s", resistors, msg)
             raise ValueError(msg)
         first_sum += 1 / float(resistor)
+    logger.debug("<<< Exiting resistor_parallel(resistors=%s)", resistors)
     return 1 / first_sum
 
 
@@ -41,12 +48,17 @@ def resistor_series(resistors: list[float]) -> float:
         ...
     ValueError: Resistor at index 2 has a negative value!
     """
+    logger.debug(">>> Entering resistor_series(resistors=%s)", resistors)
+    logger.debug("resistor_series(resistors=%s): Req → %s", resistors, Req)
     sum_r = 0.00
+    logger.debug("resistor_series(resistors=%s): sum_r → %s", resistors, sum_r)
     for index, resistor in enumerate(resistors):
         sum_r += resistor
         if resistor < 0:
             msg = f"Resistor at index {index} has a negative value!"
+            logger.debug("resistor_series(resistors=%s): msg → %s", resistors, msg)
             raise ValueError(msg)
+    logger.debug("<<< Exiting resistor_series(resistors=%s)", resistors)
     return sum_r
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Source: https://en.wikipedia.org/wiki/Odd%E2%80%93even_sort
 
@@ -19,12 +21,15 @@ def odd_even_transposition(arr: list) -> list:
     >>> odd_even_transposition([-.1, 1.1, .1, -2.9])
     [-2.9, -0.1, 0.1, 1.1]
     """
+    logger.debug(">>> Entering odd_even_transposition(arr=%s)", arr)
     arr_size = len(arr)
+    logger.debug("odd_even_transposition(arr=%s): arr_size → %s", arr, arr_size)
     for _ in range(arr_size):
         for i in range(_ % 2, arr_size - 1, 2):
             if arr[i + 1] < arr[i]:
                 arr[i], arr[i + 1] = arr[i + 1], arr[i]
 
+    logger.debug("<<< Exiting odd_even_transposition(arr=%s)", arr)
     return arr
 
 

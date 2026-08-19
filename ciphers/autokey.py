@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 https://en.wikipedia.org/wiki/Autokey_cipher
 
@@ -35,6 +37,7 @@ def encrypt(plaintext: str, key: str) -> str:
         ...
     TypeError: plaintext must be a string
     """
+    logger.debug(">>> Entering encrypt(plaintext=%s,key=%s)", plaintext, key)
     if not isinstance(plaintext, str):
         raise TypeError("plaintext must be a string")
     if not isinstance(key, str):
@@ -47,10 +50,15 @@ def encrypt(plaintext: str, key: str) -> str:
 
     key += plaintext
     plaintext = plaintext.lower()
+    logger.debug("encrypt(plaintext=%s,key=%s): plaintext → %s", plaintext, key, plaintext)
     key = key.lower()
+    logger.debug("encrypt(plaintext=%s,key=%s): key → %s", plaintext, key, key)
     plaintext_iterator = 0
+    logger.debug("encrypt(plaintext=%s,key=%s): plaintext_iterator → %s", plaintext, key, plaintext_iterator)
     key_iterator = 0
+    logger.debug("encrypt(plaintext=%s,key=%s): key_iterator → %s", plaintext, key, key_iterator)
     ciphertext = ""
+    logger.debug("encrypt(plaintext=%s,key=%s): ciphertext → %s", plaintext, key, ciphertext)
     while plaintext_iterator < len(plaintext):
         if (
             ord(plaintext[plaintext_iterator]) < 97
@@ -71,6 +79,7 @@ def encrypt(plaintext: str, key: str) -> str:
             )
             key_iterator += 1
             plaintext_iterator += 1
+    logger.debug("<<< Exiting encrypt(plaintext=%s,key=%s)", plaintext, key)
     return ciphertext
 
 
@@ -100,6 +109,7 @@ def decrypt(ciphertext: str, key: str) -> str:
         ...
     TypeError: key must be a string
     """
+    logger.debug(">>> Entering decrypt(ciphertext=%s,key=%s)", ciphertext, key)
     if not isinstance(ciphertext, str):
         raise TypeError("ciphertext must be a string")
     if not isinstance(key, str):
@@ -111,9 +121,13 @@ def decrypt(ciphertext: str, key: str) -> str:
         raise ValueError("key is empty")
 
     key = key.lower()
+    logger.debug("decrypt(ciphertext=%s,key=%s): key → %s", ciphertext, key, key)
     ciphertext_iterator = 0
+    logger.debug("decrypt(ciphertext=%s,key=%s): ciphertext_iterator → %s", ciphertext, key, ciphertext_iterator)
     key_iterator = 0
+    logger.debug("decrypt(ciphertext=%s,key=%s): key_iterator → %s", ciphertext, key, key_iterator)
     plaintext = ""
+    logger.debug("decrypt(ciphertext=%s,key=%s): plaintext → %s", ciphertext, key, plaintext)
     while ciphertext_iterator < len(ciphertext):
         if (
             ord(ciphertext[ciphertext_iterator]) < 97
@@ -131,6 +145,7 @@ def decrypt(ciphertext: str, key: str) -> str:
             )
             key_iterator += 1
         ciphertext_iterator += 1
+    logger.debug("<<< Exiting decrypt(ciphertext=%s,key=%s)", ciphertext, key)
     return plaintext
 
 

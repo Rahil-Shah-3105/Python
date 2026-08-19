@@ -32,6 +32,8 @@ greatest product. What is the value of this product?
 """
 
 from functools import reduce
+import logging
+logger = logging.getLogger(__name__)
 
 N = (
     "73167176531330624919225119674426574742355349194934"
@@ -69,7 +71,9 @@ def solution(n: str = N) -> int:
     >>> solution("1397843129582379841238352374")
     209018880
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return max(
         # mypy cannot properly interpret reduce
         int(reduce(lambda x, y: str(int(x) * int(y)), n[i : i + 13]))

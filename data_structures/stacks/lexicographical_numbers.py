@@ -1,4 +1,6 @@
 from collections.abc import Iterator
+import logging
+logger = logging.getLogger(__name__)
 
 
 def lexical_order(max_number: int) -> Iterator[int]:
@@ -16,11 +18,14 @@ def lexical_order(max_number: int) -> Iterator[int]:
     >>> list(lexical_order(12))
     [1, 10, 11, 12, 2, 3, 4, 5, 6, 7, 8, 9]
     """
+    logger.debug(">>> Entering lexical_order(max_number=%s)", max_number)
 
     stack = [1]
+    logger.debug("lexical_order(max_number=%s): stack → %s", max_number, stack)
 
     while stack:
         num = stack.pop()
+        logger.debug("lexical_order(max_number=%s): num → %s", max_number, num)
         if num > max_number:
             continue
 
@@ -29,6 +34,7 @@ def lexical_order(max_number: int) -> Iterator[int]:
             stack.append(num + 1)
 
         stack.append(num * 10)
+        logger.debug("<<< Exiting lexical_order(max_number=%s)", max_number)
 
 
 if __name__ == "__main__":

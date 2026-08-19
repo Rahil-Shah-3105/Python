@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def sum_of_digits(n: int) -> int:
     """
     Find the sum of digits of a number.
@@ -10,11 +12,15 @@ def sum_of_digits(n: int) -> int:
     >>> sum_of_digits(0)
     0
     """
+    logger.debug(">>> Entering sum_of_digits(n=%s)", n)
     n = abs(n)
+    logger.debug("sum_of_digits(n=%s): n → %s", n, n)
     res = 0
+    logger.debug("sum_of_digits(n=%s): res → %s", n, res)
     while n > 0:
         res += n % 10
         n //= 10
+    logger.debug("<<< Exiting sum_of_digits(n=%s)", n)
     return res
 
 
@@ -30,7 +36,9 @@ def sum_of_digits_recursion(n: int) -> int:
     >>> sum_of_digits_recursion(0)
     0
     """
+    logger.debug(">>> Entering sum_of_digits_recursion(n=%s)", n)
     n = abs(n)
+    logger.debug("sum_of_digits_recursion(n=%s): n → %s", n, n)
     return n if n < 10 else n % 10 + sum_of_digits(n // 10)
 
 

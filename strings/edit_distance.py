@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def edit_distance(source: str, target: str) -> int:
     """
     Edit distance algorithm is a string metric, i.e., it is a way of quantifying how
@@ -29,12 +31,14 @@ def edit_distance(source: str, target: str) -> int:
     >>> edit_distance("lstring", "lsstring")
     1
     """
+    logger.debug(">>> Entering edit_distance(source=%s,target=%s)", source, target)
     if len(source) == 0:
         return len(target)
     elif len(target) == 0:
         return len(source)
 
     delta = int(source[-1] != target[-1])  # Substitution
+    logger.debug("<<< Exiting edit_distance(source=%s,target=%s)", source, target)
     return min(
         edit_distance(source[:-1], target[:-1]) + delta,
         edit_distance(source, target[:-1]) + 1,

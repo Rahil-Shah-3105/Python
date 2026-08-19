@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 == Raise base to the power of exponent using recursion ==
     Input -->
@@ -47,6 +49,8 @@ def power(base: int, exponent: int) -> float:
     >>> power(23, 12)
     21914624432020321
     """
+    logger.debug(">>> Entering power(base=%s,exponent=%s)", base, exponent)
+    logger.debug("<<< Exiting power(base=%s,exponent=%s)", base, exponent)
     return base * power(base, (exponent - 1)) if exponent else 1
 
 

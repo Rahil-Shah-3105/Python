@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This module provides two implementations for the rod-cutting problem:
   1. A naive recursive implementation which has an exponential runtime
@@ -40,16 +42,19 @@ def naive_cut_rod_recursive(n: int, prices: list):
     >>> naive_cut_rod_recursive(10, [1, 5, 8, 9, 10, 17, 17, 20, 24, 30])
     30
     """
+    logger.debug(">>> Entering naive_cut_rod_recursive(n=%s,prices=%s)", n, prices)
 
     _enforce_args(n, prices)
     if n == 0:
         return 0
     max_revue = float("-inf")
+    logger.debug("naive_cut_rod_recursive(n=%s,prices=%s): max_revue → %s", n, prices, max_revue)
     for i in range(1, n + 1):
         max_revue = max(
             max_revue, prices[i - 1] + naive_cut_rod_recursive(n - i, prices)
         )
 
+    logger.debug("<<< Exiting naive_cut_rod_recursive(n=%s,prices=%s)", n, prices)
     return max_revue
 
 
@@ -86,8 +91,11 @@ def top_down_cut_rod(n: int, prices: list):
     >>> top_down_cut_rod(10, [1, 5, 8, 9, 10, 17, 17, 20, 24, 30])
     30
     """
+    logger.debug(">>> Entering top_down_cut_rod(n=%s,prices=%s)", n, prices)
     _enforce_args(n, prices)
     max_rev = [float("-inf") for _ in range(n + 1)]
+    logger.debug("top_down_cut_rod(n=%s,prices=%s): max_rev → %s", n, prices, max_rev)
+    logger.debug("<<< Exiting top_down_cut_rod(n=%s,prices=%s)", n, prices)
     return _top_down_cut_rod_recursive(n, prices, max_rev)
 
 
@@ -113,12 +121,14 @@ def _top_down_cut_rod_recursive(n: int, prices: list, max_rev: list):
     The maximum revenue obtainable for a rod of length `n` given the list of prices
     for each piece.
     """
+    logger.debug(">>> Entering _top_down_cut_rod_recursive(n=%s,prices=%s,max_rev=%s)", n, prices, max_rev)
     if max_rev[n] >= 0:
         return max_rev[n]
     elif n == 0:
         return 0
     else:
         max_revenue = float("-inf")
+        logger.debug("_top_down_cut_rod_recursive(n=%s,prices=%s,max_rev=%s): max_revenue → %s", n, prices, max_rev, max_revenue)
         for i in range(1, n + 1):
             max_revenue = max(
                 max_revenue,
@@ -127,6 +137,7 @@ def _top_down_cut_rod_recursive(n: int, prices: list, max_rev: list):
 
         max_rev[n] = max_revenue
 
+    logger.debug("<<< Exiting _top_down_cut_rod_recursive(n=%s,prices=%s,max_rev=%s)", n, prices, max_rev)
     return max_rev[n]
 
 
@@ -157,20 +168,24 @@ def bottom_up_cut_rod(n: int, prices: list):
     >>> bottom_up_cut_rod(10, [1, 5, 8, 9, 10, 17, 17, 20, 24, 30])
     30
     """
+    logger.debug(">>> Entering bottom_up_cut_rod(n=%s,prices=%s)", n, prices)
     _enforce_args(n, prices)
 
     # length(max_rev) = n + 1, to accommodate for the revenue obtainable from a rod of
     # length 0.
     max_rev = [float("-inf") for _ in range(n + 1)]
+    logger.debug("bottom_up_cut_rod(n=%s,prices=%s): max_rev → %s", n, prices, max_rev)
     max_rev[0] = 0
 
     for i in range(1, n + 1):
         max_revenue_i = max_rev[i]
+        logger.debug("bottom_up_cut_rod(n=%s,prices=%s): max_revenue_i → %s", n, prices, max_revenue_i)
         for j in range(1, i + 1):
             max_revenue_i = max(max_revenue_i, prices[j - 1] + max_rev[i - j])
 
         max_rev[i] = max_revenue_i
 
+    logger.debug("<<< Exiting bottom_up_cut_rod(n=%s,prices=%s)", n, prices)
     return max_rev[n]
 
 
@@ -185,8 +200,10 @@ def _enforce_args(n: int, prices: list):
         if `n` is negative or there are fewer items in the price list than the length of
         the rod
     """
+    logger.debug(">>> Entering _enforce_args(n=%s,prices=%s)", n, prices)
     if n < 0:
         msg = f"n must be greater than or equal to 0. Got n = {n}"
+        logger.debug("_enforce_args(n=%s,prices=%s): msg → %s", n, prices, msg)
         raise ValueError(msg)
 
     if n > len(prices):
@@ -194,24 +211,32 @@ def _enforce_args(n: int, prices: list):
             "Each integral piece of rod must have a corresponding price. "
             f"Got n = {n} but length of prices = {len(prices)}"
         )
+        logger.debug("<<< Exiting _enforce_args(n=%s,prices=%s)", n, prices)
         raise ValueError(msg)
 
 
 def main():
+    logger.debug(">>> Entering main()")
     prices = [6, 10, 12, 15, 20, 23]
+    logger.debug("main(): prices → %s", prices)
     n = len(prices)
+    logger.debug("main(): n → %s", n)
 
     # the best revenue comes from cutting the rod into 6 pieces, each
     # of length 1 resulting in a revenue of 6 * 6 = 36.
     expected_max_revenue = 36
 
     max_rev_top_down = top_down_cut_rod(n, prices)
+    logger.debug("main(): max_rev_top_down → %s", max_rev_top_down)
     max_rev_bottom_up = bottom_up_cut_rod(n, prices)
+    logger.debug("main(): max_rev_bottom_up → %s", max_rev_bottom_up)
     max_rev_naive = naive_cut_rod_recursive(n, prices)
+    logger.debug("main(): max_rev_naive → %s", max_rev_naive)
 
     assert expected_max_revenue == max_rev_top_down
     assert max_rev_top_down == max_rev_bottom_up
     assert max_rev_bottom_up == max_rev_naive
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

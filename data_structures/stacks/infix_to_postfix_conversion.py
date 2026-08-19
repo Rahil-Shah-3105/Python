@@ -8,6 +8,8 @@ from typing import Literal
 
 from .balanced_parentheses import balanced_parentheses
 from .stack import Stack
+import logging
+logger = logging.getLogger(__name__)
 
 PRECEDENCES: dict[str, int] = {
     "+": 1,
@@ -31,6 +33,8 @@ def precedence(char: str) -> int:
     order of operation.
     https://en.wikipedia.org/wiki/Order_of_operations
     """
+    logger.debug(">>> Entering precedence(char=%s)", char)
+    logger.debug("<<< Exiting precedence(char=%s)", char)
     return PRECEDENCES.get(char, -1)
 
 
@@ -39,6 +43,8 @@ def associativity(char: str) -> Literal["LR", "RL"]:
     Return the associativity of the operator `char`.
     https://en.wikipedia.org/wiki/Operator_associativity
     """
+    logger.debug(">>> Entering associativity(char=%s)", char)
+    logger.debug("<<< Exiting associativity(char=%s)", char)
     return ASSOCIATIVITIES[char]
 
 
@@ -63,10 +69,12 @@ def infix_to_postfix(expression_str: str) -> str:
     >>> infix_to_postfix("2^3^2")
     '2 3 2 ^ ^'
     """
+    logger.debug(">>> Entering infix_to_postfix(expression_str=%s)", expression_str)
     if not balanced_parentheses(expression_str):
         raise ValueError("Mismatched parentheses")
     stack: Stack[str] = Stack()
     postfix = []
+    logger.debug("infix_to_postfix(expression_str=%s): postfix → %s", expression_str, postfix)
     for char in expression_str:
         if char.isalpha() or char.isdigit():
             postfix.append(char)
@@ -83,7 +91,9 @@ def infix_to_postfix(expression_str: str) -> str:
                     break
 
                 char_precedence = precedence(char)
+                logger.debug("infix_to_postfix(expression_str=%s): char_precedence → %s", expression_str, char_precedence)
                 tos_precedence = precedence(stack.peek())
+                logger.debug("infix_to_postfix(expression_str=%s): tos_precedence → %s", expression_str, tos_precedence)
 
                 if char_precedence > tos_precedence:
                     stack.push(char)
@@ -99,6 +109,7 @@ def infix_to_postfix(expression_str: str) -> str:
 
     while not stack.is_empty():
         postfix.append(stack.pop())
+    logger.debug("<<< Exiting infix_to_postfix(expression_str=%s)", expression_str)
     return " ".join(postfix)
 
 

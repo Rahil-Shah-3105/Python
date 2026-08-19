@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import random
 import string
+import logging
+logger = logging.getLogger(__name__)
 
 
 class ShuffledShiftCipher:
@@ -34,14 +36,21 @@ class ShuffledShiftCipher:
         Note: No new passcode is generated if user provides a passcode
         while creating the object
         """
+        logger.debug(">>> Entering __init__(passcode=%s)", passcode)
         self.__passcode = passcode or self.__passcode_creator()
+        logger.debug("__init__(passcode=%s): self.__passcode → %s", passcode, self.__passcode)
+        logger.debug("<<< Exiting __init__(passcode=%s)", passcode)
         self.__key_list = self.__make_key_list()
+        logger.debug("__init__(passcode=%s): self.__key_list → %s", passcode, self.__key_list)
         self.__shift_key = self.__make_shift_key()
+        logger.debug("__init__(passcode=%s): self.__shift_key → %s", passcode, self.__shift_key)
 
     def __str__(self) -> str:
         """
         :return: passcode of the cipher object
         """
+        logger.debug(">>> Entering __str__()")
+        logger.debug("<<< Exiting __str__()")
         return "".join(self.__passcode)
 
     def __neg_pos(self, iterlist: list[int]) -> list[int]:
@@ -52,8 +61,10 @@ class ShuffledShiftCipher:
         :return: the mutated list
 
         """
+        logger.debug(">>> Entering __neg_pos(iterlist=%s)", iterlist)
         for i in range(1, len(iterlist), 2):
             iterlist[i] *= -1
+        logger.debug("<<< Exiting __neg_pos(iterlist=%s)", iterlist)
         return iterlist
 
     def __passcode_creator(self) -> list[str]:
@@ -66,8 +77,13 @@ class ShuffledShiftCipher:
         :rtype: list
         :return: a password of a random length between 10 to 20
         """
+        logger.debug(">>> Entering __passcode_creator()")
+        logger.warning("__passcode_creator(self=%s): password → %s", self, password)
         choices = string.ascii_letters + string.digits
+        logger.debug("__passcode_creator(self=%s): choices → %s", self, choices)
         password = [random.choice(choices) for _ in range(random.randint(10, 20))]
+        logger.debug("__passcode_creator(): password → <redacted>")
+        logger.debug("<<< Exiting __passcode_creator()")
         return password
 
     def __make_key_list(self) -> list[str]:
@@ -90,6 +106,7 @@ class ShuffledShiftCipher:
         Moreover, shift keys even introduce a multiple of 26 for a brute force approach
         for each of the already 97! combinations.
         """
+        logger.debug(">>> Entering __make_key_list()")
         # key_list_options contain nearly all printable except few elements from
         # string.whitespace
         key_list_options = (
@@ -97,10 +114,13 @@ class ShuffledShiftCipher:
         )
 
         keys_l = []
+        logger.debug("__make_key_list(self=%s): keys_l → %s", self, keys_l)
 
         # creates points known as breakpoints to break the key_list_options at those
         # points and pivot each substring
         breakpoints = sorted(set(self.__passcode))
+        logger.debug("__make_key_list(self=%s): breakpoints → %s", self, breakpoints)
+        logger.debug("__make_key_list(): breakpoints → %s", breakpoints)
         temp_list: list[str] = []
 
         # algorithm for creating a new shuffled list, keys_l, out of key_list_options
@@ -114,6 +134,7 @@ class ShuffledShiftCipher:
                 temp_list.clear()
 
         # returning a shuffled keys_l to prevent brute force guessing of shift key
+        logger.debug("<<< Exiting __make_key_list()")
         return keys_l
 
     def __make_shift_key(self) -> int:
@@ -121,7 +142,11 @@ class ShuffledShiftCipher:
         sum() of the mutated list of ascii values of all characters where the
         mutated list is the one returned by __neg_pos()
         """
+        logger.debug(">>> Entering __make_shift_key()")
         num = sum(self.__neg_pos([ord(x) for x in self.__passcode]))
+        logger.debug("__make_shift_key(self=%s): num → %s", self, num)
+        logger.debug("__make_shift_key(): num → %s", num)
+        logger.debug("<<< Exiting __make_shift_key()")
         return num if num > 0 else len(self.__passcode)
 
     def decrypt(self, encoded_message: str) -> str:
@@ -134,16 +159,22 @@ class ShuffledShiftCipher:
         'Hello, this is a modified Caesar cipher'
 
         """
+        logger.debug(">>> Entering decrypt(encoded_message=%s)", encoded_message)
         decoded_message = ""
+        logger.debug("decrypt(self=%s,encoded_message=%s): decoded_message → %s", self, encoded_message, decoded_message)
+        logger.debug("decrypt(encoded_message=%s): decoded_message → %s", encoded_message, decoded_message)
 
         # decoding shift like Caesar cipher algorithm implementing negative shift or
         # reverse shift or left shift
         for i in encoded_message:
             position = self.__key_list.index(i)
+            logger.debug("decrypt(self=%s,encoded_message=%s): position → %s", self, encoded_message, position)
+            logger.debug("decrypt(encoded_message=%s): position → %s", encoded_message, position)
             decoded_message += self.__key_list[
                 (position - self.__shift_key) % -len(self.__key_list)
             ]
 
+        logger.debug("<<< Exiting decrypt(encoded_message=%s)", encoded_message)
         return decoded_message
 
     def encrypt(self, plaintext: str) -> str:
@@ -156,16 +187,22 @@ class ShuffledShiftCipher:
         "d>**-1z6&'5z'5z:z+-='$'>=zp:>5:#z<'.&>#"
 
         """
+        logger.debug(">>> Entering encrypt(plaintext=%s)", plaintext)
         encoded_message = ""
+        logger.debug("encrypt(self=%s,plaintext=%s): encoded_message → %s", self, plaintext, encoded_message)
+        logger.debug("encrypt(plaintext=%s): encoded_message → %s", plaintext, encoded_message)
 
         # encoding shift like Caesar cipher algorithm implementing positive shift or
         # forward shift or right shift
         for i in plaintext:
             position = self.__key_list.index(i)
+            logger.debug("encrypt(self=%s,plaintext=%s): position → %s", self, plaintext, position)
+            logger.debug("encrypt(plaintext=%s): position → %s", plaintext, position)
             encoded_message += self.__key_list[
                 (position + self.__shift_key) % len(self.__key_list)
             ]
 
+        logger.debug("<<< Exiting encrypt(plaintext=%s)", plaintext)
         return encoded_message
 
 
@@ -174,7 +211,10 @@ def test_end_to_end(msg: str = "Hello, this is a modified Caesar cipher") -> str
     >>> test_end_to_end()
     'Hello, this is a modified Caesar cipher'
     """
+    logger.debug(">>> Entering test_end_to_end(msg=%s)", msg)
     cip1 = ShuffledShiftCipher()
+    logger.debug("test_end_to_end(msg=%s): cip1 → %s", msg, cip1)
+    logger.debug("<<< Exiting test_end_to_end(msg=%s)", msg)
     return cip1.decrypt(cip1.encrypt(msg))
 
 

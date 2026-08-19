@@ -7,6 +7,8 @@ from __future__ import annotations
 import numpy as np
 from numpy import float64
 from numpy.typing import NDArray
+import logging
+logger = logging.getLogger(__name__)
 
 
 # Method to find solution of system of linear equations
@@ -131,6 +133,10 @@ def jacobi_iteration_method(
                     temp += (-1) * table[row][col] * init_val[col]
             temp = (temp + val) / denom
             new_val.append(temp)
+        logger.debug(">>> Entering strictly_diagonally_dominant(table=%s)", table)
+        logger.debug("strictly_diagonally_dominant(table=%s): is_diagonally_dominant → %s", table, is_diagonally_dominant)
+        logger.debug("strictly_diagonally_dominant(table=%s): total → %s", table, total)
+        logger.debug("<<< Exiting strictly_diagonally_dominant(table=%s)", table)
         init_val = new_val
     """
 
@@ -178,6 +184,7 @@ def strictly_diagonally_dominant(table: NDArray[float64]) -> bool:
         ...
     ValueError: Coefficient matrix is not strictly diagonally dominant
     """
+    logger.debug(">>> Entering strictly_diagonally_dominant(table=%s)", table)
 
     rows, cols = table.shape
 

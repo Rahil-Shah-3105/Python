@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 9: https://projecteuler.net/problem=9
 
@@ -30,9 +32,12 @@ def solution(n: int = 1000) -> int:
     >>> solution(126)
     66780
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     product = -1
+    logger.debug("solution(n=%s): product → %s", n, product)
     candidate = 0
+    logger.debug("solution(n=%s): candidate → %s", n, candidate)
     for a in range(1, n // 3):
         # Solving the two equations a**2+b**2=c**2 and a+b+c=N eliminating c
         b = (n * n - 2 * a * n) // (2 * n - 2 * a)

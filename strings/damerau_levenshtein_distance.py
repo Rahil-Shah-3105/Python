@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This script is a implementation of the Damerau-Levenshtein distance algorithm.
 
@@ -33,8 +35,10 @@ def damerau_levenshtein_distance(first_string: str, second_string: str) -> int:
     >>> damerau_levenshtein_distance("container", "containment")
     3
     """
+    logger.debug(">>> Entering damerau_levenshtein_distance(first_string=%s,second_string=%s)", first_string, second_string)
     # Create a dynamic programming matrix to store the distances
     dp_matrix = [[0] * (len(second_string) + 1) for _ in range(len(first_string) + 1)]
+    logger.debug("damerau_levenshtein_distance(first_string=%s,second_string=%s): dp_matrix → %s", first_string, second_string, dp_matrix)
 
     # Initialize the matrix
     for i in range(len(first_string) + 1):
@@ -46,6 +50,7 @@ def damerau_levenshtein_distance(first_string: str, second_string: str) -> int:
     for i, first_char in enumerate(first_string, start=1):
         for j, second_char in enumerate(second_string, start=1):
             cost = int(first_char != second_char)
+            logger.debug("damerau_levenshtein_distance(first_string=%s,second_string=%s): cost → %s", first_string, second_string, cost)
 
             dp_matrix[i][j] = min(
                 dp_matrix[i - 1][j] + 1,  # Deletion
@@ -62,6 +67,7 @@ def damerau_levenshtein_distance(first_string: str, second_string: str) -> int:
                 # Transposition
                 dp_matrix[i][j] = min(dp_matrix[i][j], dp_matrix[i - 2][j - 2] + cost)
 
+    logger.debug("<<< Exiting damerau_levenshtein_distance(first_string=%s,second_string=%s)", first_string, second_string)
     return dp_matrix[-1][-1]
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def apply_table(inp, table):
     """
     >>> apply_table("0123456789", list(range(10)))
@@ -5,9 +7,12 @@ def apply_table(inp, table):
     >>> apply_table("0123456789", list(range(9, -1, -1)))
     '8765432109'
     """
+    logger.debug(">>> Entering apply_table(inp=%s,table=%s)", inp, table)
     res = ""
+    logger.debug("apply_table(inp=%s,table=%s): res → %s", inp, table, res)
     for i in table:
         res += inp[i - 1]
+    logger.debug("<<< Exiting apply_table(inp=%s,table=%s)", inp, table)
     return res
 
 
@@ -16,6 +21,8 @@ def left_shift(data):
     >>> left_shift("0123456789")
     '1234567890'
     """
+    logger.debug(">>> Entering left_shift(data=%s)", data)
+    logger.debug("<<< Exiting left_shift(data=%s)", data)
     return data[1:] + data[0]
 
 
@@ -24,32 +31,45 @@ def xor(a, b):
     >>> xor("01010101", "00001111")
     '01011010'
     """
+    logger.debug(">>> Entering xor(a=%s,b=%s)", a, b)
     res = ""
+    logger.debug("xor(a=%s,b=%s): res → %s", a, b, res)
     for i in range(len(a)):
         if a[i] == b[i]:
             res += "0"
         else:
             res += "1"
+    logger.debug("<<< Exiting xor(a=%s,b=%s)", a, b)
     return res
 
 
 def apply_sbox(s, data):
+    logger.debug(">>> Entering apply_sbox(s=%s,data=%s)", s, data)
     row = int("0b" + data[0] + data[-1], 2)
+    logger.debug("apply_sbox(s=%s,data=%s): row → %s", s, data, row)
     col = int("0b" + data[1:3], 2)
+    logger.debug("apply_sbox(s=%s,data=%s): col → %s", s, data, col)
+    logger.debug("<<< Exiting apply_sbox(s=%s,data=%s)", s, data)
     return bin(s[row][col])[2:]
 
 
 def function(expansion, s0, s1, key, message):
+    logger.debug(">>> Entering function(expansion=%s,s0=%s,s1=%s,key=%s,message=%s)", expansion, s0, s1, key, message)
     left = message[:4]
+    logger.debug("function(expansion=%s,s0=%s,s1=%s,key=%s,message=%s): left → %s", expansion, s0, s1, key, message, left)
     right = message[4:]
+    logger.debug("function(expansion=%s,s0=%s,s1=%s,key=%s,message=%s): right → %s", expansion, s0, s1, key, message, right)
     temp = apply_table(right, expansion)
     temp = xor(temp, key)
     left_bin_str = apply_sbox(s0, temp[:4])
     right_bin_str = apply_sbox(s1, temp[4:])
     left_bin_str = "0" * (2 - len(left_bin_str)) + left_bin_str
+    logger.debug("function(expansion=%s,s0=%s,s1=%s,key=%s,message=%s): left_bin_str → %s", expansion, s0, s1, key, message, left_bin_str)
     right_bin_str = "0" * (2 - len(right_bin_str)) + right_bin_str
+    logger.debug("function(expansion=%s,s0=%s,s1=%s,key=%s,message=%s): right_bin_str → %s", expansion, s0, s1, key, message, right_bin_str)
     temp = apply_table(left_bin_str + right_bin_str, p4_table)
     temp = xor(left, temp)
+    logger.debug("<<< Exiting function(expansion=%s,s0=%s,s1=%s,key=%s,message=%s)", expansion, s0, s1, key, message)
     return temp + right
 
 

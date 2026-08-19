@@ -1,4 +1,6 @@
 from collections.abc import Sequence
+import logging
+logger = logging.getLogger(__name__)
 
 
 def assign_ranks(data: Sequence[float]) -> list[int]:
@@ -15,12 +17,16 @@ def assign_ranks(data: Sequence[float]) -> list[int]:
     >>> assign_ranks([10.5, 8.1, 12.4, 9.3, 11.0])
     [3, 1, 5, 2, 4]
     """
+    logger.debug(">>> Entering assign_ranks(data=%s)", data)
     ranked_data = sorted((value, index) for index, value in enumerate(data))
+    logger.debug("assign_ranks(data=%s): ranked_data → %s", data, ranked_data)
     ranks = [0] * len(data)
+    logger.debug("assign_ranks(data=%s): ranks → %s", data, ranks)
 
     for position, (_, index) in enumerate(ranked_data):
         ranks[index] = position + 1
 
+    logger.debug("<<< Exiting assign_ranks(data=%s)", data)
     return ranks
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Lychrel numbers
 Problem 55: https://projecteuler.net/problem=55
@@ -37,6 +39,8 @@ def is_palindrome(n: int) -> bool:
     >>> is_palindrome(9876789)
     True
     """
+    logger.debug(">>> Entering is_palindrome(n=%s)", n)
+    logger.debug("<<< Exiting is_palindrome(n=%s)", n)
     return str(n) == str(n)[::-1]
 
 
@@ -50,6 +54,8 @@ def sum_reverse(n: int) -> int:
     >>> sum_reverse(12)
     33
     """
+    logger.debug(">>> Entering sum_reverse(n=%s)", n)
+    logger.debug("<<< Exiting sum_reverse(n=%s)", n)
     return int(n) + int(str(n)[::-1])
 
 
@@ -63,17 +69,22 @@ def solution(limit: int = 10000) -> int:
     >>> solution(1000)
     13
     """
+    logger.debug(">>> Entering solution(limit=%s)", limit)
     lychrel_nums = []
+    logger.debug("solution(limit=%s): lychrel_nums → %s", limit, lychrel_nums)
     for num in range(1, limit):
         iterations = 0
+        logger.debug("solution(limit=%s): iterations → %s", limit, iterations)
         a = num
         while iterations < 50:
             num = sum_reverse(num)
+            logger.debug("solution(limit=%s): num → %s", limit, num)
             iterations += 1
             if is_palindrome(num):
                 break
         else:
             lychrel_nums.append(a)
+    logger.debug("<<< Exiting solution(limit=%s)", limit)
     return len(lychrel_nums)
 
 

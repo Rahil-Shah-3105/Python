@@ -4,6 +4,8 @@ Implementation of median filter algorithm
 
 from cv2 import COLOR_BGR2GRAY, cvtColor, imread, imshow, waitKey
 from numpy import divide, int8, multiply, ravel, sort, zeros_like
+import logging
+logger = logging.getLogger(__name__)
 
 
 def median_filter(gray_img, mask=3):
@@ -12,17 +14,23 @@ def median_filter(gray_img, mask=3):
     :param mask: mask size
     :return: image with median filter
     """
+    logger.debug(">>> Entering median_filter(gray_img=%s,mask=%s)", gray_img, mask)
     # set image borders
     bd = int(mask / 2)
+    logger.debug("median_filter(gray_img=%s,mask=%s): bd → %s", gray_img, mask, bd)
     # copy image size
     median_img = zeros_like(gray_img)
+    logger.debug("median_filter(gray_img=%s,mask=%s): median_img → %s", gray_img, mask, median_img)
     for i in range(bd, gray_img.shape[0] - bd):
         for j in range(bd, gray_img.shape[1] - bd):
             # get mask according with mask
             kernel = ravel(gray_img[i - bd : i + bd + 1, j - bd : j + bd + 1])
+            logger.debug("median_filter(gray_img=%s,mask=%s): kernel → %s", gray_img, mask, kernel)
             # calculate mask median
             median = sort(kernel)[int8(divide((multiply(mask, mask)), 2) + 1)]
+            logger.debug("median_filter(gray_img=%s,mask=%s): median → %s", gray_img, mask, median)
             median_img[i, j] = median
+    logger.debug("<<< Exiting median_filter(gray_img=%s,mask=%s)", gray_img, mask)
     return median_img
 
 

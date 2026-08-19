@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def average_absolute_deviation(nums: list[int]) -> float:
     """
     Return the average absolute deviation of a list of numbers.
@@ -16,10 +18,13 @@ def average_absolute_deviation(nums: list[int]) -> float:
         ...
     ValueError: List is empty
     """
+    logger.debug(">>> Entering average_absolute_deviation(nums=%s)", nums)
     if not nums:  # Makes sure that the list is not empty
         raise ValueError("List is empty")
 
     average = sum(nums) / len(nums)  # Calculate the average
+    logger.debug("average_absolute_deviation(nums=%s): average → %s", nums, average)
+    logger.debug("<<< Exiting average_absolute_deviation(nums=%s)", nums)
     return sum(abs(x - average) for x in nums) / len(nums)
 
 

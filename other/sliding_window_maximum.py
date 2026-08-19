@@ -1,4 +1,6 @@
 from collections import deque
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sliding_window_maximum(numbers: list[int], window_size: int) -> list[int]:
@@ -32,6 +34,7 @@ def sliding_window_maximum(numbers: list[int], window_size: int) -> list[int]:
     >>> sliding_window_maximum([1], 1)
     [1]
     """
+    logger.debug(">>> Entering sliding_window_maximum(numbers=%s,window_size=%s)", numbers, window_size)
     if window_size <= 0:
         raise ValueError("Window size must be a positive integer")
     if not numbers:
@@ -55,4 +58,5 @@ def sliding_window_maximum(numbers: list[int], window_size: int) -> list[int]:
         if current_index >= window_size - 1:
             result.append(numbers[index_deque[0]])
 
+    logger.debug("<<< Exiting sliding_window_maximum(numbers=%s,window_size=%s)", numbers, window_size)
     return result

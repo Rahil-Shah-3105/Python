@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Calculate the minimum waiting time using a greedy algorithm.
 reference: https://www.youtube.com/watch?v=Sf3eiO12eJs
@@ -36,9 +38,12 @@ def minimum_waiting_time(queries: list[int]) -> int:
     >>> minimum_waiting_time([])
     0
     """
+    logger.debug(">>> Entering minimum_waiting_time(queries=%s)", queries)
     n = len(queries)
+    logger.debug("minimum_waiting_time(queries=%s): n → %s", queries, n)
     if n in (0, 1):
         return 0
+    logger.debug("<<< Exiting minimum_waiting_time(queries=%s)", queries)
     return sum(query * (n - i - 1) for i, query in enumerate(sorted(queries)))
 
 

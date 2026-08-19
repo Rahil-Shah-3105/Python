@@ -4,6 +4,8 @@ import typing
 from collections.abc import Iterable
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 Vector = typing.Union[Iterable[float], Iterable[int], np.ndarray]  # noqa: UP007
 VectorOut = typing.Union[np.float64, int, float]  # noqa: UP007
@@ -22,6 +24,8 @@ def euclidean_distance(vector_1: Vector, vector_2: Vector) -> VectorOut:
     >>> float(euclidean_distance([1, 2, 3, 4], [5, 6, 7, 8]))
     8.0
     """
+    logger.debug(">>> Entering euclidean_distance(vector_1=%s,vector_2=%s)", vector_1, vector_2)
+    logger.debug("<<< Exiting euclidean_distance(vector_1=%s,vector_2=%s)", vector_1, vector_2)
     return np.sqrt(np.sum((np.asarray(vector_1) - np.asarray(vector_2)) ** 2))
 
 
@@ -34,6 +38,8 @@ def euclidean_distance_no_np(vector_1: Vector, vector_2: Vector) -> VectorOut:
     >>> euclidean_distance_no_np([1, 2, 3, 4], [5, 6, 7, 8])
     8.0
     """
+    logger.debug(">>> Entering euclidean_distance_no_np(vector_1=%s,vector_2=%s)", vector_1, vector_2)
+    logger.debug("<<< Exiting euclidean_distance_no_np(vector_1=%s,vector_2=%s)", vector_1, vector_2)
     return sum((v1 - v2) ** 2 for v1, v2 in zip(vector_1, vector_2)) ** (1 / 2)
 
 
@@ -43,8 +49,11 @@ if __name__ == "__main__":
         """
         Benchmarks
         """
+        logger.debug(">>> Entering benchmark()")
         from timeit import timeit
 
+        logger.debug("benchmark(): globals → %s", globals)
+        logger.debug("benchmark(): number → %s", number)
         print("Without Numpy")
         print(
             timeit(
@@ -61,5 +70,6 @@ if __name__ == "__main__":
                 globals=globals(),
             )
         )
+        logger.debug("<<< Exiting benchmark()")
 
     benchmark()

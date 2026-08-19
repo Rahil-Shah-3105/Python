@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 https://en.wikipedia.org/wiki/Check_digit#Algorithms
 """
@@ -18,17 +20,21 @@ def get_check_digit(barcode: int) -> int:
     >>> [get_check_digit(x) for x in range(0, 100, 10)]
     [0, 7, 4, 1, 8, 5, 2, 9, 6, 3]
     """
+    logger.debug(">>> Entering get_check_digit(barcode=%s)", barcode)
     barcode //= 10  # exclude the last digit
     checker = False
+    logger.debug("get_check_digit(barcode=%s): checker → %s", barcode, checker)
     s = 0
 
     # extract and check each digit
     while barcode != 0:
         mult = 1 if checker else 3
+        logger.debug("get_check_digit(barcode=%s): mult → %s", barcode, mult)
         s += mult * (barcode % 10)
         barcode //= 10
         checker = not checker
 
+    logger.debug("<<< Exiting get_check_digit(barcode=%s)", barcode)
     return (10 - (s % 10)) % 10
 
 
@@ -50,6 +56,8 @@ def is_valid(barcode: int) -> bool:
         ...
     NameError: name 'dwefgiweuf' is not defined
     """
+    logger.debug(">>> Entering is_valid(barcode=%s)", barcode)
+    logger.debug("<<< Exiting is_valid(barcode=%s)", barcode)
     return len(str(barcode)) == 13 and get_check_digit(barcode) == barcode % 10
 
 
@@ -64,12 +72,15 @@ def get_barcode(barcode: str) -> int:
         ...
     ValueError: Barcode 'dwefgiweuf' has alphabetic characters.
     """
+    logger.debug(">>> Entering get_barcode(barcode=%s)", barcode)
     if str(barcode).isalpha():
         msg = f"Barcode '{barcode}' has alphabetic characters."
+        logger.debug("get_barcode(barcode=%s): msg → %s", barcode, msg)
         raise ValueError(msg)
     elif int(barcode) < 0:
         raise ValueError("The entered barcode has a negative value. Try again.")
     else:
+        logger.debug("<<< Exiting get_barcode(barcode=%s)", barcode)
         return int(barcode)
 
 

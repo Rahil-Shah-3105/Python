@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -35,6 +37,7 @@ def is_palindrome(head: ListNode | None) -> bool:
         >>> is_palindrome(ListNode(1, ListNode(2, ListNode(2, ListNode(1)))))
         True
     """
+    logger.debug(">>> Entering is_palindrome(head=%s)", head)
     if not head:
         return True
     # split the list to two parts
@@ -42,18 +45,25 @@ def is_palindrome(head: ListNode | None) -> bool:
     slow: ListNode | None = head
     while fast and fast.next_node:
         fast = fast.next_node.next_node
+        logger.debug("is_palindrome(head=%s): fast → %s", head, fast)
         slow = slow.next_node if slow else None
+        logger.debug("is_palindrome(head=%s): slow → %s", head, slow)
     if slow:
         # slow will always be defined,
         # adding this check to resolve mypy static check
         second = slow.next_node
+        logger.debug("is_palindrome(head=%s): second → %s", head, second)
         slow.next_node = None  # Don't forget here! But forget still works!
+        logger.debug("is_palindrome(head=%s): slow.next_node → %s", head, slow.next_node)
     # reverse the second part
     node: ListNode | None = None
     while second:
         nxt = second.next_node
+        logger.debug("is_palindrome(head=%s): nxt → %s", head, nxt)
         second.next_node = node
+        logger.debug("is_palindrome(head=%s): second.next_node → %s", head, second.next_node)
         node = second
+        logger.debug("is_palindrome(head=%s): node → %s", head, node)
         second = nxt
     # compare two parts
     # second part has the same or one less node
@@ -62,6 +72,7 @@ def is_palindrome(head: ListNode | None) -> bool:
             return False
         node = node.next_node
         head = head.next_node
+    logger.debug("<<< Exiting is_palindrome(head=%s)", head)
     return True
 
 
@@ -91,6 +102,7 @@ def is_palindrome_stack(head: ListNode | None) -> bool:
         >>> is_palindrome_stack(ListNode(1, ListNode(2, ListNode(2, ListNode(1)))))
         True
     """
+    logger.debug(">>> Entering is_palindrome_stack(head=%s)", head)
     if not head or not head.next_node:
         return True
 
@@ -99,12 +111,15 @@ def is_palindrome_stack(head: ListNode | None) -> bool:
     fast: ListNode | None = head
     while fast and fast.next_node:
         fast = fast.next_node.next_node
+        logger.debug("is_palindrome_stack(head=%s): fast → %s", head, fast)
         slow = slow.next_node if slow else None
+        logger.debug("is_palindrome_stack(head=%s): slow → %s", head, slow)
 
     # slow will always be defined,
     # adding this check to resolve mypy static check
     if slow:
         stack = [slow.val]
+        logger.debug("is_palindrome_stack(head=%s): stack → %s", head, stack)
 
         # 2. Push the second half into the stack
         while slow.next_node:
@@ -117,7 +132,9 @@ def is_palindrome_stack(head: ListNode | None) -> bool:
             if stack.pop() != cur.val:
                 return False
             cur = cur.next_node
+            logger.debug("is_palindrome_stack(head=%s): cur → %s", head, cur)
 
+    logger.debug("<<< Exiting is_palindrome_stack(head=%s)", head)
     return True
 
 
@@ -154,10 +171,12 @@ def is_palindrome_dict(head: ListNode | None) -> bool:
         ... )
         False
     """
+    logger.debug(">>> Entering is_palindrome_dict(head=%s)", head)
     if not head or not head.next_node:
         return True
     d: dict[int, list[int]] = {}
     pos = 0
+    logger.debug("is_palindrome_dict(head=%s): pos → %s", head, pos)
     while head:
         if head.val in d:
             d[head.val].append(pos)
@@ -166,7 +185,9 @@ def is_palindrome_dict(head: ListNode | None) -> bool:
         head = head.next_node
         pos += 1
     checksum = pos - 1
+    logger.debug("is_palindrome_dict(head=%s): checksum → %s", head, checksum)
     middle = 0
+    logger.debug("is_palindrome_dict(head=%s): middle → %s", head, middle)
     for v in d.values():
         if len(v) % 2 != 0:
             middle += 1
@@ -176,6 +197,7 @@ def is_palindrome_dict(head: ListNode | None) -> bool:
                     return False
         if middle > 1:
             return False
+    logger.debug("<<< Exiting is_palindrome_dict(head=%s)", head)
     return True
 
 

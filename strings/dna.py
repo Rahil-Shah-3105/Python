@@ -1,4 +1,6 @@
 import re
+import logging
+logger = logging.getLogger(__name__)
 
 
 def dna(dna: str) -> str:
@@ -17,10 +19,12 @@ def dna(dna: str) -> str:
         ...
     ValueError: Invalid Strand
     """
+    logger.debug(">>> Entering dna(dna=%s)", dna)
 
     if len(re.findall("[ATCG]", dna)) != len(dna):
         raise ValueError("Invalid Strand")
 
+    logger.debug("<<< Exiting dna(dna=%s)", dna)
     return dna.translate(dna.maketrans("ATCG", "TAGC"))
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 2: https://projecteuler.net/problem=2
 
@@ -32,8 +34,10 @@ def solution(n: int = 4000000) -> int:
     >>> solution(34)
     44
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     fib = [0, 1]
+    logger.debug("solution(n=%s): fib → %s", n, fib)
     i = 0
     while fib[i] <= n:
         fib.append(fib[i] + fib[i + 1])
@@ -41,10 +45,12 @@ def solution(n: int = 4000000) -> int:
             break
         i += 1
     total = 0
+    logger.debug("solution(n=%s): total → %s", n, total)
     for j in range(len(fib) - 1):
         if fib[j] % 2 == 0:
             total += fib[j]
 
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return total
 
 

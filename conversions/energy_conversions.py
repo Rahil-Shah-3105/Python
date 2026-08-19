@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Conversion of energy units.
 
@@ -99,12 +101,15 @@ def energy_conversion(from_type: str, to_type: str, value: float) -> float:
     ValueError: Incorrect 'from_type' or 'to_type' value: '123', 'abc'
     Valid values are: joule, ... footpound
     """
+    logger.debug(">>> Entering energy_conversion(from_type=%s,to_type=%s,value=%s)", from_type, to_type, value)
+    logger.debug("energy_conversion(from_type=%s,to_type=%s,value=%s): msg → %s", from_type, to_type, value, msg)
     if to_type not in ENERGY_CONVERSION or from_type not in ENERGY_CONVERSION:
         msg = (
             f"Incorrect 'from_type' or 'to_type' value: {from_type!r}, {to_type!r}\n"
             f"Valid values are: {', '.join(ENERGY_CONVERSION)}"
         )
         raise ValueError(msg)
+    logger.debug("<<< Exiting energy_conversion(from_type=%s,to_type=%s,value=%s)", from_type, to_type, value)
     return value * ENERGY_CONVERSION[from_type] / ENERGY_CONVERSION[to_type]
 
 

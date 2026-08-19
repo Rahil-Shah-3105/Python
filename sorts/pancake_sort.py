@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This is a pure Python implementation of the pancake sort algorithm
 For doctests run following command:
@@ -21,15 +23,20 @@ def pancake_sort(arr):
     >>> pancake_sort([-2, -5, -45])
     [-45, -5, -2]
     """
+    logger.debug(">>> Entering pancake_sort(arr=%s)", arr)
     cur = len(arr)
+    logger.debug("pancake_sort(arr=%s): cur → %s", arr, cur)
     while cur > 1:
         # Find the maximum number in arr
         mi = arr.index(max(arr[0:cur]))
+        logger.debug("pancake_sort(arr=%s): mi → %s", arr, mi)
         # Reverse from 0 to mi
         arr = arr[mi::-1] + arr[mi + 1 : len(arr)]
+        logger.debug("pancake_sort(arr=%s): arr → %s", arr, arr)
         # Reverse whole list
         arr = arr[cur - 1 :: -1] + arr[cur : len(arr)]
         cur -= 1
+    logger.debug("<<< Exiting pancake_sort(arr=%s)", arr)
     return arr
 
 

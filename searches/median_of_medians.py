@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 A Python implementation of the Median of Medians algorithm
 to select pivots for quick_select, which is efficient for
@@ -24,7 +26,9 @@ def median_of_five(arr: list) -> int:
     >>> median_of_five([3, 5, 7, 10, 2])
     5
     """
+    logger.debug(">>> Entering median_of_five(arr=%s)", arr)
     arr = sorted(arr)
+    logger.debug("median_of_five(arr=%s): arr → %s", arr, arr)
     return arr[len(arr) // 2]
 
 

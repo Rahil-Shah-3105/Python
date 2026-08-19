@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 https://en.wikipedia.org/wiki/N-gram
 """
@@ -14,6 +16,8 @@ def create_ngram(sentence: str, ngram_size: int) -> list[str]:
     >>> create_ngram("This is short", 50)
     []
     """
+    logger.debug(">>> Entering create_ngram(sentence=%s,ngram_size=%s)", sentence, ngram_size)
+    logger.debug("<<< Exiting create_ngram(sentence=%s,ngram_size=%s)", sentence, ngram_size)
     return [sentence[i : i + ngram_size] for i in range(len(sentence) - ngram_size + 1)]
 
 

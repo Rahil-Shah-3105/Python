@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Created on Thu Oct  5 16:44:23 2017
 
@@ -64,6 +66,7 @@ def is_prime(number: int) -> bool:
         ...
     AssertionError: 'number' must been an int and positive
     """
+    logger.debug(">>> Entering is_prime(number=%s)", number)
 
     # precondition
     assert isinstance(number, int) and (number >= 0), (
@@ -71,6 +74,7 @@ def is_prime(number: int) -> bool:
     )
 
     status = True
+    logger.debug("is_prime(number=%s): status → %s", number, status)
 
     # 0 and 1 are none primes.
     if number <= 1:
@@ -86,6 +90,7 @@ def is_prime(number: int) -> bool:
     # precondition
     assert isinstance(status, bool), "'status' must been from type bool"
 
+    logger.debug("<<< Exiting is_prime(number=%s)", number)
     return status
 
 
@@ -111,14 +116,17 @@ def sieve_er(n):
         ...
     AssertionError: 'N' must been an int and > 2
     """
+    logger.debug(">>> Entering sieve_er(n=%s)", n)
 
     # precondition
     assert isinstance(n, int) and (n > 2), "'N' must been an int and > 2"
 
     # beginList: contains all natural numbers from 2 up to N
     begin_list = list(range(2, n + 1))
+    logger.debug("sieve_er(n=%s): begin_list → %s", n, begin_list)
 
     ans = []  # this list will be returns.
+    logger.debug("sieve_er(n=%s): ans → %s", n, ans)
 
     # actual sieve of erathostenes
     for i in range(len(begin_list)):
@@ -132,6 +140,7 @@ def sieve_er(n):
     # precondition
     assert isinstance(ans, list), "'ans' must been from type list"
 
+    logger.debug("<<< Exiting sieve_er(n=%s)", n)
     return ans
 
 
@@ -155,11 +164,13 @@ def get_prime_numbers(n):
         ...
     AssertionError: 'N' must been an int and > 2
     """
+    logger.debug(">>> Entering get_prime_numbers(n=%s)", n)
 
     # precondition
     assert isinstance(n, int) and (n > 2), "'N' must been an int and > 2"
 
     ans = []
+    logger.debug("get_prime_numbers(n=%s): ans → %s", n, ans)
 
     # iterates over all numbers between 2 up to N+1
     # if a number is prime then appends to list 'ans'
@@ -170,6 +181,7 @@ def get_prime_numbers(n):
     # precondition
     assert isinstance(ans, list), "'ans' must been from type list"
 
+    logger.debug("<<< Exiting get_prime_numbers(n=%s)", n)
     return ans
 
 
@@ -196,17 +208,21 @@ def prime_factorization(number):
         ...
     AssertionError: 'number' must been an int and >= 0
     """
+    logger.debug(">>> Entering prime_factorization(number=%s)", number)
 
     # precondition
     assert isinstance(number, int) and number >= 0, "'number' must been an int and >= 0"
 
     ans = []  # this list will be returns of the function.
+    logger.debug("prime_factorization(number=%s): ans → %s", number, ans)
 
     # potential prime number factors.
 
     factor = 2
+    logger.debug("prime_factorization(number=%s): factor → %s", number, factor)
 
     quotient = number
+    logger.debug("prime_factorization(number=%s): quotient → %s", number, quotient)
 
     if number in {0, 1}:
         ans.append(number)
@@ -226,6 +242,7 @@ def prime_factorization(number):
     # precondition
     assert isinstance(ans, list), "'ans' must been from type list"
 
+    logger.debug("<<< Exiting prime_factorization(number=%s)", number)
     return ans
 
 
@@ -252,6 +269,7 @@ def greatest_prime_factor(number):
         ...
     AssertionError: 'number' must been an int and >= 0
     """
+    logger.debug(">>> Entering greatest_prime_factor(number=%s)", number)
 
     # precondition
     assert isinstance(number, int) and (number >= 0), (
@@ -259,15 +277,18 @@ def greatest_prime_factor(number):
     )
 
     ans = 0
+    logger.debug("greatest_prime_factor(number=%s): ans → %s", number, ans)
 
     # prime factorization of 'number'
     prime_factors = prime_factorization(number)
+    logger.debug("greatest_prime_factor(number=%s): prime_factors → %s", number, prime_factors)
 
     ans = max(prime_factors)
 
     # precondition
     assert isinstance(ans, int), "'ans' must been from type int"
 
+    logger.debug("<<< Exiting greatest_prime_factor(number=%s)", number)
     return ans
 
 
@@ -294,6 +315,7 @@ def smallest_prime_factor(number):
         ...
     AssertionError: 'number' must been an int and >= 0
     """
+    logger.debug(">>> Entering smallest_prime_factor(number=%s)", number)
 
     # precondition
     assert isinstance(number, int) and (number >= 0), (
@@ -301,15 +323,18 @@ def smallest_prime_factor(number):
     )
 
     ans = 0
+    logger.debug("smallest_prime_factor(number=%s): ans → %s", number, ans)
 
     # prime factorization of 'number'
     prime_factors = prime_factorization(number)
+    logger.debug("smallest_prime_factor(number=%s): prime_factors → %s", number, prime_factors)
 
     ans = min(prime_factors)
 
     # precondition
     assert isinstance(ans, int), "'ans' must been from type int"
 
+    logger.debug("<<< Exiting smallest_prime_factor(number=%s)", number)
     return ans
 
 
@@ -334,11 +359,13 @@ def is_even(number):
         ...
     AssertionError: 'number' must been an int
     """
+    logger.debug(">>> Entering is_even(number=%s)", number)
 
     # precondition
     assert isinstance(number, int), "'number' must been an int"
     assert isinstance(number % 2 == 0, bool), "compare must been from type bool"
 
+    logger.debug("<<< Exiting is_even(number=%s)", number)
     return number % 2 == 0
 
 
@@ -363,11 +390,13 @@ def is_odd(number):
         ...
     AssertionError: 'number' must been an int
     """
+    logger.debug(">>> Entering is_odd(number=%s)", number)
 
     # precondition
     assert isinstance(number, int), "'number' must been an int"
     assert isinstance(number % 2 != 0, bool), "compare must been from type bool"
 
+    logger.debug("<<< Exiting is_odd(number=%s)", number)
     return number % 2 != 0
 
 
@@ -397,6 +426,7 @@ def goldbach(number):
         ...
     AssertionError: 'number' must been an int, even and > 2
     """
+    logger.debug(">>> Entering goldbach(number=%s)", number)
 
     # precondition
     assert isinstance(number, int) and (number > 2) and is_even(number), (
@@ -404,10 +434,13 @@ def goldbach(number):
     )
 
     ans = []  # this list will returned
+    logger.debug("goldbach(number=%s): ans → %s", number, ans)
 
     # creates a list of prime numbers between 2 up to 'number'
     prime_numbers = get_prime_numbers(number)
+    logger.debug("goldbach(number=%s): prime_numbers → %s", number, prime_numbers)
     len_pn = len(prime_numbers)
+    logger.debug("goldbach(number=%s): len_pn → %s", number, len_pn)
 
     # run variable for while-loops.
     i = 0
@@ -415,6 +448,7 @@ def goldbach(number):
 
     # exit variable. for break up the loops
     loop = True
+    logger.debug("goldbach(number=%s): loop → %s", number, loop)
 
     while i < len_pn and loop:
         j = i + 1
@@ -438,6 +472,7 @@ def goldbach(number):
         and is_prime(ans[1])
     ), "'ans' must contains two primes. And sum of elements must been eq 'number'"
 
+    logger.debug("<<< Exiting goldbach(number=%s)", number)
     return ans
 
 
@@ -469,6 +504,7 @@ def kg_v(number1, number2):
         ...
     AssertionError: 'number1' and 'number2' must been positive integer.
     """
+    logger.debug(">>> Entering kg_v(number1=%s,number2=%s)", number1, number2)
 
     # precondition
     assert (
@@ -479,12 +515,15 @@ def kg_v(number1, number2):
     ), "'number1' and 'number2' must been positive integer."
 
     ans = 1  # actual answer that will be return.
+    logger.debug("kg_v(number1=%s,number2=%s): ans → %s", number1, number2, ans)
 
     # for kgV (x,1)
     if number1 > 1 and number2 > 1:
         # builds the prime factorization of 'number1' and 'number2'
         prime_fac_1 = prime_factorization(number1)
+        logger.debug("kg_v(number1=%s,number2=%s): prime_fac_1 → %s", number1, number2, prime_fac_1)
         prime_fac_2 = prime_factorization(number2)
+        logger.debug("kg_v(number1=%s,number2=%s): prime_fac_2 → %s", number1, number2, prime_fac_2)
 
     elif number1 == 1 or number2 == 1:
         prime_fac_1 = []
@@ -492,9 +531,12 @@ def kg_v(number1, number2):
         ans = max(number1, number2)
 
     count1 = 0
+    logger.debug("kg_v(number1=%s,number2=%s): count1 → %s", number1, number2, count1)
     count2 = 0
+    logger.debug("kg_v(number1=%s,number2=%s): count2 → %s", number1, number2, count2)
 
     done = []  # captured numbers int both 'primeFac1' and 'primeFac2'
+    logger.debug("kg_v(number1=%s,number2=%s): done → %s", number1, number2, done)
 
     # iterates through primeFac1
     for n in prime_fac_1:
@@ -529,6 +571,7 @@ def kg_v(number1, number2):
         "'ans' must been from type int and positive"
     )
 
+    logger.debug("<<< Exiting kg_v(number1=%s,number2=%s)", number1, number2)
     return ans
 
 
@@ -556,12 +599,15 @@ def get_prime(n):
         ...
     AssertionError: 'number' must been a positive int
     """
+    logger.debug(">>> Entering get_prime(n=%s)", n)
 
     # precondition
     assert isinstance(n, int) and (n >= 0), "'number' must been a positive int"
 
     index = 0
+    logger.debug("get_prime(n=%s): index → %s", n, index)
     ans = 2  # this variable holds the answer
+    logger.debug("get_prime(n=%s): ans → %s", n, ans)
 
     while index < n:
         index += 1
@@ -578,6 +624,7 @@ def get_prime(n):
         "'ans' must been a prime number and from type int"
     )
 
+    logger.debug("<<< Exiting get_prime(n=%s)", n)
     return ans
 
 
@@ -610,6 +657,7 @@ def get_primes_between(p_number_1, p_number_2):
         ...
     AssertionError: 'number' must been an int and positive
     """
+    logger.debug(">>> Entering get_primes_between(p_number_1=%s,p_number_2=%s)", p_number_1, p_number_2)
 
     # precondition
     assert (
@@ -617,8 +665,10 @@ def get_primes_between(p_number_1, p_number_2):
     ), "The arguments must been prime numbers and 'pNumber1' < 'pNumber2'"
 
     number = p_number_1 + 1  # jump to the next number
+    logger.debug("get_primes_between(p_number_1=%s,p_number_2=%s): number → %s", p_number_1, p_number_2, number)
 
     ans = []  # this list will be returns.
+    logger.debug("get_primes_between(p_number_1=%s,p_number_2=%s): ans → %s", p_number_1, p_number_2, ans)
 
     # if number is not prime then
     # fetch the next prime number.
@@ -642,6 +692,7 @@ def get_primes_between(p_number_1, p_number_2):
     ), "'ans' must been a list without the arguments"
 
     # 'ans' contains not 'pNumber1' and 'pNumber2' !
+    logger.debug("<<< Exiting get_primes_between(p_number_1=%s,p_number_2=%s)", p_number_1, p_number_2)
     return ans
 
 
@@ -666,11 +717,13 @@ def get_divisors(n):
         ...
     AssertionError: 'n' must been int and >= 1
     """
+    logger.debug(">>> Entering get_divisors(n=%s)", n)
 
     # precondition
     assert isinstance(n, int) and (n >= 1), "'n' must been int and >= 1"
 
     ans = []  # will be returned.
+    logger.debug("get_divisors(n=%s): ans → %s", n, ans)
 
     for divisor in range(1, n + 1):
         if n % divisor == 0:
@@ -679,6 +732,7 @@ def get_divisors(n):
     # precondition
     assert ans[0] == 1 and ans[len(ans) - 1] == n, "Error in function getDivisiors(...)"
 
+    logger.debug("<<< Exiting get_divisors(n=%s)", n)
     return ans
 
 
@@ -703,6 +757,7 @@ def is_perfect_number(number):
         ...
     AssertionError: 'number' must been an int and >= 1
     """
+    logger.debug(">>> Entering is_perfect_number(number=%s)", number)
 
     # precondition
     assert isinstance(number, int) and (number > 1), (
@@ -710,6 +765,7 @@ def is_perfect_number(number):
     )
 
     divisors = get_divisors(number)
+    logger.debug("is_perfect_number(number=%s): divisors → %s", number, divisors)
 
     # precondition
     assert (
@@ -719,6 +775,7 @@ def is_perfect_number(number):
     ), "Error in help-function getDivisiors(...)"
 
     # summed all divisors up to 'number' (exclusive), hence [:-1]
+    logger.debug("<<< Exiting is_perfect_number(number=%s)", number)
     return sum(divisors[:-1]) == number
 
 
@@ -740,6 +797,7 @@ def simplify_fraction(numerator, denominator):
         ...
     AssertionError: The arguments must been from type int and 'denominator' != 0
     """
+    logger.debug(">>> Entering simplify_fraction(numerator=%s,denominator=%s)", numerator, denominator)
 
     # precondition
     assert (
@@ -750,6 +808,7 @@ def simplify_fraction(numerator, denominator):
 
     # build the greatest common divisor of numerator and denominator.
     gcd_of_fraction = gcd_by_iterative(abs(numerator), abs(denominator))
+    logger.debug("simplify_fraction(numerator=%s,denominator=%s): gcd_of_fraction → %s", numerator, denominator, gcd_of_fraction)
 
     # precondition
     assert (

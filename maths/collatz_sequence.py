@@ -15,6 +15,8 @@ Reference: https://en.wikipedia.org/wiki/Collatz_conjecture
 from __future__ import annotations
 
 from collections.abc import Generator
+import logging
+logger = logging.getLogger(__name__)
 
 
 def collatz_sequence(n: int) -> Generator[int]:
@@ -44,6 +46,7 @@ def collatz_sequence(n: int) -> Generator[int]:
     (43, 130, 65, 196, 98, 49, 148, 74, 37, 112, 56, 28, 14, 7, 22, 11, 34, 17, 52, 26,
     13, 40, 20, 10, 5, 16, 8, 4, 2, 1)
     """
+    logger.debug(">>> Entering collatz_sequence(n=%s)", n)
     if not isinstance(n, int) or n < 1:
         raise Exception("Sequence only defined for positive integers")
 
@@ -54,13 +57,18 @@ def collatz_sequence(n: int) -> Generator[int]:
         else:
             n = 3 * n + 1
         yield n
+        logger.debug("<<< Exiting collatz_sequence(n=%s)", n)
 
 
 def main():
+    logger.debug(">>> Entering main()")
     n = int(input("Your number: "))
+    logger.debug("main(): n → %s", n)
     sequence = tuple(collatz_sequence(n))
+    logger.debug("main(): sequence → %s", sequence)
     print(sequence)
     print(f"Collatz sequence from {n} took {len(sequence)} steps.")
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

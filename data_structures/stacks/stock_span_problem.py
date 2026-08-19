@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The stock span problem is a financial problem where we have a series of n daily
 price quotes for a stock and we need to calculate span of stock's price for all n days.
@@ -29,7 +31,9 @@ def calculate_span(price: list[int]) -> list[int]:
     >>> calculate_span([100, 80, 60, 70, 60, 75, 85])
     [1, 1, 1, 2, 1, 4, 6]
     """
+    logger.debug(">>> Entering calculate_span(price=%s)", price)
     n = len(price)
+    logger.debug("calculate_span(price=%s): n → %s", price, n)
     s = [0] * n
     # Create a stack and push index of fist element to it
     st = []
@@ -54,13 +58,16 @@ def calculate_span(price: list[int]) -> list[int]:
         # Push this element to stack
         st.append(i)
 
+    logger.debug("<<< Exiting calculate_span(price=%s)", price)
     return s
 
 
 # A utility function to print elements of array
 def print_array(arr, n):
+    logger.debug(">>> Entering print_array(arr=%s,n=%s)", arr, n)
     for i in range(n):
         print(arr[i], end=" ")
+        logger.debug("<<< Exiting print_array(arr=%s,n=%s)", arr, n)
 
 
 # Driver program to test above function

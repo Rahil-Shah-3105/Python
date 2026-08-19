@@ -18,9 +18,13 @@ terms, find the value of the denominator.
 from __future__ import annotations
 
 from fractions import Fraction
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_digit_cancelling(num: int, den: int) -> bool:
+    logger.debug(">>> Entering is_digit_cancelling(num=%s,den=%s)", num, den)
+    logger.debug("<<< Exiting is_digit_cancelling(num=%s,den=%s)", num, den)
     return (
         num != den and num % 10 == den // 10 and (num // 10) / (den % 10) == num / den
     )
@@ -39,9 +43,13 @@ def fraction_list(digit_len: int) -> list[str]:
     >>> fraction_list(5)
     ['16/64', '19/95', '26/65', '49/98']
     """
+    logger.debug(">>> Entering fraction_list(digit_len=%s)", digit_len)
     solutions = []
+    logger.debug("fraction_list(digit_len=%s): solutions → %s", digit_len, solutions)
     den = 11
+    logger.debug("fraction_list(digit_len=%s): den → %s", digit_len, den)
     last_digit = int("1" + "0" * digit_len)
+    logger.debug("fraction_list(digit_len=%s): last_digit → %s", digit_len, last_digit)
     for num in range(den, last_digit):
         while den <= 99:
             if (

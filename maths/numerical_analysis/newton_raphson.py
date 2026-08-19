@@ -11,6 +11,8 @@ Reference: https://en.wikipedia.org/wiki/Newton%27s_method
 """
 
 from collections.abc import Callable
+import logging
+logger = logging.getLogger(__name__)
 
 RealFunc = Callable[[float], float]
 
@@ -29,6 +31,8 @@ def calc_derivative(f: RealFunc, x: float, delta_x: float = 1e-3) -> float:
     >>> math.isclose(derivative, 1, abs_tol=tolerance)
     True
     """
+    logger.debug(">>> Entering calc_derivative(f=%s,x=%s,delta_x=%s)", f, x, delta_x)
+    logger.debug("<<< Exiting calc_derivative(f=%s,x=%s,delta_x=%s)", f, x, delta_x)
     return (f(x + delta_x / 2) - f(x - delta_x / 2)) / delta_x
 
 
@@ -80,6 +84,8 @@ def newton_raphson(
     """
 
     def f_derivative(x: float) -> float:
+        logger.debug(">>> Entering f_derivative(x=%s)", x)
+        logger.debug("<<< Exiting f_derivative(x=%s)", x)
         return calc_derivative(f, x, step)
 
     a = x0  # Set initial guess
@@ -105,6 +111,8 @@ if __name__ == "__main__":
     doctest.testmod()
 
     def func(x: float) -> float:
+        logger.debug(">>> Entering func(x=%s)", x)
+        logger.debug("<<< Exiting func(x=%s)", x)
         return tanh(x) ** 2 - exp(3 * x)
 
     solution, err, steps = newton_raphson(

@@ -29,6 +29,8 @@ Solution is doing the following:
 """
 
 from math import isqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def generate_primes(max_num: int) -> list[int]:
@@ -38,13 +40,16 @@ def generate_primes(max_num: int) -> list[int]:
     >>> generate_primes(6)
     [2, 3, 5]
     """
+    logger.debug(">>> Entering generate_primes(max_num=%s)", max_num)
     are_primes = [True] * (max_num + 1)
+    logger.debug("generate_primes(max_num=%s): are_primes → %s", max_num, are_primes)
     are_primes[0] = are_primes[1] = False
     for i in range(2, isqrt(max_num) + 1):
         if are_primes[i]:
             for j in range(i * i, max_num + 1, i):
                 are_primes[j] = False
 
+    logger.debug("<<< Exiting generate_primes(max_num=%s)", max_num)
     return [prime for prime, is_prime in enumerate(are_primes) if is_prime]
 
 
@@ -111,13 +116,18 @@ def find_longest_chain(chain: list[int], max_num: int) -> int:
     >>> find_longest_chain(chain=[0, 0, 0, 0, 0, 0, 6], max_num=6)
     6
     """
+    logger.debug(">>> Entering find_longest_chain(chain=%s,max_num=%s)", chain, max_num)
 
     max_len = 0
+    logger.debug("find_longest_chain(chain=%s,max_num=%s): max_len → %s", chain, max_num, max_len)
     min_elem = 0
+    logger.debug("find_longest_chain(chain=%s,max_num=%s): min_elem → %s", chain, max_num, min_elem)
     for start in range(2, len(chain)):
         visited = {start}
+        logger.debug("find_longest_chain(chain=%s,max_num=%s): visited → %s", chain, max_num, visited)
         elem = chain[start]
         length = 1
+        logger.debug("find_longest_chain(chain=%s,max_num=%s): length → %s", chain, max_num, length)
 
         while elem > 1 and elem <= max_num and elem not in visited:
             visited.add(elem)
@@ -128,6 +138,7 @@ def find_longest_chain(chain: list[int], max_num: int) -> int:
             max_len = length
             min_elem = start
 
+    logger.debug("<<< Exiting find_longest_chain(chain=%s,max_num=%s)", chain, max_num)
     return min_elem
 
 
@@ -140,10 +151,13 @@ def solution(max_num: int = 1000000) -> int:
     >>> solution(200000)
     12496
     """
+    logger.debug(">>> Entering solution(max_num=%s)", max_num)
 
     primes = generate_primes(max_num)
+    logger.debug("solution(max_num=%s): primes → %s", max_num, primes)
     chain = [0] * (max_num + 1)
     for prime_idx, prime in enumerate(primes):
+        logger.debug("solution(max_num=%s): chain → %s", max_num, chain)
         if prime**2 > max_num:
             break
 
@@ -157,6 +171,7 @@ def solution(max_num: int = 1000000) -> int:
             primes_degrees={},
         )
 
+    logger.debug("<<< Exiting solution(max_num=%s)", max_num)
     return find_longest_chain(chain=chain, max_num=max_num)
 
 

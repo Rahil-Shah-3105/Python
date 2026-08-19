@@ -36,6 +36,8 @@ Brute force solution, with caching intermediate steps to speed up the calculatio
 
 import numpy as np
 from numpy.typing import NDArray
+import logging
+logger = logging.getLogger(__name__)
 
 MATRIX_1 = [
     "7 53 183 439 863",
@@ -101,15 +103,20 @@ def solution(matrix_str: list[str] = MATRIX_2) -> int:
     >>> solution(MATRIX_1)
     3315
     """
+    logger.debug(">>> Entering solution(matrix_str=%s)", matrix_str)
 
     n = len(matrix_str)
+    logger.debug("solution(matrix_str=%s): n → %s", matrix_str, n)
     arr = np.empty(shape=(n, n), dtype=int)
+    logger.debug("solution(matrix_str=%s): arr → %s", matrix_str, arr)
     for row, matrix_row_str in enumerate(matrix_str):
         matrix_row_list_str = matrix_row_str.split()
+        logger.debug("solution(matrix_str=%s): matrix_row_list_str → %s", matrix_str, matrix_row_list_str)
         for col, elem_str in enumerate(matrix_row_list_str):
             arr[row, col] = int(elem_str)
 
     cache: dict[str, int] = {}
+    logger.debug("<<< Exiting solution(matrix_str=%s)", matrix_str)
     return solve(arr=arr, row=0, cols=set(range(n)), cache=cache)
 
 

@@ -4,6 +4,8 @@ import math
 import unittest
 
 import pytest
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -38,6 +40,7 @@ def is_prime(number: int) -> bool:
         ...
     ValueError: is_prime() only accepts positive integers
     """
+    logger.debug(">>> Entering is_prime(number=%s)", number)
 
     # precondition
     if not isinstance(number, int) or not number >= 0:
@@ -54,11 +57,13 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.debug("<<< Exiting is_prime(number=%s)", number)
     return True
 
 
 class Test(unittest.TestCase):
     def test_primes(self):
+        logger.debug(">>> Entering test_primes()")
         assert is_prime(2)
         assert is_prime(3)
         assert is_prime(5)
@@ -69,9 +74,12 @@ class Test(unittest.TestCase):
         assert is_prime(19)
         assert is_prime(23)
         assert is_prime(29)
+        logger.debug("<<< Exiting test_primes()")
 
     def test_not_primes(self):
+        logger.debug(">>> Entering test_not_primes()")
         with pytest.raises(ValueError):
+            logger.error("Exception in test_not_primes()", exc_info=True)
             is_prime(-19)
         assert not is_prime(0), (
             "Zero doesn't have any positive factors, primes must have exactly two."
@@ -84,6 +92,7 @@ class Test(unittest.TestCase):
         assert not is_prime(3 * 3)
         assert not is_prime(3 * 5)
         assert not is_prime(3 * 5 * 7)
+        logger.debug("<<< Exiting test_not_primes()")
 
 
 if __name__ == "__main__":

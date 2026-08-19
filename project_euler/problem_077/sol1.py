@@ -17,6 +17,8 @@ from __future__ import annotations
 
 from functools import lru_cache
 from math import ceil
+import logging
+logger = logging.getLogger(__name__)
 
 NUM_PRIMES = 100
 
@@ -72,9 +74,11 @@ def solution(number_unique_partitions: int = 5000) -> int | None:
     >>> solution(1000)
     53
     """
+    logger.debug(">>> Entering solution(number_unique_partitions=%s)", number_unique_partitions)
     for number_to_partition in range(1, NUM_PRIMES):
         if len(partition(number_to_partition)) > number_unique_partitions:
             return number_to_partition
+    logger.debug("<<< Exiting solution(number_unique_partitions=%s)", number_unique_partitions)
     return None
 
 

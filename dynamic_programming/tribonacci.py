@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # Tribonacci sequence using Dynamic Programming
 
 
@@ -9,12 +11,14 @@ def tribonacci(num: int) -> list[int]:
     >>> tribonacci(8)
     [0, 0, 1, 1, 2, 4, 7, 13]
     """
+    logger.debug(">>> Entering tribonacci(num=%s)", num)
     dp = [0] * num
     dp[2] = 1
 
     for i in range(3, num):
         dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3]
 
+    logger.debug("<<< Exiting tribonacci(num=%s)", num)
     return dp
 
 

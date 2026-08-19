@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Problem source: https://www.hackerrank.com/challenges/the-power-sum/problem
 Find the number of ways that a given integer X, can be expressed as the sum
@@ -76,12 +78,14 @@ def solve(needed_sum: int, power: int) -> int:
     ValueError: Invalid input
     needed_sum must be between 1 and 1000, power between 2 and 10.
     """
+    logger.debug(">>> Entering solve(needed_sum=%s,power=%s)", needed_sum, power)
     if not (1 <= needed_sum <= 1000 and 2 <= power <= 10):
         raise ValueError(
             "Invalid input\n"
             "needed_sum must be between 1 and 1000, power between 2 and 10."
         )
 
+    logger.debug("<<< Exiting solve(needed_sum=%s,power=%s)", needed_sum, power)
     return backtrack(needed_sum, power, 1, 0, 0)[1]  # Return the solutions_count
 
 

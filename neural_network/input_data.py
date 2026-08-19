@@ -26,6 +26,8 @@ import numpy as np
 from tensorflow.python.framework import dtypes, random_seed
 from tensorflow.python.platform import gfile
 from tensorflow.python.util.deprecation import deprecated
+import logging
+logger = logging.getLogger(__name__)
 
 
 class _Datasets(typing.NamedTuple):
@@ -39,7 +41,10 @@ DEFAULT_SOURCE_URL = "https://storage.googleapis.com/cvdf-datasets/mnist/"
 
 
 def _read32(bytestream):
+    logger.debug(">>> Entering _read32(bytestream=%s)", bytestream)
     dt = np.dtype(np.uint32).newbyteorder(">")
+    logger.debug("_read32(bytestream=%s): dt → %s", bytestream, dt)
+    logger.debug("<<< Exiting _read32(bytestream=%s)", bytestream)
     return np.frombuffer(bytestream.read(4), dtype=dt)[0]
 
 
@@ -57,28 +62,43 @@ def _extract_images(f):
       ValueError: If the bytestream does not start with 2051.
 
     """
+    logger.debug(">>> Entering _extract_images(f=%s)", f)
     print("Extracting", f.name)
     with gzip.GzipFile(fileobj=f) as bytestream:
+        logger.error("Exception in _extract_images(f=%s)", f, exc_info=True)
         magic = _read32(bytestream)
+        logger.debug("_extract_images(f=%s): magic → %s", f, magic)
         if magic != 2051:
             msg = f"Invalid magic number {magic} in MNIST image file: {f.name}"
+            logger.debug("_extract_images(f=%s): msg → %s", f, msg)
             raise ValueError(msg)
         num_images = _read32(bytestream)
+        logger.debug("_extract_images(f=%s): num_images → %s", f, num_images)
         rows = _read32(bytestream)
+        logger.debug("_extract_images(f=%s): rows → %s", f, rows)
         cols = _read32(bytestream)
+        logger.debug("_extract_images(f=%s): cols → %s", f, cols)
         buf = bytestream.read(rows * cols * num_images)
+        logger.debug("_extract_images(f=%s): buf → %s", f, buf)
         data = np.frombuffer(buf, dtype=np.uint8)
         data = data.reshape(num_images, rows, cols, 1)
+        logger.debug("_extract_images(f=%s): data → %s", f, data)
+        logger.debug("<<< Exiting _extract_images(f=%s)", f)
         return data
 
 
 @deprecated(None, "Please use tf.one_hot on tensors.")
 def _dense_to_one_hot(labels_dense, num_classes):
     """Convert class labels from scalars to one-hot vectors."""
+    logger.debug(">>> Entering _dense_to_one_hot(labels_dense=%s,num_classes=%s)", labels_dense, num_classes)
     num_labels = labels_dense.shape[0]
+    logger.debug("_dense_to_one_hot(labels_dense=%s,num_classes=%s): num_labels → %s", labels_dense, num_classes, num_labels)
     index_offset = np.arange(num_labels) * num_classes
+    logger.debug("_dense_to_one_hot(labels_dense=%s,num_classes=%s): index_offset → %s", labels_dense, num_classes, index_offset)
     labels_one_hot = np.zeros((num_labels, num_classes))
+    logger.debug("_dense_to_one_hot(labels_dense=%s,num_classes=%s): labels_one_hot → %s", labels_dense, num_classes, labels_one_hot)
     labels_one_hot.flat[index_offset + labels_dense.ravel()] = 1
+    logger.debug("<<< Exiting _dense_to_one_hot(labels_dense=%s,num_classes=%s)", labels_dense, num_classes)
     return labels_one_hot
 
 
@@ -97,17 +117,25 @@ def _extract_labels(f, one_hot=False, num_classes=10):
     Raises:
       ValueError: If the bystream doesn't start with 2049.
     """
+    logger.debug(">>> Entering _extract_labels(f=%s,one_hot=%s,num_classes=%s)", f, one_hot, num_classes)
     print("Extracting", f.name)
     with gzip.GzipFile(fileobj=f) as bytestream:
+        logger.error("Exception in _extract_labels(f=%s,one_hot=%s,num_classes=%s)", f, one_hot, num_classes, exc_info=True)
         magic = _read32(bytestream)
+        logger.debug("_extract_labels(f=%s,one_hot=%s,num_classes=%s): magic → %s", f, one_hot, num_classes, magic)
         if magic != 2049:
             msg = f"Invalid magic number {magic} in MNIST label file: {f.name}"
+            logger.debug("_extract_labels(f=%s,one_hot=%s,num_classes=%s): msg → %s", f, one_hot, num_classes, msg)
             raise ValueError(msg)
         num_items = _read32(bytestream)
+        logger.debug("_extract_labels(f=%s,one_hot=%s,num_classes=%s): num_items → %s", f, one_hot, num_classes, num_items)
         buf = bytestream.read(num_items)
+        logger.debug("_extract_labels(f=%s,one_hot=%s,num_classes=%s): buf → %s", f, one_hot, num_classes, buf)
         labels = np.frombuffer(buf, dtype=np.uint8)
+        logger.debug("_extract_labels(f=%s,one_hot=%s,num_classes=%s): labels → %s", f, one_hot, num_classes, labels)
         if one_hot:
             return _dense_to_one_hot(labels, num_classes)
+        logger.debug("<<< Exiting _extract_labels(f=%s,one_hot=%s,num_classes=%s)", f, one_hot, num_classes)
         return labels
 
 
@@ -183,25 +211,36 @@ class _DataSet:
 
     @property
     def images(self):
+        logger.debug(">>> Entering images()")
+        logger.debug("<<< Exiting images()")
         return self._images
 
     @property
     def labels(self):
+        logger.debug(">>> Entering labels()")
+        logger.debug("<<< Exiting labels()")
         return self._labels
 
     @property
     def num_examples(self):
+        logger.debug(">>> Entering num_examples()")
+        logger.debug("<<< Exiting num_examples()")
         return self._num_examples
 
     @property
     def epochs_completed(self):
+        logger.debug(">>> Entering epochs_completed()")
+        logger.debug("<<< Exiting epochs_completed()")
         return self._epochs_completed
 
     def next_batch(self, batch_size, fake_data=False, shuffle=True):
         """Return the next `batch_size` examples from this data set."""
+        logger.debug(">>> Entering next_batch(batch_size=%s,fake_data=%s,shuffle=%s)", batch_size, fake_data, shuffle)
         if fake_data:
             fake_image = [1] * 784
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): fake_image → %s", self, batch_size, fake_data, shuffle, fake_image)
             fake_label = [1] + [0] * 9 if self.one_hot else 0
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): fake_label → %s", self, batch_size, fake_data, shuffle, fake_label)
             return (
                 [fake_image for _ in range(batch_size)],
                 [fake_label for _ in range(batch_size)],
@@ -210,29 +249,40 @@ class _DataSet:
         # Shuffle for the first epoch
         if self._epochs_completed == 0 and start == 0 and shuffle:
             perm0 = np.arange(self._num_examples)
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): perm0 → %s", self, batch_size, fake_data, shuffle, perm0)
             self._rng.shuffle(perm0)
             self._images = self.images[perm0]
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): self._images → %s", self, batch_size, fake_data, shuffle, self._images)
             self._labels = self.labels[perm0]
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): self._labels → %s", self, batch_size, fake_data, shuffle, self._labels)
         # Go to the next epoch
         if start + batch_size > self._num_examples:
             # Finished epoch
             self._epochs_completed += 1
             # Get the rest examples in this epoch
             rest_num_examples = self._num_examples - start
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): rest_num_examples → %s", self, batch_size, fake_data, shuffle, rest_num_examples)
             images_rest_part = self._images[start : self._num_examples]
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): images_rest_part → %s", self, batch_size, fake_data, shuffle, images_rest_part)
             labels_rest_part = self._labels[start : self._num_examples]
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): labels_rest_part → %s", self, batch_size, fake_data, shuffle, labels_rest_part)
             # Shuffle the data
             if shuffle:
                 perm = np.arange(self._num_examples)
+                logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): perm → %s", self, batch_size, fake_data, shuffle, perm)
                 self._rng.shuffle(perm)
                 self._images = self.images[perm]
                 self._labels = self.labels[perm]
             # Start next epoch
             start = 0
             self._index_in_epoch = batch_size - rest_num_examples
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): self._index_in_epoch → %s", self, batch_size, fake_data, shuffle, self._index_in_epoch)
             end = self._index_in_epoch
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): end → %s", self, batch_size, fake_data, shuffle, end)
             images_new_part = self._images[start:end]
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): images_new_part → %s", self, batch_size, fake_data, shuffle, images_new_part)
             labels_new_part = self._labels[start:end]
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): labels_new_part → %s", self, batch_size, fake_data, shuffle, labels_new_part)
             return (
                 np.concatenate((images_rest_part, images_new_part), axis=0),
                 np.concatenate((labels_rest_part, labels_new_part), axis=0),
@@ -240,6 +290,7 @@ class _DataSet:
         else:
             self._index_in_epoch += batch_size
             end = self._index_in_epoch
+            logger.debug("<<< Exiting next_batch(batch_size=%s,fake_data=%s,shuffle=%s)", batch_size, fake_data, shuffle)
             return self._images[start:end], self._labels[start:end]
 
 
@@ -255,14 +306,18 @@ def _maybe_download(filename, work_directory, source_url):
     Returns:
         Path to resulting file.
     """
+    logger.debug(">>> Entering _maybe_download(filename=%s,work_directory=%s,source_url=%s)", filename, work_directory, source_url)
     if not gfile.Exists(work_directory):
         gfile.MakeDirs(work_directory)
     filepath = os.path.join(work_directory, filename)
+    logger.debug("_maybe_download(filename=%s,work_directory=%s,source_url=%s): filepath → %s", filename, work_directory, source_url, filepath)
     if not gfile.Exists(filepath):
         urllib.request.urlretrieve(source_url, filepath)  # noqa: S310
         with gfile.GFile(filepath) as f:
             size = f.size()
+            logger.debug("_maybe_download(filename=%s,work_directory=%s,source_url=%s): size → %s", filename, work_directory, source_url, size)
         print("Successfully downloaded", filename, size, "bytes.")
+    logger.debug("<<< Exiting _maybe_download(filename=%s,work_directory=%s,source_url=%s)", filename, work_directory, source_url)
     return filepath
 
 
@@ -280,6 +335,8 @@ def read_data_sets(
     if fake_data:
 
         def fake():
+            logger.debug(">>> Entering fake()")
+            logger.debug("<<< Exiting fake()")
             return _DataSet(
                 [], [], fake_data=True, one_hot=one_hot, dtype=dtype, seed=seed
             )

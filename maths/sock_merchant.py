@@ -1,4 +1,6 @@
 from collections import Counter
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sock_merchant(colors: list[int]) -> int:
@@ -8,6 +10,7 @@ def sock_merchant(colors: list[int]) -> int:
     >>> sock_merchant([1, 1, 3, 3])
     2
     """
+    logger.debug(">>> Entering sock_merchant(colors=%s)", colors)
     return sum(socks_by_color // 2 for socks_by_color in Counter(colors).values())
 
 

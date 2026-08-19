@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 class MaxFenwickTree:
     """
     Maximum Fenwick Tree
@@ -46,15 +48,22 @@ class MaxFenwickTree:
         Returns:
             None
         """
+        logger.debug(">>> Entering __init__(size=%s)", size)
         self.size = size
+        logger.debug("__init__(self=%s,size=%s): self.size → %s", self, size, self.size)
+        logger.debug("<<< Exiting __init__(size=%s)", size)
         self.arr = [0] * size
+        logger.debug("__init__(self=%s,size=%s): self.arr → %s", self, size, self.arr)
         self.tree = [0] * size
+        logger.debug("__init__(self=%s,size=%s): self.tree → %s", self, size, self.tree)
 
     @staticmethod
     def get_next(index: int) -> int:
         """
         Get next index in O(1)
         """
+        logger.debug(">>> Entering get_next(index=%s)", index)
+        logger.debug("<<< Exiting get_next(index=%s)", index)
         return index | (index + 1)
 
     @staticmethod
@@ -62,6 +71,8 @@ class MaxFenwickTree:
         """
         Get previous index in O(1)
         """
+        logger.debug(">>> Entering get_prev(index=%s)", index)
+        logger.debug("<<< Exiting get_prev(index=%s)", index)
         return (index & (index + 1)) - 1
 
     def update(self, index: int, value: int) -> None:
@@ -75,14 +86,17 @@ class MaxFenwickTree:
         Returns:
             None
         """
+        logger.debug(">>> Entering update(index=%s,value=%s)", index, value)
         self.arr[index] = value
         while index < self.size:
             current_left_border = self.get_prev(index) + 1
+            logger.debug("update(index=%s,value=%s): current_left_border → %s", index, value, current_left_border)
             if current_left_border == index:
                 self.tree[index] = value
             else:
                 self.tree[index] = max(value, current_left_border, index)
             index = self.get_next(index)
+            logger.debug("<<< Exiting update(index=%s,value=%s)", index, value)
 
     def query(self, left: int, right: int) -> int:
         """
@@ -95,8 +109,12 @@ class MaxFenwickTree:
         Returns:
             Maximum value of range [left, right)
         """
+        logger.debug(">>> Entering query(left=%s,right=%s)", left, right)
         right -= 1  # Because of right is exclusive
         result = 0
+        logger.debug("query(left=%s,right=%s): result → %s", left, right, result)
+        logger.debug("query(left=%s,right=%s): current_left → %s", left, right, current_left)
+        logger.debug("query(self=%s,left=%s,right=%s): current_left → %s", self, left, right, current_left)
         while left <= right:
             current_left = self.get_prev(right)
             if left <= current_left:
@@ -105,6 +123,7 @@ class MaxFenwickTree:
             else:
                 result = max(result, self.arr[right])
                 right -= 1
+        logger.debug("<<< Exiting query(left=%s,right=%s)", left, right)
         return result
 
 

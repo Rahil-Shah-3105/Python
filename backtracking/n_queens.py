@@ -9,6 +9,8 @@ diagonal lines.
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 solution = []
 
@@ -42,11 +44,14 @@ def is_safe(board: list[list[int]], row: int, column: int) -> bool:
     >>> is_safe([[0, 0, 0], [1, 0, 0], [0, 0, 0]], 2, 2)
     True
     """
+    logger.debug(">>> Entering is_safe(board=%s,row=%s,column=%s)", board, row, column)
 
     n = len(board)  # Size of the board
+    logger.debug("is_safe(board=%s,row=%s,column=%s): n → %s", board, row, column, n)
 
     # Check if there is any queen in the same upper column,
     # left upper diagonal and right upper diagonal
+    logger.debug("<<< Exiting is_safe(board=%s,row=%s,column=%s)", board, row, column)
     return (
         all(board[i][j] != 1 for i, j in zip(range(row), [column] * row))
         and all(
@@ -66,6 +71,7 @@ def solve(board: list[list[int]], row: int) -> bool:
     receives a False Boolean and terminates that branch and backtracks to the next
     possible solution branch.
     """
+    logger.debug(">>> Entering solve(board=%s,row=%s)", board, row)
     if row >= len(board):
         """
         If the row number exceeds N, we have a board with a successful combination
@@ -86,6 +92,7 @@ def solve(board: list[list[int]], row: int) -> bool:
             board[row][i] = 1
             solve(board, row + 1)
             board[row][i] = 0
+    logger.debug("<<< Exiting solve(board=%s,row=%s)", board, row)
     return False
 
 
@@ -93,6 +100,7 @@ def printboard(board: list[list[int]]) -> None:
     """
     Prints the boards that have a successful combination.
     """
+    logger.debug(">>> Entering printboard(board=%s)", board)
     for i in range(len(board)):
         for j in range(len(board)):
             if board[i][j] == 1:
@@ -100,6 +108,7 @@ def printboard(board: list[list[int]]) -> None:
             else:
                 print(".", end=" ")  # Empty cell
         print()
+        logger.debug("<<< Exiting printboard(board=%s)", board)
 
 
 # Number of queens (e.g., n=8 for an 8x8 board)

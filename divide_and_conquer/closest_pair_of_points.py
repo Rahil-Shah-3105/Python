@@ -11,6 +11,8 @@ minimum distance is obtained recursively.
 This case handled by forming a strip of points
 whose Xco-ords distance is less than closest_pair_dis
 from mid-point's Xco-ords. Points sorted based on Yco-ords
+import logging
+logger = logging.getLogger(__name__)
 are used in this step to reduce sorting time.
 Closest pair distance is found in the strip of points. (closest_in_strip)
 
@@ -25,6 +27,8 @@ def euclidean_distance_sqr(point1, point2):
     >>> euclidean_distance_sqr([1,2],[2,4])
     5
     """
+    logger.debug(">>> Entering euclidean_distance_sqr(point1=%s,point2=%s)", point1, point2)
+    logger.debug("<<< Exiting euclidean_distance_sqr(point1=%s,point2=%s)", point1, point2)
     return (point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2
 
 
@@ -33,6 +37,8 @@ def column_based_sort(array, column=0):
     >>> column_based_sort([(5, 1), (4, 2), (3, 0)], 1)
     [(3, 0), (5, 1), (4, 2)]
     """
+    logger.debug(">>> Entering column_based_sort(array=%s,column=%s)", array, column)
+    logger.debug("<<< Exiting column_based_sort(array=%s,column=%s)", array, column)
     return sorted(array, key=lambda x: x[column])
 
 
@@ -50,11 +56,15 @@ def dis_between_closest_pair(points, points_counts, min_dis=float("inf")):
     5
 
     """
+    logger.debug(">>> Entering dis_between_closest_pair(points=%s,points_counts=%s,min_dis=%s)", points, points_counts, min_dis)
 
     for i in range(points_counts - 1):
         for j in range(i + 1, points_counts):
             current_dis = euclidean_distance_sqr(points[i], points[j])
+            logger.debug("dis_between_closest_pair(points=%s,points_counts=%s,min_dis=%s): current_dis → %s", points, points_counts, min_dis, current_dis)
             min_dis = min(min_dis, current_dis)
+            logger.debug("dis_between_closest_pair(points=%s,points_counts=%s,min_dis=%s): min_dis → %s", points, points_counts, min_dis, min_dis)
+    logger.debug("<<< Exiting dis_between_closest_pair(points=%s,points_counts=%s,min_dis=%s)", points, points_counts, min_dis)
     return min_dis
 
 
@@ -71,11 +81,15 @@ def dis_between_closest_in_strip(points, points_counts, min_dis=float("inf")):
     >>> dis_between_closest_in_strip([[1,2],[2,4],[5,7],[8,9],[11,0]],5)
     85
     """
+    logger.debug(">>> Entering dis_between_closest_in_strip(points=%s,points_counts=%s,min_dis=%s)", points, points_counts, min_dis)
 
     for i in range(min(6, points_counts - 1), points_counts):
         for j in range(max(0, i - 6), i):
             current_dis = euclidean_distance_sqr(points[i], points[j])
+            logger.debug("dis_between_closest_in_strip(points=%s,points_counts=%s,min_dis=%s): current_dis → %s", points, points_counts, min_dis, current_dis)
             min_dis = min(min_dis, current_dis)
+            logger.debug("dis_between_closest_in_strip(points=%s,points_counts=%s,min_dis=%s): min_dis → %s", points, points_counts, min_dis, min_dis)
+    logger.debug("<<< Exiting dis_between_closest_in_strip(points=%s,points_counts=%s,min_dis=%s)", points, points_counts, min_dis)
     return min_dis
 
 
@@ -91,6 +105,7 @@ def closest_pair_of_points_sqr(points_sorted_on_x, points_sorted_on_y, points_co
     >>> closest_pair_of_points_sqr([(1, 2), (3, 4)], [(5, 6), (7, 8)], 2)
     8
     """
+    logger.debug(">>> Entering closest_pair_of_points_sqr(points_sorted_on_x=%s,points_sorted_on_y=%s,points_counts=%s)", points_sorted_on_x, points_sorted_on_y, points_counts)
 
     # base case
     if points_counts <= 3:
@@ -105,6 +120,7 @@ def closest_pair_of_points_sqr(points_sorted_on_x, points_sorted_on_y, points_co
         points_sorted_on_y, points_sorted_on_y[mid:], points_counts - mid
     )
     closest_pair_dis = min(closest_in_left, closest_in_right)
+    logger.debug("closest_pair_of_points_sqr(points_sorted_on_x=%s,points_sorted_on_y=%s,points_counts=%s): closest_pair_dis → %s", points_sorted_on_x, points_sorted_on_y, points_counts, closest_pair_dis)
 
     """
     cross_strip contains the points, whose Xcoords are at a
@@ -112,6 +128,7 @@ def closest_pair_of_points_sqr(points_sorted_on_x, points_sorted_on_y, points_co
     """
 
     cross_strip = []
+    logger.debug("closest_pair_of_points_sqr(points_sorted_on_x=%s,points_sorted_on_y=%s,points_counts=%s): cross_strip → %s", points_sorted_on_x, points_sorted_on_y, points_counts, cross_strip)
     for point in points_sorted_on_x:
         if abs(point[0] - points_sorted_on_x[mid][0]) < closest_pair_dis:
             cross_strip.append(point)
@@ -119,6 +136,7 @@ def closest_pair_of_points_sqr(points_sorted_on_x, points_sorted_on_y, points_co
     closest_in_strip = dis_between_closest_in_strip(
         cross_strip, len(cross_strip), closest_pair_dis
     )
+    logger.debug("<<< Exiting closest_pair_of_points_sqr(points_sorted_on_x=%s,points_sorted_on_y=%s,points_counts=%s)", points_sorted_on_x, points_sorted_on_y, points_counts)
     return min(closest_pair_dis, closest_in_strip)
 
 
@@ -127,8 +145,12 @@ def closest_pair_of_points(points, points_counts):
     >>> closest_pair_of_points([(2, 3), (12, 30)], len([(2, 3), (12, 30)]))
     28.792360097775937
     """
+    logger.debug(">>> Entering closest_pair_of_points(points=%s,points_counts=%s)", points, points_counts)
     points_sorted_on_x = column_based_sort(points, column=0)
+    logger.debug("closest_pair_of_points(points=%s,points_counts=%s): points_sorted_on_x → %s", points, points_counts, points_sorted_on_x)
+    logger.debug("<<< Exiting closest_pair_of_points(points=%s,points_counts=%s)", points, points_counts)
     points_sorted_on_y = column_based_sort(points, column=1)
+    logger.debug("closest_pair_of_points(points=%s,points_counts=%s): points_sorted_on_y → %s", points, points_counts, points_sorted_on_y)
     return (
         closest_pair_of_points_sqr(
             points_sorted_on_x, points_sorted_on_y, points_counts

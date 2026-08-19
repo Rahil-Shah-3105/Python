@@ -1,6 +1,8 @@
 """
 Python program to show how to interpolate and evaluate a polynomial
 using Neville's method.
+import logging
+logger = logging.getLogger(__name__)
 Neville's method evaluates a polynomial that passes through a
 given set of x and y points for a particular x value (x0) using the
 Newton polynomial form.
@@ -34,8 +36,11 @@ def neville_interpolate(x_points: list, y_points: list, x0: int) -> list:
         ...
     TypeError: unsupported operand type(s) for -: 'str' and 'int'
     """
+    logger.debug(">>> Entering neville_interpolate(x_points=%s,y_points=%s,x0=%s)", x_points, y_points, x0)
     n = len(x_points)
+    logger.debug("neville_interpolate(x_points=%s,y_points=%s,x0=%s): n → %s", x_points, y_points, x0, n)
     q = [[0] * n for i in range(n)]
+    logger.debug("neville_interpolate(x_points=%s,y_points=%s,x0=%s): q → %s", x_points, y_points, x0, q)
     for i in range(n):
         q[i][1] = y_points[i]
 
@@ -46,6 +51,7 @@ def neville_interpolate(x_points: list, y_points: list, x0: int) -> list:
                 - (x0 - x_points[j]) * q[j - 1][i - 1]
             ) / (x_points[j] - x_points[j - i + 1])
 
+    logger.debug("<<< Exiting neville_interpolate(x_points=%s,y_points=%s,x0=%s)", x_points, y_points, x0)
     return [q[n - 1][n - 1], q]
 
 

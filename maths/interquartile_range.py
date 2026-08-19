@@ -9,6 +9,8 @@ https://en.wikipedia.org/wiki/Interquartile_range
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_median(nums: list[int | float]) -> float:
@@ -25,9 +27,11 @@ def find_median(nums: list[int | float]) -> float:
     >>> find_median(nums=([1.1, 2.2, 2, 3.3, 4.4, 4]))
     2.65
     """
+    logger.debug(">>> Entering find_median(nums=%s)", nums)
     div, mod = divmod(len(nums), 2)
     if mod:
         return nums[div]
+    logger.debug("<<< Exiting find_median(nums=%s)", nums)
     return (nums[div] + nums[(div) - 1]) / 2
 
 
@@ -50,14 +54,20 @@ def interquartile_range(nums: list[int | float]) -> float:
     ...
     ValueError: The list is empty. Provide a non-empty list.
     """
+    logger.debug(">>> Entering interquartile_range(nums=%s)", nums)
     if not nums:
         raise ValueError("The list is empty. Provide a non-empty list.")
     nums.sort()
     length = len(nums)
+    logger.debug("interquartile_range(nums=%s): length → %s", nums, length)
     div, mod = divmod(length, 2)
     q1 = find_median(nums[:div])
+    logger.debug("interquartile_range(nums=%s): q1 → %s", nums, q1)
     half_length = sum((div, mod))
+    logger.debug("interquartile_range(nums=%s): half_length → %s", nums, half_length)
     q3 = find_median(nums[half_length:length])
+    logger.debug("interquartile_range(nums=%s): q3 → %s", nums, q3)
+    logger.debug("<<< Exiting interquartile_range(nums=%s)", nums)
     return q3 - q1
 
 

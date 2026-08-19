@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Author  : ilyas dahhou
 Date    : Oct 7, 2023
@@ -45,7 +47,9 @@ def is_match(string: str, pattern: str) -> bool:
     >>> is_match('aa','*')
     True
     """
+    logger.debug(">>> Entering is_match(string=%s,pattern=%s)", string, pattern)
     dp = [[False] * (len(pattern) + 1) for _ in string + "1"]
+    logger.debug("is_match(string=%s,pattern=%s): dp → %s", string, pattern, dp)
     dp[0][0] = True
     # Fill in the first row
     for j, char in enumerate(pattern, 1):
@@ -58,6 +62,7 @@ def is_match(string: str, pattern: str) -> bool:
                 dp[i][j] = dp[i - 1][j - 1]
             elif pattern[j - 1] == "*":
                 dp[i][j] = dp[i - 1][j] or dp[i][j - 1]
+    logger.debug("<<< Exiting is_match(string=%s,pattern=%s)", string, pattern)
     return dp[len(string)][len(pattern)]
 
 

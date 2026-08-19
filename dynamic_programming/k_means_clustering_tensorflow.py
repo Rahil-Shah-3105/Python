@@ -2,6 +2,8 @@ from random import shuffle
 
 import tensorflow as tf
 from numpy import array
+import logging
+logger = logging.getLogger(__name__)
 
 
 def tf_k_means_cluster(vectors, noofclusters):
@@ -11,15 +13,19 @@ def tf_k_means_cluster(vectors, noofclusters):
     of vectors of dimensionality k.
     'noofclusters' should be an integer.
     """
+    logger.debug(">>> Entering tf_k_means_cluster(vectors=%s,noofclusters=%s)", vectors, noofclusters)
 
     noofclusters = int(noofclusters)
+    logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): noofclusters → %s", vectors, noofclusters, noofclusters)
     assert noofclusters < len(vectors)
 
     # Find out the dimensionality
     dim = len(vectors[0])
+    logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): dim → %s", vectors, noofclusters, dim)
 
     # Will help select random centroids from among the available vectors
     vector_indices = list(range(len(vectors)))
+    logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): vector_indices → %s", vectors, noofclusters, vector_indices)
     shuffle(vector_indices)
 
     # GRAPH OF COMPUTATION
@@ -29,11 +35,14 @@ def tf_k_means_cluster(vectors, noofclusters):
     # unused ops and Variables from previous function calls.
 
     graph = tf.Graph()
+    logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): graph → %s", vectors, noofclusters, graph)
 
     with graph.as_default():
+        logger.error("Exception in tf_k_means_cluster(vectors=%s,noofclusters=%s)", vectors, noofclusters, exc_info=True)
         # SESSION OF COMPUTATION
 
         sess = tf.Session()
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): sess → %s", vectors, noofclusters, sess)
 
         ##CONSTRUCTING THE ELEMENTS OF COMPUTATION
 
@@ -45,38 +54,50 @@ def tf_k_means_cluster(vectors, noofclusters):
         ##These nodes will assign the centroid Variables the appropriate
         ##values
         centroid_value = tf.placeholder("float64", [dim])
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): centroid_value → %s", vectors, noofclusters, centroid_value)
         cent_assigns = []
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): cent_assigns → %s", vectors, noofclusters, cent_assigns)
         for centroid in centroids:
             cent_assigns.append(tf.assign(centroid, centroid_value))
 
         ##Variables for cluster assignments of individual vectors(initialized
         ##to 0 at first)
         assignments = [tf.Variable(0) for i in range(len(vectors))]
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): assignments → %s", vectors, noofclusters, assignments)
         ##These nodes will assign an assignment Variable the appropriate
         ##value
         assignment_value = tf.placeholder("int32")
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): assignment_value → %s", vectors, noofclusters, assignment_value)
         cluster_assigns = []
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): cluster_assigns → %s", vectors, noofclusters, cluster_assigns)
         for assignment in assignments:
             cluster_assigns.append(tf.assign(assignment, assignment_value))
 
         ##Now lets construct the node that will compute the mean
         # The placeholder for the input
         mean_input = tf.placeholder("float", [None, dim])
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): mean_input → %s", vectors, noofclusters, mean_input)
         # The Node/op takes the input and computes a mean along the 0th
         # dimension, i.e. the list of input vectors
         mean_op = tf.reduce_mean(mean_input, 0)
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): mean_op → %s", vectors, noofclusters, mean_op)
 
         ##Node for computing Euclidean distances
         # Placeholders for input
         v1 = tf.placeholder("float", [dim])
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): v1 → %s", vectors, noofclusters, v1)
         v2 = tf.placeholder("float", [dim])
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): v2 → %s", vectors, noofclusters, v2)
         euclid_dist = tf.sqrt(tf.reduce_sum(tf.pow(tf.sub(v1, v2), 2)))
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): euclid_dist → %s", vectors, noofclusters, euclid_dist)
 
         ##This node will figure out which cluster to assign a vector to,
         ##based on Euclidean distances of the vector from the centroids.
         # Placeholder for input
         centroid_distances = tf.placeholder("float", [noofclusters])
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): centroid_distances → %s", vectors, noofclusters, centroid_distances)
         cluster_assignment = tf.argmin(centroid_distances, 0)
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): cluster_assignment → %s", vectors, noofclusters, cluster_assignment)
 
         ##INITIALIZING STATE VARIABLES
 
@@ -85,6 +106,7 @@ def tf_k_means_cluster(vectors, noofclusters):
         ##all the Variables have been constructed, so that each of them
         ##will be included in the initialization.
         init_op = tf.initialize_all_variables()
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): init_op → %s", vectors, noofclusters, init_op)
 
         # Initialize all variables
         sess.run(init_op)
@@ -95,6 +117,7 @@ def tf_k_means_cluster(vectors, noofclusters):
         # iterations. To keep things simple, we will only do a set number of
         # iterations, instead of using a Stopping Criterion.
         noofiterations = 100
+        logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): noofiterations → %s", vectors, noofclusters, noofiterations)
         for _ in range(noofiterations):
             ##EXPECTATION STEP
             ##Based on the centroid locations till last iteration, compute
@@ -102,6 +125,7 @@ def tf_k_means_cluster(vectors, noofclusters):
             # Iterate over each vector
             for vector_n in range(len(vectors)):
                 vect = vectors[vector_n]
+                logger.debug("tf_k_means_cluster(vectors=%s,noofclusters=%s): vect → %s", vectors, noofclusters, vect)
                 # Compute Euclidean distance between this vector and each
                 # centroid. Remember that this list cannot be named
                 #'centroid_distances', since that is the input to the
@@ -143,4 +167,5 @@ def tf_k_means_cluster(vectors, noofclusters):
         # Return centroids and assignments
         centroids = sess.run(centroids)
         assignments = sess.run(assignments)
+        logger.debug("<<< Exiting tf_k_means_cluster(vectors=%s,noofclusters=%s)", vectors, noofclusters)
         return centroids, assignments

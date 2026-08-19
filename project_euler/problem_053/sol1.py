@@ -18,9 +18,13 @@ than one-million?
 """
 
 from math import factorial
+import logging
+logger = logging.getLogger(__name__)
 
 
 def combinations(n, r):
+    logger.debug(">>> Entering combinations(n=%s,r=%s)", n, r)
+    logger.debug("<<< Exiting combinations(n=%s,r=%s)", n, r)
     return factorial(n) / (factorial(r) * factorial(n - r))
 
 
@@ -31,12 +35,15 @@ def solution():
     >>> solution()
     4075
     """
+    logger.debug(">>> Entering solution()")
     total = 0
+    logger.debug("solution(): total → %s", total)
 
     for i in range(1, 101):
         for j in range(1, i + 1):
             if combinations(i, j) > 1e6:
                 total += 1
+    logger.debug("<<< Exiting solution()")
     return total
 
 

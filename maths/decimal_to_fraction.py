@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def decimal_to_fraction(decimal: float | str) -> tuple[int, int]:
     """
     Return a decimal number in its simplest fraction form
@@ -31,17 +33,24 @@ def decimal_to_fraction(decimal: float | str) -> tuple[int, int]:
     >>> decimal_to_fraction("0.500")
     (1, 2)
     """
+    logger.debug(">>> Entering decimal_to_fraction(decimal=%s)", decimal)
     try:
         decimal = float(decimal)
+        logger.debug("decimal_to_fraction(decimal=%s): decimal → %s", decimal, decimal)
     except ValueError:
+        logger.error("Exception in decimal_to_fraction(decimal=%s)", decimal, exc_info=True)
         raise ValueError("Please enter a valid number")
     fractional_part = decimal - int(decimal)
+    logger.debug("decimal_to_fraction(decimal=%s): fractional_part → %s", decimal, fractional_part)
     if fractional_part == 0:
         return int(decimal), 1
     else:
         number_of_frac_digits = len(str(decimal).split(".")[1])
+        logger.debug("decimal_to_fraction(decimal=%s): number_of_frac_digits → %s", decimal, number_of_frac_digits)
         numerator = int(decimal * (10**number_of_frac_digits))
+        logger.debug("decimal_to_fraction(decimal=%s): numerator → %s", decimal, numerator)
         denominator = 10**number_of_frac_digits
+        logger.debug("decimal_to_fraction(decimal=%s): denominator → %s", decimal, denominator)
         divisor, dividend = denominator, numerator
         while True:
             remainder = dividend % divisor
@@ -49,6 +58,7 @@ def decimal_to_fraction(decimal: float | str) -> tuple[int, int]:
                 break
             dividend, divisor = divisor, remainder
         numerator, denominator = numerator // divisor, denominator // divisor
+        logger.debug("<<< Exiting decimal_to_fraction(decimal=%s)", decimal)
         return numerator, denominator
 
 

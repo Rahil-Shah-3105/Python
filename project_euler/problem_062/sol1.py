@@ -11,6 +11,8 @@ cube.
 """
 
 from collections import defaultdict
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(max_base: int = 5) -> int:
@@ -30,15 +32,21 @@ def solution(max_base: int = 5) -> int:
     >>> solution(3)
     41063625
     """
+    logger.debug(">>> Entering solution(max_base=%s)", max_base)
     freqs = defaultdict(list)
+    logger.debug("solution(max_base=%s): freqs → %s", max_base, freqs)
     num = 0
+    logger.debug("solution(max_base=%s): num → %s", max_base, num)
 
     while True:
         digits = get_digits(num)
+        logger.debug("solution(max_base=%s): digits → %s", max_base, digits)
         freqs[digits].append(num)
 
         if len(freqs[digits]) == max_base:
             base = freqs[digits][0] ** 3
+            logger.debug("solution(max_base=%s): base → %s", max_base, base)
+            logger.debug("<<< Exiting solution(max_base=%s)", max_base)
             return base
 
         num += 1
@@ -55,6 +63,8 @@ def get_digits(num: int) -> str:
     >>> get_digits(123)
     '0166788'
     """
+    logger.debug(">>> Entering get_digits(num=%s)", num)
+    logger.debug("<<< Exiting get_digits(num=%s)", num)
     return "".join(sorted(str(num**3)))
 
 

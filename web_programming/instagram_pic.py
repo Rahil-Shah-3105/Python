@@ -10,6 +10,8 @@ from datetime import UTC, datetime
 
 import httpx
 from bs4 import BeautifulSoup
+import logging
+logger = logging.getLogger(__name__)
 
 
 def download_image(url: str) -> str:
@@ -22,31 +24,41 @@ def download_image(url: str) -> str:
     Returns:
         A message indicating the result of the operation.
     """
+    logger.debug(">>> Entering download_image(url=%s)", url)
+    logger.info("download_image(url)=%s: external service call %s took %s ms", url, url, int((time.time() - __log_start) * 1000))
     try:
         response = httpx.get(url, timeout=10)
         response.raise_for_status()
+        logger.debug("download_image(url=%s): response → %s", url, response)
     except httpx.RequestError as e:
+        logger.error("Exception in download_image(url=%s): %s", url, str(e), exc_info=True)
         return f"An error occurred during the HTTP request to {url}: {e!r}"
 
     soup = BeautifulSoup(response.text, "html.parser")
+    logger.debug("download_image(url=%s): soup → %s", url, soup)
     image_meta_tag = soup.find("meta", {"property": "og:image"})
+    logger.debug("download_image(url=%s): image_meta_tag → %s", url, image_meta_tag)
     if not image_meta_tag:
         return "No meta tag with property 'og:image' was found."
 
     image_url = image_meta_tag.get("content")
+    logger.debug("download_image(url=%s): image_url → %s", url, image_url)
     if not image_url:
         return f"Image URL not found in meta tag {image_meta_tag}."
 
     try:
         image_data = httpx.get(image_url, timeout=10).content
+        logger.debug("download_image(url=%s): image_data → %s", url, image_data)
     except httpx.RequestError as e:
         return f"An error occurred during the HTTP request to {image_url}: {e!r}"
     if not image_data:
         return f"Failed to download the image from {image_url}."
 
     file_name = f"{datetime.now(tz=UTC).astimezone():%Y-%m-%d_%H-%M-%S}.jpg"
+    logger.debug("download_image(url=%s): file_name → %s", url, file_name)
     with open(file_name, "wb") as out_file:
         out_file.write(image_data)
+    logger.debug("<<< Exiting download_image(url=%s)", url)
     return f"Image downloaded and saved in the file {file_name}"
 
 

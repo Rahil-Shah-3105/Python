@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Algorithm for calculating the most cost-efficient sequence for converting one string
 into another.
@@ -100,10 +102,12 @@ def assemble_transformation(ops: list[list[str]], i: int, j: int) -> list[str]:
     >>> assemble_transformation(ops2, x2, y2)
     ['C1', 'I2', 'R23']
     """
+    logger.debug(">>> Entering assemble_transformation(ops=%s,i=%s,j=%s)", ops, i, j)
     if i == 0 and j == 0:
         return []
     elif ops[i][j][0] in {"C", "R"}:
         seq = assemble_transformation(ops, i - 1, j - 1)
+        logger.debug("assemble_transformation(ops=%s,i=%s,j=%s): seq → %s", ops, i, j, seq)
         seq.append(ops[i][j])
         return seq
     elif ops[i][j][0] == "D":
@@ -113,6 +117,7 @@ def assemble_transformation(ops: list[list[str]], i: int, j: int) -> list[str]:
     else:
         seq = assemble_transformation(ops, i, j - 1)
         seq.append(ops[i][j])
+        logger.debug("<<< Exiting assemble_transformation(ops=%s,i=%s,j=%s)", ops, i, j)
         return seq
 
 

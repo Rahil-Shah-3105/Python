@@ -14,6 +14,8 @@ Example:
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def longest_subsequence(array: list[int]) -> list[int]:  # This function is recursive
@@ -33,14 +35,18 @@ def longest_subsequence(array: list[int]) -> list[int]:  # This function is recu
     >>> longest_subsequence([])
     []
     """
+    logger.debug(">>> Entering longest_subsequence(array=%s)", array)
     array_length = len(array)
+    logger.debug("longest_subsequence(array=%s): array_length → %s", array, array_length)
     # If the array contains only one element, we return it (it's the stop condition of
     # recursion)
     if array_length <= 1:
         return array
         # Else
     pivot = array[0]
+    logger.debug("longest_subsequence(array=%s): pivot → %s", array, pivot)
     is_found = False
+    logger.debug("longest_subsequence(array=%s): is_found → %s", array, is_found)
     i = 1
     longest_subseq: list[int] = []
     while not is_found and i < array_length:
@@ -48,8 +54,10 @@ def longest_subsequence(array: list[int]) -> list[int]:  # This function is recu
             is_found = True
             temp_array = array[i:]
             temp_array = longest_subsequence(temp_array)
+            logger.debug("longest_subsequence(array=%s): temp_array → %s", array, temp_array)
             if len(temp_array) > len(longest_subseq):
                 longest_subseq = temp_array
+                logger.debug("longest_subsequence(array=%s): longest_subseq → %s", array, longest_subseq)
         else:
             i += 1
 
@@ -58,6 +66,7 @@ def longest_subsequence(array: list[int]) -> list[int]:  # This function is recu
     if len(temp_array) > len(longest_subseq):
         return temp_array
     else:
+        logger.debug("<<< Exiting longest_subsequence(array=%s)", array)
         return longest_subseq
 
 

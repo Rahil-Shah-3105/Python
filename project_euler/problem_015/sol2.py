@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Problem 15: https://projecteuler.net/problem=15
 
@@ -18,13 +20,16 @@ def solution(n: int = 20) -> int:
     >>> solution(1)
     2
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     counts = [[1 for _ in range(n + 1)] for _ in range(n + 1)]
+    logger.debug("solution(n=%s): counts → %s", n, counts)
 
     for i in range(1, n + 1):
         for j in range(1, n + 1):
             counts[i][j] = counts[i - 1][j] + counts[i][j - 1]
 
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return counts[n][n]
 
 

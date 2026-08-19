@@ -27,6 +27,8 @@ e.g. python tabu_search.py -f tabudata2.txt -i 4 -s 3
 
 import argparse
 import copy
+import logging
+logger = logging.getLogger(__name__)
 
 
 def generate_neighbours(path):
@@ -46,13 +48,17 @@ def generate_neighbours(path):
     with distance 20, the node 'c' with distance 18, the node 'd' with distance 22 and
     the node 'e' with distance 26.
     """
+    logger.debug(">>> Entering generate_neighbours(path=%s)", path)
 
+    logger.error("Exception in generate_neighbours(path=%s)", path, exc_info=True)
     dict_of_neighbours = {}
+    logger.debug("generate_neighbours(path=%s): dict_of_neighbours → %s", path, dict_of_neighbours)
 
     with open(path) as f:
         for line in f:
             if line.split()[0] not in dict_of_neighbours:
                 _list = []
+                logger.debug("generate_neighbours(path=%s): _list → %s", path, _list)
                 _list.append([line.split()[1], line.split()[2]])
                 dict_of_neighbours[line.split()[0]] = _list
             else:
@@ -68,6 +74,7 @@ def generate_neighbours(path):
                     [line.split()[0], line.split()[2]]
                 )
 
+    logger.debug("<<< Exiting generate_neighbours(path=%s)", path)
     return dict_of_neighbours
 
 

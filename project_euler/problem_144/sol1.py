@@ -30,6 +30,8 @@ How many times does the beam hit the internal surface of the white cell before e
 """
 
 from math import isclose, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def next_point(
@@ -84,15 +86,18 @@ def solution(first_x_coord: float = 1.4, first_y_coord: float = -9.6) -> int:
     >>> solution(5, 0)
     287
     """
+    logger.debug(">>> Entering solution(first_x_coord=%s,first_y_coord=%s)", first_x_coord, first_y_coord)
     num_reflections: int = 0
     point_x: float = first_x_coord
     point_y: float = first_y_coord
     gradient: float = (10.1 - point_y) / (0.0 - point_x)
+    logger.debug("solution(first_x_coord=%s,first_y_coord=%s): gradient → %s", first_x_coord, first_y_coord, gradient)
 
     while not (-0.01 <= point_x <= 0.01 and point_y > 0):
         point_x, point_y, gradient = next_point(point_x, point_y, gradient)
         num_reflections += 1
 
+    logger.debug("<<< Exiting solution(first_x_coord=%s,first_y_coord=%s)", first_x_coord, first_y_coord)
     return num_reflections
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 https://en.wikipedia.org/wiki/Combination
 """
@@ -29,15 +31,18 @@ def combinations(n: int, k: int) -> int:
     Traceback (most recent call last):
     ValueError: Please enter positive integers for n and k where n >= k
     """
+    logger.debug(">>> Entering combinations(n=%s,k=%s)", n, k)
 
     # If either of the conditions are true, the function is being asked
     # to calculate a factorial of a negative number, which is not possible
     if n < k or k < 0:
         raise ValueError("Please enter positive integers for n and k where n >= k")
     res = 1
+    logger.debug("combinations(n=%s,k=%s): res → %s", n, k, res)
     for i in range(k):
         res *= n - i
         res //= i + 1
+    logger.debug("<<< Exiting combinations(n=%s,k=%s)", n, k)
     return res
 
 

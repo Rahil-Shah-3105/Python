@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 
 Project Euler Problem 207: https://projecteuler.net/problem=207
@@ -54,9 +56,12 @@ def check_partition_perfect(positive_integer: int) -> bool:
     False
 
     """
+    logger.debug(">>> Entering check_partition_perfect(positive_integer=%s)", positive_integer)
 
     exponent = math.log2(math.sqrt(4 * positive_integer + 1) / 2 + 1 / 2)
+    logger.debug("check_partition_perfect(positive_integer=%s): exponent → %s", positive_integer, exponent)
 
+    logger.debug("<<< Exiting check_partition_perfect(positive_integer=%s)", positive_integer)
     return exponent == int(exponent)
 
 
@@ -75,13 +80,18 @@ def solution(max_proportion: float = 1 / 12345) -> int:
     True
 
     """
+    logger.debug(">>> Entering solution(max_proportion=%s)", max_proportion)
 
     total_partitions = 0
+    logger.debug("solution(max_proportion=%s): total_partitions → %s", max_proportion, total_partitions)
     perfect_partitions = 0
+    logger.debug("solution(max_proportion=%s): perfect_partitions → %s", max_proportion, perfect_partitions)
 
     integer = 3
+    logger.debug("solution(max_proportion=%s): integer → %s", max_proportion, integer)
     while True:
         partition_candidate = (integer**2 - 1) / 4
+        logger.debug("solution(max_proportion=%s): partition_candidate → %s", max_proportion, partition_candidate)
         # if candidate is an integer, then there is a partition for k
         if partition_candidate == int(partition_candidate):
             partition_candidate = int(partition_candidate)
@@ -92,6 +102,7 @@ def solution(max_proportion: float = 1 / 12345) -> int:
             perfect_partitions > 0
             and perfect_partitions / total_partitions < max_proportion
         ):
+            logger.debug("<<< Exiting solution(max_proportion=%s)", max_proportion)
             return int(partition_candidate)
         integer += 1
 

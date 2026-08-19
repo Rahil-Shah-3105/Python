@@ -8,6 +8,8 @@ Details: https://en.wikipedia.org/wiki/Prim%27s_algorithm
 import heapq as hq
 import math
 from collections.abc import Iterator
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Vertex:
@@ -21,36 +23,54 @@ class Vertex:
             neighbors - a list of the vertices it is linked to
             edges     - a dict to store the edges's weight
         """
+        logger.debug(">>> Entering __init__(id_=%s)", id_)
         self.id = str(id_)
+        logger.debug("__init__(id_=%s): self.id → %s", id_, self.id)
         self.key = None
+        logger.debug("__init__(self=%s,id_=%s): self.key → %s", self, id_, self.key)
+        logger.debug("__init__(id_=%s): self.key → %s", id_, self.key)
+        logger.debug("<<< Exiting __init__(id_=%s)", id_)
         self.pi = None
+        logger.debug("__init__(self=%s,id_=%s): self.pi → %s", self, id_, self.pi)
         self.neighbors = []
+        logger.debug("__init__(self=%s,id_=%s): self.neighbors → %s", self, id_, self.neighbors)
         self.edges = {}  # {vertex:distance}
+        logger.debug("__init__(self=%s,id_=%s): self.edges → %s", self, id_, self.edges)
 
     def __lt__(self, other):
         """Comparison rule to < operator."""
+        logger.debug(">>> Entering __lt__(other=%s)", other)
+        logger.debug("<<< Exiting __lt__(other=%s)", other)
         return self.key < other.key
 
     def __repr__(self):
         """Return the vertex id."""
+        logger.debug(">>> Entering __repr__()")
+        logger.debug("<<< Exiting __repr__()")
         return self.id
 
     def add_neighbor(self, vertex):
         """Add a pointer to a vertex at neighbor's list."""
+        logger.debug(">>> Entering add_neighbor(vertex=%s)", vertex)
         self.neighbors.append(vertex)
+        logger.debug("<<< Exiting add_neighbor(vertex=%s)", vertex)
 
     def add_edge(self, vertex, weight):
         """Destination vertex and weight."""
+        logger.debug(">>> Entering add_edge(vertex=%s,weight=%s)", vertex, weight)
         self.edges[vertex.id] = weight
+        logger.debug("<<< Exiting add_edge(vertex=%s,weight=%s)", vertex, weight)
 
 
 def connect(graph, a, b, edge):
+    logger.debug(">>> Entering connect(graph=%s,a=%s,b=%s,edge=%s)", graph, a, b, edge)
     # add the neighbors:
     graph[a - 1].add_neighbor(graph[b - 1])
     graph[b - 1].add_neighbor(graph[a - 1])
     # add the edges:
     graph[a - 1].add_edge(graph[b - 1], edge)
     graph[b - 1].add_edge(graph[a - 1], edge)
+    logger.debug("<<< Exiting connect(graph=%s,a=%s,b=%s,edge=%s)", graph, a, b, edge)
 
 
 def prim(graph: list, root: Vertex) -> list:
@@ -65,21 +85,29 @@ def prim(graph: list, root: Vertex) -> list:
     Usage:
         prim(graph, graph[0])
     """
+    logger.debug(">>> Entering prim(graph=%s,root=%s)", graph, root)
     a = []
     for u in graph:
         u.key = math.inf
+        logger.debug("prim(graph=%s,root=%s): u.key → %s", graph, root, u.key)
         u.pi = None
+        logger.debug("prim(graph=%s,root=%s): u.pi → %s", graph, root, u.pi)
     root.key = 0
+    logger.debug("prim(graph=%s,root=%s): root.key → %s", graph, root, root.key)
     q = graph[:]
     while q:
         u = min(q)
+        logger.debug("prim(graph=%s,root=%s): u → %s", graph, root, u)
         q.remove(u)
         for v in u.neighbors:
             if (v in q) and (u.edges[v.id] < v.key):
                 v.pi = u
+                logger.debug("prim(graph=%s,root=%s): v.pi → %s", graph, root, v.pi)
                 v.key = u.edges[v.id]
+                logger.debug("prim(graph=%s,root=%s): v.key → %s", graph, root, v.key)
     for i in range(1, len(graph)):
         a.append((int(graph[i].id) + 1, int(graph[i].pi.id) + 1))
+    logger.debug("<<< Exiting prim(graph=%s,root=%s)", graph, root)
     return a
 
 
@@ -95,24 +123,33 @@ def prim_heap(graph: list, root: Vertex) -> Iterator[tuple]:
     Usage:
         prim(graph, graph[0])
     """
+    logger.debug(">>> Entering prim_heap(graph=%s,root=%s)", graph, root)
     for u in graph:
         u.key = math.inf
+        logger.debug("prim_heap(graph=%s,root=%s): u.key → %s", graph, root, u.key)
         u.pi = None
+        logger.debug("prim_heap(graph=%s,root=%s): u.pi → %s", graph, root, u.pi)
     root.key = 0
+    logger.debug("prim_heap(graph=%s,root=%s): root.key → %s", graph, root, root.key)
 
     h = list(graph)
+    logger.debug("prim_heap(graph=%s,root=%s): h → %s", graph, root, h)
     hq.heapify(h)
 
     while h:
         u = hq.heappop(h)
+        logger.debug("prim_heap(graph=%s,root=%s): u → %s", graph, root, u)
         for v in u.neighbors:
             if (v in h) and (u.edges[v.id] < v.key):
                 v.pi = u
+                logger.debug("prim_heap(graph=%s,root=%s): v.pi → %s", graph, root, v.pi)
                 v.key = u.edges[v.id]
+                logger.debug("prim_heap(graph=%s,root=%s): v.key → %s", graph, root, v.key)
                 hq.heapify(h)
 
     for i in range(1, len(graph)):
         yield (int(graph[i].id) + 1, int(graph[i].pi.id) + 1)
+        logger.debug("<<< Exiting prim_heap(graph=%s,root=%s)", graph, root)
 
 
 def test_vector() -> None:
@@ -144,7 +181,9 @@ def test_vector() -> None:
     (4, 3)
     (5, 2)
     """
+    logger.debug(">>> Entering test_vector()")
 
+    logger.debug("<<< Exiting test_vector()")
 
 if __name__ == "__main__":
     import doctest

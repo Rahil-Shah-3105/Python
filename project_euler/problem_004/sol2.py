@@ -5,6 +5,8 @@ Largest palindrome product
 
 A palindromic number reads the same both ways. The largest palindrome made
 from the product of two 2-digit numbers is 9009 = 91 x 99.
+import logging
+logger = logging.getLogger(__name__)
 
 Find the largest palindrome made from the product of two 3-digit numbers.
 
@@ -25,13 +27,17 @@ def solution(n: int = 998001) -> int:
     >>> solution(40000)
     39893
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     answer = 0
+    logger.debug("solution(n=%s): answer → %s", n, answer)
     for i in range(999, 99, -1):  # 3 digit numbers range from 999 down to 100
         for j in range(999, 99, -1):
             product_string = str(i * j)
+            logger.debug("solution(n=%s): product_string → %s", n, product_string)
             if product_string == product_string[::-1] and i * j < n:
                 answer = max(answer, i * j)
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return answer
 
 

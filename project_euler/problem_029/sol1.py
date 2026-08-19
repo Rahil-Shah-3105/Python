@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Consider all integer combinations of ab for 2 <= a <= 5 and 2 <= b <= 5:
 
@@ -33,9 +35,12 @@ def solution(n: int = 100) -> int:
     >>> solution(1)
     0
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     collect_powers = set()
+    logger.debug("solution(n=%s): collect_powers → %s", n, collect_powers)
 
     current_pow = 0
+    logger.debug("solution(n=%s): current_pow → %s", n, current_pow)
 
     n = n + 1  # maximum limit
 
@@ -43,6 +48,7 @@ def solution(n: int = 100) -> int:
         for b in range(2, n):
             current_pow = a**b  # calculates the current power
             collect_powers.add(current_pow)  # adds the result to the set
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return len(collect_powers)
 
 

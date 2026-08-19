@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The Josephus problem is a famous theoretical problem related to a certain
 counting-out game. This module provides functions to solve the Josephus problem
@@ -63,6 +65,7 @@ def josephus_recursive(num_people: int, step_size: int) -> int:
             ...
         ValueError: num_people or step_size is not a positive integer.
     """
+    logger.debug(">>> Entering josephus_recursive(num_people=%s,step_size=%s)", num_people, step_size)
     if (
         not isinstance(num_people, int)
         or not isinstance(step_size, int)
@@ -74,6 +77,7 @@ def josephus_recursive(num_people: int, step_size: int) -> int:
     if num_people == 1:
         return 0
 
+    logger.debug("<<< Exiting josephus_recursive(num_people=%s,step_size=%s)", num_people, step_size)
     return (josephus_recursive(num_people - 1, step_size) + step_size) % num_people
 
 
@@ -94,6 +98,8 @@ def find_winner(num_people: int, step_size: int) -> int:
         >>> find_winner(10, 2)
         5
     """
+    logger.debug(">>> Entering find_winner(num_people=%s,step_size=%s)", num_people, step_size)
+    logger.debug("<<< Exiting find_winner(num_people=%s,step_size=%s)", num_people, step_size)
     return josephus_recursive(num_people, step_size) + 1
 
 
@@ -114,13 +120,17 @@ def josephus_iterative(num_people: int, step_size: int) -> int:
         >>> josephus_iterative(7, 3)
         4
     """
+    logger.debug(">>> Entering josephus_iterative(num_people=%s,step_size=%s)", num_people, step_size)
     circle = list(range(1, num_people + 1))
+    logger.debug("josephus_iterative(num_people=%s,step_size=%s): circle → %s", num_people, step_size, circle)
     current = 0
+    logger.debug("josephus_iterative(num_people=%s,step_size=%s): current → %s", num_people, step_size, current)
 
     while len(circle) > 1:
         current = (current + step_size - 1) % len(circle)
         circle.pop(current)
 
+    logger.debug("<<< Exiting josephus_iterative(num_people=%s,step_size=%s)", num_people, step_size)
     return circle[0]
 
 

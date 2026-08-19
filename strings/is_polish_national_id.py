@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def is_polish_national_id(input_str: str) -> bool:
     """
     Verification of the correctness of the PESEL number.
@@ -35,16 +37,20 @@ def is_polish_national_id(input_str: str) -> bool:
     >>> is_polish_national_id("02070803621") # wrong checksum
     False
     """
+    logger.debug(">>> Entering is_polish_national_id(input_str=%s)", input_str)
 
     # check for invalid input type
     if not isinstance(input_str, str):
         msg = f"Expected str as input, found {type(input_str)}"
+        logger.debug("is_polish_national_id(input_str=%s): msg → %s", input_str, msg)
         raise ValueError(msg)
 
     # check if input can be converted to int
     try:
         input_int = int(input_str)
+        logger.debug("is_polish_national_id(input_str=%s): input_int → %s", input_str, input_int)
     except ValueError:
+        logger.error("Exception in is_polish_national_id(input_str=%s)", input_str, exc_info=True)
         msg = "Expected number as input"
         raise ValueError(msg)
 
@@ -54,6 +60,7 @@ def is_polish_national_id(input_str: str) -> bool:
 
     # check month correctness
     month = int(input_str[2:4])
+    logger.debug("is_polish_national_id(input_str=%s): month → %s", input_str, month)
 
     if (
         month not in range(1, 13)  # year 1900-1999
@@ -66,15 +73,19 @@ def is_polish_national_id(input_str: str) -> bool:
 
     # check day correctness
     day = int(input_str[4:6])
+    logger.debug("is_polish_national_id(input_str=%s): day → %s", input_str, day)
 
     if day not in range(1, 32):
         return False
 
     # check the checksum
     multipliers = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3]
+    logger.debug("is_polish_national_id(input_str=%s): multipliers → %s", input_str, multipliers)
     subtotal = 0
+    logger.debug("is_polish_national_id(input_str=%s): subtotal → %s", input_str, subtotal)
 
     digits_to_check = str(input_str)[:-1]  # cut off the checksum
+    logger.debug("is_polish_national_id(input_str=%s): digits_to_check → %s", input_str, digits_to_check)
 
     for index, digit in enumerate(digits_to_check):
         # Multiply corresponding digits and multipliers.
@@ -83,6 +94,7 @@ def is_polish_national_id(input_str: str) -> bool:
 
     checksum = 10 - subtotal % 10
 
+    logger.debug("<<< Exiting is_polish_national_id(input_str=%s)", input_str)
     return checksum == input_int % 10
 
 

@@ -26,6 +26,8 @@ Examples for doctest:
 """
 
 from random import randint, random
+import logging
+logger = logging.getLogger(__name__)
 
 
 def construct_highway(
@@ -67,14 +69,18 @@ def get_distance(highway_now: list, car_index: int) -> int:
     >>> get_distance([-1, -1, -1, -1, 2, -1, -1, -1, 3], -1)
     4
     """
+    logger.debug(">>> Entering get_distance(highway_now=%s,car_index=%s)", highway_now, car_index)
 
     distance = 0
+    logger.debug("get_distance(highway_now=%s,car_index=%s): distance → %s", highway_now, car_index, distance)
     cells = highway_now[car_index + 1 :]
+    logger.debug("get_distance(highway_now=%s,car_index=%s): cells → %s", highway_now, car_index, cells)
     for cell in range(len(cells)):  # May need a better name for this
         if cells[cell] != -1:  # If the cell is not empty then
             return distance  # we have the distance we wanted
         distance += 1
     # Here if the car is near the end of the highway
+    logger.debug("<<< Exiting get_distance(highway_now=%s,car_index=%s)", highway_now, car_index)
     return distance + get_distance(highway_now, -1)
 
 
@@ -86,10 +92,13 @@ def update(highway_now: list, probability: float, max_speed: int) -> list:
     >>> update([-1, -1, 2, -1, -1, -1, -1, 3], 0.0, 5)
     [-1, -1, 3, -1, -1, -1, -1, 1]
     """
+    logger.debug(">>> Entering update(highway_now=%s,probability=%s,max_speed=%s)", highway_now, probability, max_speed)
 
     number_of_cells = len(highway_now)
+    logger.debug("update(highway_now=%s,probability=%s,max_speed=%s): number_of_cells → %s", highway_now, probability, max_speed, number_of_cells)
     # Beforce calculations, the highway is empty
     next_highway = [-1] * number_of_cells
+    logger.debug("update(highway_now=%s,probability=%s,max_speed=%s): next_highway → %s", highway_now, probability, max_speed, next_highway)
 
     for car_index in range(number_of_cells):
         if highway_now[car_index] != -1:
@@ -97,11 +106,13 @@ def update(highway_now: list, probability: float, max_speed: int) -> list:
             next_highway[car_index] = min(highway_now[car_index] + 1, max_speed)
             # Number of empty cell before the next car
             dn = get_distance(highway_now, car_index) - 1
+            logger.debug("update(highway_now=%s,probability=%s,max_speed=%s): dn → %s", highway_now, probability, max_speed, dn)
             # We can't have the car causing an accident
             next_highway[car_index] = min(next_highway[car_index], dn)
             if random() < probability:
                 # Randomly, a driver will slow down
                 next_highway[car_index] = max(next_highway[car_index] - 1, 0)
+    logger.debug("<<< Exiting update(highway_now=%s,probability=%s,max_speed=%s)", highway_now, probability, max_speed)
     return next_highway
 
 

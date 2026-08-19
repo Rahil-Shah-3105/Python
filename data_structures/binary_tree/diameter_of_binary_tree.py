@@ -6,6 +6,8 @@ between two end nodes.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -28,8 +30,14 @@ class Node:
         >>> root.depth()
         2
         """
+        logger.debug(">>> Entering depth()")
         left_depth = self.left.depth() if self.left else 0
+        logger.debug("depth(self=%s): left_depth → %s", self, left_depth)
+        logger.debug("depth(): left_depth → %s", left_depth)
         right_depth = self.right.depth() if self.right else 0
+        logger.debug("depth(self=%s): right_depth → %s", self, right_depth)
+        logger.debug("depth(): right_depth → %s", right_depth)
+        logger.debug("<<< Exiting depth()")
         return max(left_depth, right_depth) + 1
 
     def diameter(self) -> int:
@@ -46,8 +54,14 @@ class Node:
         >>> root.diameter()
         3
         """
+        logger.debug(">>> Entering diameter()")
         left_depth = self.left.depth() if self.left else 0
+        logger.debug("diameter(self=%s): left_depth → %s", self, left_depth)
+        logger.debug("diameter(): left_depth → %s", left_depth)
         right_depth = self.right.depth() if self.right else 0
+        logger.debug("diameter(self=%s): right_depth → %s", self, right_depth)
+        logger.debug("diameter(): right_depth → %s", right_depth)
+        logger.debug("<<< Exiting diameter()")
         return left_depth + right_depth + 1
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def multiplicative_persistence(num: int) -> int:
     """
     Return the persistence of a given number.
@@ -15,6 +17,7 @@ def multiplicative_persistence(num: int) -> int:
         ...
     ValueError: multiplicative_persistence() only accepts integral values
     """
+    logger.debug(">>> Entering multiplicative_persistence(num=%s)", num)
 
     if not isinstance(num, int):
         raise ValueError("multiplicative_persistence() only accepts integral values")
@@ -22,18 +25,23 @@ def multiplicative_persistence(num: int) -> int:
         raise ValueError("multiplicative_persistence() does not accept negative values")
 
     steps = 0
+    logger.debug("multiplicative_persistence(num=%s): steps → %s", num, steps)
     num_string = str(num)
+    logger.debug("multiplicative_persistence(num=%s): num_string → %s", num, num_string)
 
     while len(num_string) != 1:
         numbers = [int(i) for i in num_string]
+        logger.debug("multiplicative_persistence(num=%s): numbers → %s", num, numbers)
 
         total = 1
+        logger.debug("multiplicative_persistence(num=%s): total → %s", num, total)
         for i in range(len(numbers)):
             total *= numbers[i]
 
         num_string = str(total)
 
         steps += 1
+    logger.debug("<<< Exiting multiplicative_persistence(num=%s)", num)
     return steps
 
 
@@ -54,6 +62,7 @@ def additive_persistence(num: int) -> int:
         ...
     ValueError: additive_persistence() only accepts integral values
     """
+    logger.debug(">>> Entering additive_persistence(num=%s)", num)
 
     if not isinstance(num, int):
         raise ValueError("additive_persistence() only accepts integral values")
@@ -61,18 +70,23 @@ def additive_persistence(num: int) -> int:
         raise ValueError("additive_persistence() does not accept negative values")
 
     steps = 0
+    logger.debug("additive_persistence(num=%s): steps → %s", num, steps)
     num_string = str(num)
+    logger.debug("additive_persistence(num=%s): num_string → %s", num, num_string)
 
     while len(num_string) != 1:
         numbers = [int(i) for i in num_string]
+        logger.debug("additive_persistence(num=%s): numbers → %s", num, numbers)
 
         total = 0
+        logger.debug("additive_persistence(num=%s): total → %s", num, total)
         for i in range(len(numbers)):
             total += numbers[i]
 
         num_string = str(total)
 
         steps += 1
+    logger.debug("<<< Exiting additive_persistence(num=%s)", num)
     return steps
 
 

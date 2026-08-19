@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Longest Common Substring Problem Statement:
     Given two sequences, find the
@@ -39,6 +41,7 @@ def longest_common_substring(text1: str, text2: str) -> str:
         ...
     ValueError: longest_common_substring() takes two strings for inputs
     """
+    logger.debug(">>> Entering longest_common_substring(text1=%s,text2=%s)", text1, text2)
 
     if not (isinstance(text1, str) and isinstance(text2, str)):
         raise ValueError("longest_common_substring() takes two strings for inputs")
@@ -47,11 +50,15 @@ def longest_common_substring(text1: str, text2: str) -> str:
         return ""
 
     text1_length = len(text1)
+    logger.debug("longest_common_substring(text1=%s,text2=%s): text1_length → %s", text1, text2, text1_length)
     text2_length = len(text2)
+    logger.debug("longest_common_substring(text1=%s,text2=%s): text2_length → %s", text1, text2, text2_length)
 
     dp = [[0] * (text2_length + 1) for _ in range(text1_length + 1)]
     end_pos = 0
+    logger.debug("longest_common_substring(text1=%s,text2=%s): end_pos → %s", text1, text2, end_pos)
     max_length = 0
+    logger.debug("longest_common_substring(text1=%s,text2=%s): max_length → %s", text1, text2, max_length)
 
     for i in range(1, text1_length + 1):
         for j in range(1, text2_length + 1):
@@ -61,6 +68,7 @@ def longest_common_substring(text1: str, text2: str) -> str:
                     end_pos = i
                     max_length = dp[i][j]
 
+    logger.debug("<<< Exiting longest_common_substring(text1=%s,text2=%s)", text1, text2)
     return text1[end_pos - max_length : end_pos]
 
 

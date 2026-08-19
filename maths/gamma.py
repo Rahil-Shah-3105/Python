@@ -13,6 +13,8 @@ import math
 
 from numpy import inf
 from scipy.integrate import quad
+import logging
+logger = logging.getLogger(__name__)
 
 
 def gamma_iterative(num: float) -> float:
@@ -41,13 +43,17 @@ def gamma_iterative(num: float) -> float:
     >>> gamma_iterative(3.3) - math_gamma(3.3) <= 0.00000001
     True
     """
+    logger.debug(">>> Entering gamma_iterative(num=%s)", num)
     if num <= 0:
         raise ValueError("math domain error")
 
+    logger.debug("<<< Exiting gamma_iterative(num=%s)", num)
     return quad(integrand, 0, inf, args=(num))[0]
 
 
 def integrand(x: float, z: float) -> float:
+    logger.debug(">>> Entering integrand(x=%s,z=%s)", x, z)
+    logger.debug("<<< Exiting integrand(x=%s,z=%s)", x, z)
     return math.pow(x, z - 1) * math.exp(-x)
 
 
@@ -92,6 +98,7 @@ def gamma_recursive(num: float) -> float:
         ...
     NotImplementedError: num must be an integer or a half-integer
     """
+    logger.debug(">>> Entering gamma_recursive(num=%s)", num)
     if num <= 0:
         raise ValueError("math domain error")
     if num > 171.5:
@@ -101,6 +108,7 @@ def gamma_recursive(num: float) -> float:
     elif num == 0.5:
         return math.sqrt(math.pi)
     else:
+        logger.debug("<<< Exiting gamma_recursive(num=%s)", num)
         return 1.0 if num == 1 else (num - 1) * gamma_recursive(num - 1)
 
 

@@ -13,6 +13,8 @@ References:
 """
 
 from math import sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -34,6 +36,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(1)
     False
     """
+    logger.debug(">>> Entering is_prime(number=%s)", number)
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -46,6 +49,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.debug("<<< Exiting is_prime(number=%s)", number)
     return True
 
 
@@ -66,9 +70,12 @@ def solution(nth: int = 10001) -> int:
     >>> solution(100)
     541
     """
+    logger.debug(">>> Entering solution(nth=%s)", nth)
 
     count = 0
+    logger.debug("solution(nth=%s): count → %s", nth, count)
     number = 1
+    logger.debug("solution(nth=%s): number → %s", nth, number)
     while count != nth and number < 3:
         number += 1
         if is_prime(number):
@@ -77,6 +84,7 @@ def solution(nth: int = 10001) -> int:
         number += 2
         if is_prime(number):
             count += 1
+    logger.debug("<<< Exiting solution(nth=%s)", nth)
     return number
 
 

@@ -13,6 +13,8 @@ Algorithm :
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 # Extended Euclid
@@ -25,10 +27,12 @@ def extended_euclid(a: int, b: int) -> tuple[int, int]:
     (-2, 3)
 
     """
+    logger.debug(">>> Entering extended_euclid(a=%s,b=%s)", a, b)
     if b == 0:
         return (1, 0)
     (x, y) = extended_euclid(b, a % b)
     k = a // b
+    logger.debug("<<< Exiting extended_euclid(a=%s,b=%s)", a, b)
     return (y, x - k * y)
 
 
@@ -46,9 +50,11 @@ def chinese_remainder_theorem(n1: int, r1: int, n2: int, r2: int) -> int:
     14
 
     """
+    logger.debug(">>> Entering chinese_remainder_theorem(n1=%s,r1=%s,n2=%s,r2=%s)", n1, r1, n2, r2)
     (x, y) = extended_euclid(n1, n2)
     m = n1 * n2
     n = r2 * x * n1 + r1 * y * n2
+    logger.debug("<<< Exiting chinese_remainder_theorem(n1=%s,r1=%s,n2=%s,r2=%s)", n1, r1, n2, r2)
     return (n % m + m) % m
 
 
@@ -65,9 +71,12 @@ def invert_modulo(a: int, n: int) -> int:
     1
 
     """
+    logger.debug(">>> Entering invert_modulo(a=%s,n=%s)", a, n)
     (b, _x) = extended_euclid(a, n)
     if b < 0:
         b = (b % n + n) % n
+        logger.debug("invert_modulo(a=%s,n=%s): b → %s", a, n, b)
+    logger.debug("<<< Exiting invert_modulo(a=%s,n=%s)", a, n)
     return b
 
 
@@ -81,9 +90,11 @@ def chinese_remainder_theorem2(n1: int, r1: int, n2: int, r2: int) -> int:
     14
 
     """
+    logger.debug(">>> Entering chinese_remainder_theorem2(n1=%s,r1=%s,n2=%s,r2=%s)", n1, r1, n2, r2)
     x, y = invert_modulo(n1, n2), invert_modulo(n2, n1)
     m = n1 * n2
     n = r2 * x * n1 + r1 * y * n2
+    logger.debug("<<< Exiting chinese_remainder_theorem2(n1=%s,r1=%s,n2=%s,r2=%s)", n1, r1, n2, r2)
     return (n % m + m) % m
 
 

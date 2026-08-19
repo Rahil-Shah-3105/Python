@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections import deque
 from collections.abc import Generator
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 # https://en.wikipedia.org/wiki/Tree_traversal
@@ -22,11 +24,14 @@ def make_tree() -> Node | None:
      / \
     4   5
     """
+    logger.debug(">>> Entering make_tree()")
     tree = Node(1)
+    logger.debug("make_tree(): tree → %s", tree)
     tree.left = Node(2)
     tree.right = Node(3)
     tree.left.left = Node(4)
     tree.left.right = Node(5)
+    logger.debug("<<< Exiting make_tree()")
     return tree
 
 
@@ -36,7 +41,9 @@ def preorder(root: Node | None) -> Generator[int]:
     >>> list(preorder(make_tree()))
     [1, 2, 4, 5, 3]
     """
+    logger.debug(">>> Entering preorder(root=%s)", root)
     if not root:
+        logger.debug("<<< Exiting preorder(root=%s)", root)
         return
     yield root.data
     yield from preorder(root.left)
@@ -49,7 +56,9 @@ def postorder(root: Node | None) -> Generator[int]:
     >>> list(postorder(make_tree()))
     [4, 5, 2, 3, 1]
     """
+    logger.debug(">>> Entering postorder(root=%s)", root)
     if not root:
+        logger.debug("<<< Exiting postorder(root=%s)", root)
         return
     yield from postorder(root.left)
     yield from postorder(root.right)
@@ -62,7 +71,9 @@ def inorder(root: Node | None) -> Generator[int]:
     >>> list(inorder(make_tree()))
     [4, 2, 5, 1, 3]
     """
+    logger.debug(">>> Entering inorder(root=%s)", root)
     if not root:
+        logger.debug("<<< Exiting inorder(root=%s)", root)
         return
     yield from inorder(root.left)
     yield root.data
@@ -75,7 +86,9 @@ def reverse_inorder(root: Node | None) -> Generator[int]:
     >>> list(reverse_inorder(make_tree()))
     [3, 1, 5, 2, 4]
     """
+    logger.debug(">>> Entering reverse_inorder(root=%s)", root)
     if not root:
+        logger.debug("<<< Exiting reverse_inorder(root=%s)", root)
         return
     yield from reverse_inorder(root.right)
     yield root.data
@@ -90,6 +103,8 @@ def height(root: Node | None) -> int:
     >>> height(make_tree())
     3
     """
+    logger.debug(">>> Entering height(root=%s)", root)
+    logger.debug("<<< Exiting height(root=%s)", root)
     return (max(height(root.left), height(root.right)) + 1) if root else 0
 
 
@@ -100,14 +115,18 @@ def level_order(root: Node | None) -> Generator[int]:
     >>> list(level_order(make_tree()))
     [1, 2, 3, 4, 5]
     """
+    logger.debug(">>> Entering level_order(root=%s)", root)
 
     if root is None:
+        logger.debug("<<< Exiting level_order(root=%s)", root)
         return
 
     process_queue = deque([root])
+    logger.debug("level_order(root=%s): process_queue → %s", root, process_queue)
 
     while process_queue:
         node = process_queue.popleft()
+        logger.debug("level_order(root=%s): node → %s", root, node)
         yield node.data
 
         if node.left:
@@ -125,9 +144,13 @@ def get_nodes_from_left_to_right(root: Node | None, level: int) -> Generator[int
     >>> list(get_nodes_from_left_to_right(make_tree(), 2))
     [2, 3]
     """
+    logger.debug(">>> Entering get_nodes_from_left_to_right(root=%s,level=%s)", root, level)
 
+    logger.debug("<<< Exiting get_nodes_from_left_to_right(root=%s,level=%s)", root, level)
     def populate_output(root: Node | None, level: int) -> Generator[int]:
+        logger.debug(">>> Entering populate_output(root=%s,level=%s)", root, level)
         if not root:
+            logger.debug("<<< Exiting populate_output(root=%s,level=%s)", root, level)
             return
         if level == 1:
             yield root.data
@@ -147,7 +170,9 @@ def get_nodes_from_right_to_left(root: Node | None, level: int) -> Generator[int
     >>> list(get_nodes_from_right_to_left(make_tree(), 2))
     [3, 2]
     """
+    logger.debug(">>> Entering get_nodes_from_right_to_left(root=%s,level=%s)", root, level)
 
+    logger.debug("<<< Exiting get_nodes_from_right_to_left(root=%s,level=%s)", root, level)
     def populate_output(root: Node | None, level: int) -> Generator[int]:
         if not root:
             return
@@ -167,11 +192,15 @@ def zigzag(root: Node | None) -> Generator[int]:
     >>> list(zigzag(make_tree()))
     [1, 3, 2, 4, 5]
     """
+    logger.debug(">>> Entering zigzag(root=%s)", root)
     if root is None:
+        logger.debug("<<< Exiting zigzag(root=%s)", root)
         return
 
     flag = 0
+    logger.debug("zigzag(root=%s): flag → %s", root, flag)
     height_tree = height(root)
+    logger.debug("zigzag(root=%s): height_tree → %s", root, height_tree)
 
     for h in range(1, height_tree + 1):
         if not flag:
@@ -183,6 +212,9 @@ def zigzag(root: Node | None) -> Generator[int]:
 
 
 def main() -> None:  # Main function for testing.
+    logger.debug(">>> Entering main()")
+    logger.debug("main(): root → %s", root)
+    logger.warning("main(): root → %s", root)
     # Create binary tree.
     root = make_tree()
 
@@ -203,6 +235,7 @@ def main() -> None:  # Main function for testing.
         print(f"Level {level}:", list(get_nodes_from_left_to_right(root, level=level)))
 
     print("\nZigZag order Traversal: ")
+    logger.debug("<<< Exiting main()")
     print(f"{list(zigzag(root))}")
 
 

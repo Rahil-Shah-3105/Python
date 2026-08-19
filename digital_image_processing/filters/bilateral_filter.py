@@ -15,23 +15,34 @@ import sys
 
 import cv2
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def vec_gaussian(img: np.ndarray, variance: float) -> np.ndarray:
+    logger.debug(">>> Entering vec_gaussian(img=%s,variance=%s)", img, variance)
     # For applying gaussian function for each element in matrix.
     sigma = math.sqrt(variance)
+    logger.debug("vec_gaussian(img=%s,variance=%s): sigma → %s", img, variance, sigma)
     cons = 1 / (sigma * math.sqrt(2 * math.pi))
+    logger.debug("vec_gaussian(img=%s,variance=%s): cons → %s", img, variance, cons)
+    logger.debug("<<< Exiting vec_gaussian(img=%s,variance=%s)", img, variance)
     return cons * np.exp(-((img / sigma) ** 2) * 0.5)
 
 
 def get_slice(img: np.ndarray, x: int, y: int, kernel_size: int) -> np.ndarray:
+    logger.debug(">>> Entering get_slice(img=%s,x=%s,y=%s,kernel_size=%s)", img, x, y, kernel_size)
     half = kernel_size // 2
+    logger.debug("get_slice(img=%s,x=%s,y=%s,kernel_size=%s): half → %s", img, x, y, kernel_size, half)
+    logger.debug("<<< Exiting get_slice(img=%s,x=%s,y=%s,kernel_size=%s)", img, x, y, kernel_size)
     return img[x - half : x + half + 1, y - half : y + half + 1]
 
 
 def get_gauss_kernel(kernel_size: int, spatial_variance: float) -> np.ndarray:
+    logger.debug(">>> Entering get_gauss_kernel(kernel_size=%s,spatial_variance=%s)", kernel_size, spatial_variance)
     # Creates a gaussian kernel of given dimension.
     arr = np.zeros((kernel_size, kernel_size))
+    logger.debug("get_gauss_kernel(kernel_size=%s,spatial_variance=%s): arr → %s", kernel_size, spatial_variance, arr)
     for i in range(kernel_size):
         for j in range(kernel_size):
             arr[i, j] = math.sqrt(

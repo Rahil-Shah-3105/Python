@@ -3,6 +3,8 @@ from a given source node to a target node in an unweighted graph.
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 graph = {
     "A": ["B", "C", "E"],
@@ -21,10 +23,14 @@ class Graph:
         Graph is implemented as dictionary of adjacency lists. Also,
         Source vertex have to be defined upon initialization.
         """
+        logger.debug(">>> Entering __init__(graph=%s,source_vertex=%s)", graph, source_vertex)
         self.graph = graph
+        logger.debug("__init__(self=%s,graph=%s,source_vertex=%s): self.graph → %s", self, graph, source_vertex, self.graph)
         # mapping node to its parent in resulting breadth first tree
         self.parent: dict[str, str | None] = {}
+        logger.debug("<<< Exiting __init__(graph=%s,source_vertex=%s)", graph, source_vertex)
         self.source_vertex = source_vertex
+        logger.debug("__init__(self=%s,graph=%s,source_vertex=%s): self.source_vertex → %s", self, graph, source_vertex, self.source_vertex)
 
     def breath_first_search(self) -> None:
         """
@@ -69,16 +75,20 @@ class Graph:
         >>> g.shortest_path("G")
         'G'
         """
+        logger.debug(">>> Entering shortest_path(target_vertex=%s)", target_vertex)
         if target_vertex == self.source_vertex:
             return self.source_vertex
 
         target_vertex_parent = self.parent.get(target_vertex)
+        logger.debug("shortest_path(self=%s,target_vertex=%s): target_vertex_parent → %s", self, target_vertex, target_vertex_parent)
+        logger.debug("shortest_path(self=%s,target_vertex=%s): msg → %s", self, target_vertex, msg)
         if target_vertex_parent is None:
             msg = (
                 f"No path from vertex: {self.source_vertex} to vertex: {target_vertex}"
             )
             raise ValueError(msg)
 
+        logger.debug("<<< Exiting shortest_path(target_vertex=%s)", target_vertex)
         return self.shortest_path(target_vertex_parent) + f"->{target_vertex}"
 
 

@@ -1,9 +1,13 @@
+import logging
+logger = logging.getLogger(__name__)
 def show_bits(before: int, after: int) -> str:
     """
     >>> print(show_bits(0, 0xFFFF))
         0: 00000000
     65535: 1111111111111111
     """
+    logger.debug(">>> Entering show_bits(before=%s,after=%s)", before, after)
+    logger.debug("<<< Exiting show_bits(before=%s,after=%s)", before, after)
     return f"{before:>5}: {before:08b}\n{after:>5}: {after:08b}"
 
 
@@ -40,13 +44,17 @@ def swap_odd_even_bits(num: int) -> int:
        23: 00010111
        43: 00101011
     """
+    logger.debug(">>> Entering swap_odd_even_bits(num=%s)", num)
     # Get all even bits - 0xAAAAAAAA is a 32-bit number with all even bits set to 1
     even_bits = num & 0xAAAAAAAA
+    logger.debug("swap_odd_even_bits(num=%s): even_bits → %s", num, even_bits)
 
     # Get all odd bits - 0x55555555 is a 32-bit number with all odd bits set to 1
     odd_bits = num & 0x55555555
+    logger.debug("swap_odd_even_bits(num=%s): odd_bits → %s", num, odd_bits)
 
     # Right shift even bits and left shift odd bits and swap them
+    logger.debug("<<< Exiting swap_odd_even_bits(num=%s)", num)
     return even_bits >> 1 | odd_bits << 1
 
 

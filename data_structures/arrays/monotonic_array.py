@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # https://leetcode.com/problems/monotonic-array/
 def is_monotonic(nums: list[int]) -> bool:
     """
@@ -20,6 +22,7 @@ def is_monotonic(nums: list[int]) -> bool:
     >>> is_monotonic([-100,0,100])
     True
     """
+    logger.debug(">>> Entering is_monotonic(nums=%s)", nums)
     return all(nums[i] <= nums[i + 1] for i in range(len(nums) - 1)) or all(
         nums[i] >= nums[i + 1] for i in range(len(nums) - 1)
     )

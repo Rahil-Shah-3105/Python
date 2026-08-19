@@ -9,6 +9,8 @@ https://en.wikipedia.org/wiki/Sigmoid_function
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sigmoid(vector: np.ndarray) -> np.ndarray:
@@ -30,6 +32,8 @@ def sigmoid(vector: np.ndarray) -> np.ndarray:
     >>> sigmoid(np.array([0.0]))
     array([0.5])
     """
+    logger.debug(">>> Entering sigmoid(vector=%s)", vector)
+    logger.debug("<<< Exiting sigmoid(vector=%s)", vector)
     return 1 / (1 + np.exp(-vector))
 
 

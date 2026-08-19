@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 113: https://projecteuler.net/problem=113
 
@@ -28,9 +30,12 @@ def choose(n: int, r: int) -> int:
     >>> choose(20,6)
     38760
     """
+    logger.debug(">>> Entering choose(n=%s,r=%s)", n, r)
     ret = 1.0
+    logger.debug("choose(n=%s,r=%s): ret → %s", n, r, ret)
     for i in range(1, r + 1):
         ret *= (n + 1 - i) / i
+    logger.debug("<<< Exiting choose(n=%s,r=%s)", n, r)
     return round(ret)
 
 
@@ -44,6 +49,8 @@ def non_bouncy_exact(n: int) -> int:
     >>> non_bouncy_exact(10)
     136126
     """
+    logger.debug(">>> Entering non_bouncy_exact(n=%s)", n)
+    logger.debug("<<< Exiting non_bouncy_exact(n=%s)", n)
     return choose(8 + n, n) + choose(9 + n, n) - 10
 
 
@@ -57,6 +64,8 @@ def non_bouncy_upto(n: int) -> int:
     >>> non_bouncy_upto(10)
     277032
     """
+    logger.debug(">>> Entering non_bouncy_upto(n=%s)", n)
+    logger.debug("<<< Exiting non_bouncy_upto(n=%s)", n)
     return sum(non_bouncy_exact(i) for i in range(1, n + 1))
 
 
@@ -68,6 +77,8 @@ def solution(num_digits: int = 100) -> int:
     >>> solution(10)
     277032
     """
+    logger.debug(">>> Entering solution(num_digits=%s)", num_digits)
+    logger.debug("<<< Exiting solution(num_digits=%s)", num_digits)
     return non_bouncy_upto(num_digits)
 
 

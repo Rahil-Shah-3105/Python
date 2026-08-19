@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The Fibonacci sequence is defined by the recurrence relation:
 
@@ -43,15 +45,18 @@ def fibonacci(n: int) -> int:
     144
 
     """
+    logger.debug(">>> Entering fibonacci(n=%s)", n)
     if n == 1 or not isinstance(n, int):
         return 0
     elif n == 2:
         return 1
     else:
         sequence = [0, 1]
+        logger.debug("fibonacci(n=%s): sequence → %s", n, sequence)
         for i in range(2, n + 1):
             sequence.append(sequence[i - 1] + sequence[i - 2])
 
+        logger.debug("<<< Exiting fibonacci(n=%s)", n)
         return sequence[n]
 
 
@@ -70,13 +75,17 @@ def fibonacci_digits_index(n: int) -> int:
     >>> fibonacci_digits_index(3)
     12
     """
+    logger.debug(">>> Entering fibonacci_digits_index(n=%s)", n)
     digits = 0
+    logger.debug("fibonacci_digits_index(n=%s): digits → %s", n, digits)
     index = 2
+    logger.debug("fibonacci_digits_index(n=%s): index → %s", n, index)
 
     while digits < n:
         index += 1
         digits = len(str(fibonacci(index)))
 
+    logger.debug("<<< Exiting fibonacci_digits_index(n=%s)", n)
     return index
 
 
@@ -94,6 +103,8 @@ def solution(n: int = 1000) -> int:
     >>> solution(3)
     12
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return fibonacci_digits_index(n)
 
 
