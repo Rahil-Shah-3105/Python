@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 9: https://projecteuler.net/problem=9
 
@@ -28,6 +30,7 @@ def solution() -> int:
     >>> solution()
     31875000
     """
+    logger.debug(">>> Entering solution()")
 
     for a in range(300):
         for b in range(a + 1, 400):
@@ -35,6 +38,7 @@ def solution() -> int:
                 if (a + b + c) == 1000 and (a**2) + (b**2) == (c**2):
                     return a * b * c
 
+    logger.debug("<<< Exiting solution()")
     return -1
 
 
@@ -49,6 +53,7 @@ def solution_fast() -> int:
     >>> solution_fast()
     31875000
     """
+    logger.debug(">>> Entering solution_fast()")
 
     for a in range(300):
         for b in range(400):
@@ -56,6 +61,7 @@ def solution_fast() -> int:
             if a < b < c and (a**2) + (b**2) == (c**2):
                 return a * b * c
 
+    logger.debug("<<< Exiting solution_fast()")
     return -1
 
 
@@ -63,6 +69,7 @@ def benchmark() -> None:
     """
     Benchmark code comparing two different version function.
     """
+    logger.debug(">>> Entering benchmark()")
     import timeit
 
     print(
@@ -73,6 +80,7 @@ def benchmark() -> None:
             "solution_fast()", setup="from __main__ import solution_fast", number=1000
         )
     )
+    logger.debug("<<< Exiting benchmark()")
 
 
 if __name__ == "__main__":

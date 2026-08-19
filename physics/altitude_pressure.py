@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Title : Calculate altitude using Pressure
 
@@ -38,11 +40,14 @@ def get_altitude_at_pressure(pressure: float) -> float:
       ...
     ValueError: Atmospheric Pressure can not be negative !
     """
+    logger.debug(">>> Entering get_altitude_at_pressure(pressure=%s)", pressure)
+    logger.debug("get_altitude_at_pressure(pressure=%s): H → %s", pressure, H)
 
     if pressure > 101325:
         raise ValueError("Value Higher than Pressure at Sea Level !")
     if pressure < 0:
         raise ValueError("Atmospheric Pressure can not be negative !")
+    logger.debug("<<< Exiting get_altitude_at_pressure(pressure=%s)", pressure)
     return 44_330 * (1 - (pressure / 101_325) ** (1 / 5.5255))
 
 

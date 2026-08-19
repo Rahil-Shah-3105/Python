@@ -17,6 +17,8 @@ Find the least value of n for which p(n) is divisible by one million.
 """
 
 import itertools
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(number: int = 1000000) -> int:
@@ -30,13 +32,16 @@ def solution(number: int = 1000000) -> int:
     >>> solution()
     55374
     """
+    logger.debug(">>> Entering solution(number=%s)", number)
     partitions = [1]
+    logger.debug("solution(number=%s): partitions → %s", number, partitions)
 
     for i in itertools.count(len(partitions)):
         item = 0
         for j in itertools.count(1):
             sign = -1 if j % 2 == 0 else +1
             index = (j * j * 3 - j) // 2
+            logger.debug("solution(number=%s): index → %s", number, index)
             if index > i:
                 break
             item += partitions[i - index] * sign
@@ -51,6 +56,7 @@ def solution(number: int = 1000000) -> int:
             return i
         partitions.append(item)
 
+    logger.debug("<<< Exiting solution(number=%s)", number)
     return 0
 
 

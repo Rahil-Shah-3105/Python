@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Geometric Mean
 Reference :  https://en.wikipedia.org/wiki/Geometric_mean
@@ -27,6 +29,7 @@ def is_geometric_series(series: list) -> bool:
         ...
     ValueError: Input series is not valid, valid series - [2, 4, 8]
     """
+    logger.debug(">>> Entering is_geometric_series(series=%s)", series)
     if not isinstance(series, list):
         raise ValueError("Input series is not valid, valid series - [2, 4, 8]")
     if len(series) == 0:
@@ -35,11 +38,14 @@ def is_geometric_series(series: list) -> bool:
         return True
     try:
         common_ratio = series[1] / series[0]
+        logger.debug("is_geometric_series(series=%s): common_ratio → %s", series, common_ratio)
         for index in range(len(series) - 1):
             if series[index + 1] / series[index] != common_ratio:
                 return False
     except ZeroDivisionError:
+        logger.error("Exception in is_geometric_series(series=%s)", series, exc_info=True)
         return False
+    logger.debug("<<< Exiting is_geometric_series(series=%s)", series)
     return True
 
 
@@ -67,13 +73,16 @@ def geometric_mean(series: list) -> float:
     ValueError: Input list must be a non empty list
 
     """
+    logger.debug(">>> Entering geometric_mean(series=%s)", series)
     if not isinstance(series, list):
         raise ValueError("Input series is not valid, valid series - [2, 4, 8]")
     if len(series) == 0:
         raise ValueError("Input list must be a non empty list")
     answer = 1
+    logger.debug("geometric_mean(series=%s): answer → %s", series, answer)
     for value in series:
         answer *= value
+    logger.debug("<<< Exiting geometric_mean(series=%s)", series)
     return pow(answer, 1 / len(series))
 
 

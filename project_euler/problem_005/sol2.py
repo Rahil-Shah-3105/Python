@@ -7,6 +7,8 @@ Smallest multiple
 
 2520 is the smallest number that can be divided by each of the numbers
 from 1 to 10 without any remainder.
+import logging
+logger = logging.getLogger(__name__)
 
 What is the smallest positive number that is _evenly divisible_ by all
 of the numbers from 1 to 20?
@@ -33,7 +35,9 @@ def lcm(x: int, y: int) -> int:
     >>> lcm(64, 48)
     192
     """
+    logger.debug(">>> Entering lcm(x=%s,y=%s)", x, y)
 
+    logger.debug("<<< Exiting lcm(x=%s,y=%s)", x, y)
     return (x * y) // greatest_common_divisor(x, y)
 
 
@@ -49,10 +53,14 @@ def solution(n: int = 20) -> int:
     >>> solution(22)
     232792560
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
+    logger.error("Exception in solution(n=%s)", n, exc_info=True)
     g = 1
+    logger.debug("solution(n=%s): g → %s", n, g)
     for i in range(1, n + 1):
         g = lcm(g, i)
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return g
 
 

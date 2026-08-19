@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def rgb_to_cmyk(r_input: int, g_input: int, b_input: int) -> tuple[int, int, int, int]:
     """
     Simple RGB to CMYK conversion. Returns percentages of CMYK paint.
@@ -35,6 +37,7 @@ def rgb_to_cmyk(r_input: int, g_input: int, b_input: int) -> tuple[int, int, int
     >>> rgb_to_cmyk(0, 0, 255)    # blue
     (100, 100, 0, 0)
     """
+    logger.debug(">>> Entering rgb_to_cmyk(r_input=%s,g_input=%s,b_input=%s)", r_input, g_input, b_input)
 
     if (
         not isinstance(r_input, int)
@@ -42,6 +45,7 @@ def rgb_to_cmyk(r_input: int, g_input: int, b_input: int) -> tuple[int, int, int
         or not isinstance(b_input, int)
     ):
         msg = f"Expected int, found {type(r_input), type(g_input), type(b_input)}"
+        logger.debug("rgb_to_cmyk(r_input=%s,g_input=%s,b_input=%s): msg → %s", r_input, g_input, b_input, msg)
         raise ValueError(msg)
 
     if not 0 <= r_input < 256 or not 0 <= g_input < 256 or not 0 <= b_input < 256:
@@ -62,6 +66,7 @@ def rgb_to_cmyk(r_input: int, g_input: int, b_input: int) -> tuple[int, int, int
     y = round(100 * (1 - b - k) / (1 - k))
     k = round(100 * k)
 
+    logger.debug("<<< Exiting rgb_to_cmyk(r_input=%s,g_input=%s,b_input=%s)", r_input, g_input, b_input)
     return c, m, y, k
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 https://en.wikipedia.org/wiki/Augmented_matrix
 
@@ -16,8 +18,10 @@ def simplify(current_set: list[list]) -> list[list]:
     >>> simplify([[5, 2, 5], [5, 1, 10]])
     [[1.0, 0.4, 1.0], [0.0, 0.2, -1.0]]
     """
+    logger.debug(">>> Entering simplify(current_set=%s)", current_set)
     # Divide each row by magnitude of first term --> creates 'unit' matrix
     duplicate_set = current_set.copy()
+    logger.debug("simplify(current_set=%s): duplicate_set → %s", current_set, duplicate_set)
     for row_index, row in enumerate(duplicate_set):
         magnitude = row[0]
         for column_index, column in enumerate(row):
@@ -27,10 +31,13 @@ def simplify(current_set: list[list]) -> list[list]:
             current_set[row_index][column_index] = column / magnitude
     # Subtract to cancel term
     first_row = current_set[0]
+    logger.debug("simplify(current_set=%s): first_row → %s", current_set, first_row)
     final_set = [first_row]
+    logger.debug("simplify(current_set=%s): final_set → %s", current_set, final_set)
     current_set = current_set[1::]
     for row in current_set:
         temp_row = []
+        logger.debug("simplify(current_set=%s): temp_row → %s", current_set, temp_row)
         # If first term is 0, it is already in form we want, so we preserve it
         if row[0] == 0:
             final_set.append(row)
@@ -41,16 +48,21 @@ def simplify(current_set: list[list]) -> list[list]:
     # Create next recursion iteration set
     if len(final_set[0]) != 3:
         current_first_row = final_set[0]
+        logger.debug("simplify(current_set=%s): current_first_row → %s", current_set, current_first_row)
         current_first_column = []
+        logger.debug("simplify(current_set=%s): current_first_column → %s", current_set, current_first_column)
         next_iteration = []
+        logger.debug("simplify(current_set=%s): next_iteration → %s", current_set, next_iteration)
         for row in final_set[1::]:
             current_first_column.append(row[0])
             next_iteration.append(row[1::])
         resultant = simplify(next_iteration)
+        logger.debug("simplify(current_set=%s): resultant → %s", current_set, resultant)
         for i in range(len(resultant)):
             resultant[i].insert(0, current_first_column[i])
         resultant.insert(0, current_first_row)
         final_set = resultant
+    logger.debug("<<< Exiting simplify(current_set=%s)", current_set)
     return final_set
 
 
@@ -77,9 +89,11 @@ def solve_simultaneous(equations: list[list]) -> list:
         ...
     ValueError: solve_simultaneous() requires at least 1 full equation
     """
+    logger.debug(">>> Entering solve_simultaneous(equations=%s)", equations)
     if len(equations) == 0:
         raise IndexError("solve_simultaneous() requires n lists of length n+1")
     _length = len(equations) + 1
+    logger.debug("solve_simultaneous(equations=%s): _length → %s", equations, _length)
     if any(len(item) != _length for item in equations):
         raise IndexError("solve_simultaneous() requires n lists of length n+1")
     for row in equations:
@@ -88,9 +102,12 @@ def solve_simultaneous(equations: list[list]) -> list:
     if len(equations) == 1:
         return [equations[0][-1] / equations[0][0]]
     data_set = equations.copy()
+    logger.debug("solve_simultaneous(equations=%s): data_set → %s", equations, data_set)
     if any(0 in row for row in data_set):
         temp_data = data_set.copy()
+        logger.debug("solve_simultaneous(equations=%s): temp_data → %s", equations, temp_data)
         full_row = []
+        logger.debug("solve_simultaneous(equations=%s): full_row → %s", equations, full_row)
         for row_index, row in enumerate(temp_data):
             if 0 not in row:
                 full_row = data_set.pop(row_index)
@@ -99,11 +116,14 @@ def solve_simultaneous(equations: list[list]) -> list:
             raise ValueError("solve_simultaneous() requires at least 1 full equation")
         data_set.insert(0, full_row)
     useable_form = data_set.copy()
+    logger.debug("solve_simultaneous(equations=%s): useable_form → %s", equations, useable_form)
     simplified = simplify(useable_form)
     simplified = simplified[::-1]
+    logger.debug("solve_simultaneous(equations=%s): simplified → %s", equations, simplified)
     solutions: list = []
     for row in simplified:
         current_solution = row[-1]
+        logger.debug("solve_simultaneous(equations=%s): current_solution → %s", equations, current_solution)
         if not solutions:
             if row[-2] == 0:
                 solutions.append(0)
@@ -111,6 +131,7 @@ def solve_simultaneous(equations: list[list]) -> list:
             solutions.append(current_solution / row[-2])
             continue
         temp_row = row.copy()[: len(row) - 1 :]
+        logger.debug("solve_simultaneous(equations=%s): temp_row → %s", equations, temp_row)
         while temp_row[0] == 0:
             temp_row.pop(0)
         if len(temp_row) == 0:
@@ -122,8 +143,10 @@ def solve_simultaneous(equations: list[list]) -> list:
             current_solution -= column * solutions[column_index]
         solutions.append(current_solution)
     final = []
+    logger.debug("solve_simultaneous(equations=%s): final → %s", equations, final)
     for item in solutions:
         final.append(float(round(item, 5)))
+    logger.debug("<<< Exiting solve_simultaneous(equations=%s)", equations)
     return final[::-1]
 
 

@@ -12,6 +12,8 @@ python3 binary_search.py
 
 import bisect
 from itertools import pairwise
+import logging
+logger = logging.getLogger(__name__)
 
 
 def bisect_left(
@@ -197,13 +199,17 @@ def binary_search(sorted_collection: list[int], item: int) -> int:
     >>> binary_search([0, 5, 7, 10, 15], 6)
     -1
     """
+    logger.debug(">>> Entering binary_search(sorted_collection=%s,item=%s)", sorted_collection, item)
     if any(a > b for a, b in pairwise(sorted_collection)):
         raise ValueError("sorted_collection must be sorted in ascending order")
     left = 0
+    logger.debug("binary_search(sorted_collection=%s,item=%s): left → %s", sorted_collection, item, left)
     right = len(sorted_collection) - 1
+    logger.debug("binary_search(sorted_collection=%s,item=%s): right → %s", sorted_collection, item, right)
 
     while left <= right:
         midpoint = left + (right - left) // 2
+        logger.debug("binary_search(sorted_collection=%s,item=%s): midpoint → %s", sorted_collection, item, midpoint)
         current_item = sorted_collection[midpoint]
         if current_item == item:
             return midpoint
@@ -211,6 +217,7 @@ def binary_search(sorted_collection: list[int], item: int) -> int:
             right = midpoint - 1
         else:
             left = midpoint + 1
+    logger.debug("<<< Exiting binary_search(sorted_collection=%s,item=%s)", sorted_collection, item)
     return -1
 
 
@@ -234,11 +241,14 @@ def binary_search_std_lib(sorted_collection: list[int], item: int) -> int:
     >>> binary_search_std_lib([0, 5, 7, 10, 15], 6)
     -1
     """
+    logger.debug(">>> Entering binary_search_std_lib(sorted_collection=%s,item=%s)", sorted_collection, item)
     if list(sorted_collection) != sorted(sorted_collection):
         raise ValueError("sorted_collection must be sorted in ascending order")
     index = bisect.bisect_left(sorted_collection, item)
+    logger.debug("binary_search_std_lib(sorted_collection=%s,item=%s): index → %s", sorted_collection, item, index)
     if index != len(sorted_collection) and sorted_collection[index] == item:
         return index
+    logger.debug("<<< Exiting binary_search_std_lib(sorted_collection=%s,item=%s)", sorted_collection, item)
     return -1
 
 
@@ -268,8 +278,10 @@ def binary_search_with_duplicates(sorted_collection: list[int], item: int) -> li
     >>> binary_search_with_duplicates([1, 2, 2, 2, 3], 4)
     []
     """
+    logger.debug(">>> Entering binary_search_with_duplicates(sorted_collection=%s,item=%s)", sorted_collection, item)
     if list(sorted_collection) != sorted(sorted_collection):
         raise ValueError("sorted_collection must be sorted in ascending order")
+        logger.debug("<<< Exiting binary_search_with_duplicates(sorted_collection=%s,item=%s)", sorted_collection, item)
 
     def lower_bound(sorted_collection: list[int], item: int) -> int:
         """
@@ -279,15 +291,21 @@ def binary_search_with_duplicates(sorted_collection: list[int], item: int) -> li
         :param item: The item to find the lower bound for.
         :return: The index where the item can be inserted while maintaining order.
         """
+        logger.debug(">>> Entering lower_bound(sorted_collection=%s,item=%s)", sorted_collection, item)
         left = 0
+        logger.debug("lower_bound(sorted_collection=%s,item=%s): left → %s", sorted_collection, item, left)
         right = len(sorted_collection)
+        logger.debug("lower_bound(sorted_collection=%s,item=%s): right → %s", sorted_collection, item, right)
         while left < right:
             midpoint = left + (right - left) // 2
+            logger.debug("lower_bound(sorted_collection=%s,item=%s): midpoint → %s", sorted_collection, item, midpoint)
             current_item = sorted_collection[midpoint]
+            logger.debug("lower_bound(sorted_collection=%s,item=%s): current_item → %s", sorted_collection, item, current_item)
             if current_item < item:
                 left = midpoint + 1
             else:
                 right = midpoint
+        logger.debug("<<< Exiting lower_bound(sorted_collection=%s,item=%s)", sorted_collection, item)
         return left
 
     def upper_bound(sorted_collection: list[int], item: int) -> int:
@@ -298,15 +316,21 @@ def binary_search_with_duplicates(sorted_collection: list[int], item: int) -> li
         :param item: The item to find the upper bound for.
         :return: The index where the item can be inserted after all existing instances.
         """
+        logger.debug(">>> Entering upper_bound(sorted_collection=%s,item=%s)", sorted_collection, item)
         left = 0
+        logger.debug("upper_bound(sorted_collection=%s,item=%s): left → %s", sorted_collection, item, left)
         right = len(sorted_collection)
+        logger.debug("upper_bound(sorted_collection=%s,item=%s): right → %s", sorted_collection, item, right)
         while left < right:
             midpoint = left + (right - left) // 2
+            logger.debug("upper_bound(sorted_collection=%s,item=%s): midpoint → %s", sorted_collection, item, midpoint)
             current_item = sorted_collection[midpoint]
+            logger.debug("upper_bound(sorted_collection=%s,item=%s): current_item → %s", sorted_collection, item, current_item)
             if current_item <= item:
                 left = midpoint + 1
             else:
                 right = midpoint
+        logger.debug("<<< Exiting upper_bound(sorted_collection=%s,item=%s)", sorted_collection, item)
         return left
 
     left = lower_bound(sorted_collection, item)
@@ -381,18 +405,24 @@ def exponential_search(sorted_collection: list[int], item: int) -> int:
     >>> exponential_search([0, 5, 7, 10, 15], 6)
     -1
     """
+    logger.debug(">>> Entering exponential_search(sorted_collection=%s,item=%s)", sorted_collection, item)
     if list(sorted_collection) != sorted(sorted_collection):
         raise ValueError("sorted_collection must be sorted in ascending order")
     bound = 1
+    logger.debug("exponential_search(sorted_collection=%s,item=%s): bound → %s", sorted_collection, item, bound)
+    logger.debug("exponential_search(sorted_collection=%s,item=%s): last_result → %s", sorted_collection, item, last_result)
     while bound < len(sorted_collection) and sorted_collection[bound] < item:
         bound *= 2
     left = bound // 2
+    logger.debug("exponential_search(sorted_collection=%s,item=%s): left → %s", sorted_collection, item, left)
     right = min(bound, len(sorted_collection) - 1)
+    logger.debug("exponential_search(sorted_collection=%s,item=%s): right → %s", sorted_collection, item, right)
     last_result = binary_search_by_recursion(
         sorted_collection=sorted_collection, item=item, left=left, right=right
     )
     if last_result is None:
         return -1
+    logger.debug("<<< Exiting exponential_search(sorted_collection=%s,item=%s)", sorted_collection, item)
     return last_result
 
 

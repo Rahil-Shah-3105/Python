@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Calculate the Product Sum from a Special Array.
 reference: https://dev.to/sfrasica/algorithms-product-sum-from-an-array-dc6
@@ -58,9 +60,12 @@ def product_sum(arr: list[int | list], depth: int) -> int:
         1.5
 
     """
+    logger.debug(">>> Entering product_sum(arr=%s,depth=%s)", arr, depth)
     total_sum = 0
+    logger.debug("product_sum(arr=%s,depth=%s): total_sum → %s", arr, depth, total_sum)
     for ele in arr:
         total_sum += product_sum(ele, depth + 1) if isinstance(ele, list) else ele
+    logger.debug("<<< Exiting product_sum(arr=%s,depth=%s)", arr, depth)
     return total_sum * depth
 
 
@@ -89,6 +94,8 @@ def product_sum_array(array: list[int | list]) -> int:
         -1
 
     """
+    logger.debug(">>> Entering product_sum_array(array=%s)", array)
+    logger.debug("<<< Exiting product_sum_array(array=%s)", array)
     return product_sum(array, 1)
 
 

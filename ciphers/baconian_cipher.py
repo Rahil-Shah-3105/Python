@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Program to encode and decode Baconian or Bacon's Cipher
 Wikipedia reference : https://en.wikipedia.org/wiki/Bacon%27s_cipher
@@ -50,12 +52,15 @@ def encode(word: str) -> str:
         ...
     Exception: encode() accepts only letters of the alphabet and spaces
     """
+    logger.debug(">>> Entering encode(word=%s)", word)
     encoded = ""
+    logger.debug("encode(word=%s): encoded → %s", word, encoded)
     for letter in word.lower():
         if letter.isalpha() or letter == " ":
             encoded += encode_dict[letter]
         else:
             raise Exception("encode() accepts only letters of the alphabet and spaces")
+    logger.debug("<<< Exiting encode(word=%s)", word)
     return encoded
 
 
@@ -72,14 +77,18 @@ def decode(coded: str) -> str:
         ...
     Exception: decode() accepts only 'A', 'B' and spaces
     """
+    logger.debug(">>> Entering decode(coded=%s)", coded)
     if set(coded) - {"A", "B", " "} != set():
         raise Exception("decode() accepts only 'A', 'B' and spaces")
     decoded = ""
+    logger.debug("decode(coded=%s): decoded → %s", coded, decoded)
     for word in coded.split():
         while len(word) != 0:
             decoded += decode_dict[word[:5]]
             word = word[5:]
+            logger.debug("decode(coded=%s): word → %s", coded, word)
         decoded += " "
+    logger.debug("<<< Exiting decode(coded=%s)", coded)
     return decoded.strip()
 
 

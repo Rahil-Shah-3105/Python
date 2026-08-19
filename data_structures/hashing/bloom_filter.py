@@ -60,47 +60,77 @@ The probability decreases with the number of bits in the bitarray.
 """
 
 from hashlib import md5, sha256
+import logging
+logger = logging.getLogger(__name__)
 
 HASH_FUNCTIONS = (sha256, md5)
 
 
 class Bloom:
     def __init__(self, size: int = 8) -> None:
+        logger.debug(">>> Entering __init__(size=%s)", size)
         self.bitarray = 0b0
+        logger.debug("__init__(self=%s,size=%s): self.bitarray → %s", self, size, self.bitarray)
         self.size = size
+        logger.debug("__init__(self=%s,size=%s): self.size → %s", self, size, self.size)
+        logger.debug("<<< Exiting __init__(size=%s)", size)
 
     def add(self, value: str) -> None:
+        logger.debug(">>> Entering add(value=%s)", value)
         h = self.hash_(value)
+        logger.debug("add(value=%s): h → %s", value, h)
         self.bitarray |= h
+        logger.debug("<<< Exiting add(value=%s)", value)
 
     def exists(self, value: str) -> bool:
+        logger.debug(">>> Entering exists(value=%s)", value)
         h = self.hash_(value)
+        logger.debug("exists(value=%s): h → %s", value, h)
+        logger.debug("<<< Exiting exists(value=%s)", value)
         return (h & self.bitarray) == h
 
     def __contains__(self, other: str) -> bool:
+        logger.debug(">>> Entering __contains__(other=%s)", other)
+        logger.debug("<<< Exiting __contains__(other=%s)", other)
         return self.exists(other)
 
     def format_bin(self, bitarray: int) -> str:
+        logger.debug(">>> Entering format_bin(bitarray=%s)", bitarray)
         res = bin(bitarray)[2:]
+        logger.debug("format_bin(bitarray=%s): res → %s", bitarray, res)
+        logger.debug("format_bin(self=%s,bitarray=%s): res → %s", self, bitarray, res)
+        logger.debug("<<< Exiting format_bin(bitarray=%s)", bitarray)
         return res.zfill(self.size)
 
     @property
     def bitstring(self) -> str:
+        logger.debug(">>> Entering bitstring()")
+        logger.debug("<<< Exiting bitstring()")
         return self.format_bin(self.bitarray)
 
     def hash_(self, value: str) -> int:
+        logger.debug(">>> Entering hash_(value=%s)", value)
+        logger.debug("hash_(self=%s,value=%s): position → %s", self, value, position)
         res = 0b0
+        logger.debug("hash_(self=%s,value=%s): res → %s", self, value, res)
         for func in HASH_FUNCTIONS:
             position = (
                 int.from_bytes(func(value.encode()).digest(), "little") % self.size
             )
             res |= 2**position
+        logger.debug("<<< Exiting hash_(value=%s)", value)
         return res
 
     def format_hash(self, value: str) -> str:
+        logger.debug(">>> Entering format_hash(value=%s)", value)
+        logger.debug("<<< Exiting format_hash(value=%s)", value)
         return self.format_bin(self.hash_(value))
 
     @property
     def estimated_error_rate(self) -> float:
+        logger.debug(">>> Entering estimated_error_rate()")
         n_ones = bin(self.bitarray).count("1")
+        logger.debug("estimated_error_rate(self=%s): n_ones → %s", self, n_ones)
+        logger.debug("<<< Exiting estimated_error_rate()")
+        logger.debug("estimated_error_rate(): n_ones → %s", n_ones)
         return (n_ones / self.size) ** len(HASH_FUNCTIONS)

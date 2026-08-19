@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def reverse_words(sentence: str) -> str:
     """Reverse the order of words in a given string.
 
@@ -8,6 +10,8 @@ def reverse_words(sentence: str) -> str:
     >>> reverse_words("I     Love          Python")
     'Python Love I'
     """
+    logger.debug(">>> Entering reverse_words(sentence=%s)", sentence)
+    logger.debug("<<< Exiting reverse_words(sentence=%s)", sentence)
     return " ".join(sentence.split()[::-1])
 
 

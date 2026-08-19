@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import math
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 def rsafactor(d: int, e: int, n: int) -> list[int]:
@@ -35,23 +37,28 @@ def rsafactor(d: int, e: int, n: int) -> list[int]:
     >>> rsafactor(4021, 13, 17711)
     [89, 199]
     """
+    logger.debug(">>> Entering rsafactor(d=%s,e=%s,n=%s)", d, e, n)
     k = d * e - 1
     p = 0
     q = 0
     while p == 0:
         g = random.randint(2, n - 1)
+        logger.debug("rsafactor(d=%s,e=%s,n=%s): g → %s", d, e, n, g)
         t = k
         while True:
             if t % 2 == 0:
                 t = t // 2
                 x = (g**t) % n
+                logger.debug("rsafactor(d=%s,e=%s,n=%s): x → %s", d, e, n, x)
                 y = math.gcd(x - 1, n)
+                logger.debug("rsafactor(d=%s,e=%s,n=%s): y → %s", d, e, n, y)
                 if x > 1 and y > 1:
                     p = y
                     q = n // y
                     break  # find the correct factors
             else:
                 break  # t is not divisible by 2, break and choose another g
+    logger.debug("<<< Exiting rsafactor(d=%s,e=%s,n=%s)", d, e, n)
     return sorted([p, q])
 
 

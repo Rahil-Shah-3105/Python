@@ -6,6 +6,8 @@ python breadth_first_search_shortest_path_2.py
 """
 
 from collections import deque
+import logging
+logger = logging.getLogger(__name__)
 
 demo_graph = {
     "A": ["B", "C", "E"],
@@ -39,6 +41,7 @@ def bfs_shortest_path(graph: dict, start, goal) -> list[str]:
     explored = set()
     # keep track of all the paths to be checked
     queue = deque([[start]])
+    logger.debug("bfs_shortest_path(graph=%s,start=%s,goal=%s): queue → %s", graph, start, goal, queue)
 
     # return path if start is goal
     if start == goal:
@@ -48,14 +51,18 @@ def bfs_shortest_path(graph: dict, start, goal) -> list[str]:
     while queue:
         # pop the first path from the queue
         path = queue.popleft()
+        logger.debug("bfs_shortest_path(graph=%s,start=%s,goal=%s): path → %s", graph, start, goal, path)
         # get the last node from the path
         node = path[-1]
+        logger.debug("bfs_shortest_path(graph=%s,start=%s,goal=%s): node → %s", graph, start, goal, node)
         if node not in explored:
             neighbours = graph[node]
+            logger.debug("bfs_shortest_path(graph=%s,start=%s,goal=%s): neighbours → %s", graph, start, goal, neighbours)
             # go through all neighbour nodes, construct a new path and
             # push it into the queue
             for neighbour in neighbours:
                 new_path = list(path)
+                logger.debug("bfs_shortest_path(graph=%s,start=%s,goal=%s): new_path → %s", graph, start, goal, new_path)
                 new_path.append(neighbour)
                 queue.append(new_path)
                 # return path if neighbour is goal
@@ -92,8 +99,10 @@ def bfs_shortest_path_distance(graph: dict, start, target) -> int:
         return 0
     queue = deque([start])
     visited = set(start)
+    logger.debug("bfs_shortest_path_distance(graph=%s,start=%s,target=%s): visited → %s", graph, start, target, visited)
     # Keep tab on distances from `start` node.
     dist = {start: 0, target: -1}
+    logger.debug("bfs_shortest_path_distance(graph=%s,start=%s,target=%s): dist → %s", graph, start, target, dist)
     while queue:
         node = queue.popleft()
         if node == target:

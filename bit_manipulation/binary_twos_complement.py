@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # Information on 2's complement: https://en.wikipedia.org/wiki/Two%27s_complement
 
 
@@ -21,9 +23,12 @@ def twos_complement(number: int) -> str:
         ...
     ValueError: input must be a negative integer
     """
+    logger.debug(">>> Entering twos_complement(number=%s)", number)
+    logger.debug("twos_complement(number=%s): twos_complement_number → %s", number, twos_complement_number)
     if number > 0:
         raise ValueError("input must be a negative integer")
     binary_number_length = len(bin(number)[3:])
+    logger.debug("twos_complement(number=%s): binary_number_length → %s", number, binary_number_length)
     twos_complement_number = bin(abs(number) - (1 << binary_number_length))[3:]
     twos_complement_number = (
         (
@@ -34,6 +39,7 @@ def twos_complement(number: int) -> str:
         if number < 0
         else "0"
     )
+    logger.debug("<<< Exiting twos_complement(number=%s)", number)
     return "0b" + twos_complement_number
 
 

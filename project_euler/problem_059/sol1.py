@@ -31,6 +31,8 @@ from __future__ import annotations
 import string
 from itertools import cycle, product
 from pathlib import Path
+import logging
+logger = logging.getLogger(__name__)
 
 VALID_CHARS: str = (
     string.ascii_letters + string.digits + string.punctuation + string.whitespace
@@ -52,6 +54,8 @@ def try_key(ciphertext: list[int], key: tuple[int, ...]) -> str | None:
     >>> try_key([68, 10, 300, 4, 27], (104, 116, 120)) is None
     True
     """
+    logger.debug(">>> Entering try_key(ciphertext=%s,key=%s)", ciphertext, key)
+    logger.debug("try_key(ciphertext=%s,key=%s): decoded → %s", ciphertext, key, decoded)
     decoded: str = ""
     keychar: int
     cipherchar: int
@@ -59,10 +63,12 @@ def try_key(ciphertext: list[int], key: tuple[int, ...]) -> str | None:
 
     for keychar, cipherchar in zip(cycle(key), ciphertext):
         decodedchar = cipherchar ^ keychar
+        logger.debug("try_key(ciphertext=%s,key=%s): decodedchar → %s", ciphertext, key, decodedchar)
         if decodedchar not in VALID_INTS:
             return None
         decoded += chr(decodedchar)
 
+    logger.debug("<<< Exiting try_key(ciphertext=%s,key=%s)", ciphertext, key)
     return decoded
 
 
@@ -77,11 +83,14 @@ def filter_valid_chars(ciphertext: list[int]) -> list[str]:
     >>> text in filter_valid_chars(encoded)
     True
     """
+    logger.debug(">>> Entering filter_valid_chars(ciphertext=%s)", ciphertext)
     possibles: list[str] = []
     for key in product(LOWERCASE_INTS, repeat=3):
         encoded = try_key(ciphertext, key)
+        logger.debug("filter_valid_chars(ciphertext=%s): encoded → %s", ciphertext, encoded)
         if encoded is not None:
             possibles.append(encoded)
+    logger.debug("<<< Exiting filter_valid_chars(ciphertext=%s)", ciphertext)
     return possibles
 
 
@@ -95,6 +104,8 @@ def filter_common_word(possibles: list[str], common_word: str) -> list[str]:
     >>> filter_common_word(['athla amf', 'I am here', '   !?! #a'], 'am')
     ['athla amf', 'I am here']
     """
+    logger.debug(">>> Entering filter_common_word(possibles=%s,common_word=%s)", possibles, common_word)
+    logger.debug("<<< Exiting filter_common_word(possibles=%s,common_word=%s)", possibles, common_word)
     return [possible for possible in possibles if common_word in possible.lower()]
 
 
@@ -106,21 +117,27 @@ def solution(filename: str = "p059_cipher.txt") -> int:
     >>> solution("test_cipher.txt")
     3000
     """
+    logger.debug(">>> Entering solution(filename=%s)", filename)
     ciphertext: list[int]
     possibles: list[str]
     common_word: str
     decoded_text: str
     data: str = Path(__file__).parent.joinpath(filename).read_text(encoding="utf-8")
+    logger.debug("solution(filename=%s): data → %s", filename, data)
 
     ciphertext = [int(number) for number in data.strip().split(",")]
+    logger.debug("solution(filename=%s): ciphertext → %s", filename, ciphertext)
 
     possibles = filter_valid_chars(ciphertext)
+    logger.debug("solution(filename=%s): possibles → %s", filename, possibles)
     for common_word in COMMON_WORDS:
         possibles = filter_common_word(possibles, common_word)
         if len(possibles) == 1:
             break
 
     decoded_text = possibles[0]
+    logger.debug("solution(filename=%s): decoded_text → %s", filename, decoded_text)
+    logger.debug("<<< Exiting solution(filename=%s)", filename)
     return sum(ord(char) for char in decoded_text)
 
 

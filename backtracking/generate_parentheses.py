@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 author: Aayush Soni
 Given n pairs of parentheses, write a function to generate all
@@ -69,9 +71,11 @@ def generate_parenthesis(n: int) -> list[str]:
     >>> generate_parenthesis(0)
     ['']
     """
+    logger.debug(">>> Entering generate_parenthesis(n=%s)", n)
 
     result: list[str] = []
     backtrack("", 0, 0, n, result)
+    logger.debug("<<< Exiting generate_parenthesis(n=%s)", n)
     return result
 
 

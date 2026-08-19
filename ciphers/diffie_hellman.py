@@ -1,6 +1,8 @@
 from binascii import hexlify
 from hashlib import sha256
 from os import urandom
+import logging
+logger = logging.getLogger(__name__)
 
 # RFC 3526 - More Modular Exponential (MODP) Diffie-Hellman groups for
 # Internet Key Exchange (IKE) https://tools.ietf.org/html/rfc3526
@@ -212,22 +214,37 @@ class DiffieHellman:
 
     # Current minimum recommendation is 2048 bit (group 14)
     def __init__(self, group: int = 14) -> None:
+        logger.debug(">>> Entering __init__(group=%s)", group)
+        logger.debug("__init__(group=%s): self.generator → %s", group, self.generator)
+        logger.debug("__init__(group=%s): self.prime → %s", group, self.prime)
+        logger.debug("__init__(self=%s,group=%s): self.prime → %s", self, group, self.prime)
+        logger.debug("__init__(self=%s,group=%s): self.generator → %s", self, group, self.generator)
+        logger.debug("__init__(group=%s): self.__private_key → <redacted>", group)
         if group not in primes:
             raise ValueError("Unsupported Group")
         self.prime = primes[group]["prime"]
         self.generator = primes[group]["generator"]
 
+        logger.debug("<<< Exiting __init__(group=%s)", group)
         self.__private_key = int(hexlify(urandom(32)), base=16)
 
     def get_private_key(self) -> str:
+        logger.debug(">>> Entering get_private_key()")
+        logger.debug("<<< Exiting get_private_key()")
         return hex(self.__private_key)[2:]
 
     def generate_public_key(self) -> str:
+        logger.debug(">>> Entering generate_public_key()")
         public_key = pow(self.generator, self.__private_key, self.prime)
+        logger.debug("generate_public_key(): public_key → %s", public_key)
+        logger.debug("generate_public_key(self=%s): public_key → %s", self, public_key)
+        logger.debug("<<< Exiting generate_public_key()")
         return hex(public_key)[2:]
 
     def is_valid_public_key(self, key: int) -> bool:
+        logger.debug(">>> Entering is_valid_public_key(key=%s)", key)
         # check if the other public key is valid based on NIST SP800-56
+        logger.debug("<<< Exiting is_valid_public_key(key=%s)", key)
         return (
             2 <= key <= self.prime - 2
             and pow(key, (self.prime - 1) // 2, self.prime) == 1

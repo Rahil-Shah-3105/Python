@@ -22,6 +22,8 @@ example given above.
 from __future__ import annotations
 
 from pathlib import Path
+import logging
+logger = logging.getLogger(__name__)
 
 
 def vector_product(point1: tuple[int, int], point2: tuple[int, int]) -> int:
@@ -32,6 +34,8 @@ def vector_product(point1: tuple[int, int], point2: tuple[int, int]) -> int:
     >>> vector_product((3, 1), (6, 10))
     24
     """
+    logger.debug(">>> Entering vector_product(point1=%s,point2=%s)", point1, point2)
+    logger.debug("<<< Exiting vector_product(point1=%s,point2=%s)", point1, point2)
     return point1[0] * point2[1] - point1[1] * point2[0]
 
 
@@ -44,16 +48,20 @@ def contains_origin(x1: int, y1: int, x2: int, y2: int, x3: int, y3: int) -> boo
     >>> contains_origin(-175, 41, -421, -714, 574, -645)
     False
     """
+    logger.debug(">>> Entering contains_origin(x1=%s,y1=%s,x2=%s,y2=%s,x3=%s,y3=%s)", x1, y1, x2, y2, x3, y3)
     point_a: tuple[int, int] = (x1, y1)
     point_a_to_b: tuple[int, int] = (x2 - x1, y2 - y1)
     point_a_to_c: tuple[int, int] = (x3 - x1, y3 - y1)
+    logger.debug("contains_origin(x1=%s,y1=%s,x2=%s,y2=%s,x3=%s,y3=%s): a → %s", x1, y1, x2, y2, x3, y3, a)
     a: float = -vector_product(point_a, point_a_to_b) / vector_product(
         point_a_to_c, point_a_to_b
     )
+    logger.debug("contains_origin(x1=%s,y1=%s,x2=%s,y2=%s,x3=%s,y3=%s): b → %s", x1, y1, x2, y2, x3, y3, b)
     b: float = +vector_product(point_a, point_a_to_c) / vector_product(
         point_a_to_c, point_a_to_b
     )
 
+    logger.debug("<<< Exiting contains_origin(x1=%s,y1=%s,x2=%s,y2=%s,x3=%s,y3=%s)", x1, y1, x2, y2, x3, y3)
     return a > 0 and b > 0 and a + b < 1
 
 
@@ -63,6 +71,8 @@ def solution(filename: str = "p102_triangles.txt") -> int:
     >>> solution("test_triangles.txt")
     1
     """
+    logger.debug(">>> Entering solution(filename=%s)", filename)
+    logger.debug("solution(filename=%s): data → %s", filename, data)
     data: str = Path(__file__).parent.joinpath(filename).read_text(encoding="utf-8")
 
     triangles: list[list[int]] = []
@@ -75,6 +85,7 @@ def solution(filename: str = "p102_triangles.txt") -> int:
     for triangle in triangles:
         ret += contains_origin(*triangle)
 
+    logger.debug("<<< Exiting solution(filename=%s)", filename)
     return ret
 
 

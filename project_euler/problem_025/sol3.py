@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The Fibonacci sequence is defined by the recurrence relation:
 
@@ -38,8 +40,10 @@ def solution(n: int = 1000) -> int:
     >>> solution(3)
     12
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     f1, f2 = 1, 1
     index = 2
+    logger.debug("solution(n=%s): index → %s", n, index)
     while True:
         i = 0
         f = f1 + f2
@@ -49,6 +53,7 @@ def solution(n: int = 1000) -> int:
             i += 1
         if i == n:
             break
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return index
 
 

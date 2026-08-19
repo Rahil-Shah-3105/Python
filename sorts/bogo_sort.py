@@ -14,6 +14,8 @@ python bogo_sort.py
 """
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 def bogo_sort(collection: list) -> list:
@@ -29,11 +31,15 @@ def bogo_sort(collection: list) -> list:
     >>> bogo_sort([-2, -5, -45])
     [-45, -5, -2]
     """
+    logger.debug(">>> Entering bogo_sort(collection=%s)", collection)
 
+    logger.debug("<<< Exiting bogo_sort(collection=%s)", collection)
     def is_sorted(collection: list) -> bool:
+        logger.debug(">>> Entering is_sorted(collection=%s)", collection)
         for i in range(len(collection) - 1):
             if collection[i] > collection[i + 1]:
                 return False
+        logger.debug("<<< Exiting is_sorted(collection=%s)", collection)
         return True
 
     while not is_sorted(collection):

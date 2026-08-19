@@ -28,6 +28,8 @@ Details: https://en.wikipedia.org/wiki/Bor%C5%AFvka%27s_algorithm
 from __future__ import annotations
 
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Graph:
@@ -41,34 +43,44 @@ class Graph:
             m_component - the dictionary which stores the index of the component which
             a node belongs to.
         """
+        logger.debug(">>> Entering __init__(num_of_nodes=%s)", num_of_nodes)
 
         self.m_num_of_nodes = num_of_nodes
+        logger.debug("__init__(self=%s,num_of_nodes=%s): self.m_num_of_nodes → %s", self, num_of_nodes, self.m_num_of_nodes)
         self.m_edges: list[list[int]] = []
         self.m_component: dict[int, int] = {}
+        logger.debug("<<< Exiting __init__(num_of_nodes=%s)", num_of_nodes)
 
     def add_edge(self, u_node: int, v_node: int, weight: int) -> None:
         """Adds an edge in the format [first, second, edge weight] to graph."""
+        logger.debug(">>> Entering add_edge(u_node=%s,v_node=%s,weight=%s)", u_node, v_node, weight)
 
         self.m_edges.append([u_node, v_node, weight])
+        logger.debug("<<< Exiting add_edge(u_node=%s,v_node=%s,weight=%s)", u_node, v_node, weight)
 
     def find_component(self, u_node: int) -> int:
         """Propagates a new component throughout a given component."""
+        logger.debug(">>> Entering find_component(u_node=%s)", u_node)
 
         if self.m_component[u_node] == u_node:
             return u_node
+        logger.debug("<<< Exiting find_component(u_node=%s)", u_node)
         return self.find_component(self.m_component[u_node])
 
     def set_component(self, u_node: int) -> None:
         """Finds the component index of a given node"""
+        logger.debug(">>> Entering set_component(u_node=%s)", u_node)
 
         if self.m_component[u_node] != u_node:
             for k in self.m_component:
                 self.m_component[k] = self.find_component(k)
+                logger.debug("<<< Exiting set_component(u_node=%s)", u_node)
 
     def union(self, component_size: list[int], u_node: int, v_node: int) -> None:
         """Union finds the roots of components for two nodes, compares the components
         in terms of size, and attaches the smaller one to the larger one to form
         single component"""
+        logger.debug(">>> Entering union(component_size=%s,u_node=%s,v_node=%s)", component_size, u_node, v_node)
 
         if component_size[u_node] <= component_size[v_node]:
             self.m_component[u_node] = v_node
@@ -79,13 +91,17 @@ class Graph:
             self.m_component[v_node] = self.find_component(u_node)
             component_size[u_node] += component_size[v_node]
             self.set_component(v_node)
+            logger.debug("<<< Exiting union(component_size=%s,u_node=%s,v_node=%s)", component_size, u_node, v_node)
 
     def boruvka(self) -> None:
         """Performs Borůvka's algorithm to find MST."""
+        logger.debug(">>> Entering boruvka()")
 
         # Initialize additional lists required to algorithm.
         component_size = []
+        logger.debug("boruvka(self=%s): component_size → %s", self, component_size)
         mst_weight = 0
+        logger.debug("boruvka(self=%s): mst_weight → %s", self, mst_weight)
 
         minimum_weight_edge: list[Any] = [-1] * self.m_num_of_nodes
 
@@ -95,13 +111,16 @@ class Graph:
             component_size.append(1)
 
         num_of_components = self.m_num_of_nodes
+        logger.debug("boruvka(self=%s): num_of_components → %s", self, num_of_components)
 
         while num_of_components > 1:
             for edge in self.m_edges:
                 u, v, w = edge
 
                 u_component = self.m_component[u]
+                logger.debug("boruvka(self=%s): u_component → %s", self, u_component)
                 v_component = self.m_component[v]
+                logger.debug("boruvka(self=%s): v_component → %s", self, v_component)
 
                 if u_component != v_component:
                     """If the current minimum weight edge of component u doesn't
@@ -135,7 +154,9 @@ class Graph:
                         num_of_components -= 1
 
             minimum_weight_edge = [-1] * self.m_num_of_nodes
+            logger.debug("boruvka(self=%s): minimum_weight_edge → %s", self, minimum_weight_edge)
         print(f"The total weight of the minimal spanning tree is: {mst_weight}")
+        logger.debug("<<< Exiting boruvka()")
 
 
 def test_vector() -> None:
@@ -168,7 +189,9 @@ def test_vector() -> None:
     <BLANKLINE>
     The total weight of the minimal spanning tree is: 46
     """
+    logger.debug(">>> Entering test_vector()")
 
+    logger.debug("<<< Exiting test_vector()")
 
 if __name__ == "__main__":
     import doctest

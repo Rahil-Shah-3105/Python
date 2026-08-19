@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Description : Centripetal force is the force acting on an object in
 curvilinear motion directed towards the axis of rotation
@@ -36,10 +38,12 @@ def centripetal(mass: float, velocity: float, radius: float) -> float:
     >>> round(centripetal(50,100,50),2)
     10000.0
     """
+    logger.debug(">>> Entering centripetal(mass=%s,velocity=%s,radius=%s)", mass, velocity, radius)
     if mass < 0:
         raise ValueError("The mass of the body cannot be negative")
     if radius <= 0:
         raise ValueError("The radius is always a positive non zero integer")
+    logger.debug("<<< Exiting centripetal(mass=%s,velocity=%s,radius=%s)", mass, velocity, radius)
     return (mass * (velocity) ** 2) / radius
 
 

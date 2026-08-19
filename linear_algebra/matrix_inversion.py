@@ -1,4 +1,6 @@
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def invert_matrix(matrix: list[list[float]]) -> list[list[float]]:
@@ -18,13 +20,18 @@ def invert_matrix(matrix: list[list[float]]) -> list[list[float]]:
         ...
     ValueError: Matrix is not invertible
     """
+    logger.debug(">>> Entering invert_matrix(matrix=%s)", matrix)
     np_matrix = np.array(matrix)
+    logger.debug("invert_matrix(matrix=%s): np_matrix → %s", matrix, np_matrix)
 
     try:
         inv_matrix = np.linalg.inv(np_matrix)
+        logger.debug("invert_matrix(matrix=%s): inv_matrix → %s", matrix, inv_matrix)
     except np.linalg.LinAlgError:
+        logger.error("Exception in invert_matrix(matrix=%s)", matrix, exc_info=True)
         raise ValueError("Matrix is not invertible")
 
+    logger.debug("<<< Exiting invert_matrix(matrix=%s)", matrix)
     return inv_matrix.tolist()
 
 

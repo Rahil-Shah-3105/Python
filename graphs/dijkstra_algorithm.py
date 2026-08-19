@@ -4,6 +4,8 @@
 
 import math
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 # For storing the vertex set to retrieve node with the lowest distance
 
@@ -23,9 +25,20 @@ class PriorityQueue:
         >>> priority_queue_test.pos
         {}
         """
+        logger.debug(">>> Entering __init__()")
         self.cur_size = 0
+        logger.debug("__init__(self=%s): self.cur_size → %s", self, self.cur_size)
+        logger.debug("<<< Exiting __init__()")
         self.array = []
+        logger.debug("__init__(self=%s): self.array → %s", self, self.array)
         self.pos = {}  # To store the pos of node in array
+        logger.debug("__init__(self=%s): self.pos → %s", self, self.pos)
+        logger.debug(">>> Entering __init__(num=%s)", num)
+        logger.debug("__init__(num=%s): self.adjList → %s", num, self.adjList)
+        logger.debug("__init__(self=%s,num=%s): self.num_nodes → %s", self, num, self.num_nodes)
+        logger.debug("<<< Exiting __init__(num=%s)", num)
+        logger.debug("__init__(self=%s,num=%s): self.dist → %s", self, num, self.dist)
+        logger.debug("__init__(self=%s,num=%s): self.par → %s", self, num, self.par)
 
     def is_empty(self):
         """
@@ -39,6 +52,8 @@ class PriorityQueue:
         >>> priority_queue_test.is_empty()
         False
         """
+        logger.debug(">>> Entering is_empty()")
+        logger.debug("<<< Exiting is_empty()")
         return self.cur_size == 0
 
     def min_heapify(self, idx):
@@ -72,10 +87,14 @@ class PriorityQueue:
         >>> priority_queue_test.array
         [(5, 'B'), (10, 'A')]
         """
+        logger.debug(">>> Entering min_heapify(idx=%s)", idx)
         lc = self.left(idx)
+        logger.debug("min_heapify(idx=%s): lc → %s", idx, lc)
         rc = self.right(idx)
+        logger.debug("min_heapify(idx=%s): rc → %s", idx, rc)
         if lc < self.cur_size and self.array[lc][0] < self.array[idx][0]:
             smallest = lc
+            logger.debug("min_heapify(self=%s,idx=%s): smallest → %s", self, idx, smallest)
         else:
             smallest = idx
         if rc < self.cur_size and self.array[rc][0] < self.array[smallest][0]:
@@ -83,6 +102,7 @@ class PriorityQueue:
         if smallest != idx:
             self.swap(idx, smallest)
             self.min_heapify(smallest)
+            logger.debug("<<< Exiting min_heapify(idx=%s)", idx)
 
     def insert(self, tup):
         """
@@ -100,10 +120,12 @@ class PriorityQueue:
         >>> priority_queue_test.array
         [(5, 'C'), (10, 'A'), (15, 'B')]
         """
+        logger.debug(">>> Entering insert(tup=%s)", tup)
         self.pos[tup[1]] = self.cur_size
         self.cur_size += 1
         self.array.append((sys.maxsize, tup[1]))
         self.decrease_key((sys.maxsize, tup[1]), tup[0])
+        logger.debug("<<< Exiting insert(tup=%s)", tup)
 
     def extract_min(self):
         """
@@ -120,11 +142,14 @@ class PriorityQueue:
         >>> priority_queue_test.array[0]
         (10, 'A')
         """
+        logger.debug(">>> Entering extract_min()")
         min_node = self.array[0][1]
+        logger.debug("extract_min(self=%s): min_node → %s", self, min_node)
         self.array[0] = self.array[self.cur_size - 1]
         self.cur_size -= 1
         self.min_heapify(0)
         del self.pos[min_node]
+        logger.debug("<<< Exiting extract_min()")
         return min_node
 
     def left(self, i):
@@ -138,6 +163,8 @@ class PriorityQueue:
         >>> priority_queue_test.left(1)
         3
         """
+        logger.debug(">>> Entering left(i=%s)", i)
+        logger.debug("<<< Exiting left(i=%s)", i)
         return 2 * i + 1
 
     def right(self, i):
@@ -151,6 +178,8 @@ class PriorityQueue:
         >>> priority_queue_test.right(1)
         4
         """
+        logger.debug(">>> Entering right(i=%s)", i)
+        logger.debug("<<< Exiting right(i=%s)", i)
         return 2 * i + 2
 
     def par(self, i):
@@ -166,6 +195,8 @@ class PriorityQueue:
         >>> priority_queue_test.par(4)
         2
         """
+        logger.debug(">>> Entering par(i=%s)", i)
+        logger.debug("<<< Exiting par(i=%s)", i)
         return math.floor(i / 2)
 
     def swap(self, i, j):
@@ -202,10 +233,14 @@ class PriorityQueue:
         >>> priority_queue_test.array
         [(5, 'A'), (15, 'B')]
         """
+        logger.debug(">>> Entering decrease_key(tup=%s,new_d=%s)", tup, new_d)
         idx = self.pos[tup[1]]
+        logger.debug("decrease_key(self=%s,tup=%s,new_d=%s): idx → %s", self, tup, new_d, idx)
+        logger.debug("decrease_key(tup=%s,new_d=%s): idx → %s", tup, new_d, idx)
         # assuming the new_d is at most old_d
         self.array[idx] = (new_d, tup[1])
         while idx > 0 and self.array[self.par(idx)][0] > self.array[idx][0]:
+            logger.debug("<<< Exiting decrease_key(tup=%s,new_d=%s)", tup, new_d)
             self.swap(idx, self.par(idx))
             idx = self.par(idx)
 
@@ -243,6 +278,7 @@ class Graph:
         >>> graph_test.adjList
         {1: [(2, 1)], 2: [(1, 1), (3, 2)], 3: [(2, 2)]}
         """
+        logger.debug(">>> Entering add_edge(u=%s,v=%s,w=%s)", u, v, w)
         # Check if u already in graph
         if u in self.adjList:
             self.adjList[u].append((v, w))
@@ -254,6 +290,7 @@ class Graph:
             self.adjList[v].append((u, w))
         else:
             self.adjList[v] = [(u, w)]
+            logger.debug("<<< Exiting add_edge(u=%s,v=%s,w=%s)", u, v, w)
 
     def show_graph(self):
         """
@@ -271,8 +308,10 @@ class Graph:
         2 -> 1(1) -> 3(2)
         3 -> 2(2)
         """
+        logger.debug(">>> Entering show_graph()")
         for u in self.adjList:
             print(u, "->", " -> ".join(str(f"{v}({w})") for v, w in self.adjList[u]))
+            logger.debug("<<< Exiting show_graph()")
 
     def dijkstra(self, src):
         """
@@ -349,11 +388,14 @@ class Graph:
         >>> graph_test.dist
         [0, 4, 6, 7]
         """
+        logger.debug(">>> Entering dijkstra(src=%s)", src)
         # Flush old junk values in par[]
         self.par = [-1] * self.num_nodes
+        logger.debug("dijkstra(self=%s,src=%s): self.par → %s", self, src, self.par)
         # src is the source node
         self.dist[src] = 0
         q = PriorityQueue()
+        logger.debug("dijkstra(src=%s): q → %s", src, q)
         q.insert((0, src))  # (dist from src, node)
         for u in self.adjList:
             if u != src:
@@ -362,10 +404,12 @@ class Graph:
 
         while not q.is_empty():
             u = q.extract_min()  # Returns node with the min dist from source
+            logger.debug("dijkstra(src=%s): u → %s", src, u)
             # Update the distance of all the neighbours of u and
             # if their prev dist was INFINITY then push them in Q
             for v, w in self.adjList[u]:
                 new_dist = self.dist[u] + w
+                logger.debug("dijkstra(self=%s,src=%s): new_dist → %s", self, src, new_dist)
                 if self.dist[v] > new_dist:
                     if self.dist[v] == sys.maxsize:
                         q.insert((new_dist, v))
@@ -376,6 +420,7 @@ class Graph:
 
         # Show the shortest distances from src
         self.show_distances(src)
+        logger.debug("<<< Exiting dijkstra(src=%s)", src)
 
     def show_distances(self, src):
         """
@@ -387,9 +432,11 @@ class Graph:
         Distance from node: 0
         Node 0 has distance: 0
         """
+        logger.debug(">>> Entering show_distances(src=%s)", src)
         print(f"Distance from node: {src}")
         for u in range(self.num_nodes):
             print(f"Node {u} has distance: {self.dist[u]}")
+            logger.debug("<<< Exiting show_distances(src=%s)", src)
 
     def show_path(self, src, dest):
         """
@@ -412,8 +459,11 @@ class Graph:
         0 -> 1 -> 2 -> 3
         Total cost of path:  6
         """
+        logger.debug(">>> Entering show_path(src=%s,dest=%s)", src, dest)
         path = []
+        logger.debug("show_path(self=%s,src=%s,dest=%s): path → %s", self, src, dest, path)
         cost = 0
+        logger.debug("show_path(self=%s,src=%s,dest=%s): cost → %s", self, src, dest, cost)
         temp = dest
         # Backtracking from dest to src
         while self.par[temp] != -1:
@@ -434,6 +484,7 @@ class Graph:
                 print("-> ", end="")
 
         print("\nTotal cost of path: ", cost)
+        logger.debug("<<< Exiting show_path(src=%s,dest=%s)", src, dest)
 
 
 if __name__ == "__main__":

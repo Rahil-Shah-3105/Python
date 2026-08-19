@@ -16,6 +16,8 @@ import doctest
 from collections import deque
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 class CircularConvolution:
@@ -27,9 +29,13 @@ class CircularConvolution:
         """
         First signal and second signal are stored as 1-D array
         """
+        logger.debug(">>> Entering __init__()")
 
+        logger.debug("<<< Exiting __init__()")
         self.first_signal = [2, 1, 2, -1]
+        logger.debug("__init__(self=%s): self.first_signal → %s", self, self.first_signal)
         self.second_signal = [1, 2, 3, 4]
+        logger.debug("__init__(self=%s): self.second_signal → %s", self, self.second_signal)
 
     def circular_convolution(self) -> list[float]:
         """
@@ -57,11 +63,20 @@ class CircularConvolution:
         [8.0, -2.0, 3.0, 4.0, 11.0]
 
         """
+        logger.debug(">>> Entering circular_convolution()")
+        logger.debug("circular_convolution(): matrix → %s", matrix)
+        logger.debug("circular_convolution(self=%s): matrix → %s", self, matrix)
 
         length_first_signal = len(self.first_signal)
+        logger.debug("circular_convolution(self=%s): length_first_signal → %s", self, length_first_signal)
+        logger.debug("circular_convolution(): length_first_signal → %s", length_first_signal)
         length_second_signal = len(self.second_signal)
+        logger.debug("circular_convolution(self=%s): length_second_signal → %s", self, length_second_signal)
+        logger.debug("circular_convolution(): length_second_signal → %s", length_second_signal)
 
         max_length = max(length_first_signal, length_second_signal)
+        logger.debug("circular_convolution(self=%s): max_length → %s", self, max_length)
+        logger.debug("circular_convolution(): max_length → %s", max_length)
 
         # create a zero matrix of max_length x max_length
         matrix = [[0] * max_length for i in range(max_length)]
@@ -83,14 +98,19 @@ class CircularConvolution:
         """
         for i in range(max_length):
             rotated_signal = deque(self.second_signal)
+            logger.debug("circular_convolution(self=%s): rotated_signal → %s", self, rotated_signal)
+            logger.debug("circular_convolution(): rotated_signal → %s", rotated_signal)
             rotated_signal.rotate(i)
             for j, item in enumerate(rotated_signal):
                 matrix[i][j] += item
 
         # multiply the matrix with the first signal
         final_signal = np.matmul(np.transpose(matrix), np.transpose(self.first_signal))
+        logger.debug("circular_convolution(self=%s): final_signal → %s", self, final_signal)
+        logger.debug("circular_convolution(): final_signal → %s", final_signal)
 
         # rounding-off to two decimal places
+        logger.debug("<<< Exiting circular_convolution()")
         return [float(round(i, 2)) for i in final_signal]
 
 

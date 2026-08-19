@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def alternative_string_arrange(first_str: str, second_str: str) -> str:
     """
     Return the alternative arrangements of the two strings.
@@ -13,6 +15,9 @@ def alternative_string_arrange(first_str: str, second_str: str) -> str:
     >>> alternative_string_arrange("ABC", "")
     'ABC'
     """
+    logger.debug(">>> Entering alternative_string_arrange(first_str=%s,second_str=%s)", first_str, second_str)
+    logger.debug("alternative_string_arrange(first_str=%s,second_str=%s): first_str_length → %s", first_str, second_str, first_str_length)
+    logger.debug("alternative_string_arrange(first_str=%s,second_str=%s): second_str_length → %s", first_str, second_str, second_str_length)
     first_str_length: int = len(first_str)
     second_str_length: int = len(second_str)
     abs_length: int = (
@@ -24,6 +29,7 @@ def alternative_string_arrange(first_str: str, second_str: str) -> str:
             output_list.append(first_str[char_count])
         if char_count < second_str_length:
             output_list.append(second_str[char_count])
+    logger.debug("<<< Exiting alternative_string_arrange(first_str=%s,second_str=%s)", first_str, second_str)
     return "".join(output_list)
 
 

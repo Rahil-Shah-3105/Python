@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """The following implementation assumes that the activities
 are already sorted according to their finish time"""
 
@@ -16,7 +18,9 @@ def print_max_activities(start: list[int], finish: list[int]) -> None:
     The following activities are selected:
     0,1,3,4,
     """
+    logger.debug(">>> Entering print_max_activities(start=%s,finish=%s)", start, finish)
     n = len(finish)
+    logger.debug("print_max_activities(start=%s,finish=%s): n → %s", start, finish, n)
     print("The following activities are selected:")
 
     # The first activity is always selected
@@ -31,6 +35,7 @@ def print_max_activities(start: list[int], finish: list[int]) -> None:
         if start[j] >= finish[i]:
             print(j, end=",")
             i = j
+            logger.debug("<<< Exiting print_max_activities(start=%s,finish=%s)", start, finish)
 
 
 if __name__ == "__main__":

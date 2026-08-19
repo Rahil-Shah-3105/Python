@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # dodecahedron.py
 
 """
@@ -31,9 +33,12 @@ def dodecahedron_surface_area(edge: float) -> float:
       ...
     ValueError: Length must be a positive.
     """
+    logger.debug(">>> Entering dodecahedron_surface_area(edge=%s)", edge)
+    logger.debug("dodecahedron_surface_area(edge=%s): a → %s", edge, a)
 
     if edge <= 0 or not isinstance(edge, int):
         raise ValueError("Length must be a positive.")
+    logger.debug("<<< Exiting dodecahedron_surface_area(edge=%s)", edge)
     return 3 * ((25 + 10 * (5 ** (1 / 2))) ** (1 / 2)) * (edge**2)
 
 
@@ -61,9 +66,12 @@ def dodecahedron_volume(edge: float) -> float:
       ...
     ValueError: Length must be a positive.
     """
+    logger.debug(">>> Entering dodecahedron_volume(edge=%s)", edge)
+    logger.debug("dodecahedron_volume(edge=%s): v → %s", edge, v)
 
     if edge <= 0 or not isinstance(edge, int):
         raise ValueError("Length must be a positive.")
+    logger.debug("<<< Exiting dodecahedron_volume(edge=%s)", edge)
     return ((15 + (7 * (5 ** (1 / 2)))) / 4) * (edge**3)
 
 

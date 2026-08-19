@@ -3,6 +3,8 @@ A recursive implementation of the insertion sort algorithm
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def rec_insertion_sort(collection: list, n: int):
@@ -28,8 +30,10 @@ def rec_insertion_sort(collection: list, n: int):
     >>> col
     [1]
     """
+    logger.debug(">>> Entering rec_insertion_sort(collection=%s,n=%s)", collection, n)
     # Checks if the entire collection has been sorted
     if len(collection) <= 1 or n <= 1:
+        logger.debug("<<< Exiting rec_insertion_sort(collection=%s,n=%s)", collection, n)
         return
 
     insert_next(collection, n - 1)
@@ -55,8 +59,10 @@ def insert_next(collection: list, index: int):
     >>> col
     []
     """
+    logger.debug(">>> Entering insert_next(collection=%s,index=%s)", collection, index)
     # Checks order between adjacent elements
     if index >= len(collection) or collection[index - 1] <= collection[index]:
+        logger.debug("<<< Exiting insert_next(collection=%s,index=%s)", collection, index)
         return
 
     # Swaps adjacent elements since they are not in ascending order

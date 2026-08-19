@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # https://www.geeksforgeeks.org/solve-crossword-puzzle/
 
 
@@ -103,6 +105,7 @@ def solve_crossword(puzzle: list[list[str]], words: list[str]) -> bool:
     >>> solve_crossword(puzzle, words)
     False
     """
+    logger.debug(">>> Entering solve_crossword(puzzle=%s,words=%s)", puzzle, words)
     for row in range(len(puzzle)):
         for col in range(len(puzzle[0])):
             if puzzle[row][col] == "":
@@ -116,6 +119,7 @@ def solve_crossword(puzzle: list[list[str]], words: list[str]) -> bool:
                             words.append(word)
                             remove_word(puzzle, word, row, col, vertical)
                 return False
+    logger.debug("<<< Exiting solve_crossword(puzzle=%s,words=%s)", puzzle, words)
     return True
 
 

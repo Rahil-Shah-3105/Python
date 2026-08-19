@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def butterfly_pattern(n: int) -> str:
     """
     Creates a butterfly pattern of size n and returns it as a string.
@@ -19,13 +21,18 @@ def butterfly_pattern(n: int) -> str:
     **     **
     *       *
     """
+    logger.debug(">>> Entering butterfly_pattern(n=%s)", n)
     result = []
+    logger.debug("butterfly_pattern(n=%s): result → %s", n, result)
 
     # Upper part
     for i in range(1, n):
         left_stars = "*" * i
+        logger.debug("butterfly_pattern(n=%s): left_stars → %s", n, left_stars)
         spaces = " " * (2 * (n - i) - 1)
+        logger.debug("butterfly_pattern(n=%s): spaces → %s", n, spaces)
         right_stars = "*" * i
+        logger.debug("butterfly_pattern(n=%s): right_stars → %s", n, right_stars)
         result.append(left_stars + spaces + right_stars)
 
     # Middle part
@@ -38,6 +45,7 @@ def butterfly_pattern(n: int) -> str:
         right_stars = "*" * i
         result.append(left_stars + spaces + right_stars)
 
+    logger.debug("<<< Exiting butterfly_pattern(n=%s)", n)
     return "\n".join(result)
 
 

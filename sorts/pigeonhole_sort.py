@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # Python program to implement Pigeonhole Sorting in python
 
 # Algorithm for the pigeonhole sorting
@@ -13,17 +15,23 @@ def pigeonhole_sort(a):
 
     >>> pigeonhole_sort([])
     """
+    logger.debug(">>> Entering pigeonhole_sort(a=%s)", a)
     if not a:
+        logger.debug("<<< Exiting pigeonhole_sort(a=%s)", a)
         return
     # size of range of values in the list (ie, number of pigeonholes we need)
 
     min_val = min(a)  # min() finds the minimum value
+    logger.debug("pigeonhole_sort(a=%s): min_val → %s", a, min_val)
     max_val = max(a)  # max() finds the maximum value
+    logger.debug("pigeonhole_sort(a=%s): max_val → %s", a, max_val)
 
     size = max_val - min_val + 1  # size is difference of max and min values plus one
+    logger.debug("pigeonhole_sort(a=%s): size → %s", a, size)
 
     # list of pigeonholes of size equal to the variable size
     holes = [0] * size
+    logger.debug("pigeonhole_sort(a=%s): holes → %s", a, holes)
 
     # Populate the pigeonholes.
     for x in a:
@@ -40,9 +48,11 @@ def pigeonhole_sort(a):
 
 
 def main():
+    logger.debug(">>> Entering main()")
     a = [8, 3, 2, 7, 4, 6, 8]
     pigeonhole_sort(a)
     print("Sorted order is:", *a)
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

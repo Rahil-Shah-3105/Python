@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This script demonstrates an implementation of the Gaussian Error Linear Unit function.
 * https://en.wikipedia.org/wiki/Activation_function#Comparison_of_activation_functions
@@ -22,6 +24,8 @@ def sigmoid(vector: np.ndarray) -> np.ndarray:
     >>> sigmoid(np.array([-1.0, 1.0, 2.0]))
     array([0.26894142, 0.73105858, 0.88079708])
     """
+    logger.debug(">>> Entering sigmoid(vector=%s)", vector)
+    logger.debug("<<< Exiting sigmoid(vector=%s)", vector)
     return 1 / (1 + np.exp(-vector))
 
 
@@ -42,6 +46,8 @@ def gaussian_error_linear_unit(vector: np.ndarray) -> np.ndarray:
     >>> gaussian_error_linear_unit(np.array([-3]))
     array([-0.01807131])
     """
+    logger.debug(">>> Entering gaussian_error_linear_unit(vector=%s)", vector)
+    logger.debug("<<< Exiting gaussian_error_linear_unit(vector=%s)", vector)
     return vector * sigmoid(1.702 * vector)
 
 

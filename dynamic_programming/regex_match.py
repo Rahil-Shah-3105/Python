@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Regex matching check if a text matches pattern or not.
 Pattern:
@@ -32,6 +34,7 @@ def recursive_match(text: str, pattern: str) -> bool:
     >>> recursive_match('aa', '.*')
     True
     """
+    logger.debug(">>> Entering recursive_match(text=%s,pattern=%s)", text, pattern)
     if not pattern:
         return not text
 
@@ -46,6 +49,7 @@ def recursive_match(text: str, pattern: str) -> bool:
             text, pattern[:-2]
         )
 
+    logger.debug("<<< Exiting recursive_match(text=%s,pattern=%s)", text, pattern)
     return False
 
 
@@ -71,9 +75,13 @@ def dp_match(text: str, pattern: str) -> bool:
     >>> dp_match('aa', '.*')
     True
     """
+    logger.debug(">>> Entering dp_match(text=%s,pattern=%s)", text, pattern)
     m = len(text)
+    logger.debug("dp_match(text=%s,pattern=%s): m → %s", text, pattern, m)
     n = len(pattern)
+    logger.debug("dp_match(text=%s,pattern=%s): n → %s", text, pattern, n)
     dp = [[False for _ in range(n + 1)] for _ in range(m + 1)]
+    logger.debug("dp_match(text=%s,pattern=%s): dp → %s", text, pattern, dp)
     dp[0][0] = True
 
     for j in range(1, n + 1):
@@ -90,6 +98,7 @@ def dp_match(text: str, pattern: str) -> bool:
             else:
                 dp[i][j] = False
 
+    logger.debug("<<< Exiting dp_match(text=%s,pattern=%s)", text, pattern)
     return dp[m][n]
 
 

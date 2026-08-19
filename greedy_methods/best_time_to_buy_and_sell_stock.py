@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Given a list of stock prices calculate the maximum profit that can be made from a
 single buy and sell of one share of stock.  We only allowed to complete one buy
@@ -22,16 +24,20 @@ def max_profit(prices: list[int]) -> int:
     >>> max_profit([7, 6, 4, 3, 1])
     0
     """
+    logger.debug(">>> Entering max_profit(prices=%s)", prices)
     if not prices:
         return 0
 
     min_price = prices[0]
+    logger.debug("max_profit(prices=%s): min_price → %s", prices, min_price)
     max_profit: int = 0
 
     for price in prices:
         min_price = min(price, min_price)
         max_profit = max(price - min_price, max_profit)
+        logger.debug("max_profit(prices=%s): max_profit → %s", prices, max_profit)
 
+    logger.debug("<<< Exiting max_profit(prices=%s)", prices)
     return max_profit
 
 

@@ -5,6 +5,8 @@ Fun fact: The set of weird numbers has positive asymptotic density.
 """
 
 from math import sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def factors(number: int) -> list[int]:
@@ -19,8 +21,10 @@ def factors(number: int) -> list[int]:
     # >>> factors(-12)
     # [1, 2, 3, 4, 6]
     """
+    logger.debug(">>> Entering factors(number=%s)", number)
 
     values = [1]
+    logger.debug("factors(number=%s): values → %s", number, values)
     for i in range(2, int(sqrt(number)) + 1, 1):
         if number % i == 0:
             values.append(i)

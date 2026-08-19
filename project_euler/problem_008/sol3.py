@@ -32,6 +32,8 @@ greatest product. What is the value of this product?
 """
 
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 N = (
     "73167176531330624919225119674426574742355349194934"
@@ -66,10 +68,13 @@ def str_eval(s: str) -> int:
     >>> str_eval("22222222")
     256
     """
+    logger.debug(">>> Entering str_eval(s=%s)", s)
 
     product = 1
+    logger.debug("str_eval(s=%s): product → %s", s, product)
     for digit in s:
         product *= int(digit)
+    logger.debug("<<< Exiting str_eval(s=%s)", s)
     return product
 
 
@@ -78,10 +83,14 @@ def solution(n: str = N) -> int:
     Find the thirteen adjacent digits in the 1000-digit number n that have
     the greatest product and returns it.
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     largest_product = -sys.maxsize - 1
+    logger.debug("solution(n=%s): largest_product → %s", n, largest_product)
     substr = n[:13]
+    logger.debug("solution(n=%s): substr → %s", n, substr)
     cur_index = 13
+    logger.debug("solution(n=%s): cur_index → %s", n, cur_index)
     while cur_index < len(n) - 13:
         if int(n[cur_index]) >= int(substr[0]):
             substr = substr[1:] + n[cur_index]
@@ -90,6 +99,7 @@ def solution(n: str = N) -> int:
             largest_product = max(largest_product, str_eval(substr))
             substr = n[cur_index : cur_index + 13]
             cur_index += 13
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return largest_product
 
 

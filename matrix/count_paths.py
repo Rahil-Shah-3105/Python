@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Given a grid, where you start from the top left position [0, 0],
 you want to find how many paths you can take to get to the bottom right position.
@@ -45,6 +47,7 @@ def depth_first_search(grid: list[list[int]], row: int, col: int, visit: set) ->
     >>> depth_first_search(grid, 0, 0, set())
     2
     """
+    logger.debug(">>> Entering depth_first_search(grid=%s,row=%s,col=%s,visit=%s)", grid, row, col, visit)
     row_length, col_length = len(grid), len(grid[0])
     if (
         min(row, col) < 0
@@ -60,12 +63,14 @@ def depth_first_search(grid: list[list[int]], row: int, col: int, visit: set) ->
     visit.add((row, col))
 
     count = 0
+    logger.debug("depth_first_search(grid=%s,row=%s,col=%s,visit=%s): count → %s", grid, row, col, visit, count)
     count += depth_first_search(grid, row + 1, col, visit)
     count += depth_first_search(grid, row - 1, col, visit)
     count += depth_first_search(grid, row, col + 1, visit)
     count += depth_first_search(grid, row, col - 1, visit)
 
     visit.remove((row, col))
+    logger.debug("<<< Exiting depth_first_search(grid=%s,row=%s,col=%s,visit=%s)", grid, row, col, visit)
     return count
 
 

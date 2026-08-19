@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The algorithm finds the pattern in given text using following rule.
 
@@ -30,8 +32,10 @@ class BoyerMooreSearch:
     """
 
     def __init__(self, text: str, pattern: str):
+        logger.debug(">>> Entering __init__(text=%s,pattern=%s)", text, pattern)
         self.text, self.pattern = text, pattern
         self.textLen, self.patLen = len(text), len(pattern)
+        logger.debug("<<< Exiting __init__(text=%s,pattern=%s)", text, pattern)
 
     def match_in_pattern(self, char: str) -> int:
         """
@@ -48,10 +52,12 @@ class BoyerMooreSearch:
         >>> bms.match_in_pattern("B")
         1
         """
+        logger.debug(">>> Entering match_in_pattern(char=%s)", char)
 
         for i in range(self.patLen - 1, -1, -1):
             if char == self.pattern[i]:
                 return i
+        logger.debug("<<< Exiting match_in_pattern(char=%s)", char)
         return -1
 
     def mismatch_in_text(self, current_pos: int) -> int:
@@ -70,10 +76,12 @@ class BoyerMooreSearch:
         >>> bms.mismatch_in_text(2)
         3
         """
+        logger.debug(">>> Entering mismatch_in_text(current_pos=%s)", current_pos)
 
         for i in range(self.patLen - 1, -1, -1):
             if self.pattern[i] != self.text[current_pos + i]:
                 return current_pos + i
+        logger.debug("<<< Exiting mismatch_in_text(current_pos=%s)", current_pos)
         return -1
 
     def bad_character_heuristic(self) -> list[int]:
@@ -84,17 +92,23 @@ class BoyerMooreSearch:
         >>> bms.bad_character_heuristic()
         [0, 3]
         """
+        logger.debug(">>> Entering bad_character_heuristic()")
 
         positions = []
+        logger.debug("bad_character_heuristic(self=%s): positions → %s", self, positions)
         for i in range(self.textLen - self.patLen + 1):
             mismatch_index = self.mismatch_in_text(i)
+            logger.debug("bad_character_heuristic(): mismatch_index → %s", mismatch_index)
             if mismatch_index == -1:
                 positions.append(i)
             else:
                 match_index = self.match_in_pattern(self.text[mismatch_index])
+                logger.debug("bad_character_heuristic(self=%s): match_index → %s", self, match_index)
+                logger.debug("bad_character_heuristic(): match_index → %s", match_index)
                 i = (
                     mismatch_index - match_index
                 )  # shifting index lgtm [py/multiple-definition]
+        logger.debug("<<< Exiting bad_character_heuristic()")
         return positions
 
 

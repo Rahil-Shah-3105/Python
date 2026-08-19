@@ -9,11 +9,17 @@ from __future__ import annotations
 from itertools import permutations
 from random import randint
 from timeit import repeat
+import logging
+logger = logging.getLogger(__name__)
 
 
 def make_dataset() -> tuple[list[int], int]:
+    logger.debug(">>> Entering make_dataset()")
     arr = [randint(-1000, 1000) for i in range(10)]
+    logger.debug("make_dataset(): arr → %s", arr)
     r = randint(-5000, 5000)
+    logger.debug("make_dataset(): r → %s", r)
+    logger.debug("<<< Exiting make_dataset()")
     return (arr, r)
 
 
@@ -33,9 +39,11 @@ def triplet_sum1(arr: list[int], target: int) -> tuple[int, ...]:
     >>> triplet_sum1(arr, target)
     (0, 0, 0)
     """
+    logger.debug(">>> Entering triplet_sum1(arr=%s,target=%s)", arr, target)
     for triplet in permutations(arr, 3):
         if sum(triplet) == target:
             return tuple(sorted(triplet))
+    logger.debug("<<< Exiting triplet_sum1(arr=%s,target=%s)", arr, target)
     return (0, 0, 0)
 
 
@@ -52,8 +60,10 @@ def triplet_sum2(arr: list[int], target: int) -> tuple[int, int, int]:
     >>> triplet_sum2(arr, target)
     (0, 0, 0)
     """
+    logger.debug(">>> Entering triplet_sum2(arr=%s,target=%s)", arr, target)
     arr.sort()
     n = len(arr)
+    logger.debug("triplet_sum2(arr=%s,target=%s): n → %s", arr, target, n)
     for i in range(n - 1):
         left, right = i + 1, n - 1
         while left < right:
@@ -63,10 +73,12 @@ def triplet_sum2(arr: list[int], target: int) -> tuple[int, int, int]:
                 left += 1
             elif arr[i] + arr[left] + arr[right] > target:
                 right -= 1
+    logger.debug("<<< Exiting triplet_sum2(arr=%s,target=%s)", arr, target)
     return (0, 0, 0)
 
 
 def solution_times() -> tuple[float, float]:
+    logger.debug(">>> Entering solution_times()")
     setup_code = """
 from __main__ import dataset, triplet_sum1, triplet_sum2
 """

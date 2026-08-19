@@ -44,6 +44,8 @@ https://www.codewars.com/kata/sortable-poker-hands
 from __future__ import annotations
 
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 
 class PokerHand:
@@ -119,6 +121,9 @@ class PokerHand:
 
         For example: "6S 4C KC AS TH"
         """
+        logger.debug(">>> Entering __init__(hand=%s)", hand)
+        logger.debug("__init__(hand=%s): msg → %s", hand, msg)
+        logger.debug("__init__(self=%s,hand=%s): msg → %s", self, hand, msg)
         if not isinstance(hand, str):
             msg = f"Hand should be of type 'str': {hand!r}"
             raise TypeError(msg)
@@ -127,15 +132,23 @@ class PokerHand:
             msg = f"Hand should contain only 5 cards: {hand!r}"
             raise ValueError(msg)
         self._hand = hand
+        logger.debug("__init__(self=%s,hand=%s): self._hand → %s", self, hand, self._hand)
+        logger.debug("__init__(hand=%s): self._hand_type → %s", hand, self._hand_type)
+        logger.debug("__init__(self=%s,hand=%s): self._high_card → %s", self, hand, self._high_card)
         self._first_pair = 0
+        logger.debug("__init__(self=%s,hand=%s): self._first_pair → %s", self, hand, self._first_pair)
         self._second_pair = 0
+        logger.debug("__init__(self=%s,hand=%s): self._second_pair → %s", self, hand, self._second_pair)
         self._card_values, self._card_suit = self._internal_state()
+        logger.debug("<<< Exiting __init__(hand=%s)", hand)
         self._hand_type = self._get_hand_type()
         self._high_card = self._card_values[0]
 
     @property
     def hand(self):
         """Returns the self hand"""
+        logger.debug(">>> Entering hand()")
+        logger.debug("<<< Exiting hand()")
         return self._hand
 
     def compare_with(self, other: PokerHand) -> str:
@@ -160,6 +173,7 @@ class PokerHand:
         >>> player.compare_with(opponent)
         'Tie'
         """
+        logger.debug(">>> Entering compare_with(other=%s)", other)
         # Breaking the tie works on the following order of precedence:
         # 1. First pair (default 0)
         # 2. Second pair (default 0)
@@ -181,6 +195,7 @@ class PokerHand:
                 return self._compare_cards(other)
             else:
                 return "Win" if self._second_pair > other._second_pair else "Loss"
+        logger.debug("<<< Exiting compare_with(other=%s)", other)
         return "Win" if self._first_pair > other._first_pair else "Loss"
 
     # This function is not part of the problem, I did it just for fun
@@ -207,30 +222,41 @@ class PokerHand:
 
         Source: https://en.wikipedia.org/wiki/List_of_poker_hands
         """
+        logger.debug(">>> Entering hand_name()")
         name = PokerHand._HAND_NAME[self._hand_type - 14]
+        logger.debug("hand_name(self=%s): name → %s", self, name)
+        logger.debug("hand_name(): name → %s", name)
         high = PokerHand._CARD_NAME[self._high_card]
+        logger.debug("hand_name(self=%s): high → %s", self, high)
         pair1 = PokerHand._CARD_NAME[self._first_pair]
+        logger.debug("hand_name(self=%s): pair1 → %s", self, pair1)
         pair2 = PokerHand._CARD_NAME[self._second_pair]
+        logger.debug("hand_name(self=%s): pair2 → %s", self, pair2)
         if self._hand_type in [22, 19, 18]:
             return name + f", {high}-high"
         elif self._hand_type in [21, 17, 15]:
             return name + f", {pair1}s"
         elif self._hand_type in [20, 16]:
             join = "over" if self._hand_type == 20 else "and"
+            logger.debug("hand_name(): join → %s", join)
             return name + f", {pair1}s {join} {pair2}s"
         elif self._hand_type == 23:
             return name
         else:
+            logger.debug("<<< Exiting hand_name()")
             return name + f", {high}"
 
     def _compare_cards(self, other: PokerHand) -> str:
+        logger.debug(">>> Entering _compare_cards(other=%s)", other)
         # Enumerate gives us the index as well as the element of a list
         for index, card_value in enumerate(self._card_values):
             if card_value != other._card_values[index]:
                 return "Win" if card_value > other._card_values[index] else "Loss"
+        logger.debug("<<< Exiting _compare_cards(other=%s)", other)
         return "Tie"
 
     def _get_hand_type(self) -> int:
+        logger.debug(">>> Entering _get_hand_type()")
         # Number representing the type of hand internally:
         # 23: Royal flush
         # 22: Straight flush
@@ -248,12 +274,16 @@ class PokerHand:
             return 19
         elif self._is_five_high_straight() or self._is_straight():
             return 18
+        logger.debug("<<< Exiting _get_hand_type()")
         return 14 + self._is_same_kind()
 
     def _is_flush(self) -> bool:
+        logger.debug(">>> Entering _is_flush()")
+        logger.debug("<<< Exiting _is_flush()")
         return len(self._card_suit) == 1
 
     def _is_five_high_straight(self) -> bool:
+        logger.debug(">>> Entering _is_five_high_straight()")
         # If a card is a five high straight (low ace) change the location of
         # ace from the start of the list to the end. Check whether the first
         # element is ace or not. (Don't want to change again)

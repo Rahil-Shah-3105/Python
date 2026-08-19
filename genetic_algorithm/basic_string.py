@@ -8,6 +8,8 @@ Author: D4rkia
 from __future__ import annotations
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 # Maximum size of the population.  Bigger could be faster but is more memory expensive.
 N_POPULATION = 200
@@ -28,7 +30,10 @@ def evaluate(item: str, main_target: str) -> tuple[str, float]:
     >>> evaluate("Helxo Worlx", "Hello World")
     ('Helxo Worlx', 9.0)
     """
+    logger.debug(">>> Entering evaluate(item=%s,main_target=%s)", item, main_target)
     score = len([g for position, g in enumerate(item) if g == main_target[position]])
+    logger.debug("evaluate(item=%s,main_target=%s): score → %s", item, main_target, score)
+    logger.debug("<<< Exiting evaluate(item=%s,main_target=%s)", item, main_target)
     return (item, float(score))
 
 
@@ -39,9 +44,14 @@ def crossover(parent_1: str, parent_2: str) -> tuple[str, str]:
     >>> crossover("123456", "abcdef")
     ('12345f', 'abcde6')
     """
+    logger.debug(">>> Entering crossover(parent_1=%s,parent_2=%s)", parent_1, parent_2)
     random_slice = random.randint(0, len(parent_1) - 1)
+    logger.debug("crossover(parent_1=%s,parent_2=%s): random_slice → %s", parent_1, parent_2, random_slice)
     child_1 = parent_1[:random_slice] + parent_2[random_slice:]
+    logger.debug("crossover(parent_1=%s,parent_2=%s): child_1 → %s", parent_1, parent_2, child_1)
     child_2 = parent_2[:random_slice] + parent_1[random_slice:]
+    logger.debug("crossover(parent_1=%s,parent_2=%s): child_2 → %s", parent_1, parent_2, child_2)
+    logger.debug("<<< Exiting crossover(parent_1=%s,parent_2=%s)", parent_1, parent_2)
     return (child_1, child_2)
 
 
@@ -52,9 +62,12 @@ def mutate(child: str, genes: list[str]) -> str:
     >>> mutate("123456", list("ABCDEF"))
     '12345A'
     """
+    logger.debug(">>> Entering mutate(child=%s,genes=%s)", child, genes)
     child_list = list(child)
+    logger.debug("mutate(child=%s,genes=%s): child_list → %s", child, genes, child_list)
     if random.uniform(0, 1) < MUTATION_PROBABILITY:
         child_list[random.randint(0, len(child)) - 1] = random.choice(genes)
+    logger.debug("<<< Exiting mutate(child=%s,genes=%s)", child, genes)
     return "".join(child_list)
 
 
@@ -118,19 +131,23 @@ def basic(target: str, genes: list[str], debug: bool = True) -> tuple[int, int, 
         ...
     ValueError: ['e', 's', 't'] is not in genes list, evolution cannot converge
     """
+    logger.debug(">>> Entering basic(target=%s,genes=%s,debug=%s)", target, genes, debug)
 
     # Verify if N_POPULATION is bigger than N_SELECTED
     if N_POPULATION < N_SELECTED:
         msg = f"{N_POPULATION} must be bigger than {N_SELECTED}"
+        logger.debug("basic(target=%s,genes=%s,debug=%s): msg → %s", target, genes, debug, msg)
         raise ValueError(msg)
     # Verify that the target contains no genes besides the ones inside genes variable.
     not_in_genes_list = sorted({c for c in target if c not in genes})
+    logger.debug("basic(target=%s,genes=%s,debug=%s): not_in_genes_list → %s", target, genes, debug, not_in_genes_list)
     if not_in_genes_list:
         msg = f"{not_in_genes_list} is not in genes list, evolution cannot converge"
         raise ValueError(msg)
 
     # Generate random starting population.
     population = []
+    logger.debug("basic(target=%s,genes=%s,debug=%s): population → %s", target, genes, debug, population)
     for _ in range(N_POPULATION):
         population.append("".join([random.choice(genes) for i in range(len(target))]))
 
@@ -157,10 +174,12 @@ def basic(target: str, genes: list[str], debug: bool = True) -> tuple[int, int, 
         # but with a simple algorithm like this, it will probably be slower.
         # (Option 2) We just need to call evaluate for every item inside the population.
         population_score = [evaluate(item, target) for item in population]
+        logger.debug("basic(target=%s,genes=%s,debug=%s): population_score → %s", target, genes, debug, population_score)
 
         # Check if there is a matching evolution.
         population_score = sorted(population_score, key=lambda x: x[1], reverse=True)
         if population_score[0][0] == target:
+            logger.debug("<<< Exiting basic(target=%s,genes=%s,debug=%s)", target, genes, debug)
             return (generation, total_population, population_score[0][0])
 
         # Print the best result every 10 generation.
@@ -176,6 +195,7 @@ def basic(target: str, genes: list[str], debug: bool = True) -> tuple[int, int, 
         # Flush the old population, keeping some of the best evolutions.
         # Keeping this avoid regression of evolution.
         population_best = population[: int(N_POPULATION / 3)]
+        logger.debug("basic(target=%s,genes=%s,debug=%s): population_best → %s", target, genes, debug, population_best)
         population.clear()
         population.extend(population_best)
         # Normalize population score to be between 0 and 1.

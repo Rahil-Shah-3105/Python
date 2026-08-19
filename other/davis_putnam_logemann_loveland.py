@@ -13,6 +13,8 @@ from __future__ import annotations
 
 import random
 from collections.abc import Iterable
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Clause:
@@ -35,8 +37,12 @@ class Clause:
         """
         Represent the literals and an assignment in a clause."
         """
+        logger.debug(">>> Entering __init__(literals=%s)", literals)
         # Assign all literals to None initially
         self.literals: dict[str, bool | None] = dict.fromkeys(literals)
+        logger.debug("<<< Exiting __init__(literals=%s)", literals)
+        logger.debug(">>> Entering __init__(clauses=%s)", clauses)
+        logger.debug("<<< Exiting __init__(clauses=%s)", clauses)
 
     def __str__(self) -> str:
         """
@@ -45,6 +51,8 @@ class Clause:
         >>> str(Clause(["A1", "A2'", "A3"]))
         "{A1 , A2' , A3}"
         """
+        logger.debug(">>> Entering __str__()")
+        logger.debug("<<< Exiting __str__()")
         return "{" + " , ".join(self.literals) + "}"
 
     def __len__(self) -> int:
@@ -56,22 +64,28 @@ class Clause:
         >>> len(Clause(["A1", "A2'", "A3"]))
         3
         """
+        logger.debug(">>> Entering __len__()")
+        logger.debug("<<< Exiting __len__()")
         return len(self.literals)
 
     def assign(self, model: dict[str, bool | None]) -> None:
         """
         Assign values to literals of the clause as given by model.
         """
+        logger.debug(">>> Entering assign(model=%s)", model)
         for literal in self.literals:
             symbol = literal[:2]
+            logger.debug("assign(self=%s,model=%s): symbol → %s", self, model, symbol)
             if symbol in model:
                 value = model[symbol]
+                logger.debug("assign(self=%s,model=%s): value → %s", self, model, value)
             else:
                 continue
             # Complement assignment if literal is in complemented form
             if value is not None and literal.endswith("'"):
                 value = not value
             self.literals[literal] = value
+            logger.debug("<<< Exiting assign(model=%s)", model)
 
     def evaluate(self, model: dict[str, bool | None]) -> bool | None:
         """
@@ -84,15 +98,19 @@ class Clause:
              if a literal has no assignment.
           4. Compute disjunction of all values assigned in clause.
         """
+        logger.debug(">>> Entering evaluate(model=%s)", model)
+        logger.debug("evaluate(model=%s): symbol → %s", model, symbol)
         for literal in self.literals:
             symbol = literal.rstrip("'") if literal.endswith("'") else literal + "'"
             if symbol in self.literals:
+                logger.debug("evaluate(self=%s,model=%s): symbol → %s", self, model, symbol)
                 return True
 
         self.assign(model)
         for value in self.literals.values():
             if value in (True, None):
                 return value
+        logger.debug("<<< Exiting evaluate(model=%s)", model)
         return any(self.literals.values())
 
 
@@ -109,6 +127,7 @@ class Formula:
         Represent the number of clauses and the clauses themselves.
         """
         self.clauses = list(clauses)
+        logger.debug("__init__(clauses=%s): self.clauses → %s", clauses, self.clauses)
 
     def __str__(self) -> str:
         """
@@ -125,14 +144,21 @@ def generate_clause() -> Clause:
     | Randomly generate a clause.
     | All literals have the name Ax, where x is an integer from ``1`` to ``5``.
     """
+    logger.debug(">>> Entering generate_clause()")
     literals = []
+    logger.debug("generate_clause(): literals → %s", literals)
     no_of_literals = random.randint(1, 5)
+    logger.debug("generate_clause(): no_of_literals → %s", no_of_literals)
     base_var = "A"
+    logger.debug("generate_clause(): base_var → %s", base_var)
     i = 0
     while i < no_of_literals:
         var_no = random.randint(1, 5)
+        logger.debug("generate_clause(): var_no → %s", var_no)
         var_name = base_var + str(var_no)
+        logger.debug("generate_clause(): var_name → %s", var_name)
         var_complement = random.randint(0, 1)
+        logger.debug("generate_clause(): var_complement → %s", var_complement)
         if var_complement == 1:
             var_name += "'"
         if var_name in literals:
@@ -140,6 +166,7 @@ def generate_clause() -> Clause:
         else:
             literals.append(var_name)
         i += 1
+    logger.debug("<<< Exiting generate_clause()")
     return Clause(literals)
 
 
@@ -147,10 +174,13 @@ def generate_formula() -> Formula:
     """
     Randomly generate a formula.
     """
+    logger.debug(">>> Entering generate_formula()")
     clauses: set[Clause] = set()
     no_of_clauses = random.randint(1, 10)
+    logger.debug("generate_formula(): no_of_clauses → %s", no_of_clauses)
     while len(clauses) < no_of_clauses:
         clauses.add(generate_clause())
+    logger.debug("<<< Exiting generate_formula()")
     return Formula(clauses)
 
 
@@ -171,13 +201,18 @@ def generate_parameters(formula: Formula) -> tuple[list[Clause], list[str]]:
     >>> symbols
     ['A1', 'A2', 'A3', 'A5']
     """
+    logger.debug(">>> Entering generate_parameters(formula=%s)", formula)
     clauses = formula.clauses
+    logger.debug("generate_parameters(formula=%s): clauses → %s", formula, clauses)
     symbols_set = []
+    logger.debug("generate_parameters(formula=%s): symbols_set → %s", formula, symbols_set)
     for clause in formula.clauses:
         for literal in clause.literals:
             symbol = literal[:2]
+            logger.debug("generate_parameters(formula=%s): symbol → %s", formula, symbol)
             if symbol not in symbols_set:
                 symbols_set.append(symbol)
+    logger.debug("<<< Exiting generate_parameters(formula=%s)", formula)
     return clauses, symbols_set
 
 

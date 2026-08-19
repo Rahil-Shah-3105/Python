@@ -5,6 +5,8 @@ https://towardsdatascience.com/forward-propagation-in-neural-networks-simplified
 
 import math
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 # Sigmoid
@@ -16,8 +18,10 @@ def sigmoid_function(value: float, deriv: bool = False) -> float:
     >>> sigmoid_function(3.5, True)
     -8.75
     """
+    logger.debug(">>> Entering sigmoid_function(value=%s,deriv=%s)", value, deriv)
     if deriv:
         return value * (1 - value)
+    logger.debug("<<< Exiting sigmoid_function(value=%s,deriv=%s)", value, deriv)
     return 1 / (1 + math.exp(-value))
 
 
@@ -36,20 +40,26 @@ def forward_propagation(expected: int, number_propagations: int) -> float:
     >>> res > 31 and res < 33
     False
     """
+    logger.debug(">>> Entering forward_propagation(expected=%s,number_propagations=%s)", expected, number_propagations)
 
     # Random weight
     weight = float(2 * (random.randint(1, 100)) - 1)
+    logger.debug("forward_propagation(expected=%s,number_propagations=%s): weight → %s", expected, number_propagations, weight)
 
     for _ in range(number_propagations):
         # Forward propagation
         layer_1 = sigmoid_function(INITIAL_VALUE * weight)
+        logger.debug("forward_propagation(expected=%s,number_propagations=%s): layer_1 → %s", expected, number_propagations, layer_1)
         # How much did we miss?
         layer_1_error = (expected / 100) - layer_1
+        logger.debug("forward_propagation(expected=%s,number_propagations=%s): layer_1_error → %s", expected, number_propagations, layer_1_error)
         # Error delta
         layer_1_delta = layer_1_error * sigmoid_function(layer_1, True)
+        logger.debug("forward_propagation(expected=%s,number_propagations=%s): layer_1_delta → %s", expected, number_propagations, layer_1_delta)
         # Update weight
         weight += INITIAL_VALUE * layer_1_delta
 
+    logger.debug("<<< Exiting forward_propagation(expected=%s,number_propagations=%s)", expected, number_propagations)
     return layer_1 * 100
 
 

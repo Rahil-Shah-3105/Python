@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This algorithm (k=33) was first reported by Dan Bernstein many years ago in comp.lang.c
 Another version of this algorithm (now favored by Bernstein) uses xor:
@@ -29,7 +31,10 @@ def djb2(s: str) -> int:
     >>> djb2('scramble bits')
     1609059040
     """
+    logger.debug(">>> Entering djb2(s=%s)", s)
     hash_value = 5381
+    logger.debug("djb2(s=%s): hash_value → %s", s, hash_value)
     for x in s:
         hash_value = ((hash_value << 5) + hash_value) + ord(x)
+    logger.debug("<<< Exiting djb2(s=%s)", s)
     return hash_value & 0xFFFFFFFF

@@ -49,6 +49,8 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from functools import cache
 from sys import maxsize
+import logging
+logger = logging.getLogger(__name__)
 
 
 def matrix_chain_multiply(arr: list[int]) -> int:
@@ -76,6 +78,7 @@ def matrix_chain_multiply(arr: list[int]) -> int:
     >>> # matrix_chain_multiply(list(range(1, 251)))
     # 2626798
     """
+    logger.debug(">>> Entering matrix_chain_multiply(arr=%s)", arr)
     if len(arr) < 2:
         return 0
     # initialising 2D dp matrix
@@ -93,6 +96,7 @@ def matrix_chain_multiply(arr: list[int]) -> int:
                     dp[i][j], dp[i][k] + dp[k + 1][j] + arr[i - 1] * arr[k] * arr[j]
                 )
 
+    logger.debug("<<< Exiting matrix_chain_multiply(arr=%s)", arr)
     return dp[1][n - 1]
 
 
@@ -116,9 +120,13 @@ def matrix_chain_order(dims: list[int]) -> int:
     >>> # matrix_chain_order(list(range(1, 251)))  # Max before RecursionError is raised
     # 2626798
     """
+    logger.debug(">>> Entering matrix_chain_order(dims=%s)", dims)
 
     @cache
     def a(i: int, j: int) -> int:
+        logger.debug(">>> Entering a(i=%s,j=%s)", i, j)
+        logger.debug("a(i=%s,j=%s): default → %s", i, j, default)
+        logger.debug("<<< Exiting a(i=%s,j=%s)", i, j)
         return min(
             (a(i, k) + dims[i] * dims[k] * dims[j] + a(k, j) for k in range(i + 1, j)),
             default=0,
@@ -129,12 +137,15 @@ def matrix_chain_order(dims: list[int]) -> int:
 
 @contextmanager
 def elapsed_time(msg: str) -> Iterator:
+    logger.debug(">>> Entering elapsed_time(msg=%s)", msg)
     # print(f"Starting: {msg}")
     from time import perf_counter_ns
 
     start = perf_counter_ns()
+    logger.debug("elapsed_time(msg=%s): start → %s", msg, start)
     yield
     print(f"Finished: {msg} in {(perf_counter_ns() - start) / 10**9} seconds.")
+    logger.debug("<<< Exiting elapsed_time(msg=%s)", msg)
 
 
 if __name__ == "__main__":

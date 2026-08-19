@@ -14,6 +14,8 @@ References:
 """
 
 from math import floor, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def continuous_fraction_period(n: int) -> int:
@@ -31,16 +33,24 @@ def continuous_fraction_period(n: int) -> int:
     >>> continuous_fraction_period(13)
     5
     """
+    logger.debug(">>> Entering continuous_fraction_period(n=%s)", n)
+    logger.warning("continuous_fraction_period(n=%s): root → %s", n, root)
     numerator = 0.0
+    logger.debug("continuous_fraction_period(n=%s): numerator → %s", n, numerator)
     denominator = 1.0
+    logger.debug("continuous_fraction_period(n=%s): denominator → %s", n, denominator)
     root = int(sqrt(n))
+    logger.debug("continuous_fraction_period(n=%s): root → %s", n, root)
     integer_part = root
+    logger.debug("continuous_fraction_period(n=%s): integer_part → %s", n, integer_part)
     period = 0
+    logger.debug("continuous_fraction_period(n=%s): period → %s", n, period)
     while integer_part != 2 * root:
         numerator = denominator * integer_part - numerator
         denominator = (n - numerator**2) / denominator
         integer_part = int((root + numerator) / denominator)
         period += 1
+    logger.debug("<<< Exiting continuous_fraction_period(n=%s)", n)
     return period
 
 
@@ -64,11 +74,15 @@ def solution(n: int = 10000) -> int:
     >>> solution(13)
     4
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     count_odd_periods = 0
+    logger.debug("solution(n=%s): count_odd_periods → %s", n, count_odd_periods)
     for i in range(2, n + 1):
         sr = sqrt(i)
+        logger.debug("solution(n=%s): sr → %s", n, sr)
         if sr - floor(sr) != 0 and continuous_fraction_period(i) % 2 == 1:
             count_odd_periods += 1
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return count_odd_periods
 
 

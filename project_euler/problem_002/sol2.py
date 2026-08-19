@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 2: https://projecteuler.net/problem=2
 
@@ -32,13 +34,16 @@ def solution(n: int = 4000000) -> int:
     >>> solution(34)
     44
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     even_fibs = []
+    logger.debug("solution(n=%s): even_fibs → %s", n, even_fibs)
     a, b = 0, 1
     while b <= n:
         if b % 2 == 0:
             even_fibs.append(b)
         a, b = b, a + b
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return sum(even_fibs)
 
 

@@ -41,6 +41,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import NamedTuple
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -74,8 +76,10 @@ def distribute_coins(root: TreeNode | None) -> int:
      ...
     ValueError: The nodes number should be same as the number of coins
     """
+    logger.debug(">>> Entering distribute_coins(root=%s)", root)
 
     if root is None:
+        logger.debug("<<< Exiting distribute_coins(root=%s)", root)
         return 0
 
     # Validation
@@ -84,9 +88,11 @@ def distribute_coins(root: TreeNode | None) -> int:
         >>> count_nodes(None)
         0
         """
+        logger.debug(">>> Entering count_nodes(node=%s)", node)
         if node is None:
             return 0
 
+        logger.debug("<<< Exiting count_nodes(node=%s)", node)
         return count_nodes(node.left) + count_nodes(node.right) + 1
 
     def count_coins(node: TreeNode | None) -> int:
@@ -94,9 +100,11 @@ def distribute_coins(root: TreeNode | None) -> int:
         >>> count_coins(None)
         0
         """
+        logger.debug(">>> Entering count_coins(node=%s)", node)
         if node is None:
             return 0
 
+        logger.debug("<<< Exiting count_coins(node=%s)", node)
         return count_coins(node.left) + count_coins(node.right) + node.data
 
     if count_nodes(root) != count_coins(root):
@@ -108,6 +116,7 @@ def distribute_coins(root: TreeNode | None) -> int:
         >>> get_distrib(None)
         namedtuple("CoinsDistribResult", "0 2")
         """
+        logger.debug(">>> Entering get_distrib(node=%s)", node)
 
         if node is None:
             return CoinsDistribResult(0, 1)
@@ -116,7 +125,9 @@ def distribute_coins(root: TreeNode | None) -> int:
         right_distrib_moves, right_distrib_excess = get_distrib(node.right)
 
         coins_to_left = 1 - left_distrib_excess
+        logger.debug("get_distrib(node=%s): coins_to_left → %s", node, coins_to_left)
         coins_to_right = 1 - right_distrib_excess
+        logger.debug("get_distrib(node=%s): coins_to_right → %s", node, coins_to_right)
 
         result_moves = (
             left_distrib_moves
@@ -125,7 +136,9 @@ def distribute_coins(root: TreeNode | None) -> int:
             + abs(coins_to_right)
         )
         result_excess = node.data - coins_to_left - coins_to_right
+        logger.debug("get_distrib(node=%s): result_excess → %s", node, result_excess)
 
+        logger.debug("<<< Exiting get_distrib(node=%s)", node)
         return CoinsDistribResult(result_moves, result_excess)
 
     return get_distrib(root)[0]

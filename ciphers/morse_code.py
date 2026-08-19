@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 #!/usr/bin/env python3
 
 """
@@ -29,6 +31,8 @@ def encrypt(message: str) -> str:
     >>> encrypt("SOS!") == encrypt("sos!")
     True
     """
+    logger.debug(">>> Entering encrypt(message=%s)", message)
+    logger.debug("<<< Exiting encrypt(message=%s)", message)
     return " ".join(MORSE_CODE_DICT[char] for char in message.upper())
 
 
@@ -37,6 +41,8 @@ def decrypt(message: str) -> str:
     >>> decrypt('... --- ... -.-.--')
     'SOS!'
     """
+    logger.debug(">>> Entering decrypt(message=%s)", message)
+    logger.debug("<<< Exiting decrypt(message=%s)", message)
     return "".join(REVERSE_DICT[char] for char in message.split())
 
 
@@ -46,12 +52,15 @@ def main() -> None:
     >>> decrypt(encrypt(s)) == s
     True
     """
+    logger.debug(">>> Entering main()")
     message = "Morse code here!"
+    logger.debug("main(): message → %s", message)
     print(message)
     message = encrypt(message)
     print(message)
     message = decrypt(message)
     print(message)
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

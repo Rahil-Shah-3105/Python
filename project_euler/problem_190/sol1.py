@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 190: https://projecteuler.net/problem=190
 
@@ -33,14 +35,18 @@ def solution(n: int = 15) -> int:
     >>> solution(5)
     10
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     total = 0
+    logger.debug("solution(n=%s): total → %s", n, total)
     for m in range(2, n + 1):
         x1 = 2 / (m + 1)
+        logger.debug("solution(n=%s): x1 → %s", n, x1)
         p = 1.0
         for i in range(1, m + 1):
             xi = i * x1
             p *= xi**i
         total += int(p)
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return total
 
 

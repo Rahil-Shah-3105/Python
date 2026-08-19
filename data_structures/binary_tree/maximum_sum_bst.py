@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import sys
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 INT_MIN = -sys.maxsize + 1
 INT_MAX = sys.maxsize - 1
@@ -44,7 +46,9 @@ def max_sum_bst(root: TreeNode | None) -> int:
     >>> print(max_sum_bst(t3))
     20
     """
+    logger.debug(">>> Entering max_sum_bst(root=%s)", root)
     ans: int = 0
+    logger.debug("<<< Exiting max_sum_bst(root=%s)", root)
 
     def solver(node: TreeNode | None) -> tuple[bool, int, int, int]:
         """
@@ -53,6 +57,7 @@ def max_sum_bst(root: TreeNode | None) -> int:
         >>> print(solver(t1))
         1
         """
+        logger.debug(">>> Entering solver(node=%s)", node)
         nonlocal ans
 
         if not node:
@@ -63,9 +68,12 @@ def max_sum_bst(root: TreeNode | None) -> int:
 
         if is_left_valid and is_right_valid and max_left < node.val < min_right:
             total_sum = sum_left + sum_right + node.val
+            logger.debug("solver(node=%s): total_sum → %s", node, total_sum)
             ans = max(ans, total_sum)
+            logger.debug("solver(node=%s): ans → %s", node, ans)
             return True, min(min_left, node.val), max(max_right, node.val), total_sum
 
+        logger.debug("<<< Exiting solver(node=%s)", node)
         return False, -1, -1, -1  # Not a valid BST
 
     solver(root)

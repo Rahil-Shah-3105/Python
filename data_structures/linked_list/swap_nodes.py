@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -24,9 +26,12 @@ class LinkedList:
         >>> tuple(linked_list)
         (0,)
         """
+        logger.debug(">>> Entering __iter__()")
         node = self.head
+        logger.debug("__iter__(self=%s): node → %s", self, node)
         while node:
             yield node.data
+            logger.debug("<<< Exiting __iter__()")
             node = node.next_node
 
     def __len__(self) -> int:
@@ -38,6 +43,8 @@ class LinkedList:
         >>> len(linked_list)
         1
         """
+        logger.debug(">>> Entering __len__()")
+        logger.debug("<<< Exiting __len__()")
         return sum(1 for _ in self)
 
     def push(self, new_data: Any) -> None:
@@ -60,9 +67,15 @@ class LinkedList:
             >>> list(linked_list)
             [1, 2, 3, 4, 5]
         """
+        logger.debug(">>> Entering push(new_data=%s)", new_data)
         new_node = Node(new_data)
+        logger.debug("push(self=%s,new_data=%s): new_node → %s", self, new_data, new_node)
+        logger.debug("push(new_data=%s): new_node → %s", new_data, new_node)
         new_node.next_node = self.head
+        logger.debug("push(self=%s,new_data=%s): new_node.next_node → %s", self, new_data, new_node.next_node)
+        logger.debug("<<< Exiting push(new_data=%s)", new_data)
         self.head = new_node
+        logger.debug("push(self=%s,new_data=%s): self.head → %s", self, new_data, self.head)
 
     def swap_nodes(self, node_data_1: Any, node_data_2: Any) -> None:
         """
@@ -116,16 +129,20 @@ class LinkedList:
         Returns:
             None
         """
+        logger.debug(">>> Entering swap_nodes(node_data_1=%s,node_data_2=%s)", node_data_1, node_data_2)
         if node_data_1 == node_data_2:
             return
 
         node_1 = self.head
+        logger.debug("swap_nodes(self=%s,node_data_1=%s,node_data_2=%s): node_1 → %s", self, node_data_1, node_data_2, node_1)
         while node_1 and node_1.data != node_data_1:
             node_1 = node_1.next_node
         node_2 = self.head
+        logger.debug("swap_nodes(self=%s,node_data_1=%s,node_data_2=%s): node_2 → %s", self, node_data_1, node_data_2, node_2)
         while node_2 and node_2.data != node_data_2:
             node_2 = node_2.next_node
         if node_1 is None or node_2 is None:
+            logger.debug("<<< Exiting swap_nodes(node_data_1=%s,node_data_2=%s)", node_data_1, node_data_2)
             return
         # Swap the data values of the two nodes
         node_1.data, node_2.data = node_2.data, node_1.data

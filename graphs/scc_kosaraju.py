@@ -1,9 +1,13 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def dfs(u):
+    logger.debug(">>> Entering dfs(u=%s)", u)
     global graph, reversed_graph, scc, component, visit, stack
     if visit[u]:
+        logger.debug("<<< Exiting dfs(u=%s)", u)
         return
     visit[u] = True
     for v in graph[u]:
@@ -12,8 +16,10 @@ def dfs(u):
 
 
 def dfs2(u):
+    logger.debug(">>> Entering dfs2(u=%s)", u)
     global graph, reversed_graph, scc, component, visit, stack
     if visit[u]:
+        logger.debug("<<< Exiting dfs2(u=%s)", u)
         return
     visit[u] = True
     component.append(u)
@@ -22,16 +28,20 @@ def dfs2(u):
 
 
 def kosaraju():
+    logger.debug(">>> Entering kosaraju()")
     global graph, reversed_graph, scc, component, visit, stack
     for i in range(n):
         dfs(i)
     visit = [False] * n
+    logger.debug("kosaraju(): visit → %s", visit)
     for i in stack[::-1]:
         if visit[i]:
             continue
         component = []
+        logger.debug("kosaraju(): component → %s", component)
         dfs2(i)
         scc.append(component)
+    logger.debug("<<< Exiting kosaraju()")
     return scc
 
 

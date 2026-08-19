@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """Created by Nathan Damon, @bizzfitch on github
 >>> test_miller_rabin()
 """
@@ -28,6 +30,7 @@ def miller_rabin(n: int, allow_probable: bool = False) -> bool:
     ---------
     https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test
     """
+    logger.debug(">>> Entering miller_rabin(n=%s,allow_probable=%s)", n, allow_probable)
     if n == 2:
         return True
     if not n % 2 or n < 2:
@@ -58,10 +61,12 @@ def miller_rabin(n: int, allow_probable: bool = False) -> bool:
     ]
 
     primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41]
+    logger.debug("miller_rabin(n=%s,allow_probable=%s): primes → %s", n, allow_probable, primes)
     for idx, _p in enumerate(bounds, 1):
         if n < _p:
             # then we have our last prime to check
             plist = primes[:idx]
+            logger.debug("miller_rabin(n=%s,allow_probable=%s): plist → %s", n, allow_probable, plist)
             break
     d, s = n - 1, 0
     # break up n -1 into a power of 2 (s) and
@@ -84,6 +89,7 @@ def miller_rabin(n: int, allow_probable: bool = False) -> bool:
         # if pr is False, then the above loop never evaluated to true,
         # and the n MUST be composite
         return False
+    logger.debug("<<< Exiting miller_rabin(n=%s,allow_probable=%s)", n, allow_probable)
     return True
 
 
@@ -91,6 +97,7 @@ def test_miller_rabin() -> None:
     """Testing a nontrivial (ends in 1, 3, 7, 9) composite
     and a prime in each range.
     """
+    logger.debug(">>> Entering test_miller_rabin()")
     assert not miller_rabin(561)
     assert miller_rabin(563)
     # 2047
@@ -129,6 +136,7 @@ def test_miller_rabin() -> None:
 
     assert not miller_rabin(552_840_677_446_647_897_660_333)
     assert miller_rabin(552_840_677_446_647_897_660_359)
+    logger.debug("<<< Exiting test_miller_rabin()")
     # 3_317_044_064_679_887_385_961_981
     # upper limit for probabilistic test
 

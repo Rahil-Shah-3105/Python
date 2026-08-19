@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def hex_to_bin(hex_num: str) -> int:
     """
     Convert a hexadecimal value to its binary equivalent
@@ -28,25 +30,31 @@ def hex_to_bin(hex_num: str) -> int:
         ...
     ValueError: No value was passed to the function
     """
+    logger.debug(">>> Entering hex_to_bin(hex_num=%s)", hex_num)
 
     hex_num = hex_num.strip()
     if not hex_num:
         raise ValueError("No value was passed to the function")
 
     is_negative = hex_num[0] == "-"
+    logger.debug("hex_to_bin(hex_num=%s): is_negative → %s", hex_num, is_negative)
     if is_negative:
         hex_num = hex_num[1:]
 
     try:
         int_num = int(hex_num, 16)
+        logger.debug("hex_to_bin(hex_num=%s): int_num → %s", hex_num, int_num)
     except ValueError:
+        logger.error("Exception in hex_to_bin(hex_num=%s)", hex_num, exc_info=True)
         raise ValueError("Invalid value was passed to the function")
 
     bin_str = ""
+    logger.debug("hex_to_bin(hex_num=%s): bin_str → %s", hex_num, bin_str)
     while int_num > 0:
         bin_str = str(int_num % 2) + bin_str
         int_num >>= 1
 
+    logger.debug("<<< Exiting hex_to_bin(hex_num=%s)", hex_num)
     return int(("-" + bin_str) if is_negative else bin_str)
 
 

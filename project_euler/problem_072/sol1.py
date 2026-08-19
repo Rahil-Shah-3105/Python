@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Problem 72 Counting fractions: https://projecteuler.net/problem=72
 
@@ -34,15 +36,19 @@ def solution(limit: int = 1_000_000) -> int:
     >>> solution(1_000)
     304191
     """
+    logger.debug(">>> Entering solution(limit=%s)", limit)
 
     # generating an array from -1 to limit
     phi = np.arange(-1, limit)
+    logger.debug("solution(limit=%s): phi → %s", limit, phi)
 
     for i in range(2, limit + 1):
         if phi[i] == i - 1:
             ind = np.arange(2 * i, limit + 1, i)  # indexes for selection
+            logger.debug("solution(limit=%s): ind → %s", limit, ind)
             phi[ind] -= phi[ind] // i
 
+    logger.debug("<<< Exiting solution(limit=%s)", limit)
     return int(np.sum(phi[2 : limit + 1]))
 
 

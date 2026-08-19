@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def knuth_morris_pratt(text: str, pattern: str) -> int:
@@ -21,9 +23,12 @@ def knuth_morris_pratt(text: str, pattern: str) -> int:
     ... )
     True
     """
+    logger.debug(">>> Entering knuth_morris_pratt(text=%s,pattern=%s)", text, pattern)
 
+    logger.error("Exception in knuth_morris_pratt(text=%s,pattern=%s)", text, pattern, exc_info=True)
     # 1) Construct the failure array
     failure = get_failure_array(pattern)
+    logger.debug("knuth_morris_pratt(text=%s,pattern=%s): failure → %s", text, pattern, failure)
 
     # 2) Step through text searching for pattern
     i, j = 0, 0  # index into text, pattern
@@ -39,6 +44,7 @@ def knuth_morris_pratt(text: str, pattern: str) -> int:
             j = failure[j - 1]
             continue
         i += 1
+    logger.debug("<<< Exiting knuth_morris_pratt(text=%s,pattern=%s)", text, pattern)
     return -1
 
 
@@ -48,7 +54,9 @@ def get_failure_array(pattern: str) -> list[int]:
     :param pattern:
     :return:
     """
+    logger.debug(">>> Entering get_failure_array(pattern=%s)", pattern)
     failure = [0]
+    logger.debug("get_failure_array(pattern=%s): failure → %s", pattern, failure)
     i = 0
     j = 1
     while j < len(pattern):
@@ -59,6 +67,7 @@ def get_failure_array(pattern: str) -> list[int]:
             continue
         j += 1
         failure.append(i)
+    logger.debug("<<< Exiting get_failure_array(pattern=%s)", pattern)
     return failure
 
 

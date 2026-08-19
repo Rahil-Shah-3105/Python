@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 A XOR Gate is a logic gate in boolean algebra which results to 1 (True) if only one of
 the two inputs is 1, and 0 (False) if an even number of inputs are 1.
@@ -28,6 +30,8 @@ def xor_gate(input_1: int, input_2: int) -> int:
     >>> xor_gate(1, 1)
     0
     """
+    logger.debug(">>> Entering xor_gate(input_1=%s,input_2=%s)", input_1, input_2)
+    logger.debug("<<< Exiting xor_gate(input_1=%s,input_2=%s)", input_1, input_2)
     return (input_1, input_2).count(0) % 2
 
 

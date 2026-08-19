@@ -8,6 +8,8 @@ https://practice.geeksforgeeks.org/problems/count-pairs-with-given-sum5022/0
 """
 
 from itertools import combinations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def pairs_with_sum(arr: list, req_sum: int) -> int:
@@ -20,6 +22,8 @@ def pairs_with_sum(arr: list, req_sum: int) -> int:
     >>> pairs_with_sum([1, 7, 6, 2, 5, 4, 3, 1, 9, 8], 7)
     4
     """
+    logger.debug(">>> Entering pairs_with_sum(arr=%s,req_sum=%s)", arr, req_sum)
+    logger.debug("<<< Exiting pairs_with_sum(arr=%s,req_sum=%s)", arr, req_sum)
     return len([1 for a, b in combinations(arr, 2) if a + b == req_sum])
 
 

@@ -19,6 +19,8 @@ https://en.wikipedia.org/wiki/Mass%E2%80%93energy_equivalence
 """
 
 from scipy.constants import c  # speed of light in vacuum (299792458 m/s)
+import logging
+logger = logging.getLogger(__name__)
 
 
 def energy_from_mass(mass: float) -> float:
@@ -41,8 +43,10 @@ def energy_from_mass(mass: float) -> float:
     ValueError: Mass can't be negative.
 
     """
+    logger.debug(">>> Entering energy_from_mass(mass=%s)", mass)
     if mass < 0:
         raise ValueError("Mass can't be negative.")
+    logger.debug("<<< Exiting energy_from_mass(mass=%s)", mass)
     return mass * c**2
 
 
@@ -66,8 +70,10 @@ def mass_from_energy(energy: float) -> float:
     ValueError: Energy can't be negative.
 
     """
+    logger.debug(">>> Entering mass_from_energy(energy=%s)", energy)
     if energy < 0:
         raise ValueError("Energy can't be negative.")
+    logger.debug("<<< Exiting mass_from_energy(energy=%s)", energy)
     return energy / c**2
 
 

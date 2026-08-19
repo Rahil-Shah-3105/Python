@@ -16,6 +16,8 @@ What is the total of all the name scores in the file?
 """
 
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution():
@@ -24,9 +26,14 @@ def solution():
     >>> solution()
     871198282
     """
+    logger.debug(">>> Entering solution()")
+    logger.debug("solution(): name → %s", name)
     total_sum = 0
+    logger.debug("solution(): total_sum → %s", total_sum)
     temp_sum = 0
+    logger.debug("solution(): temp_sum → %s", temp_sum)
     with open(os.path.dirname(__file__) + "/p022_names.txt") as file:
+        logger.error("Exception in solution()", exc_info=True)
         name = str(file.readlines()[0])
         name = name.replace('"', "").split(",")
 
@@ -36,6 +43,7 @@ def solution():
             temp_sum += ord(j) - ord("A") + 1
         total_sum += (i + 1) * temp_sum
         temp_sum = 0
+    logger.debug("<<< Exiting solution()")
     return total_sum
 
 

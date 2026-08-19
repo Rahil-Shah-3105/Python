@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def chebyshev_distance(point_a: list[float], point_b: list[float]) -> float:
     """
     This function calculates the Chebyshev distance (also known as the
@@ -14,7 +16,9 @@ def chebyshev_distance(point_a: list[float], point_b: list[float]) -> float:
         ...
     ValueError: Both points must have the same dimension.
     """
+    logger.debug(">>> Entering chebyshev_distance(point_a=%s,point_b=%s)", point_a, point_b)
     if len(point_a) != len(point_b):
         raise ValueError("Both points must have the same dimension.")
 
+    logger.debug("<<< Exiting chebyshev_distance(point_a=%s,point_b=%s)", point_a, point_b)
     return max(abs(a - b) for a, b in zip(point_a, point_b))

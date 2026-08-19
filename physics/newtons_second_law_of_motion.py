@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 r"""
 Description:
     Newton's second law of motion pertains to the behavior of objects for which
@@ -71,11 +73,15 @@ def newtons_second_law_of_motion(mass: float, acceleration: float) -> float:
     >>> newtons_second_law_of_motion(2.0, 1)
     2.0
     """
+    logger.debug(">>> Entering newtons_second_law_of_motion(mass=%s,acceleration=%s)", mass, acceleration)
     force = 0.0
+    logger.debug("newtons_second_law_of_motion(mass=%s,acceleration=%s): force → %s", mass, acceleration, force)
     try:
         force = mass * acceleration
     except Exception:
+        logger.error("Exception in newtons_second_law_of_motion(mass=%s,acceleration=%s)", mass, acceleration, exc_info=True)
         return -0.0
+    logger.debug("<<< Exiting newtons_second_law_of_motion(mass=%s,acceleration=%s)", mass, acceleration)
     return force
 
 

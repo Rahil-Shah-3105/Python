@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from cmath import sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def quadratic_roots(a: int, b: int, c: int) -> tuple[complex, complex]:
@@ -15,14 +17,19 @@ def quadratic_roots(a: int, b: int, c: int) -> tuple[complex, complex]:
     >>> quadratic_roots(1, -6, 25)
     ((3+4j), (3-4j))
     """
+    logger.debug(">>> Entering quadratic_roots(a=%s,b=%s,c=%s)", a, b, c)
 
     if a == 0:
         raise ValueError("Coefficient 'a' must not be zero.")
     delta = b * b - 4 * a * c
+    logger.debug("quadratic_roots(a=%s,b=%s,c=%s): delta → %s", a, b, c, delta)
 
     root_1 = (-b + sqrt(delta)) / (2 * a)
+    logger.debug("quadratic_roots(a=%s,b=%s,c=%s): root_1 → %s", a, b, c, root_1)
     root_2 = (-b - sqrt(delta)) / (2 * a)
+    logger.debug("quadratic_roots(a=%s,b=%s,c=%s): root_2 → %s", a, b, c, root_2)
 
+    logger.debug("<<< Exiting quadratic_roots(a=%s,b=%s,c=%s)", a, b, c)
     return (
         root_1.real if not root_1.imag else root_1,
         root_2.real if not root_2.imag else root_2,
@@ -30,8 +37,10 @@ def quadratic_roots(a: int, b: int, c: int) -> tuple[complex, complex]:
 
 
 def main():
+    logger.debug(">>> Entering main()")
     solution1, solution2 = quadratic_roots(a=5, b=6, c=1)
     print(f"The solutions are: {solution1} and {solution2}")
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

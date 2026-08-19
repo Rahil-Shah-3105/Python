@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def bin_to_decimal(bin_string: str) -> int:
     """
     Convert a binary value to its decimal equivalent
@@ -23,17 +25,21 @@ def bin_to_decimal(bin_string: str) -> int:
         ...
     ValueError: Non-binary value was passed to the function
     """
+    logger.debug(">>> Entering bin_to_decimal(bin_string=%s)", bin_string)
     bin_string = str(bin_string).strip()
     if not bin_string:
         raise ValueError("Empty string was passed to the function")
     is_negative = bin_string[0] == "-"
+    logger.debug("bin_to_decimal(bin_string=%s): is_negative → %s", bin_string, is_negative)
     if is_negative:
         bin_string = bin_string[1:]
     if not all(char in "01" for char in bin_string):
         raise ValueError("Non-binary value was passed to the function")
     decimal_number = 0
+    logger.debug("bin_to_decimal(bin_string=%s): decimal_number → %s", bin_string, decimal_number)
     for char in bin_string:
         decimal_number = 2 * decimal_number + int(char)
+    logger.debug("<<< Exiting bin_to_decimal(bin_string=%s)", bin_string)
     return -decimal_number if is_negative else decimal_number
 
 

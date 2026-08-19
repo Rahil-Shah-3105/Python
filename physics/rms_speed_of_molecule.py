@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The root-mean-square speed is essential in measuring the average speed of particles
 contained in a gas, defined as,
@@ -30,11 +32,13 @@ def rms_speed_of_molecule(temperature: float, molar_mass: float) -> float:
     >>> rms_speed_of_molecule(273, 12)
     23.821458421977443
     """
+    logger.debug(">>> Entering rms_speed_of_molecule(temperature=%s,molar_mass=%s)", temperature, molar_mass)
     if temperature < 0:
         raise Exception("Temperature cannot be less than 0 K")
     if molar_mass <= 0:
         raise Exception("Molar mass cannot be less than or equal to 0 kg/mol")
     else:
+        logger.debug("<<< Exiting rms_speed_of_molecule(temperature=%s,molar_mass=%s)", temperature, molar_mass)
         return (3 * UNIVERSAL_GAS_CONSTANT * temperature / molar_mass) ** 0.5
 
 

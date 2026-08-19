@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 alphabets = [chr(i) for i in range(32, 126)]
 gear_one = list(range(len(alphabets)))
 gear_two = list(range(len(alphabets)))
@@ -8,6 +10,7 @@ gear_one_pos = gear_two_pos = gear_three_pos = 0
 
 
 def rotator():
+    logger.debug(">>> Entering rotator()")
     global gear_one_pos
     global gear_two_pos
     global gear_three_pos
@@ -25,9 +28,11 @@ def rotator():
             gear_three.append(i)
             del gear_three[0]
             gear_three_pos += 1
+            logger.debug("<<< Exiting rotator()")
 
 
 def engine(input_character):
+    logger.debug(">>> Entering engine(input_character=%s)", input_character)
     target = alphabets.index(input_character)
     target = gear_one[target]
     target = gear_two[target]
@@ -36,8 +41,10 @@ def engine(input_character):
     target = gear_three.index(target)
     target = gear_two.index(target)
     target = gear_one.index(target)
+    logger.debug("engine(input_character=%s): target → %s", input_character, target)
     code.append(alphabets[target])
     rotator()
+    logger.debug("<<< Exiting engine(input_character=%s)", input_character)
 
 
 if __name__ == "__main__":

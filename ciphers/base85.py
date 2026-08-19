@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Base85 (Ascii85) encoding and decoding
 
@@ -6,6 +8,7 @@ https://en.wikipedia.org/wiki/Ascii85
 
 
 def _base10_to_85(d: int) -> str:
+    logger.debug(">>> Entering _base10_to_85(d=%s)", d)
     return "".join(chr(d % 85 + 33)) + _base10_to_85(d // 85) if d > 0 else ""
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 
 Calculates the nth number in Sylvester's sequence
@@ -26,17 +28,23 @@ def sylvester(number: int) -> int:
         ...
     AssertionError: The input value of [n=8.0] is not an integer
     """
+    logger.debug(">>> Entering sylvester(number=%s)", number)
     assert isinstance(number, int), f"The input value of [n={number}] is not an integer"
 
     if number == 1:
         return 2
     elif number < 1:
         msg = f"The input value of [n={number}] has to be > 0"
+        logger.debug("sylvester(number=%s): msg → %s", number, msg)
         raise ValueError(msg)
     else:
         num = sylvester(number - 1)
+        logger.debug("sylvester(number=%s): num → %s", number, num)
         lower = num - 1
+        logger.debug("sylvester(number=%s): lower → %s", number, lower)
         upper = num
+        logger.debug("sylvester(number=%s): upper → %s", number, upper)
+        logger.debug("<<< Exiting sylvester(number=%s)", number)
         return lower * upper + 1
 
 

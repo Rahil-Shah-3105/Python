@@ -10,6 +10,8 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -24,6 +26,8 @@ def make_tree() -> TreeNode:
     >>> make_tree().val
     3
     """
+    logger.debug(">>> Entering make_tree()")
+    logger.debug("<<< Exiting make_tree()")
     return TreeNode(3, TreeNode(9), TreeNode(20, TreeNode(15), TreeNode(7)))
 
 
@@ -42,7 +46,9 @@ def binary_tree_right_side_view(root: TreeNode) -> list[int]:
     >>> binary_tree_right_side_view(None)
     []
     """
+    logger.debug(">>> Entering binary_tree_right_side_view(root=%s)", root)
 
+    logger.debug("<<< Exiting binary_tree_right_side_view(root=%s)", root)
     def depth_first_search(
         root: TreeNode | None, depth: int, right_view: list[int]
     ) -> None:
@@ -82,7 +88,9 @@ def binary_tree_left_side_view(root: TreeNode) -> list[int]:
     >>> binary_tree_left_side_view(None)
     []
     """
+    logger.debug(">>> Entering binary_tree_left_side_view(root=%s)", root)
 
+    logger.debug("<<< Exiting binary_tree_left_side_view(root=%s)", root)
     def depth_first_search(
         root: TreeNode | None, depth: int, left_view: list[int]
     ) -> None:
@@ -125,17 +133,23 @@ def binary_tree_top_side_view(root: TreeNode) -> list[int]:
     >>> binary_tree_top_side_view(None)
     []
     """
+    logger.debug(">>> Entering binary_tree_top_side_view(root=%s)", root)
 
+    logger.debug("<<< Exiting binary_tree_top_side_view(root=%s)", root)
     def breadth_first_search(root: TreeNode, top_view: list[int]) -> None:
         """
         A breadth first search traversal with defaultdict ds to append
         the values of tree from top view
         """
+        logger.debug(">>> Entering breadth_first_search(root=%s,top_view=%s)", root, top_view)
         queue = [(root, 0)]
+        logger.debug("breadth_first_search(root=%s,top_view=%s): queue → %s", root, top_view, queue)
         lookup = defaultdict(list)
+        logger.debug("breadth_first_search(root=%s,top_view=%s): lookup → %s", root, top_view, lookup)
 
         while queue:
             first = queue.pop(0)
+            logger.debug("breadth_first_search(root=%s,top_view=%s): first → %s", root, top_view, first)
             node, hd = first
 
             lookup[hd].append(node.val)
@@ -147,6 +161,12 @@ def binary_tree_top_side_view(root: TreeNode) -> list[int]:
 
         for pair in sorted(lookup.items(), key=lambda each: each[0]):
             top_view.append(pair[1][0])
+            logger.debug("<<< Exiting breadth_first_search(root=%s,top_view=%s)", root, top_view)
+            logger.debug(">>> Entering breadth_first_search(root=%s,bottom_view=%s)", root, bottom_view)
+            logger.debug("breadth_first_search(root=%s,bottom_view=%s): queue → %s", root, bottom_view, queue)
+            logger.debug("breadth_first_search(root=%s,bottom_view=%s): lookup → %s", root, bottom_view, lookup)
+            logger.debug("breadth_first_search(root=%s,bottom_view=%s): first → %s", root, bottom_view, first)
+            logger.debug("<<< Exiting breadth_first_search(root=%s,bottom_view=%s)", root, bottom_view)
 
     top_view: list = []
     if not root:
@@ -173,7 +193,9 @@ def binary_tree_bottom_side_view(root: TreeNode) -> list[int]:
     >>> binary_tree_bottom_side_view(None)
     []
     """
+    logger.debug(">>> Entering binary_tree_bottom_side_view(root=%s)", root)
     from collections import defaultdict
+    logger.debug("<<< Exiting binary_tree_bottom_side_view(root=%s)", root)
 
     def breadth_first_search(root: TreeNode, bottom_view: list[int]) -> None:
         """

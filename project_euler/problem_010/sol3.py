@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 10: https://projecteuler.net/problem=10
 
@@ -41,8 +43,10 @@ def solution(n: int = 2000000) -> int:
         ...
     TypeError: can only concatenate str (not "int") to str
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     primality_list = [0 for i in range(n + 1)]
+    logger.debug("solution(n=%s): primality_list → %s", n, primality_list)
     primality_list[0] = 1
     primality_list[1] = 1
 
@@ -51,9 +55,11 @@ def solution(n: int = 2000000) -> int:
             for j in range(i * i, n + 1, i):
                 primality_list[j] = 1
     sum_of_primes = 0
+    logger.debug("solution(n=%s): sum_of_primes → %s", n, sum_of_primes)
     for i in range(n):
         if primality_list[i] == 0:
             sum_of_primes += i
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return sum_of_primes
 
 

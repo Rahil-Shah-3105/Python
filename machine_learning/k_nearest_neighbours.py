@@ -18,6 +18,8 @@ from heapq import nsmallest
 import numpy as np
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
+import logging
+logger = logging.getLogger(__name__)
 
 
 class KNN:
@@ -42,6 +44,8 @@ class KNN:
         >>> KNN._euclidean_distance(np.array([1, 2, 3]), np.array([1, 8, 11]))
         10.0
         """
+        logger.debug(">>> Entering _euclidean_distance(a=%s,b=%s)", a, b)
+        logger.debug("<<< Exiting _euclidean_distance(a=%s,b=%s)", a, b)
         return float(np.linalg.norm(a - b))
 
     def classify(self, pred_point: np.ndarray[float], k: int = 5) -> str:
@@ -57,6 +61,8 @@ class KNN:
         >>> knn.classify(point)
         'A'
         """
+        logger.debug(">>> Entering classify(pred_point=%s,k=%s)", pred_point, k)
+        logger.debug("classify(self=%s,pred_point=%s,k=%s): distances → %s", self, pred_point, k, distances)
         # Distances of all points from the point to be classified
         distances = (
             (self._euclidean_distance(data_point[0], pred_point), data_point[1])
@@ -65,9 +71,13 @@ class KNN:
 
         # Choosing k points with the shortest distances
         votes = (i[1] for i in nsmallest(k, distances))
+        logger.debug("classify(self=%s,pred_point=%s,k=%s): votes → %s", self, pred_point, k, votes)
+        logger.debug("classify(pred_point=%s,k=%s): votes → %s", pred_point, k, votes)
 
         # Most commonly occurring class is the one into which the point is classified
         result = Counter(votes).most_common(1)[0][0]
+        logger.debug("classify(pred_point=%s,k=%s): result → %s", pred_point, k, result)
+        logger.debug("<<< Exiting classify(pred_point=%s,k=%s)", pred_point, k)
         return self.labels[result]
 
 

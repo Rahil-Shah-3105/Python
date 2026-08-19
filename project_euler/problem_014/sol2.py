@@ -27,17 +27,22 @@ Which starting number, under one million, produces the longest chain?
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 COLLATZ_SEQUENCE_LENGTHS = {1: 1}
 
 
 def collatz_sequence_length(n: int) -> int:
     """Returns the Collatz sequence length for n."""
+    logger.debug(">>> Entering collatz_sequence_length(n=%s)", n)
     if n in COLLATZ_SEQUENCE_LENGTHS:
         return COLLATZ_SEQUENCE_LENGTHS[n]
     next_n = n // 2 if n % 2 == 0 else 3 * n + 1
     sequence_length = collatz_sequence_length(next_n) + 1
+    logger.debug("collatz_sequence_length(n=%s): sequence_length → %s", n, sequence_length)
     COLLATZ_SEQUENCE_LENGTHS[n] = sequence_length
+    logger.debug("<<< Exiting collatz_sequence_length(n=%s)", n)
     return sequence_length
 
 
@@ -53,8 +58,11 @@ def solution(n: int = 1000000) -> int:
     >>> solution(15000)
     13255
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     result = max((collatz_sequence_length(i), i) for i in range(1, n))
+    logger.debug("solution(n=%s): result → %s", n, result)
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return result[1]
 
 

@@ -13,6 +13,8 @@ For more information: https://en.wikipedia.org/wiki/Cycle_detection#Floyd's_tort
 from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any, Self
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -48,11 +50,15 @@ class LinkedList:
         >>> tuple(linked_list)
         (1,)
         """
+        logger.debug(">>> Entering __iter__()")
         visited = []
+        logger.debug("__iter__(self=%s): visited → %s", self, visited)
         node = self.head
+        logger.debug("__iter__(self=%s): node → %s", self, node)
         while node:
             # Avoid infinite loop in there's a cycle
             if node in visited:
+                logger.debug("<<< Exiting __iter__()")
                 return
             visited.append(node)
             yield node.data
@@ -74,17 +80,24 @@ class LinkedList:
         >>> tuple(linked_list)
         (1, 2, 3, 4)
         """
+        logger.debug(">>> Entering add_node(data=%s)", data)
         new_node = Node(data)
+        logger.debug("add_node(self=%s,data=%s): new_node → %s", self, data, new_node)
+        logger.debug("add_node(data=%s): new_node → %s", data, new_node)
 
         if self.head is None:
             self.head = new_node
+            logger.debug("add_node(self=%s,data=%s): self.head → %s", self, data, self.head)
+            logger.debug("<<< Exiting add_node(data=%s)", data)
             return
 
         current_node = self.head
+        logger.debug("add_node(self=%s,data=%s): current_node → %s", self, data, current_node)
         while current_node.next_node is not None:
             current_node = current_node.next_node
 
         current_node.next_node = new_node
+        logger.debug("add_node(self=%s,data=%s): current_node.next_node → %s", self, data, current_node.next_node)
 
     def detect_cycle(self) -> bool:
         """
@@ -110,6 +123,7 @@ class LinkedList:
         >>> linked_list.detect_cycle()
         True
         """
+        logger.debug(">>> Entering detect_cycle()")
         if self.head is None:
             return False
 
@@ -119,9 +133,11 @@ class LinkedList:
         while fast_pointer is not None and fast_pointer.next_node is not None:
             slow_pointer = slow_pointer.next_node if slow_pointer else None
             fast_pointer = fast_pointer.next_node.next_node
+            logger.debug("detect_cycle(self=%s): fast_pointer → %s", self, fast_pointer)
             if slow_pointer == fast_pointer:
                 return True
 
+        logger.debug("<<< Exiting detect_cycle()")
         return False
 
 

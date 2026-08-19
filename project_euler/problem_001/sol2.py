@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 1: https://projecteuler.net/problem=1
 
@@ -23,14 +25,18 @@ def solution(n: int = 1000) -> int:
     >>> solution(600)
     83700
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     total = 0
+    logger.debug("solution(n=%s): total → %s", n, total)
     terms = (n - 1) // 3
+    logger.debug("solution(n=%s): terms → %s", n, terms)
     total += ((terms) * (6 + (terms - 1) * 3)) // 2  # total of an A.P.
     terms = (n - 1) // 5
     total += ((terms) * (10 + (terms - 1) * 5)) // 2
     terms = (n - 1) // 15
     total -= ((terms) * (30 + (terms - 1) * 15)) // 2
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return total
 
 

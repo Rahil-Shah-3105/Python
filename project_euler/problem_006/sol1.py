@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 6: https://projecteuler.net/problem=6
 
@@ -31,12 +33,16 @@ def solution(n: int = 100) -> int:
     >>> solution(50)
     1582700
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     sum_of_squares = 0
+    logger.debug("solution(n=%s): sum_of_squares → %s", n, sum_of_squares)
     sum_of_ints = 0
+    logger.debug("solution(n=%s): sum_of_ints → %s", n, sum_of_ints)
     for i in range(1, n + 1):
         sum_of_squares += i**2
         sum_of_ints += i
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return sum_of_ints**2 - sum_of_squares
 
 

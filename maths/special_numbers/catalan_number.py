@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 
 Calculate the nth Catalan number
@@ -29,9 +31,11 @@ def catalan(number: int) -> int:
         ...
     TypeError: Input value of [number=5.0] must be an integer
     """
+    logger.debug(">>> Entering catalan(number=%s)", number)
 
     if not isinstance(number, int):
         msg = f"Input value of [number={number}] must be an integer"
+        logger.debug("catalan(number=%s): msg → %s", number, msg)
         raise TypeError(msg)
 
     if number < 1:
@@ -39,11 +43,13 @@ def catalan(number: int) -> int:
         raise ValueError(msg)
 
     current_number = 1
+    logger.debug("catalan(number=%s): current_number → %s", number, current_number)
 
     for i in range(1, number):
         current_number *= 4 * i - 2
         current_number //= i + 1
 
+    logger.debug("<<< Exiting catalan(number=%s)", number)
     return current_number
 
 

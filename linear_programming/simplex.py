@@ -16,6 +16,8 @@ https://tinyurl.com/simplex4beginners
 from typing import Any
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Tableau:
@@ -94,7 +96,13 @@ class Tableau:
         ... 2, 2).generate_col_titles()
         ['x1', 'x2', 'RHS']
         """
+        logger.debug(">>> Entering generate_col_titles()")
+        logger.debug("generate_col_titles(): string_starts → %s", string_starts)
+        logger.debug("generate_col_titles(self=%s): string_starts → %s", self, string_starts)
+        logger.debug("generate_col_titles(self=%s): titles → %s", self, titles)
         args = (self.n_vars, self.n_slack)
+        logger.debug("generate_col_titles(self=%s): args → %s", self, args)
+        logger.debug("generate_col_titles(): args → %s", args)
 
         # decision | slack
         string_starts = ["x", "s"]
@@ -103,6 +111,7 @@ class Tableau:
             for j in range(args[i]):
                 titles.append(string_starts[i] + str(j + 1))
         titles.append("RHS")
+        logger.debug("<<< Exiting generate_col_titles()")
         return titles
 
     def find_pivot(self) -> tuple[Any, Any]:
@@ -111,15 +120,21 @@ class Tableau:
         ... [1,2,0,1,7.]]), 2, 0).find_pivot())
         (1, 0)
         """
+        logger.debug(">>> Entering find_pivot()")
         objective = self.objectives[-1]
+        logger.debug("find_pivot(self=%s): objective → %s", self, objective)
 
         # Find entries of highest magnitude in objective rows
         sign = (objective == "min") - (objective == "max")
+        logger.debug("find_pivot(): sign → %s", sign)
         col_idx = np.argmax(sign * self.tableau[0, :-1])
+        logger.debug("find_pivot(self=%s): col_idx → %s", self, col_idx)
+        logger.debug("find_pivot(): col_idx → %s", col_idx)
 
         # Choice is only valid if below 0 for maximise, and above for minimise
         if sign * self.tableau[0, col_idx] <= 0:
             self.stop_iter = True
+            logger.debug("find_pivot(self=%s): self.stop_iter → %s", self, self.stop_iter)
             return 0, 0
 
         # Pivot row is chosen as having the lowest quotient when elements of
@@ -130,20 +145,26 @@ class Tableau:
 
         # RHS
         dividend = self.tableau[s, -1]
+        logger.debug("find_pivot(self=%s): dividend → %s", self, dividend)
 
         # Elements of pivot column within slice
         divisor = self.tableau[s, col_idx]
+        logger.debug("find_pivot(self=%s): divisor → %s", self, divisor)
 
         # Array filled with nans
         nans = np.full(self.n_rows - self.n_stages, np.nan)
+        logger.debug("find_pivot(self=%s): nans → %s", self, nans)
 
         # If element in pivot column is greater than zero, return
         # quotient or nan otherwise
         quotients = np.divide(dividend, divisor, out=nans, where=divisor > 0)
+        logger.debug("find_pivot(self=%s): quotients → %s", self, quotients)
 
         # Arg of minimum quotient excluding the nan values. n_stages is added
         # to compensate for earlier exclusion of objective columns
         row_idx = np.nanargmin(quotients) + self.n_stages
+        logger.debug("find_pivot(self=%s): row_idx → %s", self, row_idx)
+        logger.debug("<<< Exiting find_pivot()")
         return row_idx, col_idx
 
     def pivot(self, row_idx: int, col_idx: int) -> np.ndarray:
@@ -156,10 +177,14 @@ class Tableau:
         [1.0, 3.0, 1.0, 0.0, 4.0],
         [0.0, -8.0, -3.0, 1.0, -8.0]]
         """
+        logger.debug(">>> Entering pivot(row_idx=%s,col_idx=%s)", row_idx, col_idx)
+        logger.debug("pivot(row_idx=%s,col_idx=%s): piv_row → %s", row_idx, col_idx, piv_row)
+        logger.debug("pivot(self=%s,row_idx=%s,col_idx=%s): piv_row → %s", self, row_idx, col_idx, piv_row)
         # Avoid changes to original tableau
         piv_row = self.tableau[row_idx].copy()
 
         piv_val = piv_row[col_idx]
+        logger.debug("pivot(self=%s,row_idx=%s,col_idx=%s): piv_val → %s", self, row_idx, col_idx, piv_val)
 
         # Entry becomes 1
         piv_row *= 1 / piv_val
@@ -168,6 +193,7 @@ class Tableau:
         for idx, coeff in enumerate(self.tableau[:, col_idx]):
             self.tableau[idx] += -coeff * piv_row
         self.tableau[row_idx] = piv_row
+        logger.debug("<<< Exiting pivot(row_idx=%s,col_idx=%s)", row_idx, col_idx)
         return self.tableau
 
     def change_stage(self) -> np.ndarray:
@@ -186,6 +212,7 @@ class Tableau:
         [1.0, 2.0, -1.0, 0.0, 2.0],
         [2.0, 1.0, 0.0, -1.0, 2.0]]
         """
+        logger.debug(">>> Entering change_stage()")
         # Objective of original objective row remains
         self.objectives.pop()
 
@@ -202,9 +229,13 @@ class Tableau:
         self.tableau = np.delete(self.tableau, 0, axis=0)
 
         self.n_stages = 1
+        logger.debug("change_stage(self=%s): self.n_stages → %s", self, self.n_stages)
         self.n_rows -= 1
         self.n_artificial_vars = 0
+        logger.debug("change_stage(self=%s): self.n_artificial_vars → %s", self, self.n_artificial_vars)
         self.stop_iter = False
+        logger.debug("change_stage(self=%s): self.stop_iter → %s", self, self.stop_iter)
+        logger.debug("<<< Exiting change_stage()")
         return self.tableau
 
     def run_simplex(self) -> dict[Any, Any]:
@@ -286,6 +317,7 @@ class Tableau:
         ... ]), 2, 2).run_simplex().items()} # doctest: +ELLIPSIS
         {'P': 132.0, 'x1': 12.000... 'x2': 5.999...}
         """
+        logger.debug(">>> Entering run_simplex()")
         # Stop simplex algorithm from cycling.
         for _ in range(Tableau.maxiter):
             # Completion of each stage removes an objective. If both stages
@@ -302,6 +334,7 @@ class Tableau:
                 self.tableau = self.change_stage()
             else:
                 self.tableau = self.pivot(row_idx, col_idx)
+        logger.debug("<<< Exiting run_simplex()")
         return {}
 
     def interpret_tableau(self) -> dict[str, float]:

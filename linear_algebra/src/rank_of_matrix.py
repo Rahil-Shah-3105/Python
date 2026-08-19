@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Calculate the rank of a matrix.
 
@@ -55,10 +57,14 @@ def rank_of_matrix(matrix: list[list[int | float]]) -> int:
     >>> rank_of_matrix([[]])
     0
     """
+    logger.debug(">>> Entering rank_of_matrix(matrix=%s)", matrix)
 
     rows = len(matrix)
+    logger.debug("rank_of_matrix(matrix=%s): rows → %s", matrix, rows)
     columns = len(matrix[0])
+    logger.debug("rank_of_matrix(matrix=%s): columns → %s", matrix, columns)
     rank = min(rows, columns)
+    logger.debug("rank_of_matrix(matrix=%s): rank → %s", matrix, rank)
 
     for row in range(rank):
         # Check if diagonal element is not zero
@@ -66,11 +72,13 @@ def rank_of_matrix(matrix: list[list[int | float]]) -> int:
             # Eliminate all the elements below the diagonal
             for col in range(row + 1, rows):
                 multiplier = matrix[col][row] / matrix[row][row]
+                logger.debug("rank_of_matrix(matrix=%s): multiplier → %s", matrix, multiplier)
                 for i in range(row, columns):
                     matrix[col][i] -= multiplier * matrix[row][i]
         else:
             # Find a non-zero diagonal element to swap rows
             reduce = True
+            logger.debug("rank_of_matrix(matrix=%s): reduce → %s", matrix, reduce)
             for i in range(row + 1, rows):
                 if matrix[i][row] != 0:
                     matrix[row], matrix[i] = matrix[i], matrix[row]
@@ -84,6 +92,7 @@ def rank_of_matrix(matrix: list[list[int | float]]) -> int:
             # Reduce the row pointer by one to stay on the same row
             row -= 1
 
+    logger.debug("<<< Exiting rank_of_matrix(matrix=%s)", matrix)
     return rank
 
 

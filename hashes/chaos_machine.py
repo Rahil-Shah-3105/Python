@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """example of simple chaos machine"""
 
 # Chaos Machine (K, t, m)
@@ -14,18 +16,22 @@ machine_time = 0
 
 
 def push(seed):
+    logger.debug(">>> Entering push(seed=%s)", seed)
     global buffer_space, params_space, machine_time, K, m, t
 
     # Choosing Dynamical Systems (All)
     for key, value in enumerate(buffer_space):
         # Evolution Parameter
         e = float(seed / value)
+        logger.debug("push(seed=%s): e → %s", seed, e)
 
         # Control Theory: Orbit Change
         value = (buffer_space[(key + 1) % m] + e) % 1
+        logger.debug("push(seed=%s): value → %s", seed, value)
 
         # Control Theory: Trajectory Change
         r = (params_space[key] + e) % 1 + 3
+        logger.debug("push(seed=%s): r → %s", seed, r)
 
         # Modification (Transition Function) - Jumps
         buffer_space[key] = round(float(r * value * (1 - value)), 10)
@@ -37,16 +43,21 @@ def push(seed):
 
     # Machine Time
     machine_time += 1
+    logger.debug("<<< Exiting push(seed=%s)", seed)
 
 
 def pull():
+    logger.debug(">>> Entering pull()")
     global buffer_space, params_space, machine_time, K, m, t
+    logger.debug("<<< Exiting pull()")
 
     # PRNG (Xorshift by George Marsaglia)
     def xorshift(x, y):
+        logger.debug(">>> Entering xorshift(x=%s,y=%s)", x, y)
         x ^= y >> 13
         y ^= x << 17
         x ^= y >> 5
+        logger.debug("<<< Exiting xorshift(x=%s,y=%s)", x, y)
         return x
 
     # Choosing Dynamical Systems (Increment)
@@ -73,11 +84,16 @@ def pull():
 
 
 def reset():
+    logger.debug(">>> Entering reset()")
     global buffer_space, params_space, machine_time, K, m, t
 
+    logger.debug("<<< Exiting reset()")
     buffer_space = K
+    logger.debug("reset(): buffer_space → %s", buffer_space)
     params_space = [0] * m
+    logger.debug("reset(): params_space → %s", params_space)
     machine_time = 0
+    logger.debug("reset(): machine_time → %s", machine_time)
 
 
 if __name__ == "__main__":

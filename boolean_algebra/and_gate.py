@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 An AND Gate is a logic gate in boolean algebra which results to 1 (True) if all the
 inputs are 1 (True), and 0 (False) otherwise.
@@ -29,6 +31,8 @@ def and_gate(input_1: int, input_2: int) -> int:
     >>> and_gate(1, 1)
     1
     """
+    logger.debug(">>> Entering and_gate(input_1=%s,input_2=%s)", input_1, input_2)
+    logger.debug("<<< Exiting and_gate(input_1=%s,input_2=%s)", input_1, input_2)
     return int(input_1 and input_2)
 
 
@@ -41,6 +45,8 @@ def n_input_and_gate(inputs: list[int]) -> int:
     >>> n_input_and_gate([1, 1, 1, 1, 1])
     1
     """
+    logger.debug(">>> Entering n_input_and_gate(inputs=%s)", inputs)
+    logger.debug("<<< Exiting n_input_and_gate(inputs=%s)", inputs)
     return int(all(inputs))
 
 

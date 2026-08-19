@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Bead sort only works for sequences of non-negative integers.
 https://en.wikipedia.org/wiki/Bead_sort
@@ -28,6 +30,7 @@ def bead_sort(sequence: list) -> list:
         ...
     TypeError: Sequence must be list of non-negative integers
     """
+    logger.debug(">>> Entering bead_sort(sequence=%s)", sequence)
     if any(not isinstance(x, int) or x < 0 for x in sequence):
         raise TypeError("Sequence must be list of non-negative integers")
     for _ in range(len(sequence)):
@@ -35,6 +38,7 @@ def bead_sort(sequence: list) -> list:
             if rod_upper > rod_lower:
                 sequence[i] -= rod_upper - rod_lower
                 sequence[i + 1] += rod_upper - rod_lower
+    logger.debug("<<< Exiting bead_sort(sequence=%s)", sequence)
     return sequence
 
 

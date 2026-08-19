@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Given an two dimensional binary matrix grid. An island is a group of 1's (representing
 land) connected 4-directionally (horizontal or vertical.) You may assume all four edges
@@ -27,6 +29,8 @@ def is_safe(row: int, col: int, rows: int, cols: int) -> bool:
     >>> is_safe(-1,-1, 5, 5)
     False
     """
+    logger.debug(">>> Entering is_safe(row=%s,col=%s,rows=%s,cols=%s)", row, col, rows, cols)
+    logger.debug("<<< Exiting is_safe(row=%s,col=%s,rows=%s,cols=%s)", row, col, rows, cols)
     return 0 <= row < rows and 0 <= col < cols
 
 
@@ -37,8 +41,11 @@ def depth_first_search(row: int, col: int, seen: set, mat: list[list[int]]) -> i
     >>> depth_first_search(0, 0, set(), matrix)
     0
     """
+    logger.debug(">>> Entering depth_first_search(row=%s,col=%s,seen=%s,mat=%s)", row, col, seen, mat)
     rows = len(mat)
+    logger.debug("depth_first_search(row=%s,col=%s,seen=%s,mat=%s): rows → %s", row, col, seen, mat, rows)
     cols = len(mat[0])
+    logger.debug("depth_first_search(row=%s,col=%s,seen=%s,mat=%s): cols → %s", row, col, seen, mat, cols)
     if is_safe(row, col, rows, cols) and (row, col) not in seen and mat[row][col] == 1:
         seen.add((row, col))
         return (
@@ -49,6 +56,7 @@ def depth_first_search(row: int, col: int, seen: set, mat: list[list[int]]) -> i
             + depth_first_search(row, col - 1, seen, mat)
         )
     else:
+        logger.debug("<<< Exiting depth_first_search(row=%s,col=%s,seen=%s,mat=%s)", row, col, seen, mat)
         return 0
 
 
@@ -59,14 +67,18 @@ def find_max_area(mat: list[list[int]]) -> int:
     >>> find_max_area(matrix)
     6
     """
+    logger.debug(">>> Entering find_max_area(mat=%s)", mat)
+    logger.debug("find_max_area(mat=%s): seen → %s", mat, seen)
     seen: set = set()
 
     max_area = 0
+    logger.debug("find_max_area(mat=%s): max_area → %s", mat, max_area)
     for row, line in enumerate(mat):
         for col, item in enumerate(line):
             if item == 1 and (row, col) not in seen:
                 # Maximizing the area
                 max_area = max(max_area, depth_first_search(row, col, seen, mat))
+    logger.debug("<<< Exiting find_max_area(mat=%s)", mat)
     return max_area
 
 

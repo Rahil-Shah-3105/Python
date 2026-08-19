@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def kruskal(
     num_nodes: int, edges: list[tuple[int, int, int]]
 ) -> list[tuple[int, int, int]]:
@@ -17,8 +19,10 @@ def kruskal(
     parent = list(range(num_nodes))
 
     def find_parent(i):
+        logger.debug(">>> Entering find_parent(i=%s)", i)
         if i != parent[i]:
             parent[i] = find_parent(parent[i])
+        logger.debug("<<< Exiting find_parent(i=%s)", i)
         return parent[i]
 
     minimum_spanning_tree_cost = 0

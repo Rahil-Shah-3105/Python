@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 114: https://projecteuler.net/problem=114
 
@@ -39,8 +41,10 @@ def solution(length: int = 50) -> int:
     >>> solution(7)
     17
     """
+    logger.debug(">>> Entering solution(length=%s)", length)
 
     ways_number = [1] * (length + 1)
+    logger.debug("solution(length=%s): ways_number → %s", length, ways_number)
 
     for row_length in range(3, length + 1):
         for block_length in range(3, row_length + 1):
@@ -51,6 +55,7 @@ def solution(length: int = 50) -> int:
 
             ways_number[row_length] += 1
 
+    logger.debug("<<< Exiting solution(length=%s)", length)
     return ways_number[length]
 
 

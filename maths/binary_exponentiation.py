@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Binary Exponentiation
 
@@ -37,6 +39,7 @@ def binary_exp_recursive(base: float, exponent: int) -> float:
         ...
     ValueError: Exponent must be a non-negative integer
     """
+    logger.debug(">>> Entering binary_exp_recursive(base=%s,exponent=%s)", base, exponent)
     if exponent < 0:
         raise ValueError("Exponent must be a non-negative integer")
 

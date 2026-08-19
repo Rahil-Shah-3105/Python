@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Base32 encoding and decoding
 
@@ -16,10 +18,14 @@ def base32_encode(data: bytes) -> bytes:
     >>> base32_encode(b"some long complex string")
     b'ONXW2ZJANRXW4ZZAMNXW24DMMV4CA43UOJUW4ZY='
     """
+    logger.debug(">>> Entering base32_encode(data=%s)", data)
     binary_data = "".join(bin(ord(d))[2:].zfill(8) for d in data.decode("utf-8"))
     binary_data = binary_data.ljust(5 * ((len(binary_data) // 5) + 1), "0")
+    logger.debug("base32_encode(data=%s): binary_data → %s", data, binary_data)
     b32_chunks = map("".join, zip(*[iter(binary_data)] * 5))
+    logger.debug("base32_encode(data=%s): b32_chunks → %s", data, b32_chunks)
     b32_result = "".join(B32_CHARSET[int(chunk, 2)] for chunk in b32_chunks)
+    logger.debug("base32_encode(data=%s): b32_result → %s", data, b32_result)
     return bytes(b32_result.ljust(8 * ((len(b32_result) // 8) + 1), "="), "utf-8")
 
 

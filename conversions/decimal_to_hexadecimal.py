@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """Convert Base 10 (Decimal) Values to Hexadecimal Representations"""
 
 # set decimal value for each hexadecimal digit
@@ -57,11 +59,16 @@ def decimal_to_hexadecimal(decimal: float) -> str:
     >>> decimal_to_hexadecimal(-256) == hex(-256)
     True
     """
+    logger.debug(">>> Entering decimal_to_hexadecimal(decimal=%s)", decimal)
     assert isinstance(decimal, (int, float))
+    logger.error("Exception in decimal_to_hexadecimal(decimal=%s)", decimal, exc_info=True)
     assert decimal == int(decimal)
     decimal = int(decimal)
+    logger.debug("decimal_to_hexadecimal(decimal=%s): decimal → %s", decimal, decimal)
     hexadecimal = ""
+    logger.debug("decimal_to_hexadecimal(decimal=%s): hexadecimal → %s", decimal, hexadecimal)
     negative = False
+    logger.debug("decimal_to_hexadecimal(decimal=%s): negative → %s", decimal, negative)
     if decimal < 0:
         negative = True
         decimal *= -1
@@ -71,6 +78,7 @@ def decimal_to_hexadecimal(decimal: float) -> str:
     hexadecimal = "0x" + hexadecimal
     if negative:
         hexadecimal = "-" + hexadecimal
+    logger.debug("<<< Exiting decimal_to_hexadecimal(decimal=%s)", decimal)
     return hexadecimal
 
 

@@ -5,6 +5,8 @@ https://en.wikipedia.org/wiki/Co-occurrence_matrix#Application_to_image_analysis
 
 import imageio.v2 as imageio
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def root_mean_square_error(original: np.ndarray, reference: np.ndarray) -> float:
@@ -19,6 +21,8 @@ def root_mean_square_error(original: np.ndarray, reference: np.ndarray) -> float
         >>> root_mean_square_error(np.array([1, 2, 3]), np.array([6, 4, 2]))
         3.1622776601683795
     """
+    logger.debug(">>> Entering root_mean_square_error(original=%s,reference=%s)", original, reference)
+    logger.debug("<<< Exiting root_mean_square_error(original=%s,reference=%s)", original, reference)
     return float(np.sqrt(((original - reference) ** 2).mean()))
 
 
@@ -67,7 +71,9 @@ def normalize_array(array: np.ndarray, cap: float = 1) -> np.ndarray:
                [0.75],
                [1.  ]])
     """
+    logger.debug(">>> Entering normalize_array(array=%s,cap=%s)", array, cap)
     diff = np.max(array) - np.min(array)
+    logger.debug("<<< Exiting normalize_array(array=%s,cap=%s)", array, cap)
     return (array - np.min(array)) / (1 if diff == 0 else diff) * cap
 
 
@@ -82,6 +88,8 @@ def grayscale(image: np.ndarray) -> np.ndarray:
         array([[158,  97],
                [ 56, 200]], dtype=uint8)
     """
+    logger.debug(">>> Entering grayscale(image=%s)", image)
+    logger.debug("<<< Exiting grayscale(image=%s)", image)
     return np.dot(image[:, :, 0:3], [0.299, 0.587, 0.114]).astype(np.uint8)
 
 
@@ -98,6 +106,8 @@ def binarize(image: np.ndarray, threshold: float = 127.0) -> np.ndarray:
         array([[0, 1],
                [1, 0]])
     """
+    logger.debug(">>> Entering binarize(image=%s,threshold=%s)", image, threshold)
+    logger.debug("<<< Exiting binarize(image=%s,threshold=%s)", image, threshold)
     return np.where(image > threshold, 1, 0)
 
 

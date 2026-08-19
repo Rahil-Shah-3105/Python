@@ -14,6 +14,8 @@ from collections.abc import Sequence
 from random import randint
 
 from matplotlib import pyplot as plt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def max_subarray(
@@ -85,16 +87,24 @@ def max_cross_sum(
 
 
 def time_max_subarray(input_size: int) -> float:
+    logger.debug(">>> Entering time_max_subarray(input_size=%s)", input_size)
     arr = [randint(1, input_size) for _ in range(input_size)]
+    logger.debug("time_max_subarray(input_size=%s): arr → %s", input_size, arr)
     start = time.time()
     max_subarray(arr, 0, input_size - 1)
+    logger.debug("time_max_subarray(input_size=%s): start → %s", input_size, start)
     end = time.time()
+    logger.debug("time_max_subarray(input_size=%s): end → %s", input_size, end)
+    logger.debug("<<< Exiting time_max_subarray(input_size=%s)", input_size)
     return end - start
 
 
 def plot_runtimes() -> None:
+    logger.debug(">>> Entering plot_runtimes()")
     input_sizes = [10, 100, 1000, 10000, 50000, 100000, 200000, 300000, 400000, 500000]
+    logger.debug("plot_runtimes(): input_sizes → %s", input_sizes)
     runtimes = [time_max_subarray(input_size) for input_size in input_sizes]
+    logger.debug("plot_runtimes(): runtimes → %s", runtimes)
     print("No of Inputs\t\tTime Taken")
     for input_size, runtime in zip(input_sizes, runtimes):
         print(input_size, "\t\t", runtime)
@@ -102,6 +112,7 @@ def plot_runtimes() -> None:
     plt.xlabel("Number of Inputs")
     plt.ylabel("Time taken in seconds")
     plt.show()
+    logger.debug("<<< Exiting plot_runtimes()")
 
 
 if __name__ == "__main__":

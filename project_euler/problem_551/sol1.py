@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Sum of digits sequence
 Problem 551
@@ -39,21 +41,28 @@ def next_term(a_i, k, i, n):
     the number of terms calculated. ex. if starting term is a_0=1, and
     ending term is a_10=62, then (61, 9) is returned.
     """
+    logger.debug(">>> Entering next_term(a_i=%s,k=%s,i=%s,n=%s)", a_i, k, i, n)
     # ds_b - digitsum(b)
     ds_b = sum(a_i[j] for j in range(k, len(a_i)))
+    logger.debug("next_term(a_i=%s,k=%s,i=%s,n=%s): ds_b → %s", a_i, k, i, n, ds_b)
     c = sum(a_i[j] * base[j] for j in range(min(len(a_i), k)))
+    logger.debug("next_term(a_i=%s,k=%s,i=%s,n=%s): c → %s", a_i, k, i, n, c)
 
     diff, dn = 0, 0
     max_dn = n - i
+    logger.debug("next_term(a_i=%s,k=%s,i=%s,n=%s): max_dn → %s", a_i, k, i, n, max_dn)
 
     sub_memo = memo.get(ds_b)
+    logger.debug("next_term(a_i=%s,k=%s,i=%s,n=%s): sub_memo → %s", a_i, k, i, n, sub_memo)
 
     if sub_memo is not None:
         jumps = sub_memo.get(c)
+        logger.debug("next_term(a_i=%s,k=%s,i=%s,n=%s): jumps → %s", a_i, k, i, n, jumps)
 
         if jumps is not None and len(jumps) > 0:
             # find and make the largest jump without going over
             max_jump = -1
+            logger.debug("next_term(a_i=%s,k=%s,i=%s,n=%s): max_jump → %s", a_i, k, i, n, max_jump)
             for _k in range(len(jumps) - 1, -1, -1):
                 if jumps[_k][2] <= k and jumps[_k][1] <= max_dn:
                     max_jump = _k
@@ -63,6 +72,7 @@ def next_term(a_i, k, i, n):
                 diff, dn, _kk = jumps[max_jump]
                 # since the difference between jumps is cached, add c
                 new_c = diff + c
+                logger.debug("next_term(a_i=%s,k=%s,i=%s,n=%s): new_c → %s", a_i, k, i, n, new_c)
                 for j in range(min(k, len(a_i))):
                     new_c, a_i[j] = divmod(new_c, 10)
                 if new_c > 0:
@@ -103,6 +113,7 @@ def next_term(a_i, k, i, n):
 
     # cache the jump for this value digitsum(b) and c
     sub_memo[c].insert(j, (diff, dn, k))
+    logger.debug("<<< Exiting next_term(a_i=%s,k=%s,i=%s,n=%s)", a_i, k, i, n)
     return (diff, dn)
 
 
@@ -110,6 +121,7 @@ def compute(a_i, k, i, n):
     """
     same as next_term(a_i, k, i, n) but computes terms without memoizing results.
     """
+    logger.debug(">>> Entering compute(a_i=%s,k=%s,i=%s,n=%s)", a_i, k, i, n)
     if i >= n:
         return 0, i
     if k > len(a_i):
@@ -119,6 +131,7 @@ def compute(a_i, k, i, n):
     # ds_b -> digitsum(b)
     # ds_c -> digitsum(c)
     start_i = i
+    logger.debug("compute(a_i=%s,k=%s,i=%s,n=%s): start_i → %s", a_i, k, i, n, start_i)
     ds_b, ds_c, diff = 0, 0, 0
     for j in range(len(a_i)):
         if j >= k:
@@ -129,6 +142,7 @@ def compute(a_i, k, i, n):
     while i < n:
         i += 1
         addend = ds_c + ds_b
+        logger.debug("compute(a_i=%s,k=%s,i=%s,n=%s): addend → %s", a_i, k, i, n, addend)
         diff += addend
         ds_c = 0
         for j in range(k):
@@ -142,6 +156,7 @@ def compute(a_i, k, i, n):
 
     if addend > 0:
         add(a_i, k, addend)
+    logger.debug("<<< Exiting compute(a_i=%s,k=%s,i=%s,n=%s)", a_i, k, i, n)
     return diff, i - start_i
 
 
@@ -150,6 +165,7 @@ def add(digits, k, addend):
     adds addend to digit array given in digits
     starting at index k
     """
+    logger.debug(">>> Entering add(digits=%s,k=%s,addend=%s)", digits, k, addend)
     for j in range(k, len(digits)):
         s = digits[j] + addend
         if s >= 10:
@@ -164,6 +180,7 @@ def add(digits, k, addend):
 
     while addend > 0:
         addend, digit = divmod(addend, 10)
+        logger.debug("<<< Exiting add(digits=%s,k=%s,addend=%s)", digits, k, addend)
         digits.append(digit)
 
 
@@ -180,8 +197,10 @@ def solution(n: int = 10**15) -> int:
     >>> solution(10**15)
     73597483551591773
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     digits = [1]
+    logger.debug("solution(n=%s): digits → %s", n, digits)
     i = 1
     dn = 0
     while True:
@@ -191,8 +210,10 @@ def solution(n: int = 10**15) -> int:
             break
 
     a_n = 0
+    logger.debug("solution(n=%s): a_n → %s", n, a_n)
     for j in range(len(digits)):
         a_n += digits[j] * 10**j
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return a_n
 
 

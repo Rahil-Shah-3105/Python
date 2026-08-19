@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def binary_count_setbits(a: int) -> int:
     """
     Take in 1 integer, return a number that is
@@ -28,10 +30,12 @@ def binary_count_setbits(a: int) -> int:
         ...
     TypeError: '<' not supported between instances of 'str' and 'int'
     """
+    logger.debug(">>> Entering binary_count_setbits(a=%s)", a)
     if a < 0:
         raise ValueError("Input value must be a positive integer")
     elif isinstance(a, float):
         raise TypeError("Input value must be a 'int' type")
+    logger.debug("<<< Exiting binary_count_setbits(a=%s)", a)
     return bin(a).count("1")
 
 

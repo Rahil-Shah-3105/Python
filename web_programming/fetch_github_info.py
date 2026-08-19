@@ -31,6 +31,8 @@ import os
 from typing import Any
 
 import httpx
+import logging
+logger = logging.getLogger(__name__)
 
 BASE_URL = "https://api.github.com"
 
@@ -45,10 +47,12 @@ def fetch_github_info(auth_token: str) -> dict[Any, Any]:
     """
     Fetch GitHub info of a user using the httpx module
     """
+    logger.debug(">>> Entering fetch_github_info(auth_token=<redacted>)")
     headers = {
         "Authorization": f"token {auth_token}",
         "Accept": "application/vnd.github.v3+json",
     }
+    logger.debug("<<< Exiting fetch_github_info(auth_token=<redacted>)")
     return httpx.get(AUTHENTICATED_USER_ENDPOINT, headers=headers, timeout=10).json()
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Prize Strings
 Problem 191
@@ -45,6 +47,7 @@ def _calculate(days: int, absent: int, late: int) -> int:
     >>> _calculate(days=30, absent=1, late=0)
     98950096
     """
+    logger.debug(">>> Entering _calculate(days=%s,absent=%s,late=%s)", days, absent, late)
 
     # if we are absent twice, or late 3 consecutive days,
     # no further prize strings are possible
@@ -62,6 +65,7 @@ def _calculate(days: int, absent: int, late: int) -> int:
     # if yes, return the stored value from there since we already
     # know the number of possible prize strings from this point on
     key = (days, absent, late)
+    logger.warning("_calculate(days=%s,absent=%s,late=%s): key → %s", days, absent, late, key)
     if key in cache:
         return cache[key]
 
@@ -71,18 +75,23 @@ def _calculate(days: int, absent: int, late: int) -> int:
     # 1) if we are late (but not absent), the "absent" counter stays as
     # it is, but the "late" counter increases by one
     state_late = _calculate(days - 1, absent, late + 1)
+    logger.debug("_calculate(days=%s,absent=%s,late=%s): state_late → %s", days, absent, late, state_late)
 
     # 2) if we are absent, the "absent" counter increases by 1, and the
     # "late" counter resets to 0
     state_absent = _calculate(days - 1, absent + 1, 0)
+    logger.debug("_calculate(days=%s,absent=%s,late=%s): state_absent → %s", days, absent, late, state_absent)
 
     # 3) if we are on time, this resets the "late" counter and keeps the
     # absent counter
     state_ontime = _calculate(days - 1, absent, 0)
+    logger.debug("_calculate(days=%s,absent=%s,late=%s): state_ontime → %s", days, absent, late, state_ontime)
 
     prizestrings = state_late + state_absent + state_ontime
+    logger.debug("_calculate(days=%s,absent=%s,late=%s): prizestrings → %s", days, absent, late, prizestrings)
 
     cache[key] = prizestrings
+    logger.debug("<<< Exiting _calculate(days=%s,absent=%s,late=%s)", days, absent, late)
     return prizestrings
 
 
@@ -96,7 +105,9 @@ def solution(days: int = 30) -> int:
     >>> solution(4)
     43
     """
+    logger.debug(">>> Entering solution(days=%s)", days)
 
+    logger.debug("<<< Exiting solution(days=%s)", days)
     return _calculate(days, absent=0, late=0)
 
 

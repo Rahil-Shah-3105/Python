@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def get_reverse_bit_string(number: int) -> str:
     """
     Return the reverse bit string of a 32 bit integer
@@ -15,6 +17,8 @@ def get_reverse_bit_string(number: int) -> str:
         ...
     TypeError: operation can not be conducted on an object of type str
     """
+    logger.debug(">>> Entering get_reverse_bit_string(number=%s)", number)
+    logger.debug("get_reverse_bit_string(number=%s): msg → %s", number, msg)
     if not isinstance(number, int):
         msg = (
             "operation can not be conducted on an object of type "
@@ -22,9 +26,11 @@ def get_reverse_bit_string(number: int) -> str:
         )
         raise TypeError(msg)
     bit_string = ""
+    logger.debug("get_reverse_bit_string(number=%s): bit_string → %s", number, bit_string)
     for _ in range(32):
         bit_string += str(number % 2)
         number >>= 1
+    logger.debug("<<< Exiting get_reverse_bit_string(number=%s)", number)
     return bit_string
 
 
@@ -61,22 +67,26 @@ def reverse_bit(number: int) -> int:
         ...
     TypeError: Input value must be an 'int' type
     """
+    logger.debug(">>> Entering reverse_bit(number=%s)", number)
     if not isinstance(number, int):
         raise TypeError("Input value must be an 'int' type")
     if number < 0:
         raise ValueError("The value of input must be non-negative")
 
     result = 0
+    logger.debug("reverse_bit(number=%s): result → %s", number, result)
     # iterator over [0 to 31], since we are dealing with a 32 bit integer
     for _ in range(32):
         # left shift the bits by unity
         result <<= 1
         # get the end bit
         end_bit = number & 1
+        logger.debug("reverse_bit(number=%s): end_bit → %s", number, end_bit)
         # right shift the bits by unity
         number >>= 1
         # add that bit to our answer
         result |= end_bit
+    logger.debug("<<< Exiting reverse_bit(number=%s)", number)
     return result
 
 

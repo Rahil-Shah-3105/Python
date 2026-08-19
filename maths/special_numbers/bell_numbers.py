@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Bell numbers represent the number of ways to partition a set into non-empty
 subsets. This module provides functions to calculate Bell numbers for sets of
@@ -32,16 +34,19 @@ def bell_numbers(max_set_length: int) -> list[int]:
     >>> bell_numbers(5)
     [1, 1, 2, 5, 15, 52]
     """
+    logger.debug(">>> Entering bell_numbers(max_set_length=%s)", max_set_length)
     if max_set_length < 0:
         raise ValueError("max_set_length must be non-negative")
 
     bell = [0] * (max_set_length + 1)
+    logger.debug("bell_numbers(max_set_length=%s): bell → %s", max_set_length, bell)
     bell[0] = 1
 
     for i in range(1, max_set_length + 1):
         for j in range(i):
             bell[i] += _binomial_coefficient(i - 1, j) * bell[j]
 
+    logger.debug("<<< Exiting bell_numbers(max_set_length=%s)", max_set_length)
     return bell
 
 
@@ -62,16 +67,19 @@ def _binomial_coefficient(total_elements: int, elements_to_choose: int) -> int:
     >>> _binomial_coefficient(6, 3)
     20
     """
+    logger.debug(">>> Entering _binomial_coefficient(total_elements=%s,elements_to_choose=%s)", total_elements, elements_to_choose)
     if elements_to_choose in {0, total_elements}:
         return 1
 
     elements_to_choose = min(elements_to_choose, total_elements - elements_to_choose)
 
     coefficient = 1
+    logger.debug("_binomial_coefficient(total_elements=%s,elements_to_choose=%s): coefficient → %s", total_elements, elements_to_choose, coefficient)
     for i in range(elements_to_choose):
         coefficient *= total_elements - i
         coefficient //= i + 1
 
+    logger.debug("<<< Exiting _binomial_coefficient(total_elements=%s,elements_to_choose=%s)", total_elements, elements_to_choose)
     return coefficient
 
 

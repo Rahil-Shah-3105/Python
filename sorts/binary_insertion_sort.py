@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This is a pure Python implementation of the binary insertion sort algorithm
 
@@ -37,15 +39,21 @@ def binary_insertion_sort(collection: list) -> list:
     >>> binary_insertion_sort(collection) == sorted(collection)
     True
     """
+    logger.debug(">>> Entering binary_insertion_sort(collection=%s)", collection)
 
     n = len(collection)
+    logger.debug("binary_insertion_sort(collection=%s): n → %s", collection, n)
     for i in range(1, n):
         value_to_insert = collection[i]
+        logger.debug("binary_insertion_sort(collection=%s): value_to_insert → %s", collection, value_to_insert)
         low = 0
+        logger.debug("binary_insertion_sort(collection=%s): low → %s", collection, low)
         high = i - 1
+        logger.debug("binary_insertion_sort(collection=%s): high → %s", collection, high)
 
         while low <= high:
             mid = (low + high) // 2
+            logger.debug("binary_insertion_sort(collection=%s): mid → %s", collection, mid)
             if value_to_insert < collection[mid]:
                 high = mid - 1
             else:
@@ -53,6 +61,7 @@ def binary_insertion_sort(collection: list) -> list:
         for j in range(i, low, -1):
             collection[j] = collection[j - 1]
         collection[low] = value_to_insert
+    logger.debug("<<< Exiting binary_insertion_sort(collection=%s)", collection)
     return collection
 
 

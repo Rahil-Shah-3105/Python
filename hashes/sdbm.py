@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This algorithm was created for sdbm (a public-domain reimplementation of ndbm)
 database library.
@@ -31,9 +33,12 @@ def sdbm(plain_text: str) -> int:
     >>> sdbm('scramble bits')
     730247649148944819640658295400555317318720608290373040936089
     """
+    logger.debug(">>> Entering sdbm(plain_text=%s)", plain_text)
     hash_value = 0
+    logger.debug("sdbm(plain_text=%s): hash_value → %s", plain_text, hash_value)
     for plain_chr in plain_text:
         hash_value = (
             ord(plain_chr) + (hash_value << 6) + (hash_value << 16) - hash_value
         )
+    logger.debug("<<< Exiting sdbm(plain_text=%s)", plain_text)
     return hash_value

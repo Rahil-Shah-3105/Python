@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Langton's ant
 
@@ -26,8 +28,10 @@ class LangtonsAnt:
     """
 
     def __init__(self, width: int, height: int) -> None:
+        logger.debug(">>> Entering __init__(width=%s,height=%s)", width, height)
         # Each square is either True or False where True is white and False is black
         self.board = [[True] * width for _ in range(height)]
+        logger.debug("__init__(width=%s,height=%s): self.board → %s", width, height, self.board)
         self.ant_position: tuple[int, int] = (width // 2, height // 2)
 
         # Initially pointing left (similar to the wikipedia image)

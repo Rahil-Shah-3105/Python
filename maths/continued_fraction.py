@@ -6,6 +6,8 @@ https://en.wikipedia.org/wiki/Continued_fraction
 
 from fractions import Fraction
 from math import floor
+import logging
+logger = logging.getLogger(__name__)
 
 
 def continued_fraction(num: Fraction) -> list[int]:
@@ -36,16 +38,19 @@ def continued_fraction(num: Fraction) -> list[int]:
     >>> continued_fraction(Fraction("-2.25"))    # -2.25 = -3 + 0.75
     [-3, 1, 3]
     """
+    logger.debug(">>> Entering continued_fraction(num=%s)", num)
     numerator, denominator = num.as_integer_ratio()
     continued_fraction_list: list[int] = []
     while True:
         integer_part = floor(numerator / denominator)
+        logger.debug("continued_fraction(num=%s): integer_part → %s", num, integer_part)
         continued_fraction_list.append(integer_part)
         numerator -= integer_part * denominator
         if numerator == 0:
             break
         numerator, denominator = denominator, numerator
 
+    logger.debug("<<< Exiting continued_fraction(num=%s)", num)
     return continued_fraction_list
 
 

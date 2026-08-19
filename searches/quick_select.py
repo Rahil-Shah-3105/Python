@@ -6,6 +6,8 @@ https://en.wikipedia.org/wiki/Quickselect
 """
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 def _partition(data: list, pivot) -> tuple:
@@ -16,6 +18,7 @@ def _partition(data: list, pivot) -> tuple:
     :param pivot: The value to partition the data on
     :return: Three list: smaller, equal and greater
     """
+    logger.debug(">>> Entering _partition(data=%s,pivot=%s)", data, pivot)
     less, equal, greater = [], [], []
     for element in data:
         if element < pivot:
@@ -24,6 +27,7 @@ def _partition(data: list, pivot) -> tuple:
             greater.append(element)
         else:
             equal.append(element)
+    logger.debug("<<< Exiting _partition(data=%s,pivot=%s)", data, pivot)
     return less, equal, greater
 
 
@@ -38,6 +42,7 @@ def quick_select(items: list, index: int):
     >>> quick_select([3, 5, 7, 10, 2, 12], 3)
     7
     """
+    logger.debug(">>> Entering quick_select(items=%s,index=%s)", items, index)
     # index = len(items) // 2 when trying to find the median
     #   (value of index when items is sorted)
 
@@ -46,7 +51,9 @@ def quick_select(items: list, index: int):
         return None
 
     pivot = items[random.randint(0, len(items) - 1)]
+    logger.debug("quick_select(items=%s,index=%s): pivot → %s", items, index, pivot)
     count = 0
+    logger.debug("quick_select(items=%s,index=%s): count → %s", items, index, count)
     smaller, equal, larger = _partition(items, pivot)
     count = len(equal)
     m = len(smaller)
@@ -59,6 +66,7 @@ def quick_select(items: list, index: int):
         return quick_select(smaller, index)
     # must be in larger
     else:
+        logger.debug("<<< Exiting quick_select(items=%s,index=%s)", items, index)
         return quick_select(larger, index - (m + count))
 
 
@@ -75,10 +83,14 @@ def median(items: list):
     >>> median([2, 2, 9, 9, 9, 3])
     6.0
     """
+    logger.debug(">>> Entering median(items=%s)", items)
     mid, rem = divmod(len(items), 2)
     if rem != 0:
         return quick_select(items=items, index=mid)
     else:
         low_mid = quick_select(items=items, index=mid - 1)
+        logger.debug("median(items=%s): low_mid → %s", items, low_mid)
         high_mid = quick_select(items=items, index=mid)
+        logger.debug("median(items=%s): high_mid → %s", items, high_mid)
+        logger.debug("<<< Exiting median(items=%s)", items)
         return (low_mid + high_mid) / 2

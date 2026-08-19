@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 301: https://projecteuler.net/problem=301
 
@@ -45,12 +47,17 @@ def solution(exponent: int = 30) -> int:
     >>> solution(10)
     144
     """
+    logger.debug(">>> Entering solution(exponent=%s)", exponent)
     # To find how many total games were lost for a given exponent x,
     # we need to find the Fibonacci number F(x+2).
     fibonacci_index = exponent + 2
+    logger.debug("solution(exponent=%s): fibonacci_index → %s", exponent, fibonacci_index)
     phi = (1 + 5**0.5) / 2
+    logger.debug("solution(exponent=%s): phi → %s", exponent, phi)
     fibonacci = (phi**fibonacci_index - (phi - 1) ** fibonacci_index) / 5**0.5
+    logger.debug("solution(exponent=%s): fibonacci → %s", exponent, fibonacci)
 
+    logger.debug("<<< Exiting solution(exponent=%s)", exponent)
     return int(fibonacci)
 
 
