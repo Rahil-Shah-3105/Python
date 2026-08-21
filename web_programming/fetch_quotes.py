@@ -16,15 +16,25 @@ For more details and premium features visit:
 import pprint
 
 import httpx
+import logging
+logger = logging.getLogger(__name__)
 
 API_ENDPOINT_URL = "https://zenquotes.io/api"
 
 
 def quote_of_the_day() -> list:
+    logger.debug(">>> Entering quote_of_the_day()")
+    import time; __log_start = time.time()
+    logger.debug("<<< Exiting quote_of_the_day()")
+    logger.info("quote_of_the_day()=: external service call took %s ms", int((time.time() - __log_start) * 1000))
     return httpx.get(API_ENDPOINT_URL + "/today", timeout=10).json()
 
 
 def random_quotes() -> list:
+    logger.debug(">>> Entering random_quotes()")
+    import time; __log_start = time.time()
+    logger.debug("<<< Exiting random_quotes()")
+    logger.info("random_quotes()=: external service call took %s ms", int((time.time() - __log_start) * 1000))
     return httpx.get(API_ENDPOINT_URL + "/random", timeout=10).json()
 
 

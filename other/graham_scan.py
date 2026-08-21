@@ -12,6 +12,8 @@ from collections import deque
 from enum import Enum
 from math import atan2, degrees
 from sys import maxsize
+import logging
+logger = logging.getLogger(__name__)
 
 
 # traversal from the lowest and the most left point in anti-clockwise direction
@@ -22,6 +24,8 @@ class Direction(Enum):
     right = 3
 
     def __repr__(self):
+        logger.debug(">>> Entering __repr__()")
+        logger.debug("<<< Exiting __repr__()")
         return f"{self.__class__.__name__}.{self.name}"
 
 
@@ -43,8 +47,10 @@ def angle_comparer(point: tuple[int, int], minx: int, miny: int) -> float:
     >>> angle_comparer((5,5), 2, 3)
     33.690067525979785
     """
+    logger.debug(">>> Entering angle_comparer(point=%s,minx=%s,miny=%s)", point, minx, miny)
     # sort the points accorgind to the angle from the lowest and the most left point
     x, y = point
+    logger.debug("<<< Exiting angle_comparer(point=%s,minx=%s,miny=%s)", point, minx, miny)
     return degrees(atan2(y - miny, x - minx))
 
 
@@ -109,6 +115,7 @@ def graham_scan(points: list[tuple[int, int]]) -> list[tuple[int, int]]:
     >>> graham_scan([(-100, 20), (99, 3), (1, 10000001), (5133186, -25), (-66, -4)])
     [(5133186, -25), (1, 10000001), (-100, 20), (-66, -4)]
     """
+    logger.debug(">>> Entering graham_scan(points=%s)", points)
 
     if len(points) <= 2:
         # There is no convex hull
@@ -117,13 +124,16 @@ def graham_scan(points: list[tuple[int, int]]) -> list[tuple[int, int]]:
         return points
     # find the lowest and the most left point
     minidx = 0
+    logger.debug("graham_scan(points=%s): minidx → %s", points, minidx)
     miny, minx = maxsize, maxsize
     for i, point in enumerate(points):
         x = point[0]
         y = point[1]
         if y < miny:
             miny = y
+            logger.debug("graham_scan(points=%s): miny → %s", points, miny)
             minx = x
+            logger.debug("graham_scan(points=%s): minx → %s", points, minx)
             minidx = i
         if y == miny and x < minx:
             minx = x
@@ -133,6 +143,7 @@ def graham_scan(points: list[tuple[int, int]]) -> list[tuple[int, int]]:
     points.pop(minidx)
 
     sorted_points = sorted(points, key=lambda point: angle_comparer(point, minx, miny))
+    logger.debug("graham_scan(points=%s): sorted_points → %s", points, sorted_points)
     # This insert actually costs complexity,
     # and you should instead add (minx, miny) into stack later.
     # I'm using insert just for easy understanding.
@@ -149,8 +160,11 @@ def graham_scan(points: list[tuple[int, int]]) -> list[tuple[int, int]]:
     for i in range(3, len(sorted_points)):
         while True:
             starting = stack[-2]
+            logger.debug("graham_scan(points=%s): starting → %s", points, starting)
             via = stack[-1]
+            logger.debug("graham_scan(points=%s): via → %s", points, via)
             target = sorted_points[i]
+            logger.debug("graham_scan(points=%s): target → %s", points, target)
             next_direction = check_direction(starting, via, target)
 
             if next_direction == Direction.left:
@@ -169,4 +183,5 @@ def graham_scan(points: list[tuple[int, int]]) -> list[tuple[int, int]]:
             if next_direction == Direction.right:
                 stack.pop()
         stack.append(sorted_points[i])
+    logger.debug("<<< Exiting graham_scan(points=%s)", points)
     return list(stack)

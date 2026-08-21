@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance"""
 
 
@@ -24,19 +26,28 @@ def jaro_winkler(str1: str, str2: str) -> float:
     >>> jaro_winkler("hell**o", "*world")
     0.4365079365079365
     """
+    logger.debug(">>> Entering jaro_winkler(str1=%s,str2=%s)", str1, str2)
 
+    logger.debug("<<< Exiting jaro_winkler(str1=%s,str2=%s)", str1, str2)
     def get_matched_characters(_str1: str, _str2: str) -> str:
+        logger.debug(">>> Entering get_matched_characters(_str1=%s,_str2=%s)", _str1, _str2)
+        logger.debug("get_matched_characters(_str1=%s,_str2=%s): left → %s", _str1, _str2, left)
         matched = []
+        logger.debug("get_matched_characters(_str1=%s,_str2=%s): matched → %s", _str1, _str2, matched)
         limit = min(len(_str1), len(_str2)) // 2
+        logger.debug("get_matched_characters(_str1=%s,_str2=%s): limit → %s", _str1, _str2, limit)
+        logger.info("get_matched_characters(_str1=%s,_str2=%s): limit → %s", _str1, _str2, limit)
         for i, char in enumerate(_str1):
             left = int(max(0, i - limit))
             right = int(min(i + limit + 1, len(_str2)))
             if char in _str2[left:right]:
+                logger.debug("get_matched_characters(_str1=%s,_str2=%s): right → %s", _str1, _str2, right)
                 matched.append(char)
                 _str2 = (
                     f"{_str2[0 : _str2.index(char)]} {_str2[_str2.index(char) + 1 :]}"
                 )
 
+        logger.debug("<<< Exiting get_matched_characters(_str1=%s,_str2=%s)", _str1, _str2)
         return "".join(matched)
 
     # matching characters

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # https://en.wikipedia.org/wiki/Run-length_encoding
 
 
@@ -13,8 +15,11 @@ def run_length_encode(text: str) -> list:
     >>> run_length_encode("AAADDDDDDFFFCCCAAVVVV")
     [('A', 3), ('D', 6), ('F', 3), ('C', 3), ('A', 2), ('V', 4)]
     """
+    logger.debug(">>> Entering run_length_encode(text=%s)", text)
     encoded = []
+    logger.debug("run_length_encode(text=%s): encoded → %s", text, encoded)
     count = 1
+    logger.debug("run_length_encode(text=%s): count → %s", text, count)
 
     for i in range(len(text)):
         if i + 1 < len(text) and text[i] == text[i + 1]:
@@ -23,6 +28,7 @@ def run_length_encode(text: str) -> list:
             encoded.append((text[i], count))
             count = 1
 
+    logger.debug("<<< Exiting run_length_encode(text=%s)", text)
     return encoded
 
 
@@ -38,6 +44,8 @@ def run_length_decode(encoded: list) -> str:
     >>> run_length_decode([('A', 3), ('D', 6), ('F', 3), ('C', 3), ('A', 2), ('V', 4)])
     'AAADDDDDDFFFCCCAAVVVV'
     """
+    logger.debug(">>> Entering run_length_decode(encoded=%s)", encoded)
+    logger.debug("<<< Exiting run_length_decode(encoded=%s)", encoded)
     return "".join(char * length for char, length in encoded)
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def hamming_distance(string1: str, string2: str) -> int:
     """Calculate the Hamming distance between two equal length strings
     In information theory, the Hamming distance between two strings of equal
@@ -22,15 +24,18 @@ def hamming_distance(string1: str, string2: str) -> int:
       ...
     ValueError: String lengths must match!
     """
+    logger.debug(">>> Entering hamming_distance(string1=%s,string2=%s)", string1, string2)
     if len(string1) != len(string2):
         raise ValueError("String lengths must match!")
 
     count = 0
+    logger.debug("hamming_distance(string1=%s,string2=%s): count → %s", string1, string2, count)
 
     for char1, char2 in zip(string1, string2):
         if char1 != char2:
             count += 1
 
+    logger.debug("<<< Exiting hamming_distance(string1=%s,string2=%s)", string1, string2)
     return count
 
 

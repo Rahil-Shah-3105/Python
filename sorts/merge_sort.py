@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This is a pure Python implementation of the merge sort algorithm.
 
@@ -28,7 +30,9 @@ def merge_sort(collection: list) -> list:
     >>> merge_sort([-2, -5, -45])
     [-45, -5, -2]
     """
+    logger.debug(">>> Entering merge_sort(collection=%s)", collection)
 
+    logger.debug("<<< Exiting merge_sort(collection=%s)", collection)
     def merge(left: list, right: list) -> list:
         """
         Merge two sorted lists into a single sorted list.
@@ -37,11 +41,14 @@ def merge_sort(collection: list) -> list:
         :param right: Right collection
         :return: Merged result
         """
+        logger.debug(">>> Entering merge(left=%s,right=%s)", left, right)
         result = []
+        logger.debug("merge(left=%s,right=%s): result → %s", left, right, result)
         while left and right:
             result.append(left.pop(0) if left[0] <= right[0] else right.pop(0))
         result.extend(left)
         result.extend(right)
+        logger.debug("<<< Exiting merge(left=%s,right=%s)", left, right)
         return result
 
     if len(collection) <= 1:

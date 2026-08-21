@@ -1,4 +1,6 @@
 from math import log2
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binary_count_trailing_zeros(a: int) -> int:
@@ -31,10 +33,12 @@ def binary_count_trailing_zeros(a: int) -> int:
         ...
     TypeError: '<' not supported between instances of 'str' and 'int'
     """
+    logger.debug(">>> Entering binary_count_trailing_zeros(a=%s)", a)
     if a < 0:
         raise ValueError("Input value must be a positive integer")
     elif isinstance(a, float):
         raise TypeError("Input value must be a 'int' type")
+    logger.debug("<<< Exiting binary_count_trailing_zeros(a=%s)", a)
     return 0 if (a == 0) else int(log2(a & -a))
 
 

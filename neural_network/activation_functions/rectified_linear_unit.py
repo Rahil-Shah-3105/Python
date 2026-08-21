@@ -13,6 +13,8 @@ https://en.wikipedia.org/wiki/Rectifier_(neural_networks)
 from __future__ import annotations
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def relu(vector: list[float]):
@@ -32,8 +34,10 @@ def relu(vector: list[float]):
     >>> relu(vec)
     array([0, 0, 5])
     """
+    logger.debug(">>> Entering relu(vector=%s)", vector)
 
     # compare two arrays and then return element-wise maxima.
+    logger.debug("<<< Exiting relu(vector=%s)", vector)
     return np.maximum(0, vector)
 
 

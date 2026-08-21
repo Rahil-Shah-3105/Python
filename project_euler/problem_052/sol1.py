@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Permuted multiples
 Problem 52
@@ -17,6 +19,7 @@ def solution():
     >>> solution()
     142857
     """
+    logger.debug(">>> Entering solution()")
     i = 1
 
     while True:
@@ -28,6 +31,7 @@ def solution():
             == sorted(str(5 * i))
             == sorted(str(6 * i))
         ):
+            logger.debug("<<< Exiting solution()")
             return i
 
         i += 1

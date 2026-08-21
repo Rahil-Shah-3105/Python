@@ -18,6 +18,8 @@ import pandas as pd
 from sklearn.preprocessing import Normalizer
 from sklearn.svm import SVR
 from statsmodels.tsa.statespace.sarimax import SARIMAX
+import logging
+logger = logging.getLogger(__name__)
 
 
 def linear_regression_prediction(
@@ -47,15 +49,22 @@ def sarimax_predictor(train_user: list, train_match: list, test_match: list) -> 
     >>> sarimax_predictor([4,2,6,8], [3,1,2,4], [2])
     6.6666671111109626
     """
+    logger.debug(">>> Entering sarimax_predictor(train_user=%s,train_match=%s,test_match=%s)", train_user, train_match, test_match)
+    logger.debug("sarimax_predictor(train_user=%s,train_match=%s,test_match=%s): model → %s", train_user, train_match, test_match, model)
     # Suppress the User Warning raised by SARIMAX due to insufficient observations
     simplefilter("ignore", UserWarning)
     order = (1, 2, 1)
+    logger.debug("sarimax_predictor(train_user=%s,train_match=%s,test_match=%s): order → %s", train_user, train_match, test_match, order)
     seasonal_order = (1, 1, 1, 7)
+    logger.debug("sarimax_predictor(train_user=%s,train_match=%s,test_match=%s): seasonal_order → %s", train_user, train_match, test_match, seasonal_order)
     model = SARIMAX(
         train_user, exog=train_match, order=order, seasonal_order=seasonal_order
     )
     model_fit = model.fit(disp=False, maxiter=600, method="nm")
+    logger.debug("sarimax_predictor(train_user=%s,train_match=%s,test_match=%s): model_fit → %s", train_user, train_match, test_match, model_fit)
     result = model_fit.predict(1, len(test_match), exog=[test_match])
+    logger.debug("sarimax_predictor(train_user=%s,train_match=%s,test_match=%s): result → %s", train_user, train_match, test_match, result)
+    logger.debug("<<< Exiting sarimax_predictor(train_user=%s,train_match=%s,test_match=%s)", train_user, train_match, test_match)
     return float(result[0])
 
 
@@ -72,9 +81,14 @@ def support_vector_regressor(x_train: list, x_test: list, train_user: list) -> f
     >>> support_vector_regressor([[5,2],[1,5],[6,2]], [[3,2]], [2,1,4])
     1.634932078116079
     """
+    logger.debug(">>> Entering support_vector_regressor(x_train=%s,x_test=%s,train_user=%s)", x_train, x_test, train_user)
+    logger.debug("support_vector_regressor(x_train=%s,x_test=%s,train_user=%s): y_pred → %s", x_train, x_test, train_user, y_pred)
     regressor = SVR(kernel="rbf", C=1, gamma=0.1, epsilon=0.1)
+    logger.debug("support_vector_regressor(x_train=%s,x_test=%s,train_user=%s): regressor → %s", x_train, x_test, train_user, regressor)
+    logger.error("Exception in support_vector_regressor(x_train=%s,x_test=%s,train_user=%s)", x_train, x_test, train_user, exc_info=True)
     regressor.fit(x_train, train_user)
     y_pred = regressor.predict(x_test)
+    logger.debug("<<< Exiting support_vector_regressor(x_train=%s,x_test=%s,train_user=%s)", x_train, x_test, train_user)
     return float(y_pred[0])
 
 
@@ -87,11 +101,17 @@ def interquartile_range_checker(train_user: list) -> float:
     >>> interquartile_range_checker([1,2,3,4,5,6,7,8,9,10])
     2.8
     """
+    logger.debug(">>> Entering interquartile_range_checker(train_user=%s)", train_user)
     train_user.sort()
     q1 = np.percentile(train_user, 25)
+    logger.debug("interquartile_range_checker(train_user=%s): q1 → %s", train_user, q1)
     q3 = np.percentile(train_user, 75)
+    logger.debug("interquartile_range_checker(train_user=%s): q3 → %s", train_user, q3)
     iqr = q3 - q1
+    logger.debug("interquartile_range_checker(train_user=%s): iqr → %s", train_user, iqr)
     low_lim = q1 - (iqr * 0.1)
+    logger.debug("interquartile_range_checker(train_user=%s): low_lim → %s", train_user, low_lim)
+    logger.debug("<<< Exiting interquartile_range_checker(train_user=%s)", train_user)
     return float(low_lim)
 
 
@@ -104,8 +124,11 @@ def data_safety_checker(list_vote: list, actual_result: float) -> bool:
     >>> data_safety_checker([2, 3, 4], 5.0)
     False
     """
+    logger.debug(">>> Entering data_safety_checker(list_vote=%s,actual_result=%s)", list_vote, actual_result)
     safe = 0
+    logger.debug("data_safety_checker(list_vote=%s,actual_result=%s): safe → %s", list_vote, actual_result, safe)
     not_safe = 0
+    logger.debug("data_safety_checker(list_vote=%s,actual_result=%s): not_safe → %s", list_vote, actual_result, not_safe)
 
     if not isinstance(actual_result, float):
         raise TypeError("Actual result should be float. Value passed is a list")
@@ -117,6 +140,7 @@ def data_safety_checker(list_vote: list, actual_result: float) -> bool:
             safe += 1
         else:
             not_safe += 1
+    logger.debug("<<< Exiting data_safety_checker(list_vote=%s,actual_result=%s)", list_vote, actual_result)
     return safe > not_safe
 
 

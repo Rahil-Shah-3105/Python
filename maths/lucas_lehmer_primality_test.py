@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 In mathematics, the Lucas-Lehmer test (LLT) is a primality test for Mersenne
 numbers.  https://en.wikipedia.org/wiki/Lucas%E2%80%93Lehmer_primality_test
@@ -23,6 +25,7 @@ def lucas_lehmer_test(p: int) -> bool:
 
     # M_11 = 2^11 - 1 = 2047 = 23 * 89
     """
+    logger.debug(">>> Entering lucas_lehmer_test(p=%s)", p)
 
     if p < 2:
         raise ValueError("p should not be less than 2!")
@@ -33,6 +36,7 @@ def lucas_lehmer_test(p: int) -> bool:
     m = (1 << p) - 1
     for _ in range(p - 2):
         s = ((s * s) - 2) % m
+    logger.debug("<<< Exiting lucas_lehmer_test(p=%s)", p)
     return s == 0
 
 

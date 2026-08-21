@@ -6,6 +6,8 @@ from typing import Protocol
 
 import matplotlib.pyplot as plt
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 class FilterType(Protocol):
@@ -17,7 +19,9 @@ class FilterType(Protocol):
         >>> issubclass(FilterType, Protocol)
         True
         """
+        logger.debug(">>> Entering process(sample=%s)", sample)
 
+        logger.debug("<<< Exiting process(sample=%s)", sample)
 
 def get_bounds(
     fft_results: np.ndarray, samplerate: int

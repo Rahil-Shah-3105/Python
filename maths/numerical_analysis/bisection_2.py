@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Given a function on floating number f(x) and two floating numbers `a` and `b` such that
 f(a) * f(b) < 0 and f(x) is continuous in [a, b].
@@ -21,6 +23,8 @@ def equation(x: float) -> float:
     >>> equation(-0.1)
     9.99
     """
+    logger.debug(">>> Entering equation(x=%s)", x)
+    logger.debug("<<< Exiting equation(x=%s)", x)
     return 10 - x * x
 
 
@@ -35,11 +39,13 @@ def bisection(a: float, b: float) -> float:
         ...
     ValueError: Wrong space!
     """
+    logger.debug(">>> Entering bisection(a=%s,b=%s)", a, b)
     # Bolzano theory in order to find if there is a root between a and b
     if equation(a) * equation(b) >= 0:
         raise ValueError("Wrong space!")
 
     c = a
+    logger.debug("bisection(a=%s,b=%s): c → %s", a, b, c)
     while (b - a) >= 0.01:
         # Find middle point
         c = (a + b) / 2
@@ -51,6 +57,7 @@ def bisection(a: float, b: float) -> float:
             b = c
         else:
             a = c
+    logger.debug("<<< Exiting bisection(a=%s,b=%s)", a, b)
     return c
 
 

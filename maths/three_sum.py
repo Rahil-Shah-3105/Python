@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 https://en.wikipedia.org/wiki/3SUM
 """
@@ -18,8 +20,10 @@ def three_sum(nums: list[int]) -> list[list[int]]:
     >>> three_sum([1, 2, 3, 4])
     []
     """
+    logger.debug(">>> Entering three_sum(nums=%s)", nums)
     nums.sort()
     ans = []
+    logger.debug("three_sum(nums=%s): ans → %s", nums, ans)
     for i in range(len(nums) - 2):
         if i == 0 or (nums[i] != nums[i - 1]):
             low, high, c = i + 1, len(nums) - 1, 0 - nums[i]
@@ -38,6 +42,7 @@ def three_sum(nums: list[int]) -> list[list[int]]:
                     low += 1
                 else:
                     high -= 1
+    logger.debug("<<< Exiting three_sum(nums=%s)", nums)
     return ans
 
 

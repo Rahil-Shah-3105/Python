@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Matrix-Based Game Script
 =========================
@@ -57,8 +59,10 @@ def validate_matrix_size(size: int) -> None:
         ...
     ValueError: Matrix size must be a positive integer.
     """
+    logger.debug(">>> Entering validate_matrix_size(size=%s)", size)
     if not isinstance(size, int) or size <= 0:
         raise ValueError("Matrix size must be a positive integer.")
+        logger.debug("<<< Exiting validate_matrix_size(size=%s)", size)
 
 
 def validate_matrix_content(matrix: list[str], size: int) -> None:
@@ -78,15 +82,18 @@ def validate_matrix_content(matrix: list[str], size: int) -> None:
         ...
     ValueError: Each row in the matrix must have exactly 3 characters.
     """
+    logger.debug(">>> Entering validate_matrix_content(matrix=%s,size=%s)", matrix, size)
     print(matrix)
     if len(matrix) != size:
         raise ValueError("The matrix dont match with size.")
     for row in matrix:
         if len(row) != size:
             msg = f"Each row in the matrix must have exactly {size} characters."
+            logger.debug("validate_matrix_content(matrix=%s,size=%s): msg → %s", matrix, size, msg)
             raise ValueError(msg)
         if not all(char.isalnum() for char in row):
             raise ValueError("Matrix rows can only contain letters and numbers.")
+            logger.debug("<<< Exiting validate_matrix_content(matrix=%s,size=%s)", matrix, size)
 
 
 def validate_moves(moves: list[tuple[int, int]], size: int) -> None:
@@ -96,10 +103,12 @@ def validate_moves(moves: list[tuple[int, int]], size: int) -> None:
         ...
     ValueError: Move is out of bounds for a matrix.
     """
+    logger.debug(">>> Entering validate_moves(moves=%s,size=%s)", moves, size)
     for move in moves:
         x, y = move
         if not (0 <= x < size and 0 <= y < size):
             raise ValueError("Move is out of bounds for a matrix.")
+            logger.debug("<<< Exiting validate_moves(moves=%s,size=%s)", moves, size)
 
 
 def parse_moves(input_str: str) -> list[tuple[int, int]]:
@@ -115,13 +124,17 @@ def parse_moves(input_str: str) -> list[tuple[int, int]]:
         ...
     ValueError: Each move must have exactly two numbers.
     """
+    logger.debug(">>> Entering parse_moves(input_str=%s)", input_str)
     moves = []
+    logger.debug("parse_moves(input_str=%s): moves → %s", input_str, moves)
     for pair in input_str.split(","):
         parts = pair.strip().split()
+        logger.debug("parse_moves(input_str=%s): parts → %s", input_str, parts)
         if len(parts) != 2:
             raise ValueError("Each move must have exactly two numbers.")
         x, y = map(int, parts)
         moves.append((x, y))
+    logger.debug("<<< Exiting parse_moves(input_str=%s)", input_str)
     return moves
 
 
@@ -144,9 +157,11 @@ def find_repeat(
     if (color := matrix_g[column][row]) != "-":
 
         def dfs(row_n: int, column_n: int) -> None:
+            logger.debug(">>> Entering dfs(row_n=%s,column_n=%s)", row_n, column_n)
             if row_n < 0 or row_n >= size or column_n < 0 or column_n >= size:
                 return
             if (row_n, column_n) in visited:
+                logger.debug("<<< Exiting dfs(row_n=%s,column_n=%s)", row_n, column_n)
                 return
             visited.add((row_n, column_n))
             if matrix_g[row_n][column_n] == color:
@@ -170,6 +185,8 @@ def increment_score(count: int) -> int:
     >>> increment_score(0)
     0
     """
+    logger.debug(">>> Entering increment_score(count=%s)", count)
+    logger.debug("<<< Exiting increment_score(count=%s)", count)
     return int(count * (count + 1) / 2)
 
 
@@ -180,8 +197,10 @@ def move_x(matrix_g: list[list[str]], column: int, size: int) -> list[list[str]]
     >>> move_x([['-', 'A'], ['-', '-'], ['-', 'C']], 1, 2)
     [['-', '-'], ['-', 'A'], ['-', 'C']]
     """
+    logger.debug(">>> Entering move_x(matrix_g=%s,column=%s,size=%s)", matrix_g, column, size)
 
     new_list = []
+    logger.debug("move_x(matrix_g=%s,column=%s,size=%s): new_list → %s", matrix_g, column, size, new_list)
 
     for row in range(size):
         if matrix_g[row][column] != "-":
@@ -190,6 +209,7 @@ def move_x(matrix_g: list[list[str]], column: int, size: int) -> list[list[str]]
             new_list.insert(0, matrix_g[row][column])
     for row in range(size):
         matrix_g[row][column] = new_list[row]
+    logger.debug("<<< Exiting move_x(matrix_g=%s,column=%s,size=%s)", matrix_g, column, size)
     return matrix_g
 
 
@@ -200,8 +220,10 @@ def move_y(matrix_g: list[list[str]], size: int) -> list[list[str]]:
     >>> move_y([['-', 'A'], ['-', '-'], ['-', 'C']], 2)
     [['A', '-'], ['-', '-'], ['-', 'C']]
     """
+    logger.debug(">>> Entering move_y(matrix_g=%s,size=%s)", matrix_g, size)
 
     empty_columns = []
+    logger.debug("move_y(matrix_g=%s,size=%s): empty_columns → %s", matrix_g, size, empty_columns)
 
     for column in range(size - 1, -1, -1):
         if all(matrix_g[row][column] == "-" for row in range(size)):
@@ -214,6 +236,7 @@ def move_y(matrix_g: list[list[str]], size: int) -> list[list[str]]:
         for row in range(size):
             matrix_g[row][-1] = "-"
 
+    logger.debug("<<< Exiting move_y(matrix_g=%s,size=%s)", matrix_g, size)
     return matrix_g
 
 
@@ -253,15 +276,19 @@ def process_game(size: int, matrix: list[str], moves: list[tuple[int, int]]) -> 
     >>> process_game(3, ['aaa', 'bbb', 'ccc'], [(0, 0)])
     6
     """
+    logger.debug(">>> Entering process_game(size=%s,matrix=%s,moves=%s)", size, matrix, moves)
 
     game_matrix = [list(row) for row in matrix]
+    logger.debug("process_game(size=%s,matrix=%s,moves=%s): game_matrix → %s", size, matrix, moves, game_matrix)
     total_score = 0
+    logger.debug("process_game(size=%s,matrix=%s,moves=%s): total_score → %s", size, matrix, moves, total_score)
 
     for move in moves:
         pos_x, pos_y = move
         game_matrix, score = play(game_matrix, pos_x, pos_y, size)
         total_score += score
 
+    logger.debug("<<< Exiting process_game(size=%s,matrix=%s,moves=%s)", size, matrix, moves)
     return total_score
 
 

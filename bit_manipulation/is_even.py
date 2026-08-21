@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def is_even(number: int) -> bool:
     """
     return true if the input integer is even
@@ -28,6 +30,10 @@ def is_even(number: int) -> bool:
     >>> is_even(101)
     False
     """
+    logger.debug(">>> Entering is_even(number=%s)", number)
+    logger.debug("is_even(number=%s): 101 → %s", number, 101)
+    logger.debug("is_even(number=%s): 100 → %s", number, 100)
+    logger.debug("<<< Exiting is_even(number=%s)", number)
     return number & 1 == 0
 
 

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -29,7 +31,9 @@ def print_linked_list(head: Node | None) -> None:
         >>> print_linked_list(head)
         0->2->1->4->5
     """
+    logger.debug(">>> Entering print_linked_list(head=%s)", head)
     if head is None:
+        logger.debug("<<< Exiting print_linked_list(head=%s)", head)
         return
     while head.next_node is not None:
         print(head.data, end="->")
@@ -54,16 +58,21 @@ def insert_node(head: Node | None, data: int) -> Node:
     >>> print_linked_list(head)
     10->9->8
     """
+    logger.debug(">>> Entering insert_node(head=%s,data=%s)", head, data)
     new_node = Node(data)
+    logger.debug("insert_node(head=%s,data=%s): new_node → %s", head, data, new_node)
     # If the linked list is empty, the new_node becomes the head
     if head is None:
         return new_node
 
     temp_node = head
+    logger.debug("insert_node(head=%s,data=%s): temp_node → %s", head, data, temp_node)
     while temp_node.next_node:
         temp_node = temp_node.next_node
 
     temp_node.next_node = new_node
+    logger.debug("insert_node(head=%s,data=%s): temp_node.next_node → %s", head, data, temp_node.next_node)
+    logger.debug("<<< Exiting insert_node(head=%s,data=%s)", head, data)
     return head
 
 
@@ -94,6 +103,7 @@ def rotate_to_the_right(head: Node, places: int) -> Node:
     >>> print_linked_list(new_head)
     4->5->1->2->3
     """
+    logger.debug(">>> Entering rotate_to_the_right(head=%s,places=%s)", head, places)
     # Check if the list is empty or has only one element
     if not head:
         raise ValueError("The linked list is empty.")
@@ -103,7 +113,9 @@ def rotate_to_the_right(head: Node, places: int) -> Node:
 
     # Calculate the length of the linked list
     length = 1
+    logger.debug("rotate_to_the_right(head=%s,places=%s): length → %s", head, places, length)
     temp_node = head
+    logger.debug("rotate_to_the_right(head=%s,places=%s): temp_node → %s", head, places, temp_node)
     while temp_node.next_node is not None:
         length += 1
         temp_node = temp_node.next_node
@@ -116,6 +128,7 @@ def rotate_to_the_right(head: Node, places: int) -> Node:
 
     # Find the new head position after rotation.
     new_head_index = length - places
+    logger.debug("rotate_to_the_right(head=%s,places=%s): new_head_index → %s", head, places, new_head_index)
 
     # Traverse to the new head position
     temp_node = head
@@ -126,13 +139,16 @@ def rotate_to_the_right(head: Node, places: int) -> Node:
     # Update pointers to perform rotation
     assert temp_node.next_node
     new_head = temp_node.next_node
+    logger.debug("rotate_to_the_right(head=%s,places=%s): new_head → %s", head, places, new_head)
     temp_node.next_node = None
+    logger.debug("rotate_to_the_right(head=%s,places=%s): temp_node.next_node → %s", head, places, temp_node.next_node)
     temp_node = new_head
     while temp_node.next_node:
         temp_node = temp_node.next_node
     temp_node.next_node = head
 
     assert new_head
+    logger.debug("<<< Exiting rotate_to_the_right(head=%s,places=%s)", head, places)
     return new_head
 
 

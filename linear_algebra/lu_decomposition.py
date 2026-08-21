@@ -20,6 +20,8 @@ Reference: https://en.wikipedia.org/wiki/LU_decomposition
 from __future__ import annotations
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def lower_upper_decomposition(table: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -80,6 +82,7 @@ def lower_upper_decomposition(table: np.ndarray) -> tuple[np.ndarray, np.ndarray
     ...
     ArithmeticError: No LU decomposition exists
     """
+    logger.debug(">>> Entering lower_upper_decomposition(table=%s)", table)
     # Ensure that table is a square array
     rows, columns = np.shape(table)
     if rows != columns:
@@ -90,7 +93,9 @@ def lower_upper_decomposition(table: np.ndarray) -> tuple[np.ndarray, np.ndarray
         raise ValueError(msg)
 
     lower = np.zeros((rows, columns))
+    logger.debug("lower_upper_decomposition(table=%s): lower → %s", table, lower)
     upper = np.zeros((rows, columns))
+    logger.debug("lower_upper_decomposition(table=%s): upper → %s", table, upper)
 
     # in 'total', the necessary data is extracted through slices
     # and the sum of the products is obtained.
@@ -98,6 +103,7 @@ def lower_upper_decomposition(table: np.ndarray) -> tuple[np.ndarray, np.ndarray
     for i in range(columns):
         for j in range(i):
             total = np.sum(lower[i, :i] * upper[:i, j])
+            logger.debug("lower_upper_decomposition(table=%s): total → %s", table, total)
             if upper[j][j] == 0:
                 raise ArithmeticError("No LU decomposition exists")
             lower[i][j] = (table[i][j] - total) / upper[j][j]
@@ -105,6 +111,7 @@ def lower_upper_decomposition(table: np.ndarray) -> tuple[np.ndarray, np.ndarray
         for j in range(i, columns):
             total = np.sum(lower[i, :i] * upper[:i, j])
             upper[i][j] = table[i][j] - total
+    logger.debug("<<< Exiting lower_upper_decomposition(table=%s)", table)
     return lower, upper
 
 

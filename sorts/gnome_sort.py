@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Gnome Sort Algorithm (A.K.A. Stupid Sort)
 
@@ -33,6 +35,7 @@ def gnome_sort(lst: list) -> list:
     >>> "".join(gnome_sort(list(set("Gnomes are stupid!"))))
     ' !Gadeimnoprstu'
     """
+    logger.debug(">>> Entering gnome_sort(lst=%s)", lst)
     if len(lst) <= 1:
         return lst
 
@@ -47,6 +50,7 @@ def gnome_sort(lst: list) -> list:
             if i == 0:
                 i = 1
 
+    logger.debug("<<< Exiting gnome_sort(lst=%s)", lst)
     return lst
 
 

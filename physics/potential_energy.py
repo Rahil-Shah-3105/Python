@@ -1,4 +1,6 @@
 from scipy.constants import g
+import logging
+logger = logging.getLogger(__name__)
 
 """
 Finding the gravitational potential energy of an object with reference
@@ -29,6 +31,7 @@ Reference : "https://en.m.wikipedia.org/wiki/Gravitational_energy"
 
 
 def potential_energy(mass: float, height: float) -> float:
+    logger.debug(">>> Entering potential_energy(mass=%s,height=%s)", mass, height)
     # function will accept mass and height as parameters and return potential energy
     """
     >>> potential_energy(10,10)
@@ -52,6 +55,7 @@ def potential_energy(mass: float, height: float) -> float:
     if height < 0:
         # handling of negative values of height
         raise ValueError("The height above the ground cannot be negative")
+    logger.debug("<<< Exiting potential_energy(mass=%s,height=%s)", mass, height)
     return mass * g * height
 
 

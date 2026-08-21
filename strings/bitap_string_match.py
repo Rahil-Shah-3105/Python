@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Bitap exact string matching
 https://en.wikipedia.org/wiki/Bitap_algorithm
@@ -40,6 +42,7 @@ def bitap_string_match(text: str, pattern: str) -> int:
     >>> bitap_string_match('abdab', 'fofosdfo')
     -1
     """
+    logger.debug(">>> Entering bitap_string_match(text=%s,pattern=%s)", text, pattern)
     if not pattern:
         return 0
     m = len(pattern)
@@ -48,6 +51,7 @@ def bitap_string_match(text: str, pattern: str) -> int:
 
     # Initial state of bit string 1110
     state = ~1
+    logger.debug("bitap_string_match(text=%s,pattern=%s): state → %s", text, pattern, state)
     # Bit = 0 if character appears at index, and 1 otherwise
     pattern_mask: list[int] = [~0] * 27  # 1111
 
@@ -59,6 +63,7 @@ def bitap_string_match(text: str, pattern: str) -> int:
 
     for i, char in enumerate(text):
         text_index = ord(char) - ord("a")
+        logger.debug("bitap_string_match(text=%s,pattern=%s): text_index → %s", text, pattern, text_index)
         # If this character does not appear in pattern, it's pattern mask is 1111.
         # Performing a bitwise OR between state and 1111 will reset the state to 1111
         # and start searching the start of pattern again.
@@ -70,6 +75,7 @@ def bitap_string_match(text: str, pattern: str) -> int:
         if (state & (1 << m)) == 0:
             return i - m + 1
 
+    logger.debug("<<< Exiting bitap_string_match(text=%s,pattern=%s)", text, pattern)
     return -1
 
 

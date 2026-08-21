@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Author  : Naman Sharma
 Date    : October 2, 2023
@@ -44,13 +46,16 @@ def largest_pow_of_two_le_num(number: int) -> int:
         ...
     TypeError: Input value must be a 'int' type
     """
+    logger.debug(">>> Entering largest_pow_of_two_le_num(number=%s)", number)
     if isinstance(number, float):
         raise TypeError("Input value must be a 'int' type")
     if number <= 0:
         return 0
     res = 1
+    logger.debug("largest_pow_of_two_le_num(number=%s): res → %s", number, res)
     while (res << 1) <= number:
         res <<= 1
+    logger.debug("<<< Exiting largest_pow_of_two_le_num(number=%s)", number)
     return res
 
 

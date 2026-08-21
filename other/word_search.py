@@ -6,6 +6,8 @@ that are best described as compass locations.
 """
 
 from random import choice, randint, shuffle
+import logging
+logger = logging.getLogger(__name__)
 
 # The words to display on the word search -
 # can be made dynamic by randonly selecting a certain number of
@@ -26,12 +28,17 @@ class WordSearch:
     """
 
     def __init__(self, words: list[str], width: int, height: int) -> None:
+        logger.debug(">>> Entering __init__(words=%s,width=%s,height=%s)", words, width, height)
         self.words = words
+        logger.debug("__init__(self=%s,words=%s,width=%s,height=%s): self.words → %s", self, words, width, height, self.words)
         self.width = width
+        logger.debug("__init__(self=%s,words=%s,width=%s,height=%s): self.width → %s", self, words, width, height, self.width)
         self.height = height
+        logger.debug("__init__(self=%s,words=%s,width=%s,height=%s): self.height → %s", self, words, width, height, self.height)
 
         # Board matrix holding each letter
         self.board: list[list[str | None]] = [[None] * width for _ in range(height)]
+        logger.debug("<<< Exiting __init__(words=%s,width=%s,height=%s)", words, width, height)
 
     def insert_north(self, word: str, rows: list[int], cols: list[int]) -> None:
         """
@@ -47,7 +54,10 @@ class WordSearch:
         [None, 'a', 'a'],
         [None, None, 'c']]
         """
+        logger.debug(">>> Entering insert_north(word=%s,rows=%s,cols=%s)", word, rows, cols)
         word_length = len(word)
+        logger.debug("insert_north(self=%s,word=%s,rows=%s,cols=%s): word_length → %s", self, word, rows, cols, word_length)
+        logger.debug("insert_north(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length)
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Check if there is space above the row to fit in the word
@@ -59,10 +69,13 @@ class WordSearch:
                 # Only check to be made here is if there are existing letters
                 # above the column that will be overwritten
                 letters_above = [self.board[row - i][col] for i in range(word_length)]
+                logger.debug("insert_north(self=%s,word=%s,rows=%s,cols=%s): letters_above → %s", self, word, rows, cols, letters_above)
+                logger.debug("insert_north(word=%s,rows=%s,cols=%s): letters_above → %s", word, rows, cols, letters_above)
                 if all(letter is None for letter in letters_above):
                     # Successful, insert the word north
                     for i in range(word_length):
                         self.board[row - i][col] = word[i]
+                    logger.debug("<<< Exiting insert_north(word=%s,rows=%s,cols=%s)", word, rows, cols)
                     return
 
     def insert_northeast(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -79,7 +92,10 @@ class WordSearch:
         ['a', 'a', None],
         ['c', None, None]]
         """
+        logger.debug(">>> Entering insert_northeast(word=%s,rows=%s,cols=%s)", word, rows, cols)
         word_length = len(word)
+        logger.debug("insert_northeast(self=%s,word=%s,rows=%s,cols=%s): word_length → %s", self, word, rows, cols, word_length)
+        logger.debug("insert_northeast(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length)
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Check if there is space for the word above the row
@@ -101,6 +117,7 @@ class WordSearch:
                     # Successful, insert the word northeast
                     for i in range(word_length):
                         self.board[row - i][col + i] = word[i]
+                    logger.debug("<<< Exiting insert_northeast(word=%s,rows=%s,cols=%s)", word, rows, cols)
                     return
 
     def insert_east(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -117,7 +134,10 @@ class WordSearch:
         ['c', 'a', 't'],
         [None, None, None]]
         """
+        logger.debug(">>> Entering insert_east(word=%s,rows=%s,cols=%s)", word, rows, cols)
         word_length = len(word)
+        logger.debug("insert_east(self=%s,word=%s,rows=%s,cols=%s): word_length → %s", self, word, rows, cols, word_length)
+        logger.debug("insert_east(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length)
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Attempt to insert the word into each column
@@ -129,10 +149,13 @@ class WordSearch:
                 # Check if there are existing letters
                 # to the right of the column that will be overwritten
                 letters_left = [self.board[row][col + i] for i in range(word_length)]
+                logger.debug("insert_east(self=%s,word=%s,rows=%s,cols=%s): letters_left → %s", self, word, rows, cols, letters_left)
+                logger.debug("insert_east(word=%s,rows=%s,cols=%s): letters_left → %s", word, rows, cols, letters_left)
                 if all(letter is None for letter in letters_left):
                     # Successful, insert the word east
                     for i in range(word_length):
                         self.board[row][col + i] = word[i]
+                    logger.debug("<<< Exiting insert_east(word=%s,rows=%s,cols=%s)", word, rows, cols)
                     return
 
     def insert_southeast(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -149,7 +172,10 @@ class WordSearch:
         ['a', 'a', None],
         [None, 't', 't']]
         """
+        logger.debug(">>> Entering insert_southeast(word=%s,rows=%s,cols=%s)", word, rows, cols)
         word_length = len(word)
+        logger.debug("insert_southeast(self=%s,word=%s,rows=%s,cols=%s): word_length → %s", self, word, rows, cols, word_length)
+        logger.debug("insert_southeast(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length)
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Check if there is space for the word below the row
@@ -171,6 +197,7 @@ class WordSearch:
                     # Successful, insert the word southeast
                     for i in range(word_length):
                         self.board[row + i][col + i] = word[i]
+                    logger.debug("<<< Exiting insert_southeast(word=%s,rows=%s,cols=%s)", word, rows, cols)
                     return
 
     def insert_south(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -187,7 +214,10 @@ class WordSearch:
         ['a', 'a', None],
         ['t', 't', None]]
         """
+        logger.debug(">>> Entering insert_south(word=%s,rows=%s,cols=%s)", word, rows, cols)
         word_length = len(word)
+        logger.debug("insert_south(self=%s,word=%s,rows=%s,cols=%s): word_length → %s", self, word, rows, cols, word_length)
+        logger.debug("insert_south(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length)
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Check if there is space below the row to fit in the word
@@ -199,10 +229,13 @@ class WordSearch:
                 # Only check to be made here is if there are existing letters
                 # below the column that will be overwritten
                 letters_below = [self.board[row + i][col] for i in range(word_length)]
+                logger.debug("insert_south(self=%s,word=%s,rows=%s,cols=%s): letters_below → %s", self, word, rows, cols, letters_below)
+                logger.debug("insert_south(word=%s,rows=%s,cols=%s): letters_below → %s", word, rows, cols, letters_below)
                 if all(letter is None for letter in letters_below):
                     # Successful, insert the word south
                     for i in range(word_length):
                         self.board[row + i][col] = word[i]
+                    logger.debug("<<< Exiting insert_south(word=%s,rows=%s,cols=%s)", word, rows, cols)
                     return
 
     def insert_southwest(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -219,7 +252,10 @@ class WordSearch:
         [None, 'a', 'a'],
         ['t', 't', None]]
         """
+        logger.debug(">>> Entering insert_southwest(word=%s,rows=%s,cols=%s)", word, rows, cols)
         word_length = len(word)
+        logger.debug("insert_southwest(self=%s,word=%s,rows=%s,cols=%s): word_length → %s", self, word, rows, cols, word_length)
+        logger.debug("insert_southwest(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length)
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Check if there is space for the word below the row
@@ -241,6 +277,7 @@ class WordSearch:
                     # Successful, insert the word southwest
                     for i in range(word_length):
                         self.board[row + i][col - i] = word[i]
+                    logger.debug("<<< Exiting insert_southwest(word=%s,rows=%s,cols=%s)", word, rows, cols)
                     return
 
     def insert_west(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -257,7 +294,10 @@ class WordSearch:
         ['t', 'a', 'c'],
         [None, None, None]]
         """
+        logger.debug(">>> Entering insert_west(word=%s,rows=%s,cols=%s)", word, rows, cols)
         word_length = len(word)
+        logger.debug("insert_west(self=%s,word=%s,rows=%s,cols=%s): word_length → %s", self, word, rows, cols, word_length)
+        logger.debug("insert_west(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length)
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Attempt to insert the word into each column
@@ -269,10 +309,13 @@ class WordSearch:
                 # Check if there are existing letters
                 # to the left of the column that will be overwritten
                 letters_left = [self.board[row][col - i] for i in range(word_length)]
+                logger.debug("insert_west(self=%s,word=%s,rows=%s,cols=%s): letters_left → %s", self, word, rows, cols, letters_left)
+                logger.debug("insert_west(word=%s,rows=%s,cols=%s): letters_left → %s", word, rows, cols, letters_left)
                 if all(letter is None for letter in letters_left):
                     # Successful, insert the word west
                     for i in range(word_length):
                         self.board[row][col - i] = word[i]
+                    logger.debug("<<< Exiting insert_west(word=%s,rows=%s,cols=%s)", word, rows, cols)
                     return
 
     def insert_northwest(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -289,7 +332,10 @@ class WordSearch:
         ['t', 'a', None],
         [None, 'a', 'c']]
         """
+        logger.debug(">>> Entering insert_northwest(word=%s,rows=%s,cols=%s)", word, rows, cols)
         word_length = len(word)
+        logger.debug("insert_northwest(self=%s,word=%s,rows=%s,cols=%s): word_length → %s", self, word, rows, cols, word_length)
+        logger.debug("insert_northwest(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length)
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Check if there is space for the word above the row
@@ -311,6 +357,7 @@ class WordSearch:
                     # Successful, insert the word northwest
                     for i in range(word_length):
                         self.board[row - i][col - i] = word[i]
+                    logger.debug("<<< Exiting insert_northwest(word=%s,rows=%s,cols=%s)", word, rows, cols)
                     return
 
     def generate_board(self) -> None:
@@ -323,6 +370,7 @@ class WordSearch:
         ... ) == sum(map(lambda word: len(word), WORDS))
         True
         """
+        logger.debug(">>> Entering generate_board()")
         directions = (
             self.insert_north,
             self.insert_northeast,
@@ -342,6 +390,7 @@ class WordSearch:
 
             # Insert the word via the direction
             choice(directions)(word, rows, cols)
+            logger.debug("<<< Exiting generate_board()")
 
 
 def visualise_word_search(

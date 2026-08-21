@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 == Automorphic Numbers ==
 A number n is said to be a Automorphic number if
@@ -39,17 +41,21 @@ def is_automorphic_number(number: int) -> bool:
         ...
     TypeError: Input value of [number=5.0] must be an integer
     """
+    logger.debug(">>> Entering is_automorphic_number(number=%s)", number)
     if not isinstance(number, int):
         msg = f"Input value of [number={number}] must be an integer"
+        logger.debug("is_automorphic_number(number=%s): msg → %s", number, msg)
         raise TypeError(msg)
     if number < 0:
         return False
     number_square = number * number
+    logger.debug("is_automorphic_number(number=%s): number_square → %s", number, number_square)
     while number > 0:
         if number % 10 != number_square % 10:
             return False
         number //= 10
         number_square //= 10
+    logger.debug("<<< Exiting is_automorphic_number(number=%s)", number)
     return True
 
 

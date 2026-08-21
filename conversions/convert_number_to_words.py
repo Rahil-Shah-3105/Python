@@ -1,5 +1,7 @@
 from enum import Enum
 from typing import Literal
+import logging
+logger = logging.getLogger(__name__)
 
 
 class NumberingSystem(Enum):
@@ -41,15 +43,18 @@ class NumberingSystem(Enum):
         >>> NumberingSystem.max_value("indian") == 10**19 - 1
         True
         """
+        logger.debug(">>> Entering max_value(system=%s)", system)
         match system_enum := cls[system.upper()]:
             case cls.SHORT:
                 max_exp = system_enum.value[0][0] + 3
+                logger.debug("max_value(cls=%s,system=%s): max_exp → %s", cls, system, max_exp)
             case cls.LONG:
                 max_exp = system_enum.value[0][0] + 6
             case cls.INDIAN:
                 max_exp = 19
             case _:
                 raise ValueError("Invalid numbering system")
+        logger.debug("<<< Exiting max_value(system=%s)", system)
         return 10**max_exp - 1
 
 
@@ -118,6 +123,7 @@ def convert_small_number(num: int) -> str:
     ...
     ValueError: This function only converts numbers less than 100
     """
+    logger.debug(">>> Entering convert_small_number(num=%s)", num)
     if num < 0:
         raise ValueError("This function only accepts non-negative integers")
     if num >= 100:
@@ -126,6 +132,7 @@ def convert_small_number(num: int) -> str:
     if tens == 0:
         return NumberWords.ONES.value[ones] or "zero"
     if tens == 1:
+        logger.debug("<<< Exiting convert_small_number(num=%s)", num)
         return NumberWords.TEENS.value[ones]
     return (
         NumberWords.TENS.value[tens]

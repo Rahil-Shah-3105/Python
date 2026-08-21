@@ -1,4 +1,6 @@
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 def viterbi(
@@ -257,8 +259,10 @@ def _validate_lists(observations_space: Any, states_space: Any) -> None:
             ...
     ValueError: states_space must be a list of strings
     """
+    logger.debug(">>> Entering _validate_lists(observations_space=%s,states_space=%s)", observations_space, states_space)
     _validate_list(observations_space, "observations_space")
     _validate_list(states_space, "states_space")
+    logger.debug("<<< Exiting _validate_lists(observations_space=%s,states_space=%s)", observations_space, states_space)
 
 
 def _validate_list(_object: Any, var_name: str) -> None:
@@ -273,13 +277,16 @@ def _validate_list(_object: Any, var_name: str) -> None:
             ...
     ValueError: mock_name must be a list of strings
     """
+    logger.debug(">>> Entering _validate_list(_object=%s,var_name=%s)", _object, var_name)
     if not isinstance(_object, list):
         msg = f"{var_name} must be a list"
+        logger.debug("_validate_list(_object=%s,var_name=%s): msg → %s", _object, var_name, msg)
         raise ValueError(msg)
     else:
         for x in _object:
             if not isinstance(x, str):
                 msg = f"{var_name} must be a list of strings"
+                logger.debug("<<< Exiting _validate_list(_object=%s,var_name=%s)", _object, var_name)
                 raise ValueError(msg)
 
 
@@ -332,9 +339,11 @@ def _validate_nested_dict(_object: Any, var_name: str) -> None:
             ...
     ValueError: mock_name nested dictionary all values must be float
     """
+    logger.debug(">>> Entering _validate_nested_dict(_object=%s,var_name=%s)", _object, var_name)
     _validate_dict(_object, var_name, dict)
     for x in _object.values():
         _validate_dict(x, var_name, float, True)
+        logger.debug("<<< Exiting _validate_nested_dict(_object=%s,var_name=%s)", _object, var_name)
 
 
 def _validate_dict(

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This is pure Python implementation of sentinel linear search algorithm
 
@@ -31,6 +33,7 @@ def sentinel_linear_search(sequence, target):
     >>> sentinel_linear_search([0, 5, 7, 10, 15], 6)
 
     """
+    logger.debug(">>> Entering sentinel_linear_search(sequence=%s,target=%s)", sequence, target)
     sequence.append(target)
 
     index = 0
@@ -42,6 +45,7 @@ def sentinel_linear_search(sequence, target):
     if index == len(sequence):
         return None
 
+    logger.debug("<<< Exiting sentinel_linear_search(sequence=%s,target=%s)", sequence, target)
     return index
 
 

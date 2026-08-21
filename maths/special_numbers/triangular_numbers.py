@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 A triangular number or triangle number counts objects arranged in an
 equilateral triangle. This module provides a function to generate n'th
@@ -31,9 +33,11 @@ def triangular_number(position: int) -> int:
         ...
     ValueError: param `position` must be non-negative
     """
+    logger.debug(">>> Entering triangular_number(position=%s)", position)
     if position < 0:
         raise ValueError("param `position` must be non-negative")
 
+    logger.debug("<<< Exiting triangular_number(position=%s)", position)
     return position * (position + 1) // 2
 
 

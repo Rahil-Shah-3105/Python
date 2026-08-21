@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This is pure Python implementation of interpolation search algorithm
 """
@@ -39,14 +41,18 @@ def interpolation_search(sorted_collection: list[int], item: int) -> int | None:
     >>> interpolation_search([5, 5, 5, 5, 5], 3) is None
     True
     """
+    logger.debug(">>> Entering interpolation_search(sorted_collection=%s,item=%s)", sorted_collection, item)
     left = 0
+    logger.debug("interpolation_search(sorted_collection=%s,item=%s): left → %s", sorted_collection, item, left)
     right = len(sorted_collection) - 1
+    logger.debug("interpolation_search(sorted_collection=%s,item=%s): right → %s", sorted_collection, item, right)
 
     while left <= right:
         # avoid divided by 0 during interpolation
         if sorted_collection[left] == sorted_collection[right]:
             if sorted_collection[left] == item:
                 return left
+            logger.debug("interpolation_search(sorted_collection=%s,item=%s): point → %s", sorted_collection, item, point)
             return None
 
         point = left + ((item - sorted_collection[left]) * (right - left)) // (
@@ -70,6 +76,7 @@ def interpolation_search(sorted_collection: list[int], item: int) -> int | None:
             right = point - 1
         else:
             left = point + 1
+    logger.debug("<<< Exiting interpolation_search(sorted_collection=%s,item=%s)", sorted_collection, item)
     return None
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def bailey_borwein_plouffe(digit_position: int, precision: int = 1000) -> str:
     """
     Implement a popular pi-digit-extraction algorithm known as the
@@ -37,6 +39,7 @@ def bailey_borwein_plouffe(digit_position: int, precision: int = 1000) -> str:
       ...
     ValueError: Precision must be a nonnegative integer
     """
+    logger.debug(">>> Entering bailey_borwein_plouffe(digit_position=%s,precision=%s)", digit_position, precision)
     if (not isinstance(digit_position, int)) or (digit_position <= 0):
         raise ValueError("Digit position must be a positive integer")
     elif (not isinstance(precision, int)) or (precision < 0):
@@ -52,6 +55,7 @@ def bailey_borwein_plouffe(digit_position: int, precision: int = 1000) -> str:
     )
 
     # return the first hex digit of the fractional part of the result
+    logger.debug("<<< Exiting bailey_borwein_plouffe(digit_position=%s,precision=%s)", digit_position, precision)
     return hex(int((sum_result % 1) * 16))[2:]
 
 

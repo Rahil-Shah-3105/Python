@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 == Hexagonal Number ==
 The nth hexagonal number hn is the number of distinct dots
@@ -35,11 +37,14 @@ def hexagonal(number: int) -> int:
         ...
     TypeError: Input value of [number=11.0] must be an integer
     """
+    logger.debug(">>> Entering hexagonal(number=%s)", number)
     if not isinstance(number, int):
         msg = f"Input value of [number={number}] must be an integer"
+        logger.debug("hexagonal(number=%s): msg → %s", number, msg)
         raise TypeError(msg)
     if number < 1:
         raise ValueError("Input must be a positive integer")
+    logger.debug("<<< Exiting hexagonal(number=%s)", number)
     return number * (2 * number - 1)
 
 

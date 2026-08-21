@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Sieve of Eratosthenes
 
@@ -29,11 +31,13 @@ def prime_sieve_eratosthenes(num: int) -> list[int]:
     ...
     ValueError: Input must be a positive integer
     """
+    logger.debug(">>> Entering prime_sieve_eratosthenes(num=%s)", num)
 
     if num <= 0:
         raise ValueError("Input must be a positive integer")
 
     primes = [True] * (num + 1)
+    logger.debug("prime_sieve_eratosthenes(num=%s): primes → %s", num, primes)
 
     p = 2
     while p * p <= num:
@@ -42,6 +46,7 @@ def prime_sieve_eratosthenes(num: int) -> list[int]:
                 primes[i] = False
         p += 1
 
+    logger.debug("<<< Exiting prime_sieve_eratosthenes(num=%s)", num)
     return [prime for prime in range(2, num + 1) if primes[prime]]
 
 

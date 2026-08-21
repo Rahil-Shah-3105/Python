@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Functions useful for doing molecular chemistry:
 * molarity_to_normality
@@ -20,6 +22,8 @@ def molarity_to_normality(nfactor: int, moles: float, volume: float) -> float:
       >>> molarity_to_normality(4, 11.4, 5.7)
       8
     """
+    logger.debug(">>> Entering molarity_to_normality(nfactor=%s,moles=%s,volume=%s)", nfactor, moles, volume)
+    logger.debug("<<< Exiting molarity_to_normality(nfactor=%s,moles=%s,volume=%s)", nfactor, moles, volume)
     return round(float(moles / volume) * nfactor)
 
 
@@ -40,6 +44,8 @@ def moles_to_pressure(volume: float, moles: float, temperature: float) -> float:
       >>> moles_to_pressure(8.2, 5, 200)
       10
     """
+    logger.debug(">>> Entering moles_to_pressure(volume=%s,moles=%s,temperature=%s)", volume, moles, temperature)
+    logger.debug("<<< Exiting moles_to_pressure(volume=%s,moles=%s,temperature=%s)", volume, moles, temperature)
     return round(float((moles * 0.0821 * temperature) / (volume)))
 
 
@@ -60,6 +66,8 @@ def moles_to_volume(pressure: float, moles: float, temperature: float) -> float:
       >>> moles_to_volume(8.2, 5, 200)
       10
     """
+    logger.debug(">>> Entering moles_to_volume(pressure=%s,moles=%s,temperature=%s)", pressure, moles, temperature)
+    logger.debug("<<< Exiting moles_to_volume(pressure=%s,moles=%s,temperature=%s)", pressure, moles, temperature)
     return round(float((moles * 0.0821 * temperature) / (pressure)))
 
 

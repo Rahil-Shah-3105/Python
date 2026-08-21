@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # Reference: https://www.geeksforgeeks.org/position-of-rightmost-set-bit/
 
 
@@ -28,15 +30,19 @@ def get_index_of_rightmost_set_bit(number: int) -> int:
         ...
     ValueError: Input must be a non-negative integer
     """
+    logger.debug(">>> Entering get_index_of_rightmost_set_bit(number=%s)", number)
 
     if not isinstance(number, int) or number < 0:
         raise ValueError("Input must be a non-negative integer")
 
     intermediate = number & ~(number - 1)
+    logger.debug("get_index_of_rightmost_set_bit(number=%s): intermediate → %s", number, intermediate)
     index = 0
+    logger.debug("get_index_of_rightmost_set_bit(number=%s): index → %s", number, index)
     while intermediate:
         intermediate >>= 1
         index += 1
+    logger.debug("<<< Exiting get_index_of_rightmost_set_bit(number=%s)", number)
     return index - 1
 
 

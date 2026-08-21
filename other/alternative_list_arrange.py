@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def alternative_list_arrange(first_input_list: list, second_input_list: list) -> list:
     """
     The method arranges two lists as one list in alternative forms of the list elements.
@@ -13,6 +15,9 @@ def alternative_list_arrange(first_input_list: list, second_input_list: list) ->
     >>> alternative_list_arrange([1, 2, 3, 4, 5], [])
     [1, 2, 3, 4, 5]
     """
+    logger.debug(">>> Entering alternative_list_arrange(first_input_list=%s,second_input_list=%s)", first_input_list, second_input_list)
+    logger.debug("alternative_list_arrange(first_input_list=%s,second_input_list=%s): first_input_list_length → %s", first_input_list, second_input_list, first_input_list_length)
+    logger.debug("alternative_list_arrange(first_input_list=%s,second_input_list=%s): second_input_list_length → %s", first_input_list, second_input_list, second_input_list_length)
     first_input_list_length: int = len(first_input_list)
     second_input_list_length: int = len(second_input_list)
     abs_length: int = (
@@ -21,12 +26,14 @@ def alternative_list_arrange(first_input_list: list, second_input_list: list) ->
         else second_input_list_length
     )
     output_result_list: list = []
+    logger.debug("alternative_list_arrange(first_input_list=%s,second_input_list=%s): output_result_list → %s", first_input_list, second_input_list, output_result_list)
     for char_count in range(abs_length):
         if char_count < first_input_list_length:
             output_result_list.append(first_input_list[char_count])
         if char_count < second_input_list_length:
             output_result_list.append(second_input_list[char_count])
 
+    logger.debug("<<< Exiting alternative_list_arrange(first_input_list=%s,second_input_list=%s)", first_input_list, second_input_list)
     return output_result_list
 
 

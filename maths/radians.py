@@ -1,4 +1,6 @@
 from math import pi
+import logging
+logger = logging.getLogger(__name__)
 
 
 def radians(degree: float) -> float:
@@ -19,7 +21,9 @@ def radians(degree: float) -> float:
     >>> all(abs(radians(i) - math_radians(i)) <= 1e-8 for i in range(-2, 361))
     True
     """
+    logger.debug(">>> Entering radians(degree=%s)", degree)
 
+    logger.debug("<<< Exiting radians(degree=%s)", degree)
     return degree / (180 / pi)
 
 

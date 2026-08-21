@@ -27,6 +27,8 @@ analyze graph centrality.
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def validate_adjacency_list(graph: list[list[int | None]]) -> None:
@@ -46,6 +48,7 @@ def validate_adjacency_list(graph: list[list[int | None]]) -> None:
         ...
     ValueError: Invalid neighbor -1 in node 2 adjacency list.
     """
+    logger.debug(">>> Entering validate_adjacency_list(graph=%s)", graph)
     if not isinstance(graph, list):
         raise ValueError("Graph should be a list of lists.")
 
@@ -65,6 +68,7 @@ def validate_adjacency_list(graph: list[list[int | None]]) -> None:
                     f"Invalid neighbor {neighbor_index} in node {node_index} "
                     f"adjacency list."
                 )
+                logger.debug("<<< Exiting validate_adjacency_list(graph=%s)", graph)
                 raise ValueError(invalid_neighbor_message)
 
 
@@ -197,9 +201,11 @@ def main() -> None:
     """
     Main driver function for testing the implementation with doctests.
     """
+    logger.debug(">>> Entering main()")
     import doctest
 
     doctest.testmod()
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

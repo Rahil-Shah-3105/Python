@@ -41,6 +41,8 @@ What is the maximum 16-digit string for a "magic" 5-gon ring?
 """
 
 from itertools import permutations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(gon_side: int = 5) -> int:
@@ -60,20 +62,26 @@ def solution(gon_side: int = 5) -> int:
     Traceback (most recent call last):
     ValueError: gon_side must be in the range [3, 5]
     """
+    logger.debug(">>> Entering solution(gon_side=%s)", gon_side)
     if gon_side < 3 or gon_side > 5:
         raise ValueError("gon_side must be in the range [3, 5]")
 
     # Since it's 16, we know 10 is on the outer ring
     # Put the big numbers at the end so that they are never the first number
     small_numbers = list(range(gon_side + 1, 0, -1))
+    logger.debug("solution(gon_side=%s): small_numbers → %s", gon_side, small_numbers)
     big_numbers = list(range(gon_side + 2, gon_side * 2 + 1))
+    logger.debug("solution(gon_side=%s): big_numbers → %s", gon_side, big_numbers)
 
     for perm in permutations(small_numbers + big_numbers):
         numbers = generate_gon_ring(gon_side, list(perm))
+        logger.debug("solution(gon_side=%s): numbers → %s", gon_side, numbers)
         if is_magic_gon(numbers):
+            logger.debug("<<< Exiting solution(gon_side=%s)", gon_side)
             return int("".join(str(n) for n in numbers))
 
     msg = f"Magic {gon_side}-gon ring is impossible"
+    logger.debug("solution(gon_side=%s): msg → %s", gon_side, msg)
     raise ValueError(msg)
 
 
@@ -87,11 +95,14 @@ def generate_gon_ring(gon_side: int, perm: list[int]) -> list[int]:
     >>> generate_gon_ring(5, [6, 5, 4, 3, 2, 1, 7, 8, 9, 10])
     [6, 5, 4, 3, 4, 2, 1, 2, 7, 8, 7, 9, 10, 9, 5]
     """
+    logger.debug(">>> Entering generate_gon_ring(gon_side=%s,perm=%s)", gon_side, perm)
     result = [0] * (gon_side * 3)
+    logger.debug("generate_gon_ring(gon_side=%s,perm=%s): result → %s", gon_side, perm, result)
     result[0:3] = perm[0:3]
     perm.append(perm[1])
 
     magic_number = 1 if gon_side < 5 else 2
+    logger.debug("generate_gon_ring(gon_side=%s,perm=%s): magic_number → %s", gon_side, perm, magic_number)
 
     for i in range(1, len(perm) // 3 + magic_number):
         result[3 * i] = perm[2 * i + 1]

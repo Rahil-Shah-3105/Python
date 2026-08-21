@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Author  : Alexander Pantyukhin
 Date    : November 1, 2022
@@ -46,8 +48,10 @@ def is_power_of_two(number: int) -> bool:
     >>> all(is_power_of_two(int(2 ** i)) for i in range(10000))
     True
     """
+    logger.debug(">>> Entering is_power_of_two(number=%s)", number)
     if number < 0:
         raise ValueError("number must not be negative")
+    logger.debug("<<< Exiting is_power_of_two(number=%s)", number)
     return number & (number - 1) == 0
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Problem 16: https://projecteuler.net/problem=16
 
@@ -19,10 +21,12 @@ def solution(power: int = 1000) -> int:
     >>> solution(15)
     26
     """
+    logger.debug(">>> Entering solution(power=%s)", power)
     n = 2**power
     r = 0
     while n:
         r, n = r + n % 10, n // 10
+    logger.debug("<<< Exiting solution(power=%s)", power)
     return r
 
 

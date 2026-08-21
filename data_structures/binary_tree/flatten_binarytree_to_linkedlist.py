@@ -12,6 +12,8 @@ Date: 04/09/2023
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 class TreeNode:
@@ -21,9 +23,13 @@ class TreeNode:
     """
 
     def __init__(self, data: int) -> None:
+        logger.debug(">>> Entering __init__(data=%s)", data)
         self.data = data
+        logger.debug("__init__(data=%s): self.data → %s", data, self.data)
+        logger.debug("__init__(self=%s,data=%s): self.data → %s", self, data, self.data)
         self.left: TreeNode | None = None
         self.right: TreeNode | None = None
+        logger.debug("<<< Exiting __init__(data=%s)", data)
 
 
 def build_tree() -> TreeNode:
@@ -48,12 +54,16 @@ def build_tree() -> TreeNode:
         >>> root.right.right.data
         6
     """
+    logger.debug(">>> Entering build_tree()")
     root = TreeNode(1)
+    logger.debug("build_tree(): root → %s", root)
+    logger.warning("build_tree(): root → %s", root)
     root.left = TreeNode(2)
     root.right = TreeNode(5)
     root.left.left = TreeNode(3)
     root.left.right = TreeNode(4)
     root.right.right = TreeNode(6)
+    logger.debug("<<< Exiting build_tree()")
     return root
 
 
@@ -81,7 +91,9 @@ def flatten(root: TreeNode | None) -> None:
         >>> root.right.right.right is None
         True
     """
+    logger.debug(">>> Entering flatten(root=%s)", root)
     if not root:
+        logger.debug("<<< Exiting flatten(root=%s)", root)
         return
 
     # Flatten the left subtree
@@ -89,18 +101,23 @@ def flatten(root: TreeNode | None) -> None:
 
     # Save the right subtree
     right_subtree = root.right
+    logger.debug("flatten(root=%s): right_subtree → %s", root, right_subtree)
 
     # Make the left subtree the new right subtree
     root.right = root.left
+    logger.debug("flatten(root=%s): root.right → %s", root, root.right)
     root.left = None
+    logger.debug("flatten(root=%s): root.left → %s", root, root.left)
 
     # Find the end of the new right subtree
     current = root
+    logger.debug("flatten(root=%s): current → %s", root, current)
     while current.right:
         current = current.right
 
     # Append the original right subtree to the end
     current.right = right_subtree
+    logger.debug("flatten(root=%s): current.right → %s", root, current.right)
 
     # Flatten the updated right subtree
     flatten(right_subtree)
@@ -123,12 +140,15 @@ def display_linked_list(root: TreeNode | None) -> None:
         >>> display_linked_list(root)
 
     """
+    logger.debug(">>> Entering display_linked_list(root=%s)", root)
     current = root
+    logger.debug("display_linked_list(root=%s): current → %s", root, current)
     while current:
         if current.right is None:
             print(current.data, end="")
             break
         print(current.data, end=" ")
+        logger.debug("<<< Exiting display_linked_list(root=%s)", root)
         current = current.right
 
 

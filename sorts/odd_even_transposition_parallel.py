@@ -12,6 +12,8 @@ synchronization could be used.
 """
 
 import multiprocessing as mp
+import logging
+logger = logging.getLogger(__name__)
 
 # lock used to ensure that two processes do not access a pipe at the same time
 # NOTE This breaks testing on build runner. May work better locally
@@ -99,19 +101,27 @@ def odd_even_transposition(arr):
     >>> odd_even_transposition(unsorted_list) == sorted(unsorted_list + [1])
     False
     """
+    logger.debug(">>> Entering odd_even_transposition(arr=%s)", arr)
     # spawn method is considered safer than fork
     multiprocessing_context = mp.get_context("spawn")
+    logger.debug("odd_even_transposition(arr=%s): multiprocessing_context → %s", arr, multiprocessing_context)
 
     process_array_ = []
+    logger.debug("odd_even_transposition(arr=%s): process_array_ → %s", arr, process_array_)
     result_pipe = []
+    logger.debug("odd_even_transposition(arr=%s): result_pipe → %s", arr, result_pipe)
     # initialize the list of pipes where the values will be retrieved
     for _ in arr:
+        logger.debug("odd_even_transposition(arr=%s): args → %s", arr, args)
         result_pipe.append(multiprocessing_context.Pipe())
     # creates the processes
+    logger.debug("odd_even_transposition(arr=%s): target → %s", arr, target)
     # the first and last process only have one neighbor so they are made outside
     # of the loop
     temp_rs = multiprocessing_context.Pipe()
+    logger.debug("odd_even_transposition(arr=%s): temp_rs → %s", arr, temp_rs)
     temp_rr = multiprocessing_context.Pipe()
+    logger.debug("odd_even_transposition(arr=%s): temp_rr → %s", arr, temp_rr)
     process_array_.append(
         multiprocessing_context.Process(
             target=oe_process,
@@ -128,7 +138,9 @@ def odd_even_transposition(arr):
         )
     )
     temp_lr = temp_rs
+    logger.debug("odd_even_transposition(arr=%s): temp_lr → %s", arr, temp_lr)
     temp_ls = temp_rr
+    logger.debug("odd_even_transposition(arr=%s): temp_ls → %s", arr, temp_ls)
 
     for i in range(1, len(arr) - 1):
         temp_rs = multiprocessing_context.Pipe()
@@ -175,17 +187,21 @@ def odd_even_transposition(arr):
     for p in range(len(result_pipe)):
         arr[p] = result_pipe[p][0].recv()
         process_array_[p].join()
+    logger.debug("<<< Exiting odd_even_transposition(arr=%s)", arr)
     return arr
 
 
 # creates a reverse sorted list and sorts it
 def main():
+    logger.debug(">>> Entering main()")
     arr = list(range(10, 0, -1))
+    logger.debug("main(): arr → %s", arr)
     print("Initial List")
     print(*arr)
     arr = odd_even_transposition(arr)
     print("Sorted List\n")
     print(*arr)
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

@@ -5,6 +5,8 @@ https://en.wikipedia.org/wiki/Knapsack_problem
 from __future__ import annotations
 
 from functools import lru_cache
+import logging
+logger = logging.getLogger(__name__)
 
 
 def knapsack(
@@ -39,6 +41,7 @@ def knapsack(
 
     @lru_cache
     def knapsack_recur(capacity: int, counter: int) -> int:
+        logger.debug(">>> Entering knapsack_recur(capacity=%s,counter=%s)", capacity, counter)
         # Base Case
         if counter == 0 or capacity == 0:
             return 0
@@ -53,10 +56,13 @@ def knapsack(
             return knapsack_recur(capacity, counter - 1)
         else:
             left_capacity = capacity - weights[counter - 1]
+            logger.debug("knapsack_recur(capacity=%s,counter=%s): left_capacity → %s", capacity, counter, left_capacity)
             new_value_included = values[counter - 1] + knapsack_recur(
                 left_capacity, counter - 1 if not allow_repetition else counter
             )
             without_new_value = knapsack_recur(capacity, counter - 1)
+            logger.debug("knapsack_recur(capacity=%s,counter=%s): without_new_value → %s", capacity, counter, without_new_value)
+            logger.debug("<<< Exiting knapsack_recur(capacity=%s,counter=%s)", capacity, counter)
             return max(new_value_included, without_new_value)
 
     return knapsack_recur(capacity, counter)

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Find the Equilibrium Index of an Array.
 Reference: https://www.geeksforgeeks.org/equilibrium-index-of-an-array/
@@ -40,7 +42,9 @@ def equilibrium_index(arr: list[int]) -> int:
         >>> equilibrium_index([2, 4, 6, 8, 10, 3])
         -1
     """
+    logger.debug(">>> Entering equilibrium_index(arr=%s)", arr)
     total_sum = sum(arr)
+    logger.debug("equilibrium_index(arr=%s): total_sum → %s", arr, total_sum)
     left_sum = 0
 
     for i, value in enumerate(arr):
@@ -49,6 +53,7 @@ def equilibrium_index(arr: list[int]) -> int:
             return i
         left_sum += value
 
+    logger.debug("<<< Exiting equilibrium_index(arr=%s)", arr)
     return -1
 
 

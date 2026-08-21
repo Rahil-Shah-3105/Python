@@ -11,6 +11,8 @@ in that cell and repeat this process.
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 Matrix = list[list[int]]
 
@@ -48,6 +50,7 @@ def is_safe(grid: Matrix, row: int, column: int, n: int) -> bool:
     It returns False if it is not 'safe' (a duplicate digit
     is found) else returns True if it is 'safe'
     """
+    logger.debug(">>> Entering is_safe(grid=%s,row=%s,column=%s,n=%s)", grid, row, column, n)
     for i in range(9):
         if n in {grid[row][i], grid[i][column]}:
             return False
@@ -57,6 +60,7 @@ def is_safe(grid: Matrix, row: int, column: int, n: int) -> bool:
             if grid[(row - row % 3) + i][(column - column % 3) + j] == n:
                 return False
 
+    logger.debug("<<< Exiting is_safe(grid=%s,row=%s,column=%s,n=%s)", grid, row, column, n)
     return True
 
 
@@ -65,10 +69,12 @@ def find_empty_location(grid: Matrix) -> tuple[int, int] | None:
     This function finds an empty location so that we can assign a number
     for that particular row and column.
     """
+    logger.debug(">>> Entering find_empty_location(grid=%s)", grid)
     for i in range(9):
         for j in range(9):
             if grid[i][j] == 0:
                 return i, j
+    logger.debug("<<< Exiting find_empty_location(grid=%s)", grid)
     return None
 
 
@@ -91,6 +97,7 @@ def sudoku(grid: Matrix) -> Matrix | None:
      >>> sudoku(no_solution) is None
      True
     """
+    logger.debug(">>> Entering sudoku(grid=%s)", grid)
     if location := find_empty_location(grid):
         row, column = location
     else:
@@ -106,6 +113,7 @@ def sudoku(grid: Matrix) -> Matrix | None:
 
             grid[row][column] = 0
 
+    logger.debug("<<< Exiting sudoku(grid=%s)", grid)
     return None
 
 
@@ -114,10 +122,12 @@ def print_solution(grid: Matrix) -> None:
     A function to print the solution in the form
     of a 9x9 grid
     """
+    logger.debug(">>> Entering print_solution(grid=%s)", grid)
     for row in grid:
         for cell in row:
             print(cell, end=" ")
         print()
+        logger.debug("<<< Exiting print_solution(grid=%s)", grid)
 
 
 if __name__ == "__main__":

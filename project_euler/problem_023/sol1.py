@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 A perfect number is a number for which the sum of its proper divisors is exactly
 equal to the number. For example, the sum of the proper divisors of 28 would be
@@ -28,7 +30,9 @@ def solution(limit=28123):
     >>> solution()
     4179871
     """
+    logger.debug(">>> Entering solution(limit=%s)", limit)
     sum_divs = [1] * (limit + 1)
+    logger.debug("solution(limit=%s): sum_divs → %s", limit, sum_divs)
 
     for i in range(2, int(limit**0.5) + 1):
         sum_divs[i * i] += i

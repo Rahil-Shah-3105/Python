@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def points_to_polynomial(coordinates: list[list[int]]) -> str:
     """
     coordinates is a two dimensional matrix: [[x, y], [x, y], ...]
@@ -34,6 +36,7 @@ def points_to_polynomial(coordinates: list[list[int]]) -> str:
         ...
     ValueError: The program cannot work out a fitting polynomial.
     """
+    logger.debug(">>> Entering points_to_polynomial(coordinates=%s)", coordinates)
     if len(coordinates) == 0 or not all(len(pair) == 2 for pair in coordinates):
         raise ValueError("The program cannot work out a fitting polynomial.")
 
@@ -41,6 +44,7 @@ def points_to_polynomial(coordinates: list[list[int]]) -> str:
         raise ValueError("The program cannot work out a fitting polynomial.")
 
     set_x = {x for x, _ in coordinates}
+    logger.debug("points_to_polynomial(coordinates=%s): set_x → %s", coordinates, set_x)
     if len(set_x) == 1:
         return f"x={coordinates[0][0]}"
 
@@ -48,6 +52,7 @@ def points_to_polynomial(coordinates: list[list[int]]) -> str:
         raise ValueError("The program cannot work out a fitting polynomial.")
 
     x = len(coordinates)
+    logger.debug("points_to_polynomial(coordinates=%s): x → %s", coordinates, x)
 
     # put the x and x to the power values in a matrix
     matrix: list[list[float]] = [
@@ -66,6 +71,7 @@ def points_to_polynomial(coordinates: list[list[int]]) -> str:
             if count == number:
                 continue
             fraction = matrix[number][count] / matrix[count][count]
+            logger.debug("points_to_polynomial(coordinates=%s): fraction → %s", coordinates, fraction)
             for counting_columns, item in enumerate(matrix[count]):
                 # manipulating all the values in the matrix
                 matrix[number][counting_columns] -= item * fraction
@@ -78,6 +84,7 @@ def points_to_polynomial(coordinates: list[list[int]]) -> str:
     ]
 
     solved = "f(x)="
+    logger.debug("points_to_polynomial(coordinates=%s): solved → %s", coordinates, solved)
 
     for count in range(x):
         remove_e: list[str] = solution[count].split("E")
@@ -87,6 +94,7 @@ def points_to_polynomial(coordinates: list[list[int]]) -> str:
         if count + 1 != x:
             solved += "+"
 
+    logger.debug("<<< Exiting points_to_polynomial(coordinates=%s)", coordinates)
     return solved
 
 

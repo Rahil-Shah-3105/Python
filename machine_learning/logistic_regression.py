@@ -18,6 +18,8 @@ https://medium.com/@martinpella/logistic-regression-from-scratch-in-python-124c5
 import numpy as np
 from matplotlib import pyplot as plt
 from sklearn import datasets
+import logging
+logger = logging.getLogger(__name__)
 
 # get_ipython().run_line_magic('matplotlib', 'inline')
 
@@ -60,6 +62,8 @@ def sigmoid_function(z: float | np.ndarray) -> float | np.ndarray:
     >>> sigmoid_function(np.array([0.8]))
     array([0.68997448])
     """
+    logger.debug(">>> Entering sigmoid_function(z=%s)", z)
+    logger.debug("<<< Exiting sigmoid_function(z=%s)", z)
     return 1 / (1 + np.exp(-z))
 
 
@@ -100,28 +104,39 @@ def cost_function(h: np.ndarray, y: np.ndarray) -> float:
     References:
        - https://en.wikipedia.org/wiki/Logistic_regression
     """
+    logger.debug(">>> Entering cost_function(h=%s,y=%s)", h, y)
+    logger.debug("<<< Exiting cost_function(h=%s,y=%s)", h, y)
     return float((-y * np.log(h) - (1 - y) * np.log(1 - h)).mean())
 
 
 def log_likelihood(x, y, weights):
+    logger.debug(">>> Entering log_likelihood(x=%s,y=%s,weights=%s)", x, y, weights)
     scores = np.dot(x, weights)
+    logger.debug("log_likelihood(x=%s,y=%s,weights=%s): scores → %s", x, y, weights, scores)
+    logger.debug("<<< Exiting log_likelihood(x=%s,y=%s,weights=%s)", x, y, weights)
     return np.sum(y * scores - np.log(1 + np.exp(scores)))
 
 
 # here alpha is the learning rate, X is the feature matrix,y is the target matrix
 def logistic_reg(alpha, x, y, max_iterations=70000):
+    logger.debug(">>> Entering logistic_reg(alpha=%s,x=%s,y=%s,max_iterations=%s)", alpha, x, y, max_iterations)
     theta = np.zeros(x.shape[1])
+    logger.debug("logistic_reg(alpha=%s,x=%s,y=%s,max_iterations=%s): theta → %s", alpha, x, y, max_iterations, theta)
 
     for iterations in range(max_iterations):
         z = np.dot(x, theta)
         h = sigmoid_function(z)
         gradient = np.dot(x.T, h - y) / y.size
+        logger.debug("logistic_reg(alpha=%s,x=%s,y=%s,max_iterations=%s): gradient → %s", alpha, x, y, max_iterations, gradient)
         theta = theta - alpha * gradient  # updating the weights
         z = np.dot(x, theta)
+        logger.debug("logistic_reg(alpha=%s,x=%s,y=%s,max_iterations=%s): z → %s", alpha, x, y, max_iterations, z)
         h = sigmoid_function(z)
+        logger.debug("logistic_reg(alpha=%s,x=%s,y=%s,max_iterations=%s): h → %s", alpha, x, y, max_iterations, h)
         j = cost_function(h, y)
         if iterations % 100 == 0:
             print(f"loss: {j} \t")  # printing the loss after every 100 iterations
+    logger.debug("<<< Exiting logistic_reg(alpha=%s,x=%s,y=%s,max_iterations=%s)", alpha, x, y, max_iterations)
     return theta
 
 
@@ -141,6 +156,8 @@ if __name__ == "__main__":
     print("theta: ", theta)  # printing the theta i.e our weights vector
 
     def predict_prob(x):
+        logger.debug(">>> Entering predict_prob(x=%s)", x)
+        logger.debug("<<< Exiting predict_prob(x=%s)", x)
         return sigmoid_function(
             np.dot(x, theta)
         )  # predicting the value of probability from the logistic regression algorithm

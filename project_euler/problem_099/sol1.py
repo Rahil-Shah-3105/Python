@@ -15,6 +15,8 @@ NOTE: The first two lines in the file represent the numbers in the example given
 
 import os
 from math import log10
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(data_file: str = "base_exp.txt") -> int:
@@ -22,13 +24,17 @@ def solution(data_file: str = "base_exp.txt") -> int:
     >>> solution()
     709
     """
+    logger.debug(">>> Entering solution(data_file=%s)", data_file)
     largest: float = 0
     result = 0
+    logger.debug("solution(data_file=%s): result → %s", data_file, result)
     for i, line in enumerate(open(os.path.join(os.path.dirname(__file__), data_file))):
         a, x = list(map(int, line.split(",")))
         if x * log10(a) > largest:
             largest = x * log10(a)
+            logger.debug("solution(data_file=%s): largest → %s", data_file, largest)
             result = i + 1
+    logger.debug("<<< Exiting solution(data_file=%s)", data_file)
     return result
 
 

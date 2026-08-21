@@ -4,14 +4,22 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
     def __init__(self, data: Any) -> None:
+        logger.debug(">>> Entering __init__(data=%s)", data)
         self.data: Any = data
         self.next: Node | None = None
+        logger.debug("<<< Exiting __init__(data=%s)", data)
+        logger.debug(">>> Entering __init__()")
+        logger.debug("<<< Exiting __init__()")
 
     def __str__(self) -> str:
+        logger.debug(">>> Entering __str__()")
+        logger.debug("<<< Exiting __str__()")
         return f"{self.data}"
 
 
@@ -47,9 +55,12 @@ class LinkedQueue:
         self.rear: Node | None = None
 
     def __iter__(self) -> Iterator[Any]:
+        logger.debug(">>> Entering __iter__()")
         node = self.front
+        logger.debug("__iter__(self=%s): node → %s", self, node)
         while node:
             yield node.data
+            logger.debug("<<< Exiting __iter__()")
             node = node.next
 
     def __len__(self) -> int:
@@ -65,6 +76,8 @@ class LinkedQueue:
         >>> len(queue)
         0
         """
+        logger.debug(">>> Entering __len__()")
+        logger.debug("<<< Exiting __len__()")
         return len(tuple(iter(self)))
 
     def __str__(self) -> str:
@@ -90,6 +103,8 @@ class LinkedQueue:
         >>> queue.is_empty()
         False
         """
+        logger.debug(">>> Entering is_empty()")
+        logger.debug("<<< Exiting is_empty()")
         return len(self) == 0
 
     def put(self, item: Any) -> None:
@@ -104,13 +119,19 @@ class LinkedQueue:
         >>> str(queue)
         '1 <- 2 <- 3 <- 4 <- 5'
         """
+        logger.debug(">>> Entering put(item=%s)", item)
+        logger.debug("put(self=%s,item=%s): self.front → %s", self, item, self.front)
         node = Node(item)
+        logger.debug("put(self=%s,item=%s): node → %s", self, item, node)
+        logger.debug("put(item=%s): node → %s", item, node)
         if self.is_empty():
             self.front = self.rear = node
         else:
             assert isinstance(self.rear, Node)
             self.rear.next = node
+            logger.debug("<<< Exiting put(item=%s)", item)
             self.rear = node
+            logger.debug("put(self=%s,item=%s): self.rear → %s", self, item, self.rear)
 
     def get(self) -> Any:
         """
@@ -127,13 +148,18 @@ class LinkedQueue:
         >>> len(queue)
         0
         """
+        logger.debug(">>> Entering get()")
         if self.is_empty():
             raise IndexError("dequeue from empty queue")
         assert isinstance(self.front, Node)
         node = self.front
+        logger.debug("get(self=%s): node → %s", self, node)
         self.front = self.front.next
+        logger.debug("get(self=%s): self.front → %s", self, self.front)
         if self.front is None:
             self.rear = None
+            logger.debug("get(self=%s): self.rear → %s", self, self.rear)
+        logger.debug("<<< Exiting get()")
         return node.data
 
     def clear(self) -> None:
@@ -147,7 +173,10 @@ class LinkedQueue:
         >>> str(queue)
         ''
         """
+        logger.debug(">>> Entering clear()")
         self.front = self.rear = None
+        logger.debug("clear(self=%s): self.front → %s", self, self.front)
+        logger.debug("<<< Exiting clear()")
 
 
 if __name__ == "__main__":

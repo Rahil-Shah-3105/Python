@@ -10,6 +10,8 @@ python3 iterative_merge_sort.py
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def merge(input_list: list, low: int, mid: int, high: int) -> list:
@@ -17,11 +19,14 @@ def merge(input_list: list, low: int, mid: int, high: int) -> list:
     sorting left-half and right-half individually
     then merging them into result
     """
+    logger.debug(">>> Entering merge(input_list=%s,low=%s,mid=%s,high=%s)", input_list, low, mid, high)
     result = []
+    logger.debug("merge(input_list=%s,low=%s,mid=%s,high=%s): result → %s", input_list, low, mid, high, result)
     left, right = input_list[low:mid], input_list[mid : high + 1]
     while left and right:
         result.append((left if left[0] <= right[0] else right).pop(0))
     input_list[low : high + 1] = result + left + right
+    logger.debug("<<< Exiting merge(input_list=%s,low=%s,mid=%s,high=%s)", input_list, low, mid, high)
     return input_list
 
 
@@ -61,6 +66,7 @@ def iter_merge_sort(input_list: list) -> list:
     >>> iter_merge_sort('cba')
     ['a', 'b', 'c']
     """
+    logger.debug(">>> Entering iter_merge_sort(input_list=%s)", input_list)
     if len(input_list) <= 1:
         return input_list
     input_list = list(input_list)
@@ -71,8 +77,11 @@ def iter_merge_sort(input_list: list) -> list:
         # getting low, high and middle value for merge-sort of single list
         for i in range(0, len(input_list), p):
             low = i
+            logger.debug("iter_merge_sort(input_list=%s): low → %s", input_list, low)
             high = i + p - 1
+            logger.debug("iter_merge_sort(input_list=%s): high → %s", input_list, high)
             mid = (low + high + 1) // 2
+            logger.debug("iter_merge_sort(input_list=%s): mid → %s", input_list, mid)
             input_list = merge(input_list, low, mid, high)
         # final merge of last two parts
         if p * 2 >= len(input_list):
@@ -81,6 +90,7 @@ def iter_merge_sort(input_list: list) -> list:
             break
         p *= 2
 
+    logger.debug("<<< Exiting iter_merge_sort(input_list=%s)", input_list)
     return input_list
 
 

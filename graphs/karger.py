@@ -5,6 +5,8 @@ An implementation of Karger's Algorithm for partitioning a graph.
 from __future__ import annotations
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 # Adjacency list representation of this graph:
 # https://en.wikipedia.org/wiki/File:Single_run_of_Karger%E2%80%99s_Mincut_algorithm.svg
@@ -41,19 +43,25 @@ def partition_graph(graph: dict[str, list[str]]) -> set[tuple[str, str]]:
     >>> partition_graph(graph)
     {('0', '1')}
     """
+    logger.debug(">>> Entering partition_graph(graph=%s)", graph)
     # Dict that maps contracted nodes to a list of all the nodes it "contains."
     contracted_nodes = {node: {node} for node in graph}
+    logger.debug("partition_graph(graph=%s): contracted_nodes → %s", graph, contracted_nodes)
 
     graph_copy = {node: graph[node][:] for node in graph}
+    logger.debug("partition_graph(graph=%s): graph_copy → %s", graph, graph_copy)
 
     while len(graph_copy) > 2:
         # Choose a random edge.
         u = random.choice(list(graph_copy.keys()))
+        logger.debug("partition_graph(graph=%s): u → %s", graph, u)
         v = random.choice(graph_copy[u])
+        logger.debug("partition_graph(graph=%s): v → %s", graph, v)
 
         # Contract edge (u, v) to new node uv
         uv = u + v
         uv_neighbors = list(set(graph_copy[u] + graph_copy[v]))
+        logger.debug("partition_graph(graph=%s): uv_neighbors → %s", graph, uv_neighbors)
         uv_neighbors.remove(u)
         uv_neighbors.remove(v)
         graph_copy[uv] = uv_neighbors
@@ -72,7 +80,9 @@ def partition_graph(graph: dict[str, list[str]]) -> set[tuple[str, str]]:
                 graph_copy[neighbor].remove(v)
 
     # Find cutset.
+    logger.debug("<<< Exiting partition_graph(graph=%s)", graph)
     groups = [contracted_nodes[node] for node in graph_copy]
+    logger.debug("partition_graph(graph=%s): groups → %s", graph, groups)
     return {
         (node, neighbor)
         for node in groups[0]

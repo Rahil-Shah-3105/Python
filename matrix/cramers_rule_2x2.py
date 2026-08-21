@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # https://www.chilimath.com/lessons/advanced-algebra/cramers-rule-with-two-variables
 # https://en.wikipedia.org/wiki/Cramer%27s_rule
 
@@ -51,6 +53,8 @@ def cramers_rule_2x2(equation1: list[int], equation2: list[int]) -> tuple[float,
         ...
     ValueError: No solution. (Inconsistent system)
     """
+    logger.debug(">>> Entering cramers_rule_2x2(equation1=%s,equation2=%s)", equation1, equation2)
+    logger.debug("cramers_rule_2x2(equation1=%s,equation2=%s): determinant_y → %s", equation1, equation2, determinant_y)
 
     # Check if the input is valid
     if not len(equation1) == len(equation2) == 3:
@@ -80,4 +84,5 @@ def cramers_rule_2x2(equation1: list[int], equation2: list[int]) -> tuple[float,
         x = determinant_x / determinant
         y = determinant_y / determinant
         # Non-Trivial Solution (Consistent system)
+        logger.debug("<<< Exiting cramers_rule_2x2(equation1=%s,equation2=%s)", equation1, equation2)
         return (x, y)

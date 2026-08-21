@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 122: https://projecteuler.net/problem=122
 
@@ -47,6 +49,7 @@ def solve(nums: list[int], goal: int, depth: int) -> bool:
     >>> solve([1], 2, 0)
     False
     """
+    logger.debug(">>> Entering solve(nums=%s,goal=%s,depth=%s)", nums, goal, depth)
     if len(nums) > depth:
         return False
     for el in nums:
@@ -56,6 +59,7 @@ def solve(nums: list[int], goal: int, depth: int) -> bool:
         if solve(nums=nums, goal=goal, depth=depth):
             return True
         del nums[-1]
+    logger.debug("<<< Exiting solve(nums=%s,goal=%s,depth=%s)", nums, goal, depth)
     return False
 
 
@@ -73,15 +77,20 @@ def solution(n: int = 200) -> int:
     >>> solution(15)
     50
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     total = 0
+    logger.debug("solution(n=%s): total → %s", n, total)
     for i in range(2, n + 1):
         max_length = 0
+        logger.debug("solution(n=%s): max_length → %s", n, max_length)
         while True:
             nums = [1]
+            logger.debug("solution(n=%s): nums → %s", n, nums)
             max_length += 1
             if solve(nums=nums, goal=i, depth=max_length):
                 break
         total += max_length
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return total
 
 

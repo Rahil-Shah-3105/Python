@@ -2,6 +2,8 @@
 
 from collections import Counter
 from timeit import timeit
+import logging
+logger = logging.getLogger(__name__)
 
 # Problem Description:
 # Check if characters of the given string can be rearranged to form a palindrome.
@@ -39,9 +41,11 @@ def can_string_be_rearranged_as_palindrome(input_str: str = "") -> bool:
     >>> can_string_be_rearranged_as_palindrome_counter("A man a plan a canal Panama")
     True
     """
+    logger.debug(">>> Entering can_string_be_rearranged_as_palindrome(input_str=%s)", input_str)
     if len(input_str) == 0:
         return True
     lower_case_input_str = input_str.replace(" ", "").lower()
+    logger.debug("can_string_be_rearranged_as_palindrome(input_str=%s): lower_case_input_str → %s", input_str, lower_case_input_str)
     # character_freq_dict: Stores the frequency of every character in the input string
     character_freq_dict: dict[str, int] = {}
 
@@ -68,10 +72,12 @@ def can_string_be_rearranged_as_palindrome(input_str: str = "") -> bool:
     It is not possible to rearrange as a palindrome
     """
     odd_char = 0
+    logger.debug("can_string_be_rearranged_as_palindrome(input_str=%s): odd_char → %s", input_str, odd_char)
 
     for character_count in character_freq_dict.values():
         if character_count % 2:
             odd_char += 1
+    logger.debug("<<< Exiting can_string_be_rearranged_as_palindrome(input_str=%s)", input_str)
     return not odd_char > 1
 
 
@@ -79,6 +85,8 @@ def benchmark(input_str: str = "") -> None:
     """
     Benchmark code for comparing above 2 functions
     """
+    logger.debug(">>> Entering benchmark(input_str=%s)", input_str)
+    logger.debug("benchmark(input_str=%s): setup → %s", input_str, setup)
     print("\nFor string = ", input_str, ":")
     print(
         "> can_string_be_rearranged_as_palindrome_counter()",
@@ -102,6 +110,7 @@ def benchmark(input_str: str = "") -> None:
         ),
         "seconds",
     )
+    logger.debug("<<< Exiting benchmark(input_str=%s)", input_str)
 
 
 if __name__ == "__main__":

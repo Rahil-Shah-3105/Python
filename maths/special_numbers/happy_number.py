@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def is_happy_number(number: int) -> bool:
     """
     A happy number is a number which eventually reaches 1 when replaced by the sum of
@@ -31,14 +33,20 @@ def is_happy_number(number: int) -> bool:
         ...
     ValueError: number='happy' must be a positive integer
     """
+    logger.debug(">>> Entering is_happy_number(number=%s)", number)
+    logger.debug("is_happy_number(number=%s): ValueError → %s", number, ValueError)
+    logger.debug("is_happy_number(number=%s): msg → %s", number, msg)
     if not isinstance(number, int) or number <= 0:
         msg = f"{number=} must be a positive integer"
         raise ValueError(msg)
 
     seen = set()
+    logger.debug("is_happy_number(number=%s): seen → %s", number, seen)
     while number != 1 and number not in seen:
         seen.add(number)
         number = sum(int(digit) ** 2 for digit in str(number))
+        logger.debug("is_happy_number(number=%s): number → %s", number, number)
+    logger.debug("<<< Exiting is_happy_number(number=%s)", number)
     return number == 1
 
 

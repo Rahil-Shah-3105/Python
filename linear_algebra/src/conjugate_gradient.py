@@ -7,6 +7,8 @@ Resources:
 from typing import Any
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def _is_matrix_spd(matrix: np.ndarray) -> bool:
@@ -30,6 +32,7 @@ def _is_matrix_spd(matrix: np.ndarray) -> bool:
     >>> _is_matrix_spd(matrix)
     False
     """
+    logger.debug(">>> Entering _is_matrix_spd(matrix=%s)", matrix)
     # Ensure matrix is square.
     assert np.shape(matrix)[0] == np.shape(matrix)[1]
 
@@ -42,6 +45,7 @@ def _is_matrix_spd(matrix: np.ndarray) -> bool:
 
     # Check sign of all eigenvalues.
     # np.all returns a value of type np.bool_
+    logger.debug("<<< Exiting _is_matrix_spd(matrix=%s)", matrix)
     return bool(np.all(eigen_values > 0))
 
 
@@ -61,10 +65,15 @@ def _create_spd_matrix(dimension: int) -> Any:
     >>> _is_matrix_spd(spd_matrix)
     True
     """
+    logger.debug(">>> Entering _create_spd_matrix(dimension=%s)", dimension)
     rng = np.random.default_rng()
+    logger.debug("_create_spd_matrix(dimension=%s): rng → %s", dimension, rng)
     random_matrix = rng.normal(size=(dimension, dimension))
+    logger.debug("_create_spd_matrix(dimension=%s): random_matrix → %s", dimension, random_matrix)
     spd_matrix = np.dot(random_matrix, random_matrix.T)
+    logger.debug("_create_spd_matrix(dimension=%s): spd_matrix → %s", dimension, spd_matrix)
     assert _is_matrix_spd(spd_matrix)
+    logger.debug("<<< Exiting _create_spd_matrix(dimension=%s)", dimension)
     return spd_matrix
 
 
@@ -155,22 +164,31 @@ def test_conjugate_gradient() -> None:
     """
     >>> test_conjugate_gradient()  # self running tests
     """
+    logger.debug(">>> Entering test_conjugate_gradient()")
     # Create linear system with SPD matrix and known solution x_true.
     dimension = 3
+    logger.debug("test_conjugate_gradient(): dimension → %s", dimension)
     spd_matrix = _create_spd_matrix(dimension)
+    logger.debug("test_conjugate_gradient(): spd_matrix → %s", spd_matrix)
     rng = np.random.default_rng()
+    logger.debug("test_conjugate_gradient(): rng → %s", rng)
     x_true = rng.normal(size=(dimension, 1))
+    logger.debug("test_conjugate_gradient(): x_true → %s", x_true)
     b = np.dot(spd_matrix, x_true)
+    logger.debug("test_conjugate_gradient(): b → %s", b)
 
     # Numpy solution.
     x_numpy = np.linalg.solve(spd_matrix, b)
+    logger.debug("test_conjugate_gradient(): x_numpy → %s", x_numpy)
 
     # Our implementation.
     x_conjugate_gradient = conjugate_gradient(spd_matrix, b)
+    logger.debug("test_conjugate_gradient(): x_conjugate_gradient → %s", x_conjugate_gradient)
 
     # Ensure both solutions are close to x_true (and therefore one another).
     assert np.linalg.norm(x_numpy - x_true) <= 1e-6
     assert np.linalg.norm(x_conjugate_gradient - x_true) <= 1e-6
+    logger.debug("<<< Exiting test_conjugate_gradient()")
 
 
 if __name__ == "__main__":

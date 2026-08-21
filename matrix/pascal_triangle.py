@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This implementation demonstrates how to generate the elements of a Pascal's triangle.
 The element havingva row index of r and column index of c can be derivedvas follows:
@@ -18,7 +20,9 @@ def print_pascal_triangle(num_rows: int) -> None:
      1 3 3 1
     1 4 6 4 1
     """
+    logger.debug(">>> Entering print_pascal_triangle(num_rows=%s)", num_rows)
     triangle = generate_pascal_triangle(num_rows)
+    logger.debug("print_pascal_triangle(num_rows=%s): triangle → %s", num_rows, triangle)
     for row_idx in range(num_rows):
         # Print left spaces
         for _ in range(num_rows - row_idx - 1):
@@ -30,6 +34,7 @@ def print_pascal_triangle(num_rows: int) -> None:
             else:
                 print(triangle[row_idx][col_idx], end="")
         print()
+        logger.debug("<<< Exiting print_pascal_triangle(num_rows=%s)", num_rows)
 
 
 def generate_pascal_triangle(num_rows: int) -> list[list[int]]:
@@ -56,6 +61,7 @@ def generate_pascal_triangle(num_rows: int) -> list[list[int]]:
         ...
     TypeError: The input value of 'num_rows' should be 'int'
     """
+    logger.debug(">>> Entering generate_pascal_triangle(num_rows=%s)", num_rows)
 
     if not isinstance(num_rows, int):
         raise TypeError("The input value of 'num_rows' should be 'int'")
@@ -70,7 +76,9 @@ def generate_pascal_triangle(num_rows: int) -> list[list[int]]:
     triangle: list[list[int]] = []
     for current_row_idx in range(num_rows):
         current_row = populate_current_row(triangle, current_row_idx)
+        logger.debug("generate_pascal_triangle(num_rows=%s): current_row → %s", num_rows, current_row)
         triangle.append(current_row)
+    logger.debug("<<< Exiting generate_pascal_triangle(num_rows=%s)", num_rows)
     return triangle
 
 
@@ -80,13 +88,16 @@ def populate_current_row(triangle: list[list[int]], current_row_idx: int) -> lis
     >>> populate_current_row(triangle, 1)
     [1, 1]
     """
+    logger.debug(">>> Entering populate_current_row(triangle=%s,current_row_idx=%s)", triangle, current_row_idx)
     current_row = [-1] * (current_row_idx + 1)
+    logger.debug("populate_current_row(triangle=%s,current_row_idx=%s): current_row → %s", triangle, current_row_idx, current_row)
     # first and last elements of current row are equal to 1
     current_row[0], current_row[-1] = 1, 1
     for current_col_idx in range(1, current_row_idx):
         calculate_current_element(
             triangle, current_row, current_row_idx, current_col_idx
         )
+    logger.debug("<<< Exiting populate_current_row(triangle=%s,current_row_idx=%s)", triangle, current_row_idx)
     return current_row
 
 
@@ -134,6 +145,7 @@ def generate_pascal_triangle_optimized(num_rows: int) -> list[list[int]]:
         ...
     TypeError: The input value of 'num_rows' should be 'int'
     """
+    logger.debug(">>> Entering generate_pascal_triangle_optimized(num_rows=%s)", num_rows)
 
     if not isinstance(num_rows, int):
         raise TypeError("The input value of 'num_rows' should be 'int'")
@@ -149,7 +161,11 @@ def generate_pascal_triangle_optimized(num_rows: int) -> list[list[int]]:
 
     for row_index in range(1, num_rows):
         temp_row = [0] + result[-1] + [0]
+        logger.debug("generate_pascal_triangle_optimized(num_rows=%s): temp_row → %s", num_rows, temp_row)
+        logger.debug("generate_pascal_triangle_optimized(num_rows=%s): row_first_half → %s", num_rows, row_first_half)
+        logger.debug("generate_pascal_triangle_optimized(num_rows=%s): distinct_elements → %s", num_rows, distinct_elements)
         row_length = row_index + 1
+        logger.debug("generate_pascal_triangle_optimized(num_rows=%s): row_length → %s", num_rows, row_length)
         # Calculate the number of distinct elements in a row
         distinct_elements = sum(divmod(row_length, 2))
         row_first_half = [

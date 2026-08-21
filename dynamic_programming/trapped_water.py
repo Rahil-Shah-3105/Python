@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Given an array of non-negative integers representing an elevation map where the width
 of each bar is 1, this program calculates how much rainwater can be trapped.
@@ -30,22 +32,27 @@ def trapped_rainwater(heights: tuple[int, ...]) -> int:
         ...
     ValueError: No height can be negative
     """
+    logger.debug(">>> Entering trapped_rainwater(heights=%s)", heights)
     if not heights:
         return 0
     if any(h < 0 for h in heights):
         raise ValueError("No height can be negative")
     length = len(heights)
+    logger.debug("trapped_rainwater(heights=%s): length → %s", heights, length)
 
     left_max = [0] * length
+    logger.debug("trapped_rainwater(heights=%s): left_max → %s", heights, left_max)
     left_max[0] = heights[0]
     for i, height in enumerate(heights[1:], start=1):
         left_max[i] = max(height, left_max[i - 1])
 
     right_max = [0] * length
+    logger.debug("trapped_rainwater(heights=%s): right_max → %s", heights, right_max)
     right_max[-1] = heights[-1]
     for i in range(length - 2, -1, -1):
         right_max[i] = max(heights[i], right_max[i + 1])
 
+        logger.debug("<<< Exiting trapped_rainwater(heights=%s)", heights)
     return sum(
         min(left, right) - height
         for left, right, height in zip(left_max, right_max, heights)

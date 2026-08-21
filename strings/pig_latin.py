@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def pig_latin(word: str) -> str:
     """Compute the piglatin of a given string.
 
@@ -27,6 +29,7 @@ def pig_latin(word: str) -> str:
     >>> pig_latin(None)
     ''
     """
+    logger.debug(">>> Entering pig_latin(word=%s)", word)
     if not (word or "").strip():
         return ""
     word = word.lower()
@@ -35,6 +38,7 @@ def pig_latin(word: str) -> str:
     for i, char in enumerate(word):  # noqa: B007
         if char in "aeiou":
             break
+    logger.debug("<<< Exiting pig_latin(word=%s)", word)
     return f"{word[i:]}{word[:i]}ay"
 
 

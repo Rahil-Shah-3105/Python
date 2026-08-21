@@ -16,6 +16,8 @@ Example:
 from __future__ import annotations
 
 import copy
+import logging
+logger = logging.getLogger(__name__)
 
 
 def longest_subsequence(array: list[int]) -> list[int]:
@@ -35,9 +37,12 @@ def longest_subsequence(array: list[int]) -> list[int]:
     >>> longest_subsequence([])
     []
     """
+    logger.debug(">>> Entering longest_subsequence(array=%s)", array)
     n = len(array)
+    logger.debug("longest_subsequence(array=%s): n → %s", array, n)
     # The longest increasing subsequence ending at array[i]
     longest_increasing_subsequence = []
+    logger.debug("longest_subsequence(array=%s): longest_increasing_subsequence → %s", array, longest_increasing_subsequence)
     for i in range(n):
         longest_increasing_subsequence.append([array[i]])
 
@@ -59,10 +64,12 @@ def longest_subsequence(array: list[int]) -> list[int]:
                 longest_increasing_subsequence[i].append(array[i])
 
     result: list[int] = []
+    logger.debug("longest_subsequence(array=%s): result → %s", array, result)
     for i in range(n):
         if len(longest_increasing_subsequence[i]) > len(result):
             result = longest_increasing_subsequence[i]
 
+    logger.debug("<<< Exiting longest_subsequence(array=%s)", array)
     return result
 
 

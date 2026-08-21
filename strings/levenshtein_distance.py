@@ -1,4 +1,6 @@
 from collections.abc import Callable
+import logging
+logger = logging.getLogger(__name__)
 
 
 def levenshtein_distance(first_word: str, second_word: str) -> int:
@@ -23,6 +25,7 @@ def levenshtein_distance(first_word: str, second_word: str) -> int:
     >>> levenshtein_distance("orchestration", "container")
     10
     """
+    logger.debug(">>> Entering levenshtein_distance(first_word=%s,second_word=%s)", first_word, second_word)
     # The longer word should come first
     if len(first_word) < len(second_word):
         return levenshtein_distance(second_word, first_word)
@@ -31,14 +34,18 @@ def levenshtein_distance(first_word: str, second_word: str) -> int:
         return len(first_word)
 
     previous_row = list(range(len(second_word) + 1))
+    logger.debug("levenshtein_distance(first_word=%s,second_word=%s): previous_row → %s", first_word, second_word, previous_row)
 
     for i, c1 in enumerate(first_word):
         current_row = [i + 1]
+        logger.debug("levenshtein_distance(first_word=%s,second_word=%s): current_row → %s", first_word, second_word, current_row)
 
         for j, c2 in enumerate(second_word):
             # Calculate insertions, deletions, and substitutions
             insertions = previous_row[j + 1] + 1
+            logger.debug("levenshtein_distance(first_word=%s,second_word=%s): insertions → %s", first_word, second_word, insertions)
             deletions = current_row[j] + 1
+            logger.debug("levenshtein_distance(first_word=%s,second_word=%s): deletions → %s", first_word, second_word, deletions)
             substitutions = previous_row[j] + (c1 != c2)
 
             # Get the minimum to append to the current row
@@ -48,6 +55,7 @@ def levenshtein_distance(first_word: str, second_word: str) -> int:
         previous_row = current_row
 
     # Returns the last element (distance)
+    logger.debug("<<< Exiting levenshtein_distance(first_word=%s,second_word=%s)", first_word, second_word)
     return previous_row[-1]
 
 
@@ -74,6 +82,7 @@ def levenshtein_distance_optimized(first_word: str, second_word: str) -> int:
     >>> levenshtein_distance_optimized("orchestration", "container")
     10
     """
+    logger.debug(">>> Entering levenshtein_distance_optimized(first_word=%s,second_word=%s)", first_word, second_word)
     if len(first_word) < len(second_word):
         return levenshtein_distance_optimized(second_word, first_word)
 
@@ -81,18 +90,23 @@ def levenshtein_distance_optimized(first_word: str, second_word: str) -> int:
         return len(first_word)
 
     previous_row = list(range(len(second_word) + 1))
+    logger.debug("levenshtein_distance_optimized(first_word=%s,second_word=%s): previous_row → %s", first_word, second_word, previous_row)
 
     for i, c1 in enumerate(first_word):
         current_row = [i + 1] + [0] * len(second_word)
+        logger.debug("levenshtein_distance_optimized(first_word=%s,second_word=%s): current_row → %s", first_word, second_word, current_row)
 
         for j, c2 in enumerate(second_word):
             insertions = previous_row[j + 1] + 1
+            logger.debug("levenshtein_distance_optimized(first_word=%s,second_word=%s): insertions → %s", first_word, second_word, insertions)
             deletions = current_row[j] + 1
+            logger.debug("levenshtein_distance_optimized(first_word=%s,second_word=%s): deletions → %s", first_word, second_word, deletions)
             substitutions = previous_row[j] + (c1 != c2)
             current_row[j + 1] = min(insertions, deletions, substitutions)
 
         previous_row = current_row
 
+    logger.debug("<<< Exiting levenshtein_distance_optimized(first_word=%s,second_word=%s)", first_word, second_word)
     return previous_row[-1]
 
 
@@ -102,13 +116,19 @@ def benchmark_levenshtein_distance(func: Callable) -> None:
     :param str: The name of the function being benchmarked.
     :param func: The function to be benchmarked.
     """
+    logger.debug(">>> Entering benchmark_levenshtein_distance(func=%s)", func)
     from timeit import timeit
 
     stmt = f"{func.__name__}('sitting', 'kitten')"
+    logger.debug("benchmark_levenshtein_distance(func=%s): stmt → %s", func, stmt)
     setup = f"from __main__ import {func.__name__}"
+    logger.debug("benchmark_levenshtein_distance(func=%s): setup → %s", func, setup)
     number = 25_000
+    logger.debug("benchmark_levenshtein_distance(func=%s): number → %s", func, number)
     result = timeit(stmt=stmt, setup=setup, number=number)
+    logger.debug("benchmark_levenshtein_distance(func=%s): result → %s", func, result)
     print(f"{func.__name__:<30} finished {number:,} runs in {result:.5f} seconds")
+    logger.debug("<<< Exiting benchmark_levenshtein_distance(func=%s)", func)
 
 
 if __name__ == "__main__":

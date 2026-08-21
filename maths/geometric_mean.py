@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The Geometric Mean of n numbers is defined as the n-th root of the product
 of those numbers. It is used to measure the central tendency of the numbers.
@@ -27,7 +29,9 @@ def compute_geometric_mean(*args: int) -> float:
     >>> compute_geometric_mean(-5, 25, 1)
     -5.0
     """
+    logger.debug(">>> Entering compute_geometric_mean()")
     product = 1
+    logger.debug("compute_geometric_mean(): product → %s", product)
     for number in args:
         if not isinstance(number, int) and not isinstance(number, float):
             raise TypeError("Not a Number")
@@ -37,14 +41,17 @@ def compute_geometric_mean(*args: int) -> float:
     if product < 0 and len(args) % 2 == 0:
         raise ArithmeticError("Cannot Compute Geometric Mean for these numbers.")
     mean = abs(product) ** (1 / len(args))
+    logger.debug("compute_geometric_mean(): mean → %s", mean)
     # Since python calculates complex roots for negative products with odd roots.
     if product < 0:
         mean = -mean
     # Since it does floating point arithmetic, it gives 64**(1/3) as 3.99999996
     possible_mean = float(round(mean))
+    logger.debug("compute_geometric_mean(): possible_mean → %s", possible_mean)
     # To check if the rounded number is actually the mean.
     if possible_mean ** len(args) == product:
         mean = possible_mean
+    logger.debug("<<< Exiting compute_geometric_mean()")
     return mean
 
 

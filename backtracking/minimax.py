@@ -11,6 +11,8 @@ height is maximum height of Game tree
 from __future__ import annotations
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def minimax(
@@ -79,13 +81,17 @@ def minimax(
 
 
 def main() -> None:
+    logger.debug(">>> Entering main()")
     # Sample scores and height calculation
     scores = [90, 23, 6, 33, 21, 65, 123, 34423]
+    logger.debug("main(): scores → %s", scores)
     height = math.log(len(scores), 2)
+    logger.debug("main(): height → %s", height)
 
     # Calculate and print the optimal value using the minimax algorithm
     print("Optimal value : ", end="")
     print(minimax(0, 0, True, scores, height))
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # Numbers of alphabet which we call base
 alphabet_size = 256
 # Modulus to hash a string
@@ -21,14 +23,20 @@ def rabin_karp(pattern: str, text: str) -> bool:
         calculating the hash of the text within the window compare it with the hash
         of the pattern. Only testing equality if the hashes match
     """
+    logger.debug(">>> Entering rabin_karp(pattern=%s,text=%s)", pattern, text)
     p_len = len(pattern)
+    logger.debug("rabin_karp(pattern=%s,text=%s): p_len → %s", pattern, text, p_len)
+    logger.error("Exception in rabin_karp(pattern=%s,text=%s)", pattern, text, exc_info=True)
     t_len = len(text)
+    logger.debug("rabin_karp(pattern=%s,text=%s): t_len → %s", pattern, text, t_len)
     if p_len > t_len:
         return False
 
     p_hash = 0
+    logger.debug("rabin_karp(pattern=%s,text=%s): p_hash → %s", pattern, text, p_hash)
     text_hash = 0
     modulus_power = 1
+    logger.debug("rabin_karp(pattern=%s,text=%s): modulus_power → %s", pattern, text, modulus_power)
 
     # Calculating the hash of pattern and substring of text
     for i in range(p_len):
@@ -48,6 +56,7 @@ def rabin_karp(pattern: str, text: str) -> bool:
             (text_hash - ord(text[i]) * modulus_power) * alphabet_size
             + ord(text[i + p_len])
         ) % modulus
+    logger.debug("<<< Exiting rabin_karp(pattern=%s,text=%s)", pattern, text)
     return False
 
 
@@ -56,16 +65,21 @@ def test_rabin_karp() -> None:
     >>> test_rabin_karp()
     Success.
     """
+    logger.debug(">>> Entering test_rabin_karp()")
     # Test 1)
     pattern = "abc1abc12"
+    logger.debug("test_rabin_karp(): pattern → %s", pattern)
     text1 = "alskfjaldsabc1abc1abc12k23adsfabcabc"
+    logger.debug("test_rabin_karp(): text1 → %s", text1)
     text2 = "alskfjaldsk23adsfabcabc"
+    logger.debug("test_rabin_karp(): text2 → %s", text2)
     assert rabin_karp(pattern, text1)
     assert not rabin_karp(pattern, text2)
 
     # Test 2)
     pattern = "ABABX"
     text = "ABABZABABYABABX"
+    logger.debug("test_rabin_karp(): text → %s", text)
     assert rabin_karp(pattern, text)
 
     # Test 3)
@@ -85,6 +99,7 @@ def test_rabin_karp() -> None:
     pattern = "Lue"
     assert not rabin_karp(pattern, text)
     print("Success.")
+    logger.debug("<<< Exiting test_rabin_karp()")
 
 
 if __name__ == "__main__":

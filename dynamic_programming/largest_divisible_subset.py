@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def largest_divisible_subset(items: list[int]) -> list[int]:
@@ -24,15 +26,20 @@ def largest_divisible_subset(items: list[int]) -> list[int]:
     >>> largest_divisible_subset([])
     []
     """
+    logger.debug(">>> Entering largest_divisible_subset(items=%s)", items)
     # Sort the array in ascending order as the sequence does not matter we only have to
     # pick up a subset.
     items = sorted(items)
+    logger.debug("largest_divisible_subset(items=%s): items → %s", items, items)
 
     number_of_items = len(items)
+    logger.debug("largest_divisible_subset(items=%s): number_of_items → %s", items, number_of_items)
 
     # Initialize memo with 1s and hash with increasing numbers
     memo = [1] * number_of_items
+    logger.debug("largest_divisible_subset(items=%s): memo → %s", items, memo)
     hash_array = list(range(number_of_items))
+    logger.debug("largest_divisible_subset(items=%s): hash_array → %s", items, hash_array)
 
     # Iterate through the array
     for i, item in enumerate(items):
@@ -44,6 +51,7 @@ def largest_divisible_subset(items: list[int]) -> list[int]:
                 hash_array[i] = prev_index
 
     ans = -1
+    logger.debug("largest_divisible_subset(items=%s): ans → %s", items, ans)
     last_index = -1
 
     # Find the maximum length and its corresponding index
@@ -60,6 +68,7 @@ def largest_divisible_subset(items: list[int]) -> list[int]:
         last_index = hash_array[last_index]
         result.append(items[last_index])
 
+    logger.debug("<<< Exiting largest_divisible_subset(items=%s)", items)
     return result
 
 

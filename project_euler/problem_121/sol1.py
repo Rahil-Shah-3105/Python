@@ -24,6 +24,8 @@ Solution:
 """
 
 from itertools import product
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(num_turns: int = 15) -> int:
@@ -35,6 +37,7 @@ def solution(num_turns: int = 15) -> int:
     >>> solution(10)
     225
     """
+    logger.debug(">>> Entering solution(num_turns=%s)", num_turns)
     total_prob: float = 0.0
     prob: float
     num_blue: int
@@ -45,10 +48,13 @@ def solution(num_turns: int = 15) -> int:
 
     for series in product(range(2), repeat=num_turns):
         num_blue = series.count(1)
+        logger.debug("solution(num_turns=%s): num_blue → %s", num_turns, num_blue)
         num_red = num_turns - num_blue
+        logger.debug("solution(num_turns=%s): num_red → %s", num_turns, num_red)
         if num_red >= num_blue:
             continue
         prob = 1.0
+        logger.debug("solution(num_turns=%s): prob → %s", num_turns, prob)
         for ind, col in enumerate(series, 2):
             if col == 0:
                 prob *= (ind - 1) / ind
@@ -57,6 +63,7 @@ def solution(num_turns: int = 15) -> int:
 
         total_prob += prob
 
+    logger.debug("<<< Exiting solution(num_turns=%s)", num_turns)
     return int(1 / total_prob)
 
 

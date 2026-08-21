@@ -7,6 +7,8 @@ https://en.wikipedia.org/wiki/Trifid_cipher
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 # fmt: off
 TEST_CHARACTER_TO_NUMBER = {
@@ -28,12 +30,14 @@ def __encrypt_part(message_part: str, character_to_number: dict[str, str]) -> st
     >>> __encrypt_part('ASK', TEST_CHARACTER_TO_NUMBER)
     '132111112'
     """
+    logger.debug(">>> Entering __encrypt_part(message_part=%s,character_to_number=%s)", message_part, character_to_number)
     one, two, three = "", "", ""
     for each in (character_to_number[character] for character in message_part):
         one += each[0]
         two += each[1]
         three += each[2]
 
+    logger.debug("<<< Exiting __encrypt_part(message_part=%s,character_to_number=%s)", message_part, character_to_number)
     return one + two + three
 
 

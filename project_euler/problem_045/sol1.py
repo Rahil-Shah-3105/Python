@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Problem 45: https://projecteuler.net/problem=45
 
@@ -24,6 +26,8 @@ def hexagonal_num(n: int) -> int:
     >>> hexagonal_num(10)
     190
     """
+    logger.debug(">>> Entering hexagonal_num(n=%s)", n)
+    logger.debug("<<< Exiting hexagonal_num(n=%s)", n)
     return n * (2 * n - 1)
 
 
@@ -37,7 +41,11 @@ def is_pentagonal(n: int) -> bool:
     >>> is_pentagonal(2380)
     True
     """
+    logger.debug(">>> Entering is_pentagonal(n=%s)", n)
+    logger.warning("is_pentagonal(n=%s): root → %s", n, root)
     root = (1 + 24 * n) ** 0.5
+    logger.debug("is_pentagonal(n=%s): root → %s", n, root)
+    logger.debug("<<< Exiting is_pentagonal(n=%s)", n)
     return ((1 + root) / 6) % 1 == 0
 
 
@@ -47,11 +55,14 @@ def solution(start: int = 144) -> int:
     >>> solution(144)
     1533776805
     """
+    logger.debug(">>> Entering solution(start=%s)", start)
     n = start
     num = hexagonal_num(n)
+    logger.debug("solution(start=%s): num → %s", start, num)
     while not is_pentagonal(num):
         n += 1
         num = hexagonal_num(n)
+    logger.debug("<<< Exiting solution(start=%s)", start)
     return num
 
 

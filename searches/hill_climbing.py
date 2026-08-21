@@ -1,5 +1,7 @@
 # https://en.wikipedia.org/wiki/Hill_climbing
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 class SearchProblem:
@@ -17,10 +19,16 @@ class SearchProblem:
         step_size: size of the step to take when looking for neighbors.
         function_to_optimize: a function to optimize having the signature f(x, y).
         """
+        logger.debug(">>> Entering __init__(x=%s,y=%s,step_size=%s,function_to_optimize=%s)", x, y, step_size, function_to_optimize)
         self.x = x
+        logger.debug("__init__(self=%s,x=%s,y=%s,step_size=%s,function_to_optimize=%s): self.x → %s", self, x, y, step_size, function_to_optimize, self.x)
+        logger.debug("<<< Exiting __init__(x=%s,y=%s,step_size=%s,function_to_optimize=%s)", x, y, step_size, function_to_optimize)
         self.y = y
+        logger.debug("__init__(self=%s,x=%s,y=%s,step_size=%s,function_to_optimize=%s): self.y → %s", self, x, y, step_size, function_to_optimize, self.y)
         self.step_size = step_size
+        logger.debug("__init__(self=%s,x=%s,y=%s,step_size=%s,function_to_optimize=%s): self.step_size → %s", self, x, y, step_size, function_to_optimize, self.step_size)
         self.function = function_to_optimize
+        logger.debug("__init__(self=%s,x=%s,y=%s,step_size=%s,function_to_optimize=%s): self.function → %s", self, x, y, step_size, function_to_optimize, self.function)
 
     def score(self) -> int:
         """
@@ -32,6 +40,8 @@ class SearchProblem:
         >>> SearchProblem(5, 7, 1, test_function).score()  # 5 + 7 = 12
         12
         """
+        logger.debug(">>> Entering score()")
+        logger.debug("<<< Exiting score()")
         return self.function(self.x, self.y)
 
     def get_neighbors(self):
@@ -43,7 +53,10 @@ class SearchProblem:
         | 3 | _ | 4 |
         | 5 | 6 | 7 |
         """
+        logger.debug(">>> Entering get_neighbors()")
         step_size = self.step_size
+        logger.debug("get_neighbors(self=%s): step_size → %s", self, step_size)
+        logger.debug("<<< Exiting get_neighbors()")
         return [
             SearchProblem(x, y, step_size, self.function)
             for x, y in (
@@ -62,14 +75,18 @@ class SearchProblem:
         """
         hash the string representation of the current search state.
         """
+        logger.debug(">>> Entering __hash__()")
+        logger.debug("<<< Exiting __hash__()")
         return hash(str(self))
 
     def __eq__(self, obj):
         """
         Check if the 2 objects are equal.
         """
+        logger.debug(">>> Entering __eq__(obj=%s)", obj)
         if isinstance(obj, SearchProblem):
             return hash(str(self)) == hash(str(obj))
+        logger.debug("<<< Exiting __eq__(obj=%s)", obj)
         return False
 
     def __str__(self):
@@ -80,6 +97,8 @@ class SearchProblem:
         >>> str(SearchProblem(2, 5, 1, None))
         'x: 2 y: 5'
         """
+        logger.debug(">>> Entering __str__()")
+        logger.debug("<<< Exiting __str__()")
         return f"x: {self.x} y: {self.y}"
 
 
@@ -165,6 +184,8 @@ if __name__ == "__main__":
     doctest.testmod()
 
     def test_f1(x, y):
+        logger.debug(">>> Entering test_f1(x=%s,y=%s)", x, y)
+        logger.debug("<<< Exiting test_f1(x=%s,y=%s)", x, y)
         return (x**2) + (y**2)
 
     # starting the problem with initial coordinates (3, 4)
@@ -186,6 +207,8 @@ if __name__ == "__main__":
     )
 
     def test_f2(x, y):
+        logger.debug(">>> Entering test_f2(x=%s,y=%s)", x, y)
+        logger.debug("<<< Exiting test_f2(x=%s,y=%s)", x, y)
         return (3 * x**2) - (6 * y)
 
     prob = SearchProblem(x=3, y=4, step_size=1, function_to_optimize=test_f1)

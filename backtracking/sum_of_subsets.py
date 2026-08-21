@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The sum-of-subsets problem states that a set of non-negative integers, and a
 value M, determine all possible subsets of the given set whose summation sum
@@ -20,12 +22,16 @@ def generate_sum_of_subsets_solutions(nums: list[int], max_sum: int) -> list[lis
     >>> generate_sum_of_subsets_solutions(nums=[3, 34, 4, 12, 5, 2], max_sum=1)
     []
     """
+    logger.debug(">>> Entering generate_sum_of_subsets_solutions(nums=%s,max_sum=%s)", nums, max_sum)
 
     result: list[list[int]] = []
     path: list[int] = []
     num_index = 0
+    logger.debug("generate_sum_of_subsets_solutions(nums=%s,max_sum=%s): num_index → %s", nums, max_sum, num_index)
     remaining_nums_sum = sum(nums)
+    logger.debug("generate_sum_of_subsets_solutions(nums=%s,max_sum=%s): remaining_nums_sum → %s", nums, max_sum, remaining_nums_sum)
     create_state_space_tree(nums, max_sum, num_index, path, result, remaining_nums_sum)
+    logger.debug("<<< Exiting generate_sum_of_subsets_solutions(nums=%s,max_sum=%s)", nums, max_sum)
     return result
 
 

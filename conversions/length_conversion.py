@@ -23,6 +23,8 @@ REFERENCES :
 """
 
 from typing import NamedTuple
+import logging
+logger = logging.getLogger(__name__)
 
 
 class FromTo(NamedTuple):
@@ -103,10 +105,13 @@ def length_conversion(value: float, from_type: str, to_type: str) -> float:
     ValueError: Invalid 'from_type' value: 'wrongUnit'.
     Conversion abbreviations are: mm, cm, m, km, in, ft, yd, mi
     """
+    logger.debug(">>> Entering length_conversion(value=%s,from_type=%s,to_type=%s)", value, from_type, to_type)
     new_from = from_type.lower().rstrip("s")
     new_from = TYPE_CONVERSION.get(new_from, new_from)
+    logger.debug("length_conversion(value=%s,from_type=%s,to_type=%s): new_from → %s", value, from_type, to_type, new_from)
     new_to = to_type.lower().rstrip("s")
     new_to = TYPE_CONVERSION.get(new_to, new_to)
+    logger.debug("length_conversion(value=%s,from_type=%s,to_type=%s): new_to → %s", value, from_type, to_type, new_to)
     if new_from not in METRIC_CONVERSION:
         msg = (
             f"Invalid 'from_type' value: {from_type!r}.\n"
@@ -118,6 +123,7 @@ def length_conversion(value: float, from_type: str, to_type: str) -> float:
             f"Invalid 'to_type' value: {to_type!r}.\n"
             f"Conversion abbreviations are: {', '.join(METRIC_CONVERSION)}"
         )
+        logger.debug("<<< Exiting length_conversion(value=%s,from_type=%s,to_type=%s)", value, from_type, to_type)
         raise ValueError(msg)
     return (
         value

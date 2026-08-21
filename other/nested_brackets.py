@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The nested brackets problem is a problem that determines if a sequence of
 brackets are properly nested.  A sequence of brackets s is considered properly nested
@@ -49,8 +51,11 @@ def is_balanced(s: str) -> bool:
     >>> is_balanced("Life is a bowl of che}{ies.")
     False
     """
+    logger.debug(">>> Entering is_balanced(s=%s)", s)
     open_to_closed = {"{": "}", "[": "]", "(": ")"}
+    logger.debug("is_balanced(s=%s): open_to_closed → %s", s, open_to_closed)
     stack = []
+    logger.debug("is_balanced(s=%s): stack → %s", s, stack)
     for symbol in s:
         if symbol in open_to_closed:
             stack.append(symbol)
@@ -58,12 +63,16 @@ def is_balanced(s: str) -> bool:
             not stack or open_to_closed[stack.pop()] != symbol
         ):
             return False
+    logger.debug("<<< Exiting is_balanced(s=%s)", s)
     return not stack  # stack should be empty
 
 
 def main():
+    logger.debug(">>> Entering main()")
     s = input("Enter sequence of brackets: ")
+    logger.debug("main(): s → %s", s)
     print(f"'{s}' is {'' if is_balanced(s) else 'not '}balanced.")
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Implementation of regular expression matching with support for '.' and '*'.
 '.' Matches any single character.
@@ -53,15 +55,19 @@ def match_pattern(input_string: str, pattern: str) -> bool:
     >>> match_pattern("", "")
     True
     """
+    logger.debug(">>> Entering match_pattern(input_string=%s,pattern=%s)", input_string, pattern)
 
     len_string = len(input_string) + 1
+    logger.debug("match_pattern(input_string=%s,pattern=%s): len_string → %s", input_string, pattern, len_string)
     len_pattern = len(pattern) + 1
+    logger.debug("match_pattern(input_string=%s,pattern=%s): len_pattern → %s", input_string, pattern, len_pattern)
 
     # dp is a 2d matrix where dp[i][j] denotes whether prefix string of
     # length i of input_string matches with prefix string of length j of
     # given pattern.
     # "dp" stands for dynamic programming.
     dp = [[0 for i in range(len_pattern)] for j in range(len_string)]
+    logger.debug("match_pattern(input_string=%s,pattern=%s): dp → %s", input_string, pattern, dp)
 
     # since string of zero length match pattern of zero length
     dp[0][0] = 1
@@ -91,6 +97,7 @@ def match_pattern(input_string: str, pattern: str) -> bool:
             else:
                 dp[i][j] = 0
 
+    logger.debug("<<< Exiting match_pattern(input_string=%s,pattern=%s)", input_string, pattern)
     return bool(dp[-1][-1])
 
 

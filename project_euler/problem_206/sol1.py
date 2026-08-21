@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 206: https://projecteuler.net/problem=206
 
@@ -44,7 +46,9 @@ def is_square_form(num: int) -> bool:
     >>> is_square_form(123456789012345678)
     False
     """
+    logger.debug(">>> Entering is_square_form(num=%s)", num)
     digit = 9
+    logger.debug("is_square_form(num=%s): digit → %s", num, digit)
 
     while num > 0:
         if num % 10 != digit:
@@ -52,6 +56,7 @@ def is_square_form(num: int) -> bool:
         num //= 100
         digit -= 1
 
+    logger.debug("<<< Exiting is_square_form(num=%s)", num)
     return True
 
 
@@ -59,7 +64,9 @@ def solution() -> int:
     """
     Returns the first integer whose square is of the form 1_2_3_4_5_6_7_8_9_0
     """
+    logger.debug(">>> Entering solution()")
     num = 138902663
+    logger.debug("solution(): num → %s", num)
 
     while not is_square_form(num * num):
         if num % 10 == 3:
@@ -67,6 +74,7 @@ def solution() -> int:
         else:
             num -= 4  # (7 - 4) % 10 = 3
 
+    logger.debug("<<< Exiting solution()")
     return num * 10
 
 

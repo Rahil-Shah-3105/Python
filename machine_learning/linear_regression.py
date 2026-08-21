@@ -18,6 +18,8 @@ Rating). We try to best fit a line through dataset and estimate the parameters.
 
 import httpx
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def collect_dataset():
@@ -25,18 +27,26 @@ def collect_dataset():
     The dataset contains ADR vs Rating of a Player
     :return : dataset obtained from the link, as matrix
     """
+    logger.debug(">>> Entering collect_dataset()")
+    logger.info("collect_dataset()=: external service call took %s ms", int((time.time() - __log_start) * 1000))
     response = httpx.get(
         "https://raw.githubusercontent.com/yashLadha/The_Math_of_Intelligence/"
         "master/Week1/ADRvsRating.csv",
         timeout=10,
     )
+    logger.info("collect_dataset(): timeout → %s", timeout)
     lines = response.text.splitlines()
+    logger.debug("collect_dataset(): lines → %s", lines)
     data = []
     for item in lines:
+        logger.debug("collect_dataset(): data → %s", data)
         item = item.split(",")
+        logger.debug("collect_dataset(): item → %s", item)
         data.append(item)
     data.pop(0)  # This is for removing the labels from the list
     dataset = np.matrix(data)
+    logger.debug("collect_dataset(): dataset → %s", dataset)
+    logger.debug("<<< Exiting collect_dataset()")
     return dataset
 
 

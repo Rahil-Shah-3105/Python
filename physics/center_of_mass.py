@@ -26,6 +26,8 @@ Reference: https://en.wikipedia.org/wiki/Center_of_mass
 """
 
 from collections import namedtuple
+import logging
+logger = logging.getLogger(__name__)
 
 Particle = namedtuple("Particle", "x y z mass")  # noqa: PYI024
 Coord3D = namedtuple("Coord3D", "x y z")  # noqa: PYI024
@@ -84,6 +86,7 @@ def center_of_mass(particles: list[Particle]) -> Coord3D:
         ...
     ValueError: No particles provided
     """
+    logger.debug(">>> Entering center_of_mass(particles=%s)", particles)
     if not particles:
         raise ValueError("No particles provided")
 
@@ -91,6 +94,7 @@ def center_of_mass(particles: list[Particle]) -> Coord3D:
         raise ValueError("Mass of all particles must be greater than 0")
 
     total_mass = sum(particle.mass for particle in particles)
+    logger.debug("center_of_mass(particles=%s): total_mass → %s", particles, total_mass)
 
     center_of_mass_x = round(
         sum(particle.x * particle.mass for particle in particles) / total_mass, 2
@@ -101,6 +105,7 @@ def center_of_mass(particles: list[Particle]) -> Coord3D:
     center_of_mass_z = round(
         sum(particle.z * particle.mass for particle in particles) / total_mass, 2
     )
+    logger.debug("<<< Exiting center_of_mass(particles=%s)", particles)
     return Coord3D(center_of_mass_x, center_of_mass_y, center_of_mass_z)
 
 

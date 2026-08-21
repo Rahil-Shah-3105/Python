@@ -29,6 +29,8 @@ Reference: https://deadhacker.com/2006/02/21/sha-1-illustrated/
 import argparse
 import hashlib  # hashlib is only used inside the Test class
 import struct
+import logging
+logger = logging.getLogger(__name__)
 
 
 class SHA1Hash:
@@ -46,8 +48,13 @@ class SHA1Hash:
         respectively. We will start with this as a message digest. 0x is how you write
         hexadecimal numbers in Python
         """
+        logger.debug(">>> Entering __init__(data=%s)", data)
         self.data = data
+        logger.debug("__init__(self=%s,data=%s): self.data → %s", self, data, self.data)
+        logger.debug("__init__(data=%s): self.data → %s", data, self.data)
         self.h = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]
+        logger.debug("__init__(self=%s,data=%s): self.h → %s", self, data, self.h)
+        logger.debug("<<< Exiting __init__(data=%s)", data)
 
     @staticmethod
     def rotate(n, b):
@@ -56,20 +63,29 @@ class SHA1Hash:
         >>> SHA1Hash('').rotate(12,2)
         48
         """
+        logger.debug(">>> Entering rotate(n=%s,b=%s)", n, b)
+        logger.debug("<<< Exiting rotate(n=%s,b=%s)", n, b)
         return ((n << b) | (n >> (32 - b))) & 0xFFFFFFFF
 
     def padding(self):
         """
         Pads the input message with zeros so that padded_data has 64 bytes or 512 bits
         """
+        logger.debug(">>> Entering padding()")
         padding = b"\x80" + b"\x00" * (63 - (len(self.data) + 8) % 64)
+        logger.debug("padding(self=%s): padding → %s", self, padding)
+        logger.debug("padding(): padding → %s", padding)
         padded_data = self.data + padding + struct.pack(">Q", 8 * len(self.data))
+        logger.debug("padding(self=%s): padded_data → %s", self, padded_data)
+        logger.debug("padding(): padded_data → %s", padded_data)
+        logger.debug("<<< Exiting padding()")
         return padded_data
 
     def split_blocks(self):
         """
         Returns a list of bytestrings each of length 64
         """
+        logger.debug(">>> Entering split_blocks()")
         return [
             self.padded_data[i : i + 64] for i in range(0, len(self.padded_data), 64)
         ]
@@ -80,9 +96,12 @@ class SHA1Hash:
         Takes a bytestring-block of length 64, unpacks it to a list of integers and
         returns a list of 80 integers after some bit operations
         """
+        logger.debug(">>> Entering expand_block(block=%s)", block)
         w = list(struct.unpack(">16L", block)) + [0] * 64
+        logger.debug("expand_block(block=%s): w → %s", block, w)
         for i in range(16, 80):
             w[i] = self.rotate((w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16]), 1)
+        logger.debug("<<< Exiting expand_block(block=%s)", block)
         return w
 
     def final_hash(self):
@@ -95,8 +114,13 @@ class SHA1Hash:
         are processed, these 5 variables are pairwise added to h ie a to h[0], b to h[1]
         and so on. This h becomes our final hash which is returned.
         """
+        logger.debug(">>> Entering final_hash()")
+        logger.debug("final_hash(): expanded_block → %s", expanded_block)
+        logger.debug("final_hash(self=%s): expanded_block → %s", self, expanded_block)
         self.padded_data = self.padding()
+        logger.debug("final_hash(): self.padded_data → %s", self.padded_data)
         self.blocks = self.split_blocks()
+        logger.debug("final_hash(): self.blocks → %s", self.blocks)
         for block in self.blocks:
             expanded_block = self.expand_block(block)
             a, b, c, d, e = self.h
@@ -127,12 +151,16 @@ class SHA1Hash:
                 self.h[3] + d & 0xFFFFFFFF,
                 self.h[4] + e & 0xFFFFFFFF,
             )
+        logger.debug("<<< Exiting final_hash()")
         return ("{:08x}" * 5).format(*self.h)
 
 
 def test_sha1_hash():
+    logger.debug(">>> Entering test_sha1_hash()")
     msg = b"Test String"
+    logger.debug("test_sha1_hash(): msg → %s", msg)
     assert SHA1Hash(msg).final_hash() == hashlib.sha1(msg).hexdigest()  # noqa: S324
+    logger.debug("<<< Exiting test_sha1_hash()")
 
 
 def main():
@@ -141,6 +169,11 @@ def main():
     hash. unittest.main() has been commented out because we probably don't want to run
     the test each time.
     """
+    logger.debug(">>> Entering main()")
+    logger.debug("main(): help → %s", help)
+    logger.debug("main(): default → %s", default)
+    logger.debug("main(): dest → %s", dest)
+    logger.debug("main(): parser → %s", parser)
     # unittest.main()
     parser = argparse.ArgumentParser(description="Process some strings or files")
     parser.add_argument(
@@ -151,14 +184,18 @@ def main():
     )
     parser.add_argument("--file", dest="input_file", help="Hash contents of a file")
     args = parser.parse_args()
+    logger.debug("main(): args → %s", args)
     input_string = args.input_string
+    logger.debug("main(): input_string → %s", input_string)
     # In any case hash input should be a bytestring
     if args.input_file:
         with open(args.input_file, "rb") as f:
             hash_input = f.read()
+            logger.debug("main(): hash_input → %s", hash_input)
     else:
         hash_input = bytes(input_string, "utf-8")
     print(SHA1Hash(hash_input).final_hash())
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

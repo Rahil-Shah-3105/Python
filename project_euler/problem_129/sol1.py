@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 129: https://projecteuler.net/problem=129
 
@@ -24,13 +26,17 @@ def least_divisible_repunit(divisor: int) -> int:
     >>> least_divisible_repunit(1234567)
     34020
     """
+    logger.debug(">>> Entering least_divisible_repunit(divisor=%s)", divisor)
     if divisor % 5 == 0 or divisor % 2 == 0:
         return 0
     repunit = 1
+    logger.debug("least_divisible_repunit(divisor=%s): repunit → %s", divisor, repunit)
     repunit_index = 1
+    logger.debug("least_divisible_repunit(divisor=%s): repunit_index → %s", divisor, repunit_index)
     while repunit:
         repunit = (10 * repunit + 1) % divisor
         repunit_index += 1
+    logger.debug("<<< Exiting least_divisible_repunit(divisor=%s)", divisor)
     return repunit_index
 
 
@@ -45,11 +51,14 @@ def solution(limit: int = 1000000) -> int:
     >>> solution(1000)
     1017
     """
+    logger.debug(">>> Entering solution(limit=%s)", limit)
     divisor = limit - 1
+    logger.debug("solution(limit=%s): divisor → %s", limit, divisor)
     if divisor % 2 == 0:
         divisor += 1
     while least_divisible_repunit(divisor) <= limit:
         divisor += 2
+    logger.debug("<<< Exiting solution(limit=%s)", limit)
     return divisor
 
 

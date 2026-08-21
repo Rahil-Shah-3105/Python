@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_primitive(modulus: int) -> int | None:
@@ -19,15 +21,18 @@ def find_primitive(modulus: int) -> int | None:
     >>> find_primitive(8) == None # Modulo 8 has no primitive root
     True
     """
+    logger.debug(">>> Entering find_primitive(modulus=%s)", modulus)
     for r in range(1, modulus):
         li = []
         for x in range(modulus - 1):
             val = pow(r, x, modulus)
+            logger.debug("find_primitive(modulus=%s): val → %s", modulus, val)
             if val in li:
                 break
             li.append(val)
         else:
             return r
+    logger.debug("<<< Exiting find_primitive(modulus=%s)", modulus)
     return None
 
 

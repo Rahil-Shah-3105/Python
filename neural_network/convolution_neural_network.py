@@ -18,6 +18,8 @@ import pickle
 
 import numpy as np
 from matplotlib import pyplot as plt
+import logging
+logger = logging.getLogger(__name__)
 
 
 class CNN:
@@ -53,6 +55,8 @@ class CNN:
         self.thre_bp3 = -2 * rng.random(self.num_bp3) + 1
 
     def save_model(self, save_path):
+        logger.debug(">>> Entering save_model(save_path=%s)", save_path)
+        logger.debug("save_model(self=%s,save_path=%s): model_dic → %s", self, save_path, model_dic)
         # save model dict with pickle
         model_dic = {
             "num_bp1": self.num_bp1,
@@ -74,11 +78,32 @@ class CNN:
             pickle.dump(model_dic, f)
 
         print(f"Model saved: {save_path}")
+        logger.debug("<<< Exiting save_model(save_path=%s)", save_path)
 
     @classmethod
     def read_model(cls, model_path):
+        logger.debug(">>> Entering read_model(model_path=%s)", model_path)
+        logger.debug("read_model(model_path=%s): model_dic → %s", model_path, model_dic)
+        logger.debug("read_model(cls=%s,model_path=%s): model_dic → %s", cls, model_path, model_dic)
+        logger.debug("read_model(model_path=%s): conv_get → %s", model_path, conv_get)
+        logger.debug("read_model(cls=%s,model_path=%s): conv_get → %s", cls, model_path, conv_get)
+        logger.debug("read_model(model_path=%s): size_p1 → %s", model_path, size_p1)
+        logger.debug("read_model(cls=%s,model_path=%s): size_p1 → %s", cls, model_path, size_p1)
+        logger.debug("read_model(cls=%s,model_path=%s): bp1 → %s", cls, model_path, bp1)
+        logger.debug("read_model(model_path=%s): bp1 → %s", model_path, bp1)
+        logger.debug("read_model(cls=%s,model_path=%s): bp2 → %s", cls, model_path, bp2)
+        logger.debug("read_model(model_path=%s): bp2 → %s", model_path, bp2)
+        logger.debug("read_model(cls=%s,model_path=%s): bp3 → %s", cls, model_path, bp3)
+        logger.debug("read_model(model_path=%s): bp3 → %s", model_path, bp3)
+        logger.debug("read_model(cls=%s,model_path=%s): r_w → %s", cls, model_path, r_w)
+        logger.debug("read_model(model_path=%s): r_w → %s", model_path, r_w)
+        logger.debug("read_model(cls=%s,model_path=%s): r_t → %s", cls, model_path, r_t)
+        logger.debug("read_model(model_path=%s): r_t → %s", model_path, r_t)
+        logger.debug("read_model(cls=%s,model_path=%s): conv_ins → %s", cls, model_path, conv_ins)
+        logger.debug("read_model(model_path=%s): conv_ins → %s", model_path, conv_ins)
         # read saved model
         with open(model_path, "rb") as f:
+            logger.error("Exception in read_model(model_path=%s)", model_path, exc_info=True)
             model_dic = pickle.load(f)  # noqa: S301
 
         conv_get = model_dic.get("conv1")
@@ -98,15 +123,27 @@ class CNN:
         conv_ins.thre_conv1 = model_dic.get("thre_conv1")
         conv_ins.thre_bp2 = model_dic.get("thre_bp2")
         conv_ins.thre_bp3 = model_dic.get("thre_bp3")
+        logger.debug("<<< Exiting read_model(model_path=%s)", model_path)
         return conv_ins
 
     def sig(self, x):
+        logger.debug(">>> Entering sig(x=%s)", x)
+        logger.debug("<<< Exiting sig(x=%s)", x)
         return 1 / (1 + np.exp(-1 * x))
 
     def do_round(self, x):
+        logger.debug(">>> Entering do_round(x=%s)", x)
+        logger.debug("<<< Exiting do_round(x=%s)", x)
         return round(x, 3)
 
     def convolute(self, data, convs, w_convs, thre_convs, conv_step):
+        logger.debug(">>> Entering convolute(data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s)", data, convs, w_convs, thre_convs, conv_step)
+        logger.debug("convolute(data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): size_data → %s", data, convs, w_convs, thre_convs, conv_step, size_data)
+        logger.debug("convolute(self=%s,data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): size_conv → %s", self, data, convs, w_convs, thre_convs, conv_step, size_conv)
+        logger.debug("convolute(self=%s,data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): num_conv → %s", self, data, convs, w_convs, thre_convs, conv_step, num_conv)
+        logger.debug("convolute(self=%s,data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): size_data → %s", self, data, convs, w_convs, thre_convs, conv_step, size_data)
+        logger.debug("convolute(data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): data_focus → %s", data, convs, w_convs, thre_convs, conv_step, data_focus)
+        logger.debug("convolute(self=%s,data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): data_focus → %s", self, data, convs, w_convs, thre_convs, conv_step, data_focus)
         # convolution process
         size_conv = convs[0]
         num_conv = convs[1]
@@ -119,6 +156,13 @@ class CNN:
                     i_focus : i_focus + size_conv, j_focus : j_focus + size_conv
                 ]
                 data_focus.append(focus)
+                logger.debug("convolute(data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): size_feature_map → %s", data, convs, w_convs, thre_convs, conv_step, size_feature_map)
+                logger.debug("convolute(data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): data_featuremap → %s", data, convs, w_convs, thre_convs, conv_step, data_featuremap)
+                logger.debug("convolute(self=%s,data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): data_featuremap → %s", self, data, convs, w_convs, thre_convs, conv_step, data_featuremap)
+                logger.debug("convolute(self=%s,data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): size_feature_map → %s", self, data, convs, w_convs, thre_convs, conv_step, size_feature_map)
+                logger.debug("convolute(data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): featuremap → %s", data, convs, w_convs, thre_convs, conv_step, featuremap)
+                logger.debug("convolute(self=%s,data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): featuremap → %s", self, data, convs, w_convs, thre_convs, conv_step, featuremap)
+                logger.debug("convolute(self=%s,data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): net_focus → %s", self, data, convs, w_convs, thre_convs, conv_step, net_focus)
         # calculate the feature map of every single kernel, and saved as list of matrix
         data_featuremap = []
         size_feature_map = int((size_data - size_conv) / conv_step + 1)
@@ -137,12 +181,26 @@ class CNN:
 
         # expanding the data slice to one dimension
         focus1_list = []
+        logger.debug("convolute(self=%s,data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): focus1_list → %s", self, data, convs, w_convs, thre_convs, conv_step, focus1_list)
         for each_focus in data_focus:
             focus1_list.extend(self.Expand_Mat(each_focus))
         focus_list = np.asarray(focus1_list)
+        logger.debug("convolute(self=%s,data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): focus_list → %s", self, data, convs, w_convs, thre_convs, conv_step, focus_list)
+        logger.debug("convolute(data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s): focus_list → %s", data, convs, w_convs, thre_convs, conv_step, focus_list)
+        logger.debug("<<< Exiting convolute(data=%s,convs=%s,w_convs=%s,thre_convs=%s,conv_step=%s)", data, convs, w_convs, thre_convs, conv_step)
         return focus_list, data_featuremap
 
     def pooling(self, featuremaps, size_pooling, pooling_type="average_pool"):
+        logger.debug(">>> Entering pooling(featuremaps=%s,size_pooling=%s,pooling_type=%s)", featuremaps, size_pooling, pooling_type)
+        logger.debug("pooling(featuremaps=%s,size_pooling=%s,pooling_type=%s): size_map → %s", featuremaps, size_pooling, pooling_type, size_map)
+        logger.debug("pooling(self=%s,featuremaps=%s,size_pooling=%s,pooling_type=%s): size_map → %s", self, featuremaps, size_pooling, pooling_type, size_map)
+        logger.debug("pooling(self=%s,featuremaps=%s,size_pooling=%s,pooling_type=%s): size_pooled → %s", self, featuremaps, size_pooling, pooling_type, size_pooled)
+        logger.debug("pooling(featuremaps=%s,size_pooling=%s,pooling_type=%s): size_pooled → %s", featuremaps, size_pooling, pooling_type, size_pooled)
+        logger.debug("pooling(self=%s,featuremaps=%s,size_pooling=%s,pooling_type=%s): featuremap_pooled → %s", self, featuremaps, size_pooling, pooling_type, featuremap_pooled)
+        logger.debug("pooling(self=%s,featuremaps=%s,size_pooling=%s,pooling_type=%s): feature_map → %s", self, featuremaps, size_pooling, pooling_type, feature_map)
+        logger.debug("pooling(self=%s,featuremaps=%s,size_pooling=%s,pooling_type=%s): map_pooled → %s", self, featuremaps, size_pooling, pooling_type, map_pooled)
+        logger.debug("pooling(featuremaps=%s,size_pooling=%s,pooling_type=%s): map_pooled → %s", featuremaps, size_pooling, pooling_type, map_pooled)
+        logger.debug("pooling(self=%s,featuremaps=%s,size_pooling=%s,pooling_type=%s): focus → %s", self, featuremaps, size_pooling, pooling_type, focus)
         # pooling process
         size_map = len(featuremaps[0])
         size_pooled = int(size_map / size_pooling)
@@ -164,9 +222,17 @@ class CNN:
                         map_pooled.append(np.max(focus))
             map_pooled = np.asmatrix(map_pooled).reshape(size_pooled, size_pooled)
             featuremap_pooled.append(map_pooled)
+        logger.debug("<<< Exiting pooling(featuremaps=%s,size_pooling=%s,pooling_type=%s)", featuremaps, size_pooling, pooling_type)
         return featuremap_pooled
 
     def _expand(self, data):
+        logger.debug(">>> Entering _expand(data=%s)", data)
+        logger.debug("_expand(data=%s): data_expanded → %s", data, data_expanded)
+        logger.debug("_expand(self=%s,data=%s): data_expanded → %s", self, data, data_expanded)
+        logger.debug("_expand(data=%s): shapes → %s", data, shapes)
+        logger.debug("_expand(self=%s,data=%s): shapes → %s", self, data, shapes)
+        logger.debug("_expand(self=%s,data=%s): data_listed → %s", self, data, data_listed)
+        logger.debug("_expand(data=%s): data_listed → %s", data, data_listed)
         # expanding three dimension data to one dimension list
         data_expanded = []
         for i in range(len(data)):
@@ -175,13 +241,21 @@ class CNN:
             data_listed = data_listed.getA().tolist()[0]
             data_expanded.extend(data_listed)
         data_expanded = np.asarray(data_expanded)
+        logger.debug("<<< Exiting _expand(data=%s)", data)
         return data_expanded
 
     def _expand_mat(self, data_mat):
+        logger.debug(">>> Entering _expand_mat(data_mat=%s)", data_mat)
+        logger.debug("_expand_mat(data_mat=%s): shapes → %s", data_mat, shapes)
+        logger.debug("_expand_mat(data_mat=%s): data_mat → %s", data_mat, data_mat)
+        logger.debug("_expand_mat(self=%s,data_mat=%s): shapes → %s", self, data_mat, shapes)
+        logger.debug("_expand_mat(self=%s,data_mat=%s): data_expanded → %s", self, data_mat, data_expanded)
+        logger.debug("_expand_mat(data_mat=%s): data_expanded → %s", data_mat, data_expanded)
         # expanding matrix to one dimension list
         data_mat = np.asarray(data_mat)
         shapes = np.shape(data_mat)
         data_expanded = data_mat.reshape(1, shapes[0] * shapes[1])
+        logger.debug("<<< Exiting _expand_mat(data_mat=%s)", data_mat)
         return data_expanded
 
     def _calculate_gradient_from_pool(
@@ -296,13 +370,16 @@ class CNN:
             all_mse.append(mse)
 
         def draw_error():
+            logger.debug(">>> Entering draw_error()")
             yplot = [error_accuracy for i in range(int(n_repeat * 1.2))]
+            logger.debug("draw_error(): yplot → %s", yplot)
             plt.plot(all_mse, "+-")
             plt.plot(yplot, "r--")
             plt.xlabel("Learning Times")
             plt.ylabel("All_mse")
             plt.grid(True, alpha=0.5)
             plt.show()
+            logger.debug("<<< Exiting draw_error()")
 
         print("------------------Training Complete---------------------")
         print((" - - Training epoch: ", rp, f"     - - Mse: {mse:.6f}"))
@@ -311,6 +388,13 @@ class CNN:
         return mse
 
     def predict(self, datas_test):
+        logger.debug(">>> Entering predict(datas_test=%s)", datas_test)
+        logger.debug("predict(datas_test=%s): bp_out3 → %s", datas_test, bp_out3)
+        logger.debug("predict(self=%s,datas_test=%s): produce_out → %s", self, datas_test, produce_out)
+        logger.debug("predict(datas_test=%s): data_bp_input → %s", datas_test, data_bp_input)
+        logger.debug("predict(self=%s,datas_test=%s): conv_step → %s", self, datas_test, conv_step)
+        logger.debug("predict(datas_test=%s): data_test → %s", datas_test, data_test)
+        logger.debug("predict(self=%s,datas_test=%s): data_test → %s", self, datas_test, data_test)
         # model predict
         produce_out = []
         print("-------------------Start Testing-------------------------")
@@ -324,19 +408,37 @@ class CNN:
                 self.thre_conv1,
                 conv_step=self.step_conv1,
             )
+            logger.debug("predict(datas_test=%s): res → %s", datas_test, res)
+            logger.debug("predict(self=%s,datas_test=%s): res → %s", self, datas_test, res)
             data_pooled1 = self.pooling(data_conved1, self.size_pooling1)
+            logger.debug("predict(self=%s,datas_test=%s): data_pooled1 → %s", self, datas_test, data_pooled1)
+            logger.debug("predict(datas_test=%s): data_pooled1 → %s", datas_test, data_pooled1)
             data_bp_input = self._expand(data_pooled1)
+            logger.debug("predict(self=%s,datas_test=%s): data_bp_input → %s", self, datas_test, data_bp_input)
 
             bp_out1 = data_bp_input
+            logger.debug("predict(self=%s,datas_test=%s): bp_out1 → %s", self, datas_test, bp_out1)
             bp_net_j = bp_out1 * self.vji.T - self.thre_bp2
+            logger.debug("predict(self=%s,datas_test=%s): bp_net_j → %s", self, datas_test, bp_net_j)
             bp_out2 = self.sig(bp_net_j)
+            logger.debug("predict(self=%s,datas_test=%s): bp_out2 → %s", self, datas_test, bp_out2)
+            logger.debug("predict(datas_test=%s): bp_out2 → %s", datas_test, bp_out2)
             bp_net_k = bp_out2 * self.wkj.T - self.thre_bp3
+            logger.debug("predict(self=%s,datas_test=%s): bp_net_k → %s", self, datas_test, bp_net_k)
             bp_out3 = self.sig(bp_net_k)
+            logger.debug("predict(self=%s,datas_test=%s): bp_out3 → %s", self, datas_test, bp_out3)
             produce_out.extend(bp_out3.getA().tolist())
         res = [list(map(self.do_round, each)) for each in produce_out]
+        logger.debug("<<< Exiting predict(datas_test=%s)", datas_test)
+        logger.debug("convolution(self=%s,data=%s): conv_step → %s", self, data, conv_step)
+        logger.debug("convolution(self=%s,data=%s): data_pooled1 → %s", self, data, data_pooled1)
+        logger.debug("convolution(data=%s): data_pooled1 → %s", data, data_pooled1)
         return np.asarray(res)
 
     def convolution(self, data):
+        logger.debug(">>> Entering convolution(data=%s)", data)
+        logger.debug("convolution(data=%s): data_test → %s", data, data_test)
+        logger.debug("convolution(self=%s,data=%s): data_test → %s", self, data, data_test)
         # return the data of image after convoluting process so we can check it out
         data_test = np.asmatrix(data)
         _data_focus1, data_conved1 = self.convolute(
@@ -348,6 +450,7 @@ class CNN:
         )
         data_pooled1 = self.pooling(data_conved1, self.size_pooling1)
 
+        logger.debug("<<< Exiting convolution(data=%s)", data)
         return data_conved1, data_pooled1
 
 

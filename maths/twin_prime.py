@@ -9,6 +9,8 @@ https://en.wikipedia.org/wiki/Twin_prime
 
 # Author : Akshay Dubey (https://github.com/itsAkshayDubey)
 from maths.prime_check import is_prime
+import logging
+logger = logging.getLogger(__name__)
 
 
 def twin_prime(number: int) -> int:
@@ -31,12 +33,15 @@ def twin_prime(number: int) -> int:
         ...
     TypeError: Input value of [number=6.0] must be an integer
     """
+    logger.debug(">>> Entering twin_prime(number=%s)", number)
     if not isinstance(number, int):
         msg = f"Input value of [number={number}] must be an integer"
+        logger.debug("twin_prime(number=%s): msg → %s", number, msg)
         raise TypeError(msg)
     if is_prime(number) and is_prime(number + 2):
         return number + 2
     else:
+        logger.debug("<<< Exiting twin_prime(number=%s)", number)
         return -1
 
 

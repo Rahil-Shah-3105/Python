@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import re
+import logging
+logger = logging.getLogger(__name__)
 
 
 def natural_sort(input_list: list[str]) -> list[str]:
@@ -23,8 +25,12 @@ def natural_sort(input_list: list[str]) -> list[str]:
     >>> natural_sort(example2)
     ['elm0', 'elm1', 'Elm2', 'elm9', 'elm10', 'Elm11', 'Elm12', 'elm13']
     """
+    logger.debug(">>> Entering natural_sort(input_list=%s)", input_list)
 
+    logger.debug("<<< Exiting natural_sort(input_list=%s)", input_list)
     def alphanum_key(key):
+        logger.debug(">>> Entering alphanum_key(key=%s)", key)
+        logger.debug("<<< Exiting alphanum_key(key=%s)", key)
         return [int(s) if s.isdigit() else s.lower() for s in re.split("([0-9]+)", key)]
 
     return sorted(input_list, key=alphanum_key)

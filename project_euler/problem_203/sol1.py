@@ -29,6 +29,8 @@ References:
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_pascal_triangle_unique_coefficients(depth: int) -> set[int]:
@@ -48,15 +50,21 @@ def get_pascal_triangle_unique_coefficients(depth: int) -> set[int]:
     >>> get_pascal_triangle_unique_coefficients(8)
     {1, 2, 3, 4, 5, 6, 7, 35, 10, 15, 20, 21}
     """
+    logger.debug(">>> Entering get_pascal_triangle_unique_coefficients(depth=%s)", depth)
     coefficients = {1}
+    logger.debug("get_pascal_triangle_unique_coefficients(depth=%s): coefficients → %s", depth, coefficients)
     previous_coefficients = [1]
+    logger.debug("get_pascal_triangle_unique_coefficients(depth=%s): previous_coefficients → %s", depth, previous_coefficients)
     for _ in range(2, depth + 1):
         coefficients_begins_one = [*previous_coefficients, 0]
+        logger.debug("get_pascal_triangle_unique_coefficients(depth=%s): coefficients_begins_one → %s", depth, coefficients_begins_one)
         coefficients_ends_one = [0, *previous_coefficients]
+        logger.debug("get_pascal_triangle_unique_coefficients(depth=%s): coefficients_ends_one → %s", depth, coefficients_ends_one)
         previous_coefficients = []
         for x, y in zip(coefficients_begins_one, coefficients_ends_one):
             coefficients.add(x + y)
             previous_coefficients.append(x + y)
+    logger.debug("<<< Exiting get_pascal_triangle_unique_coefficients(depth=%s)", depth)
     return coefficients
 
 
@@ -79,13 +87,18 @@ def get_squarefrees(unique_coefficients: set[int]) -> set[int]:
     >>> get_squarefrees({1, 2, 3, 4, 5, 6, 7, 35, 10, 15, 20, 21})
     {1, 2, 3, 5, 6, 7, 35, 10, 15, 21}
     """
+    logger.debug(">>> Entering get_squarefrees(unique_coefficients=%s)", unique_coefficients)
 
     non_squarefrees = set()
+    logger.debug("get_squarefrees(unique_coefficients=%s): non_squarefrees → %s", unique_coefficients, non_squarefrees)
     for number in unique_coefficients:
         divisor = 2
+        logger.debug("get_squarefrees(unique_coefficients=%s): divisor → %s", unique_coefficients, divisor)
         copy_number = number
+        logger.debug("get_squarefrees(unique_coefficients=%s): copy_number → %s", unique_coefficients, copy_number)
         while divisor**2 <= copy_number:
             multiplicity = 0
+            logger.debug("get_squarefrees(unique_coefficients=%s): multiplicity → %s", unique_coefficients, multiplicity)
             while copy_number % divisor == 0:
                 copy_number //= divisor
                 multiplicity += 1
@@ -94,6 +107,7 @@ def get_squarefrees(unique_coefficients: set[int]) -> set[int]:
                 break
             divisor += 1
 
+    logger.debug("<<< Exiting get_squarefrees(unique_coefficients=%s)", unique_coefficients)
     return unique_coefficients.difference(non_squarefrees)
 
 
@@ -108,8 +122,12 @@ def solution(n: int = 51) -> int:
     >>> solution(9)
     175
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     unique_coefficients = get_pascal_triangle_unique_coefficients(n)
+    logger.debug("solution(n=%s): unique_coefficients → %s", n, unique_coefficients)
     squarefrees = get_squarefrees(unique_coefficients)
+    logger.debug("solution(n=%s): squarefrees → %s", n, squarefrees)
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return sum(squarefrees)
 
 

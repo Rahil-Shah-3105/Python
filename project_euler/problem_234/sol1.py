@@ -18,6 +18,8 @@ What is the sum of all semidivisible numbers not exceeding 999966663333 ?
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def prime_sieve(n: int) -> list:
@@ -30,23 +32,28 @@ def prime_sieve(n: int) -> list:
     >>> prime_sieve(50)
     [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
     """
+    logger.debug(">>> Entering prime_sieve(n=%s)", n)
     is_prime = [True] * n
+    logger.debug("prime_sieve(n=%s): is_prime → %s", n, is_prime)
     is_prime[0] = False
     is_prime[1] = False
     is_prime[2] = True
 
     for i in range(3, int(n**0.5 + 1), 2):
         index = i * 2
+        logger.debug("prime_sieve(n=%s): index → %s", n, index)
         while index < n:
             is_prime[index] = False
             index = index + i
 
     primes = [2]
+    logger.debug("prime_sieve(n=%s): primes → %s", n, primes)
 
     for i in range(3, n, 2):
         if is_prime[i]:
             primes.append(i)
 
+    logger.debug("<<< Exiting prime_sieve(n=%s)", n)
     return primes
 
 
@@ -62,21 +69,31 @@ def solution(limit: int = 999_966_663_333) -> int:
     >>> solution(100_000)
     36393008
     """
+    logger.debug(">>> Entering solution(limit=%s)", limit)
     primes_upper_bound = math.floor(math.sqrt(limit)) + 100
+    logger.debug("solution(limit=%s): primes_upper_bound → %s", limit, primes_upper_bound)
     primes = prime_sieve(primes_upper_bound)
+    logger.debug("solution(limit=%s): primes → %s", limit, primes)
 
     matches_sum = 0
+    logger.debug("solution(limit=%s): matches_sum → %s", limit, matches_sum)
     prime_index = 0
+    logger.debug("solution(limit=%s): prime_index → %s", limit, prime_index)
     last_prime = primes[prime_index]
+    logger.debug("solution(limit=%s): last_prime → %s", limit, last_prime)
 
     while (last_prime**2) <= limit:
         next_prime = primes[prime_index + 1]
+        logger.debug("solution(limit=%s): next_prime → %s", limit, next_prime)
 
         lower_bound = last_prime**2
+        logger.debug("solution(limit=%s): lower_bound → %s", limit, lower_bound)
         upper_bound = next_prime**2
+        logger.debug("solution(limit=%s): upper_bound → %s", limit, upper_bound)
 
         # Get numbers divisible by lps(current)
         current = lower_bound + last_prime
+        logger.debug("solution(limit=%s): current → %s", limit, current)
         while upper_bound > current <= limit:
             matches_sum += current
             current += last_prime
@@ -112,6 +129,7 @@ def solution(limit: int = 999_966_663_333) -> int:
         last_prime = next_prime
         prime_index += 1
 
+    logger.debug("<<< Exiting solution(limit=%s)", limit)
     return matches_sum
 
 

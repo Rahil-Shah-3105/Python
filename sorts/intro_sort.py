@@ -5,6 +5,8 @@ https://en.wikipedia.org/wiki/Introsort
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def insertion_sort(array: list, start: int = 0, end: int = 0) -> list:
@@ -25,14 +27,19 @@ def insertion_sort(array: list, start: int = 0, end: int = 0) -> list:
     >>> insertion_sort(array, 0, len(array))
     [-45.03, 0, 1.7, 73.56, 73.568, 89.45]
     """
+    logger.debug(">>> Entering insertion_sort(array=%s,start=%s,end=%s)", array, start, end)
     end = end or len(array)
+    logger.debug("insertion_sort(array=%s,start=%s,end=%s): end → %s", array, start, end, end)
     for i in range(start, end):
         temp_index = i
+        logger.debug("insertion_sort(array=%s,start=%s,end=%s): temp_index → %s", array, start, end, temp_index)
         temp_index_value = array[i]
+        logger.debug("insertion_sort(array=%s,start=%s,end=%s): temp_index_value → %s", array, start, end, temp_index_value)
         while temp_index != start and temp_index_value < array[temp_index - 1]:
             array[temp_index] = array[temp_index - 1]
             temp_index -= 1
         array[temp_index] = temp_index_value
+    logger.debug("<<< Exiting insertion_sort(array=%s,start=%s,end=%s)", array, start, end)
     return array
 
 

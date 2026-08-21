@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 ROMAN = [
     (1000, "M"),
     (900, "CM"),
@@ -25,9 +27,13 @@ def roman_to_int(roman: str) -> int:
     >>> all(roman_to_int(key) == value for key, value in tests.items())
     True
     """
+    logger.debug(">>> Entering roman_to_int(roman=%s)", roman)
     vals = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
+    logger.debug("roman_to_int(roman=%s): vals → %s", roman, vals)
     total = 0
+    logger.debug("roman_to_int(roman=%s): total → %s", roman, total)
     place = 0
+    logger.debug("roman_to_int(roman=%s): place → %s", roman, place)
     while place < len(roman):
         if (place + 1 < len(roman)) and (vals[roman[place]] < vals[roman[place + 1]]):
             total += vals[roman[place + 1]] - vals[roman[place]]
@@ -35,6 +41,7 @@ def roman_to_int(roman: str) -> int:
         else:
             total += vals[roman[place]]
             place += 1
+    logger.debug("<<< Exiting roman_to_int(roman=%s)", roman)
     return total
 
 
@@ -46,12 +53,15 @@ def int_to_roman(number: int) -> str:
     >>> all(int_to_roman(value) == key for key, value in tests.items())
     True
     """
+    logger.debug(">>> Entering int_to_roman(number=%s)", number)
     result = []
+    logger.debug("int_to_roman(number=%s): result → %s", number, result)
     for arabic, roman in ROMAN:
         (factor, number) = divmod(number, arabic)
         result.append(roman * factor)
         if number == 0:
             break
+    logger.debug("<<< Exiting int_to_roman(number=%s)", number)
     return "".join(result)
 
 

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -20,8 +22,10 @@ class TreeNode:
     right: TreeNode | None = None
 
     def __post_init__(self):
+        logger.debug(">>> Entering __post_init__()")
         if not isinstance(self.value, int):
             raise TypeError("Value must be an integer.")
+            logger.debug("<<< Exiting __post_init__()")
 
     def __iter__(self) -> Iterator[TreeNode]:
         """
@@ -35,9 +39,11 @@ class TreeNode:
         >>> tuple(TreeNode(1, TreeNode(2), TreeNode(3)))
         (1,2,null,null,3,null,null, 2,null,null, 3,null,null)
         """
+        logger.debug(">>> Entering __iter__()")
         yield self
         yield from self.left or ()
         yield from self.right or ()
+        logger.debug("<<< Exiting __iter__()")
 
     def __len__(self) -> int:
         """
@@ -51,6 +57,8 @@ class TreeNode:
         >>> len(TreeNode(1, TreeNode(2), TreeNode(3)))
         3
         """
+        logger.debug(">>> Entering __len__()")
+        logger.debug("<<< Exiting __len__()")
         return sum(1 for _ in self)
 
     def __repr__(self) -> str:
@@ -67,6 +75,8 @@ class TreeNode:
         >>> repr(TreeNode(1, TreeNode(2), TreeNode(3, TreeNode(4), TreeNode(5))))
         '1,2,null,null,3,4,null,null,5,null,null'
         """
+        logger.debug(">>> Entering __repr__()")
+        logger.debug("<<< Exiting __repr__()")
         return f"{self.value},{self.left!r},{self.right!r}".replace("None", "null")
 
     @classmethod
@@ -75,11 +85,15 @@ class TreeNode:
         >>> repr(TreeNode.five_tree())
         '1,2,null,null,3,4,null,null,5,null,null'
         """
+        logger.debug(">>> Entering five_tree()")
         root = TreeNode(1)
+        logger.debug("five_tree(): root → %s", root)
+        logger.warning("five_tree(cls=%s): root → %s", cls, root)
         root.left = TreeNode(2)
         root.right = TreeNode(3)
         root.right.left = TreeNode(4)
         root.right.right = TreeNode(5)
+        logger.debug("<<< Exiting five_tree()")
         return root
 
 
@@ -112,23 +126,30 @@ def deserialize(data: str) -> TreeNode | None:
         ...
     ValueError: Data cannot be empty.
     """
+    logger.debug(">>> Entering deserialize(data=%s)", data)
 
     if not data:
         raise ValueError("Data cannot be empty.")
 
+        logger.debug("<<< Exiting deserialize(data=%s)", data)
     # Split the serialized string by a comma to get node values
     nodes = data.split(",")
+    logger.debug("deserialize(data=%s): nodes → %s", data, nodes)
 
     def build_tree() -> TreeNode | None:
+        logger.debug(">>> Entering build_tree()")
         # Get the next value from the list
         value = nodes.pop(0)
+        logger.debug("build_tree(): value → %s", value)
 
         if value == "null":
             return None
 
         node = TreeNode(int(value))
+        logger.debug("build_tree(): node → %s", node)
         node.left = build_tree()  # Recursively build left subtree
         node.right = build_tree()  # Recursively build right subtree
+        logger.debug("<<< Exiting build_tree()")
         return node
 
     return build_tree()

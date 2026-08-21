@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # https://www.tutorialspoint.com/python3/bitwise_operators_example.htm
 
 
@@ -32,14 +34,19 @@ def binary_and(a: int, b: int) -> str:
         ...
     TypeError: '<' not supported between instances of 'str' and 'int'
     """
+    logger.debug(">>> Entering binary_and(a=%s,b=%s)", a, b)
     if a < 0 or b < 0:
         raise ValueError("the value of both inputs must be positive")
 
     a_binary = format(a, "b")
+    logger.debug("binary_and(a=%s,b=%s): a_binary → %s", a, b, a_binary)
     b_binary = format(b, "b")
+    logger.debug("binary_and(a=%s,b=%s): b_binary → %s", a, b, b_binary)
 
     max_len = max(len(a_binary), len(b_binary))
+    logger.debug("binary_and(a=%s,b=%s): max_len → %s", a, b, max_len)
 
+    logger.debug("<<< Exiting binary_and(a=%s,b=%s)", a, b)
     return "0b" + "".join(
         str(int(char_a == "1" and char_b == "1"))
         for char_a, char_b in zip(a_binary.zfill(max_len), b_binary.zfill(max_len))

@@ -1,4 +1,6 @@
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def power_iteration(
@@ -85,18 +87,26 @@ def test_power_iteration() -> None:
     """
     >>> test_power_iteration()  # self running tests
     """
+    logger.debug(">>> Entering test_power_iteration()")
     real_input_matrix = np.array([[41, 4, 20], [4, 26, 30], [20, 30, 50]])
+    logger.debug("test_power_iteration(): real_input_matrix → %s", real_input_matrix)
     real_vector = np.array([41, 4, 20])
+    logger.debug("test_power_iteration(): real_vector → %s", real_vector)
     complex_input_matrix = real_input_matrix.astype(np.complex128)
+    logger.debug("test_power_iteration(): complex_input_matrix → %s", complex_input_matrix)
     imag_matrix = np.triu(1j * complex_input_matrix, 1)
+    logger.debug("test_power_iteration(): imag_matrix → %s", imag_matrix)
     complex_input_matrix += imag_matrix
     complex_input_matrix += -1 * imag_matrix.T
     complex_vector = np.array([41, 4, 20]).astype(np.complex128)
+    logger.debug("test_power_iteration(): complex_vector → %s", complex_vector)
 
     for problem_type in ["real", "complex"]:
         if problem_type == "real":
             input_matrix = real_input_matrix
+            logger.debug("test_power_iteration(): input_matrix → %s", input_matrix)
             vector = real_vector
+            logger.debug("test_power_iteration(): vector → %s", vector)
         elif problem_type == "complex":
             input_matrix = complex_input_matrix
             vector = complex_vector
@@ -111,14 +121,17 @@ def test_power_iteration() -> None:
         eigen_values, eigen_vectors = np.linalg.eigh(input_matrix)
         # Last eigenvalue is the maximum one.
         eigen_value_max = eigen_values[-1]
+        logger.debug("test_power_iteration(): eigen_value_max → %s", eigen_value_max)
         # Last column in this matrix is eigenvector corresponding to largest eigenvalue.
         eigen_vector_max = eigen_vectors[:, -1]
+        logger.debug("test_power_iteration(): eigen_vector_max → %s", eigen_vector_max)
 
         # Check our implementation and numpy gives close answers.
         assert np.abs(eigen_value - eigen_value_max) <= 1e-6
         # Take absolute values element wise of each eigenvector.
         # as they are only unique to a minus sign.
         assert np.linalg.norm(np.abs(eigen_vector) - np.abs(eigen_vector_max)) <= 1e-6
+        logger.debug("<<< Exiting test_power_iteration()")
 
 
 if __name__ == "__main__":

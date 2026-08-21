@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def text_justification(word: str, max_width: int) -> list:
     """
     Will format the string such that each line has exactly
@@ -28,19 +30,29 @@ def text_justification(word: str, max_width: int) -> list:
     Time complexity: O(m*n)
     Space complexity: O(m*n)
     """
+    logger.debug(">>> Entering text_justification(word=%s,max_width=%s)", word, max_width)
+    logger.debug("text_justification(word=%s,max_width=%s): string → %s", word, max_width, string)
+    logger.debug("text_justification(word=%s,max_width=%s): output → %s", word, max_width, output)
+    logger.debug("text_justification(word=%s,max_width=%s): words → %s", word, max_width, words)
 
     # Converting string into list of strings split by a space
     words = word.split()
+    logger.debug("<<< Exiting text_justification(word=%s,max_width=%s)", word, max_width)
 
     def justify(line: list, width: int, max_width: int) -> str:
+        logger.debug(">>> Entering justify(line=%s,width=%s,max_width=%s)", line, width, max_width)
         overall_spaces_count = max_width - width
+        logger.debug("justify(line=%s,width=%s,max_width=%s): overall_spaces_count → %s", line, width, max_width, overall_spaces_count)
         words_count = len(line)
+        logger.debug("justify(line=%s,width=%s,max_width=%s): words_count → %s", line, width, max_width, words_count)
         if len(line) == 1:
             # if there is only word in line
             # just insert overall_spaces_count for the remainder of line
+            logger.debug("justify(line=%s,width=%s,max_width=%s): spaces_count_in_locations → %s", line, width, max_width, spaces_count_in_locations)
             return line[0] + " " * overall_spaces_count
         else:
             spaces_to_insert_between_words = words_count - 1
+            logger.debug("justify(line=%s,width=%s,max_width=%s): spaces_to_insert_between_words → %s", line, width, max_width, spaces_to_insert_between_words)
             # num_spaces_between_words_list[i] : tells you to insert
             # num_spaces_between_words_list[i] spaces
             # after word on line[i]
@@ -54,6 +66,7 @@ def text_justification(word: str, max_width: int) -> list:
             for i in range(spaces_count_in_locations):
                 num_spaces_between_words_list[i] += 1
             aligned_words_list = []
+            logger.debug("justify(line=%s,width=%s,max_width=%s): aligned_words_list → %s", line, width, max_width, aligned_words_list)
             for i in range(spaces_to_insert_between_words):
                 # add the word
                 aligned_words_list.append(line[i])
@@ -62,6 +75,7 @@ def text_justification(word: str, max_width: int) -> list:
             # just add the last word to the sentence
             aligned_words_list.append(line[-1])
             # join the aligned words list to form a justified line
+            logger.debug("<<< Exiting justify(line=%s,width=%s,max_width=%s)", line, width, max_width)
             return "".join(aligned_words_list)
 
     answer = []

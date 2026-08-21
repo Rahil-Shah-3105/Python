@@ -9,16 +9,23 @@ Nodes contain data and also may link to other nodes:
 from __future__ import annotations
 
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
     def __init__(self, item: Any, next: Any) -> None:  # noqa: A002
+        logger.debug(">>> Entering __init__(item=%s,next=%s)", item, next)
         self.item = item
+        logger.debug("__init__(self=%s,item=%s,next=%s): self.item → %s", self, item, next, self.item)
         self.next = next
+        logger.debug("__init__(self=%s,item=%s,next=%s): self.next → %s", self, item, next, self.next)
+        logger.debug("<<< Exiting __init__(item=%s,next=%s)", item, next)
 
 
 class LinkedList:
     def __init__(self) -> None:
+        logger.debug("__init__(self=%s): self.size → %s", self, self.size)
         self.head: Node | None = None
         self.size = 0
 
@@ -58,23 +65,31 @@ class LinkedList:
         >>> print(linked_list)
         3 --> 2 --> 4 --> 1 --> 5
         """
+        logger.debug(">>> Entering add(item=%s,position=%s)", item, position)
         if position < 0:
             raise ValueError("Position must be non-negative")
 
         if position == 0 or self.head is None:
             new_node = Node(item, self.head)
+            logger.debug("add(self=%s,item=%s,position=%s): new_node → %s", self, item, position, new_node)
+            logger.debug("add(item=%s,position=%s): new_node → %s", item, position, new_node)
             self.head = new_node
+            logger.debug("add(self=%s,item=%s,position=%s): self.head → %s", self, item, position, self.head)
         else:
             current = self.head
+            logger.debug("add(self=%s,item=%s,position=%s): current → %s", self, item, position, current)
             for _ in range(position - 1):
                 current = current.next
                 if current is None:
                     raise ValueError("Out of bounds")
             new_node = Node(item, current.next)
             current.next = new_node
+            logger.debug("add(self=%s,item=%s,position=%s): current.next → %s", self, item, position, current.next)
         self.size += 1
+        logger.debug("<<< Exiting add(item=%s,position=%s)", item, position)
 
     def remove(self) -> Any:
+        logger.debug(">>> Entering remove()")
         # Switched 'self.is_empty()' to 'self.head is None'
         # because mypy was considering the possibility that 'self.head'
         # can be None in below else part and giving error
@@ -82,11 +97,16 @@ class LinkedList:
             return None
         else:
             item = self.head.item
+            logger.debug("remove(self=%s): item → %s", self, item)
             self.head = self.head.next
+            logger.debug("remove(self=%s): self.head → %s", self, self.head)
             self.size -= 1
+            logger.debug("<<< Exiting remove()")
             return item
 
     def is_empty(self) -> bool:
+        logger.debug(">>> Entering is_empty()")
+        logger.debug("<<< Exiting is_empty()")
         return self.head is None
 
     def __str__(self) -> str:
@@ -98,11 +118,14 @@ class LinkedList:
         >>> print(linked_list)
         9 --> 14 --> 23
         """
+        logger.debug(">>> Entering __str__()")
         if self.is_empty():
             return ""
         else:
             iterate = self.head
+            logger.debug("__str__(self=%s): iterate → %s", self, iterate)
             item_str = ""
+            logger.debug("__str__(self=%s): item_str → %s", self, item_str)
             item_list: list[str] = []
             while iterate:
                 item_list.append(str(iterate.item))
@@ -110,6 +133,7 @@ class LinkedList:
 
             item_str = " --> ".join(item_list)
 
+            logger.debug("<<< Exiting __str__()")
             return item_str
 
     def __len__(self) -> int:
@@ -130,4 +154,6 @@ class LinkedList:
         >>> len(linked_list)
         0
         """
+        logger.debug(">>> Entering __len__()")
+        logger.debug("<<< Exiting __len__()")
         return self.size

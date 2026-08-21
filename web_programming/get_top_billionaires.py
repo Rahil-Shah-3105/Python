@@ -17,6 +17,8 @@ import httpx
 from rich import box
 from rich import console as rich_console
 from rich import table as rich_table
+import logging
+logger = logging.getLogger(__name__)
 
 LIMIT = 10
 TODAY = datetime.now(tz=UTC)
@@ -51,8 +53,12 @@ def years_old(birth_timestamp: int, today: date | None = None) -> int:
     ... )
     True
     """
+    logger.debug(">>> Entering years_old(birth_timestamp=%s,today=%s)", birth_timestamp, today)
     today = today or TODAY.date()
+    logger.debug("years_old(birth_timestamp=%s,today=%s): today → %s", birth_timestamp, today, today)
+    logger.debug("<<< Exiting years_old(birth_timestamp=%s,today=%s)", birth_timestamp, today)
     birth_date = datetime.fromtimestamp(birth_timestamp, tz=UTC).date()
+    logger.debug("years_old(birth_timestamp=%s,today=%s): birth_date → %s", birth_timestamp, today, birth_date)
     return (today.year - birth_date.year) - (
         (today.month, today.day) < (birth_date.month, birth_date.day)
     )
@@ -65,7 +71,10 @@ def get_forbes_real_time_billionaires() -> list[dict[str, int | str]]:
     Returns:
         List of top 10 realtime billionaires data.
     """
+    logger.debug(">>> Entering get_forbes_real_time_billionaires()")
     response_json = httpx.get(API_URL, timeout=10).json()
+    logger.debug("get_forbes_real_time_billionaires(): response_json → %s", response_json)
+    logger.debug("<<< Exiting get_forbes_real_time_billionaires()")
     return [
         {
             "Name": person["personName"],
@@ -86,6 +95,10 @@ def display_billionaires(forbes_billionaires: list[dict[str, int | str]]) -> Non
     Args:
         forbes_billionaires (list): Forbes top 10 real-time billionaires
     """
+    logger.debug(">>> Entering display_billionaires(forbes_billionaires=%s)", forbes_billionaires)
+    logger.debug("display_billionaires(forbes_billionaires=%s): highlight → %s", forbes_billionaires, highlight)
+    logger.debug("display_billionaires(forbes_billionaires=%s): style → %s", forbes_billionaires, style)
+    logger.debug("display_billionaires(forbes_billionaires=%s): box → %s", forbes_billionaires, box)
 
     table = rich_table.Table(
         title=f"Forbes Top {LIMIT} Real-Time Billionaires at {TODAY:%Y-%m-%d %H:%M}",
@@ -100,6 +113,7 @@ def display_billionaires(forbes_billionaires: list[dict[str, int | str]]) -> Non
         table.add_row(*billionaire.values())
 
     rich_console.Console().print(table)
+    logger.debug("<<< Exiting display_billionaires(forbes_billionaires=%s)", forbes_billionaires)
 
 
 if __name__ == "__main__":

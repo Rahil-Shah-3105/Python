@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Numerical integration or quadrature for a smooth function f with known values at x_i
 
@@ -10,6 +12,7 @@ method 2:
 
 
 def method_2(boundary: list[int], steps: int) -> float:
+    logger.debug(">>> Entering method_2(boundary=%s,steps=%s)", boundary, steps)
     # "Simpson Rule"
     # int(f) = delta_x/2 * (b-a)/3*(f1 + 4f2 + 2f_3 + ... + fn)
     """
@@ -45,38 +48,52 @@ def method_2(boundary: list[int], steps: int) -> float:
         raise ZeroDivisionError("Number of steps must be greater than zero")
 
     h = (boundary[1] - boundary[0]) / steps
+    logger.debug("method_2(boundary=%s,steps=%s): h → %s", boundary, steps, h)
     a = boundary[0]
     b = boundary[1]
     x_i = make_points(a, b, h)
+    logger.debug("method_2(boundary=%s,steps=%s): x_i → %s", boundary, steps, x_i)
     y = 0.0
     y += (h / 3.0) * f(a)
     cnt = 2
+    logger.debug("method_2(boundary=%s,steps=%s): cnt → %s", boundary, steps, cnt)
     for i in x_i:
         y += (h / 3) * (4 - 2 * (cnt % 2)) * f(i)
         cnt += 1
     y += (h / 3.0) * f(b)
+    logger.debug("<<< Exiting method_2(boundary=%s,steps=%s)", boundary, steps)
     return y
 
 
 def make_points(a, b, h):
+    logger.debug(">>> Entering make_points(a=%s,b=%s,h=%s)", a, b, h)
     x = a + h
     while x < (b - h):
         yield x
         x = x + h
+        logger.debug("<<< Exiting make_points(a=%s,b=%s,h=%s)", a, b, h)
 
 
 def f(x):  # enter your function here
+    logger.debug(">>> Entering f(x=%s)", x)
     y = (x - 0) * (x - 0)
+    logger.debug("f(x=%s): y → %s", x, y)
+    logger.debug("<<< Exiting f(x=%s)", x)
     return y
 
 
 def main():
+    logger.debug(">>> Entering main()")
     a = 0.0  # Lower bound of integration
     b = 1.0  # Upper bound of integration
     steps = 10.0  # number of steps or resolution
+    logger.debug("main(): steps → %s", steps)
     boundary = [a, b]  # boundary of integration
+    logger.debug("main(): boundary → %s", boundary)
     y = method_2(boundary, steps)
+    logger.debug("main(): y → %s", y)
     print(f"y = {y}")
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

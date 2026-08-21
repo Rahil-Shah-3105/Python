@@ -2,6 +2,8 @@ import os
 import sys
 
 from . import rsa_key_generator as rkg
+import logging
+logger = logging.getLogger(__name__)
 
 DEFAULT_BLOCK_SIZE = 128
 BYTE_SIZE = 256
@@ -61,9 +63,13 @@ def decrypt_message(
 
 
 def read_key_file(key_filename: str) -> tuple[int, int, int]:
+    logger.debug(">>> Entering read_key_file(key_filename=%s)", key_filename)
+    logger.debug("read_key_file(key_filename=%s): content → %s", key_filename, content)
     with open(key_filename) as fo:
+        logger.error("Exception in read_key_file(key_filename=%s)", key_filename, exc_info=True)
         content = fo.read()
     key_size, n, eor_d = content.split(",")
+    logger.debug("<<< Exiting read_key_file(key_filename=%s)", key_filename)
     return (int(key_size), int(n), int(eor_d))
 
 
@@ -91,12 +97,17 @@ def encrypt_and_write_to_file(
 
 
 def read_from_file_and_decrypt(message_filename: str, key_filename: str) -> str:
+    logger.debug(">>> Entering read_from_file_and_decrypt(message_filename=%s,key_filename=%s)", message_filename, key_filename)
     key_size, n, d = read_key_file(key_filename)
     with open(message_filename) as fo:
+        logger.error("Exception in read_from_file_and_decrypt(message_filename=%s,key_filename=%s)", message_filename, key_filename, exc_info=True)
         content = fo.read()
+        logger.debug("read_from_file_and_decrypt(message_filename=%s,key_filename=%s): content → %s", message_filename, key_filename, content)
     message_length_str, block_size_str, encrypted_message = content.split("_")
     message_length = int(message_length_str)
+    logger.debug("read_from_file_and_decrypt(message_filename=%s,key_filename=%s): message_length → %s", message_filename, key_filename, message_length)
     block_size = int(block_size_str)
+    logger.debug("read_from_file_and_decrypt(message_filename=%s,key_filename=%s): block_size → %s", message_filename, key_filename, block_size)
 
     if key_size < block_size * 8:
         sys.exit(
@@ -106,18 +117,24 @@ def read_from_file_and_decrypt(message_filename: str, key_filename: str) -> str:
         )
 
     encrypted_blocks = []
+    logger.debug("read_from_file_and_decrypt(message_filename=%s,key_filename=%s): encrypted_blocks → %s", message_filename, key_filename, encrypted_blocks)
     for block in encrypted_message.split(","):
         encrypted_blocks.append(int(block))
 
+    logger.debug("<<< Exiting read_from_file_and_decrypt(message_filename=%s,key_filename=%s)", message_filename, key_filename)
     return decrypt_message(encrypted_blocks, message_length, (n, d), block_size)
 
 
 def main() -> None:
+    logger.debug(">>> Entering main()")
     filename = "encrypted_file.txt"
+    logger.debug("main(): filename → %s", filename)
     response = input(r"Encrypt\Decrypt [e\d]: ")
 
+    logger.debug("main(): response → %s", response)
     if response.lower().startswith("e"):
         mode = "encrypt"
+        logger.debug("main(): mode → %s", mode)
     elif response.lower().startswith("d"):
         mode = "decrypt"
 
@@ -126,23 +143,29 @@ def main() -> None:
             rkg.make_key_files("rsa", 1024)
 
         message = input("\nEnter message: ")
+        logger.debug("main(): message → %s", message)
         pubkey_filename = "rsa_pubkey.txt"
+        logger.debug("main(): pubkey_filename → %s", pubkey_filename)
         print(f"Encrypting and writing to {filename}...")
         encrypted_text = encrypt_and_write_to_file(filename, pubkey_filename, message)
+        logger.debug("main(): encrypted_text → %s", encrypted_text)
 
         print("\nEncrypted text:")
         print(encrypted_text)
 
     elif mode == "decrypt":
         privkey_filename = "rsa_privkey.txt"
+        logger.debug("main(): privkey_filename → %s", privkey_filename)
         print(f"Reading from {filename} and decrypting...")
         decrypted_text = read_from_file_and_decrypt(filename, privkey_filename)
+        logger.debug("main(): decrypted_text → %s", decrypted_text)
         print("writing decryption to rsa_decryption.txt...")
         with open("rsa_decryption.txt", "w") as dec:
             dec.write(decrypted_text)
 
         print("\nDecryption:")
         print(decrypted_text)
+        logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

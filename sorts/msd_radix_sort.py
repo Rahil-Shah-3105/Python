@@ -6,6 +6,8 @@ https://en.wikipedia.org/wiki/Radix_sort
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def msd_radix_sort(list_of_ints: list[int]) -> list[int]:
@@ -27,13 +29,17 @@ def msd_radix_sort(list_of_ints: list[int]) -> list[int]:
         ...
     ValueError: All numbers must be positive
     """
+    logger.debug(">>> Entering msd_radix_sort(list_of_ints=%s)", list_of_ints)
     if not list_of_ints:
+        logger.error("Exception in msd_radix_sort(list_of_ints=%s)", list_of_ints, exc_info=True)
         return []
 
     if min(list_of_ints) < 0:
         raise ValueError("All numbers must be positive")
 
     most_bits = max(len(bin(x)[2:]) for x in list_of_ints)
+    logger.debug("msd_radix_sort(list_of_ints=%s): most_bits → %s", list_of_ints, most_bits)
+    logger.debug("<<< Exiting msd_radix_sort(list_of_ints=%s)", list_of_ints)
     return _msd_radix_sort(list_of_ints, most_bits)
 
 
@@ -50,11 +56,14 @@ def _msd_radix_sort(list_of_ints: list[int], bit_position: int) -> list[int]:
     >>> _msd_radix_sort([10, 4, 12], 2)
     [4, 12, 10]
     """
+    logger.debug(">>> Entering _msd_radix_sort(list_of_ints=%s,bit_position=%s)", list_of_ints, bit_position)
     if bit_position == 0 or len(list_of_ints) in [0, 1]:
         return list_of_ints
 
     zeros = []
+    logger.debug("_msd_radix_sort(list_of_ints=%s,bit_position=%s): zeros → %s", list_of_ints, bit_position, zeros)
     ones = []
+    logger.debug("_msd_radix_sort(list_of_ints=%s,bit_position=%s): ones → %s", list_of_ints, bit_position, ones)
     # Split numbers based on bit at bit_position from the right
     for number in list_of_ints:
         if (number >> (bit_position - 1)) & 1:
@@ -70,8 +79,10 @@ def _msd_radix_sort(list_of_ints: list[int], bit_position: int) -> list[int]:
 
     # recombine lists
     res = zeros
+    logger.debug("_msd_radix_sort(list_of_ints=%s,bit_position=%s): res → %s", list_of_ints, bit_position, res)
     res.extend(ones)
 
+    logger.debug("<<< Exiting _msd_radix_sort(list_of_ints=%s,bit_position=%s)", list_of_ints, bit_position)
     return res
 
 
@@ -97,15 +108,19 @@ def msd_radix_sort_inplace(list_of_ints: list[int]):
         ...
     ValueError: All numbers must be positive
     """
+    logger.debug(">>> Entering msd_radix_sort_inplace(list_of_ints=%s)", list_of_ints)
 
     length = len(list_of_ints)
+    logger.debug("msd_radix_sort_inplace(list_of_ints=%s): length → %s", list_of_ints, length)
     if not list_of_ints or length == 1:
+        logger.debug("<<< Exiting msd_radix_sort_inplace(list_of_ints=%s)", list_of_ints)
         return
 
     if min(list_of_ints) < 0:
         raise ValueError("All numbers must be positive")
 
     most_bits = max(len(bin(x)[2:]) for x in list_of_ints)
+    logger.debug("msd_radix_sort_inplace(list_of_ints=%s): most_bits → %s", list_of_ints, most_bits)
     _msd_radix_sort_inplace(list_of_ints, most_bits, 0, length)
 
 

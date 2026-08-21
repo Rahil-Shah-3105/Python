@@ -6,6 +6,8 @@ https://stackoverflow.com/questions/42519/how-do-you-rotate-a-two-dimensional-ar
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def make_matrix(row_size: int = 4) -> list[list[int]]:
@@ -21,7 +23,10 @@ def make_matrix(row_size: int = 4) -> list[list[int]]:
     >>> make_matrix() == make_matrix(4)
     True
     """
+    logger.debug(">>> Entering make_matrix(row_size=%s)", row_size)
     row_size = abs(row_size) or 4
+    logger.debug("make_matrix(row_size=%s): row_size → %s", row_size, row_size)
+    logger.debug("<<< Exiting make_matrix(row_size=%s)", row_size)
     return [[1 + x + y * row_size for x in range(row_size)] for y in range(row_size)]
 
 
@@ -32,7 +37,9 @@ def rotate_90(matrix: list[list[int]]) -> list[list[int]]:
     >>> rotate_90(make_matrix()) == transpose(reverse_column(make_matrix()))
     True
     """
+    logger.debug(">>> Entering rotate_90(matrix=%s)", matrix)
 
+    logger.debug("<<< Exiting rotate_90(matrix=%s)", matrix)
     return reverse_row(transpose(matrix))
     # OR.. transpose(reverse_column(matrix))
 
@@ -44,7 +51,9 @@ def rotate_180(matrix: list[list[int]]) -> list[list[int]]:
     >>> rotate_180(make_matrix()) == reverse_column(reverse_row(make_matrix()))
     True
     """
+    logger.debug(">>> Entering rotate_180(matrix=%s)", matrix)
 
+    logger.debug("<<< Exiting rotate_180(matrix=%s)", matrix)
     return reverse_row(reverse_column(matrix))
     # OR.. reverse_column(reverse_row(matrix))
 
@@ -56,29 +65,39 @@ def rotate_270(matrix: list[list[int]]) -> list[list[int]]:
     >>> rotate_270(make_matrix()) == transpose(reverse_row(make_matrix()))
     True
     """
+    logger.debug(">>> Entering rotate_270(matrix=%s)", matrix)
 
+    logger.debug("<<< Exiting rotate_270(matrix=%s)", matrix)
     return reverse_column(transpose(matrix))
     # OR.. transpose(reverse_row(matrix))
 
 
 def transpose(matrix: list[list[int]]) -> list[list[int]]:
+    logger.debug(">>> Entering transpose(matrix=%s)", matrix)
     matrix[:] = [list(x) for x in zip(*matrix)]
+    logger.debug("<<< Exiting transpose(matrix=%s)", matrix)
     return matrix
 
 
 def reverse_row(matrix: list[list[int]]) -> list[list[int]]:
+    logger.debug(">>> Entering reverse_row(matrix=%s)", matrix)
     matrix[:] = matrix[::-1]
+    logger.debug("<<< Exiting reverse_row(matrix=%s)", matrix)
     return matrix
 
 
 def reverse_column(matrix: list[list[int]]) -> list[list[int]]:
+    logger.debug(">>> Entering reverse_column(matrix=%s)", matrix)
     matrix[:] = [x[::-1] for x in matrix]
+    logger.debug("<<< Exiting reverse_column(matrix=%s)", matrix)
     return matrix
 
 
 def print_matrix(matrix: list[list[int]]) -> None:
+    logger.debug(">>> Entering print_matrix(matrix=%s)", matrix)
     for i in matrix:
         print(*i)
+        logger.debug("<<< Exiting print_matrix(matrix=%s)", matrix)
 
 
 if __name__ == "__main__":

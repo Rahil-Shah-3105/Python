@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def excess_3_code(number: int) -> str:
     """
     Find excess-3 code of integer base 10.
@@ -15,9 +17,12 @@ def excess_3_code(number: int) -> str:
     >>> excess_3_code(120)
     '0b010001010011'
     """
+    logger.debug(">>> Entering excess_3_code(number=%s)", number)
     num = ""
+    logger.debug("excess_3_code(number=%s): num → %s", number, num)
     for digit in str(max(0, number)):
         num += str(bin(int(digit) + 3))[2:].zfill(4)
+    logger.debug("<<< Exiting excess_3_code(number=%s)", number)
     return "0b" + num
 
 

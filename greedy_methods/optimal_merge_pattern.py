@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This is a pure Python implementation of the greedy-merge-sort algorithm
 reference: https://www.geeksforgeeks.org/optimal-file-merge-patterns/
@@ -37,16 +39,20 @@ def optimal_merge_pattern(files: list) -> float:
     >>> optimal_merge_pattern([8, 8, 8, 8, 8])
     96
     """
+    logger.debug(">>> Entering optimal_merge_pattern(files=%s)", files)
     optimal_merge_cost = 0
+    logger.debug("optimal_merge_pattern(files=%s): optimal_merge_cost → %s", files, optimal_merge_cost)
     while len(files) > 1:
         temp = 0
         # Consider two files with minimum cost to be merged
         for _ in range(2):
             min_index = files.index(min(files))
+            logger.debug("optimal_merge_pattern(files=%s): min_index → %s", files, min_index)
             temp += files[min_index]
             files.pop(min_index)
         files.append(temp)
         optimal_merge_cost += temp
+    logger.debug("<<< Exiting optimal_merge_pattern(files=%s)", files)
     return optimal_merge_cost
 
 

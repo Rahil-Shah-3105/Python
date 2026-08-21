@@ -5,6 +5,8 @@ Note that this program works only when size of input is a power of 2.
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def comp_and_swap(array: list[int], index1: int, index2: int, direction: int) -> None:
@@ -32,10 +34,12 @@ def comp_and_swap(array: list[int], index1: int, index2: int, direction: int) ->
     >>> arr
     [12, 42, -21, 1]
     """
+    logger.debug(">>> Entering comp_and_swap(array=%s,index1=%s,index2=%s,direction=%s)", array, index1, index2, direction)
     if (direction == 1 and array[index1] > array[index2]) or (
         direction == 0 and array[index1] < array[index2]
     ):
         array[index1], array[index2] = array[index2], array[index1]
+        logger.debug("<<< Exiting comp_and_swap(array=%s,index1=%s,index2=%s,direction=%s)", array, index1, index2, direction)
 
 
 def bitonic_merge(array: list[int], low: int, length: int, direction: int) -> None:
@@ -54,12 +58,15 @@ def bitonic_merge(array: list[int], low: int, length: int, direction: int) -> No
     >>> arr
     [42, 12, 1, -21]
     """
+    logger.debug(">>> Entering bitonic_merge(array=%s,low=%s,length=%s,direction=%s)", array, low, length, direction)
     if length > 1:
         middle = int(length / 2)
+        logger.debug("bitonic_merge(array=%s,low=%s,length=%s,direction=%s): middle → %s", array, low, length, direction, middle)
         for i in range(low, low + middle):
             comp_and_swap(array, i, i + middle, direction)
         bitonic_merge(array, low, middle, direction)
         bitonic_merge(array, low + middle, middle, direction)
+        logger.debug("<<< Exiting bitonic_merge(array=%s,low=%s,length=%s,direction=%s)", array, low, length, direction)
 
 
 def bitonic_sort(array: list[int], low: int, length: int, direction: int) -> None:
@@ -77,11 +84,14 @@ def bitonic_sort(array: list[int], low: int, length: int, direction: int) -> Non
     >>> arr
     [145, 92, 34, 12, 0, -23, -121, -167]
     """
+    logger.debug(">>> Entering bitonic_sort(array=%s,low=%s,length=%s,direction=%s)", array, low, length, direction)
     if length > 1:
         middle = int(length / 2)
+        logger.debug("bitonic_sort(array=%s,low=%s,length=%s,direction=%s): middle → %s", array, low, length, direction, middle)
         bitonic_sort(array, low, middle, 1)
         bitonic_sort(array, low + middle, middle, 0)
         bitonic_merge(array, low, length, direction)
+        logger.debug("<<< Exiting bitonic_sort(array=%s,low=%s,length=%s,direction=%s)", array, low, length, direction)
 
 
 if __name__ == "__main__":

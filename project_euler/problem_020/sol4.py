@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Problem 20: https://projecteuler.net/problem=20
 
@@ -27,14 +29,18 @@ def solution(num: int = 100) -> int:
     >>> solution(1)
     1
     """
+    logger.debug(">>> Entering solution(num=%s)", num)
     fact = 1
+    logger.debug("solution(num=%s): fact → %s", num, fact)
     result = 0
+    logger.debug("solution(num=%s): result → %s", num, result)
     for i in range(1, num + 1):
         fact *= i
 
     for j in str(fact):
         result += int(j)
 
+    logger.debug("<<< Exiting solution(num=%s)", num)
     return result
 
 

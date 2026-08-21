@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 wiki: https://en.wikipedia.org/wiki/Pangram
 """
@@ -78,12 +80,15 @@ def benchmark() -> None:
     """
     Benchmark code comparing different version.
     """
+    logger.debug(">>> Entering benchmark()")
     from timeit import timeit
 
     setup = "from __main__ import is_pangram, is_pangram_faster, is_pangram_fastest"
+    logger.debug("benchmark(): setup → %s", setup)
     print(timeit("is_pangram()", setup=setup))
     print(timeit("is_pangram_faster()", setup=setup))
     print(timeit("is_pangram_fastest()", setup=setup))
+    logger.debug("<<< Exiting benchmark()")
     # 5.348480500048026, 2.6477354579837993, 1.8470395830227062
     # 5.036091582966037, 2.644472333951853,  1.8869528750656173
 

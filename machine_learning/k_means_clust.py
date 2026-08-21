@@ -53,6 +53,8 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from sklearn.metrics import pairwise_distances
+import logging
+logger = logging.getLogger(__name__)
 
 warnings.filterwarnings("ignore")
 
@@ -61,55 +63,74 @@ TAG = "K-MEANS-CLUST/ "
 
 def get_initial_centroids(data, k, seed=None):
     """Randomly choose k data points as initial centroids"""
+    logger.debug(">>> Entering get_initial_centroids(data=%s,k=%s,seed=%s)", data, k, seed)
     # useful for obtaining consistent results
     rng = np.random.default_rng(seed)
+    logger.debug("get_initial_centroids(data=%s,k=%s,seed=%s): rng → %s", data, k, seed, rng)
     n = data.shape[0]  # number of data points
 
     # Pick K indices from range [0, N).
     rand_indices = rng.integers(0, n, k)
+    logger.debug("get_initial_centroids(data=%s,k=%s,seed=%s): rand_indices → %s", data, k, seed, rand_indices)
 
     # Keep centroids as dense format, as many entries will be nonzero due to averaging.
     # As long as at least one document in a cluster contains a word,
     # it will carry a nonzero weight in the TF-IDF vector of the centroid.
     centroids = data[rand_indices, :]
+    logger.debug("get_initial_centroids(data=%s,k=%s,seed=%s): centroids → %s", data, k, seed, centroids)
 
+    logger.debug("<<< Exiting get_initial_centroids(data=%s,k=%s,seed=%s)", data, k, seed)
     return centroids
 
 
 def centroid_pairwise_dist(x, centroids):
+    logger.debug(">>> Entering centroid_pairwise_dist(x=%s,centroids=%s)", x, centroids)
+    logger.debug("<<< Exiting centroid_pairwise_dist(x=%s,centroids=%s)", x, centroids)
     return pairwise_distances(x, centroids, metric="euclidean")
 
 
 def assign_clusters(data, centroids):
+    logger.debug(">>> Entering assign_clusters(data=%s,centroids=%s)", data, centroids)
     # Compute distances between each data point and the set of centroids:
     # Fill in the blank (RHS only)
     distances_from_centroids = centroid_pairwise_dist(data, centroids)
+    logger.debug("assign_clusters(data=%s,centroids=%s): distances_from_centroids → %s", data, centroids, distances_from_centroids)
 
     # Compute cluster assignments for each data point:
     # Fill in the blank (RHS only)
     cluster_assignment = np.argmin(distances_from_centroids, axis=1)
+    logger.debug("assign_clusters(data=%s,centroids=%s): cluster_assignment → %s", data, centroids, cluster_assignment)
 
+    logger.debug("<<< Exiting assign_clusters(data=%s,centroids=%s)", data, centroids)
     return cluster_assignment
 
 
 def revise_centroids(data, k, cluster_assignment):
+    logger.debug(">>> Entering revise_centroids(data=%s,k=%s,cluster_assignment=%s)", data, k, cluster_assignment)
     new_centroids = []
+    logger.debug("revise_centroids(data=%s,k=%s,cluster_assignment=%s): new_centroids → %s", data, k, cluster_assignment, new_centroids)
     for i in range(k):
         # Select all data points that belong to cluster i. Fill in the blank (RHS only)
         member_data_points = data[cluster_assignment == i]
+        logger.debug("revise_centroids(data=%s,k=%s,cluster_assignment=%s): member_data_points → %s", data, k, cluster_assignment, member_data_points)
         # Compute the mean of the data points. Fill in the blank (RHS only)
         centroid = member_data_points.mean(axis=0)
+        logger.debug("revise_centroids(data=%s,k=%s,cluster_assignment=%s): centroid → %s", data, k, cluster_assignment, centroid)
         new_centroids.append(centroid)
     new_centroids = np.array(new_centroids)
 
+    logger.debug("<<< Exiting revise_centroids(data=%s,k=%s,cluster_assignment=%s)", data, k, cluster_assignment)
     return new_centroids
 
 
 def compute_heterogeneity(data, k, centroids, cluster_assignment):
+    logger.debug(">>> Entering compute_heterogeneity(data=%s,k=%s,centroids=%s,cluster_assignment=%s)", data, k, centroids, cluster_assignment)
     heterogeneity = 0.0
+    logger.debug("compute_heterogeneity(data=%s,k=%s,centroids=%s,cluster_assignment=%s): heterogeneity → %s", data, k, centroids, cluster_assignment, heterogeneity)
     for i in range(k):
         # Select all data points that belong to cluster i. Fill in the blank (RHS only)
         member_data_points = data[cluster_assignment == i, :]
+        logger.debug("compute_heterogeneity(data=%s,k=%s,centroids=%s,cluster_assignment=%s): member_data_points → %s", data, k, centroids, cluster_assignment, member_data_points)
 
         if member_data_points.shape[0] > 0:  # check if i-th cluster is non-empty
             # Compute distances from centroid to data points (RHS only)
@@ -117,12 +138,15 @@ def compute_heterogeneity(data, k, centroids, cluster_assignment):
                 member_data_points, [centroids[i]], metric="euclidean"
             )
             squared_distances = distances**2
+            logger.debug("compute_heterogeneity(data=%s,k=%s,centroids=%s,cluster_assignment=%s): squared_distances → %s", data, k, centroids, cluster_assignment, squared_distances)
             heterogeneity += np.sum(squared_distances)
 
+    logger.debug("<<< Exiting compute_heterogeneity(data=%s,k=%s,centroids=%s,cluster_assignment=%s)", data, k, centroids, cluster_assignment)
     return heterogeneity
 
 
 def plot_heterogeneity(heterogeneity, k):
+    logger.debug(">>> Entering plot_heterogeneity(heterogeneity=%s,k=%s)", heterogeneity, k)
     plt.figure(figsize=(7, 4))
     plt.plot(heterogeneity, linewidth=4)
     plt.xlabel("# Iterations")
@@ -130,19 +154,23 @@ def plot_heterogeneity(heterogeneity, k):
     plt.title(f"Heterogeneity of clustering over time, K={k:d}")
     plt.rcParams.update({"font.size": 16})
     plt.show()
+    logger.debug("<<< Exiting plot_heterogeneity(heterogeneity=%s,k=%s)", heterogeneity, k)
 
 
 def plot_kmeans(data, centroids, cluster_assignment):
+    logger.debug(">>> Entering plot_kmeans(data=%s,centroids=%s,cluster_assignment=%s)", data, centroids, cluster_assignment)
     ax = plt.axes(projection="3d")
     ax.scatter(data[:, 0], data[:, 1], data[:, 2], c=cluster_assignment, cmap="viridis")
     ax.scatter(
         centroids[:, 0], centroids[:, 1], centroids[:, 2], c="red", s=100, marker="x"
     )
     ax.set_xlabel("X")
+    logger.debug("plot_kmeans(data=%s,centroids=%s,cluster_assignment=%s): ax → %s", data, centroids, cluster_assignment, ax)
     ax.set_ylabel("Y")
     ax.set_zlabel("Z")
     ax.set_title("3D K-Means Clustering Visualization")
     plt.show()
+    logger.debug("<<< Exiting plot_kmeans(data=%s,centroids=%s,cluster_assignment=%s)", data, centroids, cluster_assignment)
 
 
 def kmeans(

@@ -3,6 +3,8 @@ from __future__ import annotations
 import collections
 import pprint
 from pathlib import Path
+import logging
+logger = logging.getLogger(__name__)
 
 
 def signature(word: str) -> str:
@@ -16,7 +18,10 @@ def signature(word: str) -> str:
     >>> signature("finaltest")
     'a1e1f1i1l1n1s1t2'
     """
+    logger.debug(">>> Entering signature(word=%s)", word)
     frequencies = collections.Counter(word)
+    logger.debug("signature(word=%s): frequencies → %s", word, frequencies)
+    logger.debug("<<< Exiting signature(word=%s)", word)
     return "".join(
         f"{char}{frequency}" for char, frequency in sorted(frequencies.items())
     )
@@ -33,6 +38,8 @@ def anagram(my_word: str) -> list[str]:
     >>> anagram('final')
     ['final']
     """
+    logger.debug(">>> Entering anagram(my_word=%s)", my_word)
+    logger.debug("<<< Exiting anagram(my_word=%s)", my_word)
     return word_by_signature[signature(my_word)]
 
 

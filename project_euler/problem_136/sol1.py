@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 136: https://projecteuler.net/problem=136
 
@@ -42,7 +44,9 @@ def solution(n_limit: int = 50 * 10**6) -> int:
     >>> solution(110)
     27
     """
+    logger.debug(">>> Entering solution(n_limit=%s)", n_limit)
     n_sol = [0] * n_limit
+    logger.debug("solution(n_limit=%s): n_sol → %s", n_limit, n_sol)
 
     for delta in range(1, (n_limit + 1) // 4 + 1):
         for y in range(4 * delta - 1, delta, -1):
