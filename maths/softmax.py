@@ -11,6 +11,8 @@ https://en.wikipedia.org/wiki/Softmax_function
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def softmax(vector):
@@ -38,17 +40,22 @@ def softmax(vector):
     >>> softmax([0])
     array([1.])
     """
+    logger.debug(">>> Entering softmax(vector=%s)", vector)
 
     # Calculate e^x for each x in your vector where e is Euler's
     # number (approximately 2.718)
     exponent_vector = np.exp(vector)
+    logger.debug("softmax(vector=%s): exponent_vector → %s", vector, exponent_vector)
 
     # Add up the all the exponentials
     sum_of_exponents = np.sum(exponent_vector)
+    logger.debug("softmax(vector=%s): sum_of_exponents → %s", vector, sum_of_exponents)
 
     # Divide every exponent by the sum of all exponents
     softmax_vector = exponent_vector / sum_of_exponents
+    logger.debug("softmax(vector=%s): softmax_vector → %s", vector, softmax_vector)
 
+    logger.debug("<<< Exiting softmax(vector=%s)", vector)
     return softmax_vector
 
 

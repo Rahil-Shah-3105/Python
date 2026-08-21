@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 An IMPLY Gate is a logic gate in boolean algebra which results to 1 if
 either input 1 is 0, or if input 1 is 1, then the output is 1 only if input 2 is 1.
@@ -30,6 +32,8 @@ def imply_gate(input_1: int, input_2: int) -> int:
     >>> imply_gate(1, 1)
     1
     """
+    logger.debug(">>> Entering imply_gate(input_1=%s,input_2=%s)", input_1, input_2)
+    logger.debug("<<< Exiting imply_gate(input_1=%s,input_2=%s)", input_1, input_2)
     return int(input_1 == 0 or input_2 == 1)
 
 
@@ -76,12 +80,16 @@ def recursive_imply_list(input_list: list[int]) -> int:
     >>> recursive_imply_list([1, 1, 1])
     1
     """
+    logger.debug(">>> Entering recursive_imply_list(input_list=%s)", input_list)
     if len(input_list) < 2:
         raise ValueError("Input list must contain at least two elements")
     first_implication = imply_gate(input_list[0], input_list[1])
+    logger.debug("recursive_imply_list(input_list=%s): first_implication → %s", input_list, first_implication)
     if len(input_list) == 2:
         return first_implication
     new_list = [first_implication, *input_list[2:]]
+    logger.debug("recursive_imply_list(input_list=%s): new_list → %s", input_list, new_list)
+    logger.debug("<<< Exiting recursive_imply_list(input_list=%s)", input_list)
     return recursive_imply_list(new_list)
 
 

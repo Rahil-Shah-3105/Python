@@ -1,20 +1,29 @@
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def fx(x: float, a: float) -> float:
+    logger.debug(">>> Entering fx(x=%s,a=%s)", x, a)
+    logger.debug("<<< Exiting fx(x=%s,a=%s)", x, a)
     return math.pow(x, 2) - a
 
 
 def fx_derivative(x: float) -> float:
+    logger.debug(">>> Entering fx_derivative(x=%s)", x)
+    logger.debug("<<< Exiting fx_derivative(x=%s)", x)
     return 2 * x
 
 
 def get_initial_point(a: float) -> float:
+    logger.debug(">>> Entering get_initial_point(a=%s)", a)
     start = 2.0
+    logger.debug("get_initial_point(a=%s): start → %s", a, start)
 
     while start <= a:
         start = math.pow(start, 2)
 
+    logger.debug("<<< Exiting get_initial_point(a=%s)", a)
     return start
 
 

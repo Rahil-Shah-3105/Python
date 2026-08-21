@@ -1,6 +1,8 @@
 __author__ = "Tobias Carryer"
 
 from time import time
+import logging
+logger = logging.getLogger(__name__)
 
 
 class LinearCongruentialGenerator:
@@ -21,10 +23,16 @@ class LinearCongruentialGenerator:
         modulo is the largest number that can be generated (exclusive). The most
         efficient values are powers of 2. 2^32 is a common value.
         """
+        logger.debug(">>> Entering __init__(multiplier=%s,increment=%s,modulo=%s,seed=%s)", multiplier, increment, modulo, seed)
         self.multiplier = multiplier
+        logger.debug("__init__(self=%s,multiplier=%s,increment=%s,modulo=%s,seed=%s): self.multiplier → %s", self, multiplier, increment, modulo, seed, self.multiplier)
+        logger.debug("<<< Exiting __init__(multiplier=%s,increment=%s,modulo=%s,seed=%s)", multiplier, increment, modulo, seed)
         self.increment = increment
+        logger.debug("__init__(self=%s,multiplier=%s,increment=%s,modulo=%s,seed=%s): self.increment → %s", self, multiplier, increment, modulo, seed, self.increment)
         self.modulo = modulo
+        logger.debug("__init__(self=%s,multiplier=%s,increment=%s,modulo=%s,seed=%s): self.modulo → %s", self, multiplier, increment, modulo, seed, self.modulo)
         self.seed = seed
+        logger.debug("__init__(self=%s,multiplier=%s,increment=%s,modulo=%s,seed=%s): self.seed → %s", self, multiplier, increment, modulo, seed, self.seed)
 
     def next_number(self):
         """
@@ -32,7 +40,10 @@ class LinearCongruentialGenerator:
         The largest number that can be generated is modulo-1. modulo is set in the
         constructor.
         """
+        logger.debug(">>> Entering next_number()")
         self.seed = (self.multiplier * self.seed + self.increment) % self.modulo
+        logger.debug("next_number(): self.seed → %s", self.seed)
+        logger.debug("<<< Exiting next_number()")
         return self.seed
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 164: https://projecteuler.net/problem=164
 
@@ -57,7 +59,9 @@ def solution(n_digits: int = 20) -> int:
     >>> solution(10)
     21838806
     """
+    logger.debug(">>> Entering solution(n_digits=%s)", n_digits)
     cache: dict[str, int] = {}
+    logger.debug("<<< Exiting solution(n_digits=%s)", n_digits)
     return solve(digit=n_digits, prev1=0, prev2=0, sum_max=9, first=True, cache=cache)
 
 

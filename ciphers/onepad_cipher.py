@@ -1,4 +1,6 @@
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Onepad:
@@ -25,14 +27,21 @@ class Onepad:
         ...
         TypeError: 'float' object is not iterable
         """
+        logger.debug(">>> Entering encrypt(text=%s)", text)
+        logger.warning("encrypt(text=%s): key → %s", text, key)
         plain = [ord(i) for i in text]
+        logger.debug("encrypt(text=%s): plain → %s", text, plain)
         key = []
+        logger.debug("encrypt(text=%s): key → %s", text, key)
         cipher = []
+        logger.debug("encrypt(text=%s): cipher → %s", text, cipher)
         for i in plain:
             k = random.randint(1, 300)
             c = (i + k) * k
+            logger.debug("encrypt(text=%s): c → %s", text, c)
             cipher.append(c)
             key.append(k)
+        logger.debug("<<< Exiting encrypt(text=%s)", text)
         return cipher, key
 
     @staticmethod
@@ -51,10 +60,14 @@ class Onepad:
         >>> Onepad().decrypt([9729, 114756, 4653, 31309, 10492], [69, 292, 33, 131, 61])
         'Hello'
         """
+        logger.debug(">>> Entering decrypt(cipher=%s,key=%s)", cipher, key)
         plain = []
+        logger.debug("decrypt(cipher=%s,key=%s): plain → %s", cipher, key, plain)
         for i in range(len(key)):
             p = int((cipher[i] - (key[i]) ** 2) / key[i])
+            logger.debug("decrypt(cipher=%s,key=%s): p → %s", cipher, key, p)
             plain.append(chr(p))
+        logger.debug("<<< Exiting decrypt(cipher=%s,key=%s)", cipher, key)
         return "".join(plain)
 
 

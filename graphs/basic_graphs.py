@@ -1,7 +1,11 @@
 from collections import deque
+import logging
+logger = logging.getLogger(__name__)
 
 
 def _input(message):
+    logger.debug(">>> Entering _input(message=%s)", message)
+    logger.debug("<<< Exiting _input(message=%s)", message)
     return input(message).strip().split(" ")
 
 
@@ -85,10 +89,12 @@ def dfs(g, s):
     5
     3
     """
+    logger.debug(">>> Entering dfs(g=%s,s=%s)", g, s)
     vis, _s = {s}, [s]
     print(s)
     while _s:
         flag = 0
+        logger.debug("dfs(g=%s,s=%s): flag → %s", g, s, flag)
         for i in g[_s[-1]]:
             if i not in vis:
                 _s.append(i)
@@ -98,6 +104,7 @@ def dfs(g, s):
                 break
         if not flag:
             _s.pop()
+            logger.debug("<<< Exiting dfs(g=%s,s=%s)", g, s)
 
 
 """
@@ -123,15 +130,18 @@ def bfs(g, s):
     7
     8
     """
+    logger.debug(">>> Entering bfs(g=%s,s=%s)", g, s)
     vis, q = {s}, deque([s])
     print(s)
     while q:
         u = q.popleft()
+        logger.debug("bfs(g=%s,s=%s): u → %s", g, s, u)
         for v in g[u]:
             if v not in vis:
                 vis.add(v)
                 q.append(v)
                 print(v)
+                logger.debug("<<< Exiting bfs(g=%s,s=%s)", g, s)
 
 
 """
@@ -160,11 +170,13 @@ def dijk(g, s):
     20
     20
     """
+    logger.debug(">>> Entering dijk(g=%s,s=%s)", g, s)
     dist, known, path = {s: 0}, set(), {s: 0}
     while True:
         if len(known) == len(g) - 1:
             break
         mini = 100000
+        logger.debug("dijk(g=%s,s=%s): mini → %s", g, s, mini)
         for key, value in dist:
             if key not in known and value < mini:
                 mini = value
@@ -177,6 +189,7 @@ def dijk(g, s):
     for key, value in dist.items():
         if key != s:
             print(value)
+            logger.debug("<<< Exiting dijk(g=%s,s=%s)", g, s)
 
 
 """
@@ -187,10 +200,13 @@ def dijk(g, s):
 
 
 def topo(g, ind=None, q=None):
+    logger.debug(">>> Entering topo(g=%s,ind=%s,q=%s)", g, ind, q)
     if q is None:
         q = [1]
+        logger.debug("topo(g=%s,ind=%s,q=%s): q → %s", g, ind, q, q)
     if ind is None:
         ind = [0] * (len(g) + 1)  # SInce oth Index is ignored
+        logger.debug("topo(g=%s,ind=%s,q=%s): ind → %s", g, ind, q, ind)
         for u in g:
             for v in g[u]:
                 ind[v] += 1
@@ -199,6 +215,7 @@ def topo(g, ind=None, q=None):
             if ind[i] == 0:
                 q.append(i)
     if len(q) == 0:
+        logger.debug("<<< Exiting topo(g=%s,ind=%s,q=%s)", g, ind, q)
         return
     v = q.popleft()
     print(v)
@@ -236,10 +253,13 @@ def adjm():
     ([(0, 1, 0, 1), (1, 0, 1, 0), (0, 1, 0, 1), (1, 0, 1, 0)], 4)
     >>> sys.stdin = original_input  # Restore original stdin
     """
+    logger.debug(">>> Entering adjm()")
     n = int(input().strip())
+    logger.debug("adjm(): n → %s", n)
     a = []
     for _ in range(n):
         a.append(tuple(map(int, input().strip().split())))
+    logger.debug("<<< Exiting adjm()")
     return a, n
 
 
@@ -257,9 +277,12 @@ def adjm():
 
 
 def floy(a_and_n):
+    logger.debug(">>> Entering floy(a_and_n=%s)", a_and_n)
     (a, n) = a_and_n
     dist = list(a)
+    logger.debug("floy(a_and_n=%s): dist → %s", a_and_n, dist)
     path = [[0] * n for i in range(n)]
+    logger.debug("floy(a_and_n=%s): path → %s", a_and_n, path)
     for k in range(n):
         for i in range(n):
             for j in range(n):
@@ -267,6 +290,7 @@ def floy(a_and_n):
                     dist[i][j] = dist[i][k] + dist[k][j]
                     path[i][k] = k
     print(dist)
+    logger.debug("<<< Exiting floy(a_and_n=%s)", a_and_n)
 
 
 """
@@ -282,11 +306,13 @@ def floy(a_and_n):
 
 
 def prim(g, s):
+    logger.debug(">>> Entering prim(g=%s,s=%s)", g, s)
     dist, known, path = {s: 0}, set(), {s: 0}
     while True:
         if len(known) == len(g) - 1:
             break
         mini = 100000
+        logger.debug("prim(g=%s,s=%s): mini → %s", g, s, mini)
         for key, value in dist.items():
             if key not in known and value < mini:
                 mini = value
@@ -296,6 +322,7 @@ def prim(g, s):
             if v[0] not in known and v[1] < dist.get(v[0], 100000):
                 dist[v[0]] = v[1]
                 path[v[0]] = u
+    logger.debug("<<< Exiting prim(g=%s,s=%s)", g, s)
     return dist
 
 
@@ -330,10 +357,13 @@ def edglist():
     ([(1, 2), (2, 3), (3, 4)], 4)
     >>> sys.stdin = original_input  # Restore original stdin
     """
+    logger.debug(">>> Entering edglist()")
     n, m = tuple(map(int, input().split(" ")))
     edges = []
+    logger.debug("edglist(): edges → %s", edges)
     for _ in range(m):
         edges.append(tuple(map(int, input().split(" "))))
+    logger.debug("<<< Exiting edglist()")
     return edges, n
 
 
@@ -351,14 +381,17 @@ def krusk(e_and_n):
     """
     Sort edges on the basis of distance
     """
+    logger.debug(">>> Entering krusk(e_and_n=%s)", e_and_n)
     (e, n) = e_and_n
     e.sort(reverse=True, key=lambda x: x[2])
     s = [{i} for i in range(1, n + 1)]
+    logger.debug("krusk(e_and_n=%s): s → %s", e_and_n, s)
     while True:
         if len(s) == 1:
             break
         print(s)
         x = e.pop()
+        logger.debug("krusk(e_and_n=%s): x → %s", e_and_n, x)
         for i in range(len(s)):
             if x[0] in s[i]:
                 break
@@ -368,6 +401,7 @@ def krusk(e_and_n):
                     break
                 s[j].update(s[i])
                 s.pop(i)
+                logger.debug("<<< Exiting krusk(e_and_n=%s)", e_and_n)
                 break
 
 
@@ -402,8 +436,11 @@ def find_isolated_nodes(graph):
     >>> find_isolated_nodes(graph5)
     []
     """
+    logger.debug(">>> Entering find_isolated_nodes(graph=%s)", graph)
     isolated = []
+    logger.debug("find_isolated_nodes(graph=%s): isolated → %s", graph, isolated)
     for node in graph:
         if not graph[node]:
             isolated.append(node)
+    logger.debug("<<< Exiting find_isolated_nodes(graph=%s)", graph)
     return isolated

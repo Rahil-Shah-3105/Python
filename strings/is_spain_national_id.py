@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 NUMBERS_PLUS_LETTER = "Input must be a string of 8 numbers plus letter"
 LOOKUP_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE"
 
@@ -46,24 +48,30 @@ def is_spain_national_id(spanish_id: str) -> bool:
         ...
     TypeError: Expected string as input, found int
     """
+    logger.debug(">>> Entering is_spain_national_id(spanish_id=%s)", spanish_id)
 
     if not isinstance(spanish_id, str):
         msg = f"Expected string as input, found {type(spanish_id).__name__}"
+        logger.debug("is_spain_national_id(spanish_id=%s): msg → %s", spanish_id, msg)
         raise TypeError(msg)
 
     spanish_id_clean = spanish_id.replace("-", "").upper()
+    logger.debug("is_spain_national_id(spanish_id=%s): spanish_id_clean → %s", spanish_id, spanish_id_clean)
     if len(spanish_id_clean) != 9:
         raise ValueError(NUMBERS_PLUS_LETTER)
 
     try:
         number = int(spanish_id_clean[0:8])
+        logger.debug("is_spain_national_id(spanish_id=%s): number → %s", spanish_id, number)
         letter = spanish_id_clean[8]
     except ValueError as ex:
+        logger.error("Exception in is_spain_national_id(spanish_id=%s): %s", spanish_id, str(ex), exc_info=True)
         raise ValueError(NUMBERS_PLUS_LETTER) from ex
 
     if letter.isdigit():
         raise ValueError(NUMBERS_PLUS_LETTER)
 
+    logger.debug("<<< Exiting is_spain_national_id(spanish_id=%s)", spanish_id)
     return letter == LOOKUP_LETTERS[number % 23]
 
 

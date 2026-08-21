@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Arithmetic mean
 Reference: https://en.wikipedia.org/wiki/Arithmetic_mean
@@ -26,6 +28,7 @@ def is_arithmetic_series(series: list) -> bool:
         ...
     ValueError: Input list must be a non empty list
     """
+    logger.debug(">>> Entering is_arithmetic_series(series=%s)", series)
     if not isinstance(series, list):
         raise ValueError("Input series is not valid, valid series - [2, 4, 6]")
     if len(series) == 0:
@@ -33,9 +36,11 @@ def is_arithmetic_series(series: list) -> bool:
     if len(series) == 1:
         return True
     common_diff = series[1] - series[0]
+    logger.debug("is_arithmetic_series(series=%s): common_diff → %s", series, common_diff)
     for index in range(len(series) - 1):
         if series[index + 1] - series[index] != common_diff:
             return False
+    logger.debug("<<< Exiting is_arithmetic_series(series=%s)", series)
     return True
 
 
@@ -61,13 +66,16 @@ def arithmetic_mean(series: list) -> float:
     ValueError: Input list must be a non empty list
 
     """
+    logger.debug(">>> Entering arithmetic_mean(series=%s)", series)
     if not isinstance(series, list):
         raise ValueError("Input series is not valid, valid series - [2, 4, 6]")
     if len(series) == 0:
         raise ValueError("Input list must be a non empty list")
     answer = 0
+    logger.debug("arithmetic_mean(series=%s): answer → %s", series, answer)
     for val in series:
         answer += val
+    logger.debug("<<< Exiting arithmetic_mean(series=%s)", series)
     return answer / len(series)
 
 

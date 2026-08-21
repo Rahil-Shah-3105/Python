@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Ordered fractions
 Problem 71
@@ -31,16 +33,21 @@ def solution(numerator: int = 3, denominator: int = 7, limit: int = 1000000) -> 
     >>> solution(6, 7, 60)
     47
     """
+    logger.debug(">>> Entering solution(numerator=%s,denominator=%s,limit=%s)", numerator, denominator, limit)
     max_numerator = 0
+    logger.debug("solution(numerator=%s,denominator=%s,limit=%s): max_numerator → %s", numerator, denominator, limit, max_numerator)
     max_denominator = 1
+    logger.debug("solution(numerator=%s,denominator=%s,limit=%s): max_denominator → %s", numerator, denominator, limit, max_denominator)
 
     for current_denominator in range(1, limit + 1):
         current_numerator = current_denominator * numerator // denominator
+        logger.debug("solution(numerator=%s,denominator=%s,limit=%s): current_numerator → %s", numerator, denominator, limit, current_numerator)
         if current_denominator % denominator == 0:
             current_numerator -= 1
         if current_numerator * max_denominator > current_denominator * max_numerator:
             max_numerator = current_numerator
             max_denominator = current_denominator
+    logger.debug("<<< Exiting solution(numerator=%s,denominator=%s,limit=%s)", numerator, denominator, limit)
     return max_numerator
 
 

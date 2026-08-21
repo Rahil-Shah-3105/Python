@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 from .hash_table import HashTable
+import logging
+logger = logging.getLogger(__name__)
 
 
 class QuadraticProbing(HashTable):
@@ -10,6 +12,8 @@ class QuadraticProbing(HashTable):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        logger.debug(">>> Entering __init__()")
+        logger.debug("<<< Exiting __init__()")
 
     def _collision_resolution(self, key, data=None):  # noqa: ARG002
         """
@@ -60,9 +64,11 @@ class QuadraticProbing(HashTable):
         >>> qp.keys()
         {4: 999, 1: 111}
         """
+        logger.debug(">>> Entering _collision_resolution(key=%s,data=%s)", key, data)
 
         i = 1
         new_key = self.hash_function(key + i * i)
+        logger.debug("_collision_resolution(self=%s,key=%s,data=%s): new_key → %s", self, key, data, new_key)
 
         while self.values[new_key] is not None and self.values[new_key] != key:
             i += 1
@@ -75,6 +81,7 @@ class QuadraticProbing(HashTable):
             if new_key is None:
                 break
 
+        logger.debug("<<< Exiting _collision_resolution(key=%s,data=%s)", key, data)
         return new_key
 
 

@@ -27,6 +27,8 @@ The bruteforce of this solution will be about 1 sec.
 
 import math
 from itertools import permutations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -53,6 +55,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(67483)
     False
     """
+    logger.debug(">>> Entering is_prime(number=%s)", number)
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -65,6 +68,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.debug("<<< Exiting is_prime(number=%s)", number)
     return True
 
 
@@ -78,17 +82,22 @@ def search(target: int, prime_list: list) -> bool:
     >>> search(101, list(range(-100, 100)))
     False
     """
+    logger.debug(">>> Entering search(target=%s,prime_list=%s)", target, prime_list)
 
     left, right = 0, len(prime_list) - 1
     while left <= right:
         middle = (left + right) // 2
+        logger.debug("search(target=%s,prime_list=%s): middle → %s", target, prime_list, middle)
         if prime_list[middle] == target:
             return True
         elif prime_list[middle] < target:
             left = middle + 1
+            logger.debug("search(target=%s,prime_list=%s): left → %s", target, prime_list, left)
         else:
             right = middle - 1
+            logger.debug("search(target=%s,prime_list=%s): right → %s", target, prime_list, right)
 
+    logger.debug("<<< Exiting search(target=%s,prime_list=%s)", target, prime_list)
     return False
 
 
@@ -98,14 +107,19 @@ def solution():
     >>> solution()
     296962999629
     """
+    logger.debug(">>> Entering solution()")
     prime_list = [n for n in range(1001, 10000, 2) if is_prime(n)]
+    logger.debug("solution(): prime_list → %s", prime_list)
     candidates = []
+    logger.debug("solution(): candidates → %s", candidates)
 
     for number in prime_list:
         tmp_numbers = []
+        logger.debug("solution(): tmp_numbers → %s", tmp_numbers)
 
         for prime_member in permutations(list(str(number))):
             prime = int("".join(prime_member))
+            logger.debug("solution(): prime → %s", prime)
 
             if prime % 2 == 0:
                 continue
@@ -118,9 +132,12 @@ def solution():
             candidates.append(tmp_numbers)
 
     passed = []
+    logger.debug("solution(): passed → %s", passed)
     for candidate in candidates:
         length = len(candidate)
+        logger.debug("solution(): length → %s", length)
         found = False
+        logger.debug("solution(): found → %s", found)
 
         for i in range(length):
             for j in range(i + 1, length):
@@ -143,9 +160,11 @@ def solution():
                 break
 
     answer = set()
+    logger.debug("solution(): answer → %s", answer)
     for seq in passed:
         answer.add("".join([str(i) for i in seq]))
 
+    logger.debug("<<< Exiting solution()")
     return max(int(x) for x in answer)
 
 

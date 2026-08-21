@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 An NIMPLY Gate is a logic gate in boolean algebra which results to 0 if
 either input 1 is 0, or if input 1 is 1, then it is 0 only if input 2 is 1.
@@ -30,6 +32,8 @@ def nimply_gate(input_1: int, input_2: int) -> int:
     >>> nimply_gate(1, 1)
     0
     """
+    logger.debug(">>> Entering nimply_gate(input_1=%s,input_2=%s)", input_1, input_2)
+    logger.debug("<<< Exiting nimply_gate(input_1=%s,input_2=%s)", input_1, input_2)
     return int(input_1 == 1 and input_2 == 0)
 
 

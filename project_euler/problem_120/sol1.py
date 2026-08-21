@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Problem 120 Square remainders: https://projecteuler.net/problem=120
 
@@ -25,6 +27,7 @@ def solution(n: int = 1000) -> int:
     >>> solution(1000)
     333082500
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     return sum(2 * a * ((a - 1) // 2) for a in range(3, n + 1))
 
 

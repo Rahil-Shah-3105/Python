@@ -29,6 +29,8 @@ en.wikipedia.org/wiki/LZ77_and_LZ78
 """
 
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 __version__ = "0.1"
 __author__ = "Lucia Harcekova"
@@ -53,6 +55,8 @@ class Token:
         >>> str(token)
         '(1, 2, c)'
         """
+        logger.debug(">>> Entering __repr__()")
+        logger.debug("<<< Exiting __repr__()")
         return f"({self.offset}, {self.length}, {self.indicator})"
 
 
@@ -62,9 +66,14 @@ class LZ77Compressor:
     """
 
     def __init__(self, window_size: int = 13, lookahead_buffer_size: int = 6) -> None:
+        logger.debug(">>> Entering __init__(window_size=%s,lookahead_buffer_size=%s)", window_size, lookahead_buffer_size)
         self.window_size = window_size
+        logger.debug("__init__(self=%s,window_size=%s,lookahead_buffer_size=%s): self.window_size → %s", self, window_size, lookahead_buffer_size, self.window_size)
         self.lookahead_buffer_size = lookahead_buffer_size
+        logger.debug("__init__(self=%s,window_size=%s,lookahead_buffer_size=%s): self.lookahead_buffer_size → %s", self, window_size, lookahead_buffer_size, self.lookahead_buffer_size)
         self.search_buffer_size = self.window_size - self.lookahead_buffer_size
+        logger.debug("__init__(self=%s,window_size=%s,lookahead_buffer_size=%s): self.search_buffer_size → %s", self, window_size, lookahead_buffer_size, self.search_buffer_size)
+        logger.debug("<<< Exiting __init__(window_size=%s,lookahead_buffer_size=%s)", window_size, lookahead_buffer_size)
 
     def compress(self, text: str) -> list[Token]:
         """
@@ -82,15 +91,20 @@ class LZ77Compressor:
         >>> str(lz77_compressor.compress("aacaacabcabaaac"))
         '[(0, 0, a), (1, 1, c), (3, 4, b), (3, 3, a), (1, 2, c)]'
         """
+        logger.debug(">>> Entering compress(text=%s)", text)
 
         output = []
+        logger.debug("compress(self=%s,text=%s): output → %s", self, text, output)
         search_buffer = ""
+        logger.debug("compress(self=%s,text=%s): search_buffer → %s", self, text, search_buffer)
 
         # while there are still characters in text to compress
         while text:
             # find the next encoding phrase
             # - triplet with offset, length, indicator (the next encoding character)
             token = self._find_encoding_token(text, search_buffer)
+            logger.debug("compress(text=%s): token → <redacted>", text)
+            logger.warning("compress(self=%s,text=%s): token → %s", self, text, token)
 
             # update the search buffer:
             # - add new characters from text into it
@@ -106,6 +120,7 @@ class LZ77Compressor:
             # append the token to output
             output.append(token)
 
+        logger.debug("<<< Exiting compress(text=%s)", text)
         return output
 
     def decompress(self, tokens: list[Token]) -> str:
@@ -131,14 +146,18 @@ class LZ77Compressor:
             ... Token(3, 4, 'b'), Token(3, 3, 'a'), Token(1, 2, 'c')])
             'aacaacabcabaaac'
         """
+        logger.debug(">>> Entering decompress(tokens=<redacted>)")
 
         output = ""
+        logger.debug("decompress(self=%s,tokens=<redacted>): output → %s", self, output)
+        logger.debug("decompress(tokens=<redacted>): output → %s", output)
 
         for token in tokens:
             for _ in range(token.length):
                 output += output[-token.offset]
             output += token.indicator
 
+        logger.debug("<<< Exiting decompress(tokens=<redacted>)")
         return output
 
     def _find_encoding_token(self, text: str, search_buffer: str) -> Token:
@@ -159,6 +178,7 @@ class LZ77Compressor:
             >>> lz77_compressor._find_encoding_token("abc", "").offset
             0
         """
+        logger.debug(">>> Entering _find_encoding_token(text=%s,search_buffer=%s)", text, search_buffer)
 
         if not text:
             raise ValueError("We need some text to work with.")
@@ -171,13 +191,16 @@ class LZ77Compressor:
 
         for i, character in enumerate(search_buffer):
             found_offset = len(search_buffer) - i
+            logger.debug("_find_encoding_token(self=%s,text=%s,search_buffer=%s): found_offset → %s", self, text, search_buffer, found_offset)
             if character == text[0]:
                 found_length = self._match_length_from_index(text, search_buffer, 0, i)
+                logger.debug("_find_encoding_token(self=%s,text=%s,search_buffer=%s): found_length → %s", self, text, search_buffer, found_length)
                 # if the found length is bigger than the current or if it's equal,
                 # which means it's offset is smaller: update offset and length
                 if found_length >= length:
                     offset, length = found_offset, found_length
 
+        logger.debug("<<< Exiting _find_encoding_token(text=%s,search_buffer=%s)", text, search_buffer)
         return Token(offset, length, text[length])
 
     def _match_length_from_index(

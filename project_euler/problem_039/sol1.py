@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import typing
 from collections import Counter
+import logging
+logger = logging.getLogger(__name__)
 
 
 def pythagorean_triple(max_perimeter: int) -> typing.Counter[int]:
@@ -25,15 +27,19 @@ def pythagorean_triple(max_perimeter: int) -> typing.Counter[int]:
     >>> pythagorean_triple(50)
     Counter({12: 1, 30: 1, 24: 1, 40: 1, 36: 1, 48: 1})
     """
+    logger.debug(">>> Entering pythagorean_triple(max_perimeter=%s)", max_perimeter)
     triplets: typing.Counter[int] = Counter()
     for base in range(1, max_perimeter + 1):
         for perpendicular in range(base, max_perimeter + 1):
             hypotenuse = (base * base + perpendicular * perpendicular) ** 0.5
+            logger.debug("pythagorean_triple(max_perimeter=%s): hypotenuse → %s", max_perimeter, hypotenuse)
             if hypotenuse == int(hypotenuse):
                 perimeter = int(base + perpendicular + hypotenuse)
+                logger.debug("pythagorean_triple(max_perimeter=%s): perimeter → %s", max_perimeter, perimeter)
                 if perimeter > max_perimeter:
                     continue
                 triplets[perimeter] += 1
+    logger.debug("<<< Exiting pythagorean_triple(max_perimeter=%s)", max_perimeter)
     return triplets
 
 
@@ -47,7 +53,10 @@ def solution(n: int = 1000) -> int:
     >>> solution(1000)
     840
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     triplets = pythagorean_triple(n)
+    logger.debug("solution(n=%s): triplets → %s", n, triplets)
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return triplets.most_common(1)[0][0]
 
 

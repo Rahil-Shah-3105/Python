@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 https://en.wikipedia.org/wiki/Smith%E2%80%93Waterman_algorithm
 The Smith-Waterman algorithm is a dynamic programming algorithm used for sequence
@@ -142,12 +144,17 @@ def traceback(score: list[list[int]], query: str, subject: str) -> str:
     >>> traceback([[0, 0, 0]], 'ACAC', '')
     ''
     """
+    logger.debug(">>> Entering traceback(score=%s,query=%s,subject=%s)", score, query, subject)
     # make both query and subject uppercase
     query = query.upper()
+    logger.debug("traceback(score=%s,query=%s,subject=%s): query → %s", score, query, subject, query)
     subject = subject.upper()
+    logger.debug("traceback(score=%s,query=%s,subject=%s): subject → %s", score, query, subject, subject)
     # find the indices of the maximum value in the score matrix
     max_value = float("-inf")
+    logger.debug("traceback(score=%s,query=%s,subject=%s): max_value → %s", score, query, subject, max_value)
     i_max = j_max = 0
+    logger.debug("traceback(score=%s,query=%s,subject=%s): i_max → %s", score, query, subject, i_max)
     for i, row in enumerate(score):
         for j, value in enumerate(row):
             if value > max_value:
@@ -157,8 +164,11 @@ def traceback(score: list[list[int]], query: str, subject: str) -> str:
     i = i_max
     j = j_max
     align1 = ""
+    logger.debug("traceback(score=%s,query=%s,subject=%s): align1 → %s", score, query, subject, align1)
     align2 = ""
+    logger.debug("traceback(score=%s,query=%s,subject=%s): align2 → %s", score, query, subject, align2)
     gap = score_function("-", "-")
+    logger.debug("traceback(score=%s,query=%s,subject=%s): gap → %s", score, query, subject, gap)
     # guard against empty query or subject
     if i == 0 or j == 0:
         return ""
@@ -182,6 +192,7 @@ def traceback(score: list[list[int]], query: str, subject: str) -> str:
             align2 = subject[j - 1] + align2
             j -= 1
 
+    logger.debug("<<< Exiting traceback(score=%s,query=%s,subject=%s)", score, subject)
     return f"{align1}\n{align2}"
 
 

@@ -9,10 +9,14 @@ where n denotes the length of the given sequence.
 from __future__ import annotations
 
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 def generate_all_subsequences(sequence: list[Any]) -> None:
+    logger.debug(">>> Entering generate_all_subsequences(sequence=%s)", sequence)
     create_state_space_tree(sequence, [], 0)
+    logger.debug("<<< Exiting generate_all_subsequences(sequence=%s)", sequence)
 
 
 def create_state_space_tree(

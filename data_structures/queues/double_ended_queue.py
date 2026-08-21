@@ -7,6 +7,8 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Deque:
@@ -58,13 +60,20 @@ class Deque:
         __slots__ = ("_cur",)
 
         def __init__(self, cur: Deque._Node | None) -> None:
+            logger.debug(">>> Entering __init__(cur=%s)", cur)
             self._cur = cur
+            logger.debug("__init__(self=%s,cur=%s): self._cur → %s", self, cur, self._cur)
+            logger.debug("<<< Exiting __init__(cur=%s)", cur)
+            logger.debug(">>> Entering __init__(iterable=%s)", iterable)
+            logger.debug("<<< Exiting __init__(iterable=%s)", iterable)
 
         def __iter__(self) -> Deque._Iterator:
             """
             >>> our_deque = Deque([1, 2, 3])
             >>> iterator = iter(our_deque)
             """
+            logger.debug(">>> Entering __iter__()")
+            logger.debug("<<< Exiting __iter__()")
             return self
 
         def __next__(self) -> Any:
@@ -78,12 +87,16 @@ class Deque:
             >>> next(iterator)
             3
             """
+            logger.debug(">>> Entering __next__()")
             if self._cur is None:
                 # finished iterating
                 raise StopIteration
             val = self._cur.val
+            logger.debug("__next__(self=%s): val → %s", self, val)
             self._cur = self._cur.next_node
+            logger.debug("__next__(self=%s): self._cur → %s", self, self._cur)
 
+            logger.debug("<<< Exiting __next__()")
             return val
 
     def __init__(self, iterable: Iterable[Any] | None = None) -> None:
@@ -122,21 +135,29 @@ class Deque:
         >>> list(our_deque_2) == list(deque_collections_2)
         True
         """
+        logger.debug(">>> Entering append(val=%s)", val)
         node = self._Node(val, None, None)
+        logger.debug("append(self=%s,val=%s): node → %s", self, val, node)
+        logger.debug("append(val=%s): node → %s", val, node)
         if self.is_empty():
             # front = back
             self._front = self._back = node
+            logger.debug("append(self=%s,val=%s): self._front → %s", self, val, self._front)
             self._len = 1
+            logger.debug("append(self=%s,val=%s): self._len → %s", self, val, self._len)
         else:
             # connect nodes
             self._back.next_node = node
             node.prev_node = self._back
+            logger.debug("append(self=%s,val=%s): node.prev_node → %s", self, val, node.prev_node)
             self._back = node  # assign new back to the new node
+            logger.debug("append(self=%s,val=%s): self._back → %s", self, val, self._back)
 
             self._len += 1
 
             # make sure there were no errors
             assert not self.is_empty(), "Error on appending value."
+            logger.debug("<<< Exiting append(val=%s)", val)
 
     def appendleft(self, val: Any) -> None:
         """
@@ -164,14 +185,20 @@ class Deque:
         >>> list(our_deque_2) == list(deque_collections_2)
         True
         """
+        logger.debug(">>> Entering appendleft(val=%s)", val)
         node = self._Node(val, None, None)
+        logger.debug("appendleft(self=%s,val=%s): node → %s", self, val, node)
+        logger.debug("appendleft(val=%s): node → %s", val, node)
         if self.is_empty():
             # front = back
             self._front = self._back = node
+            logger.debug("appendleft(self=%s,val=%s): self._front → %s", self, val, self._front)
             self._len = 1
+            logger.debug("appendleft(self=%s,val=%s): self._len → %s", self, val, self._len)
         else:
             # connect nodes
             node.next_node = self._front
+            logger.debug("appendleft(self=%s,val=%s): node.next_node → %s", self, val, node.next_node)
             self._front.prev_node = node
             self._front = node  # assign new front to the new node
 
@@ -179,6 +206,7 @@ class Deque:
 
             # make sure there were no errors
             assert not self.is_empty(), "Error on appending value."
+            logger.debug("<<< Exiting appendleft(val=%s)", val)
 
     def extend(self, iterable: Iterable[Any]) -> None:
         """
@@ -206,8 +234,10 @@ class Deque:
         >>> list(our_deque_2) == list(deque_collections_2)
         True
         """
+        logger.debug(">>> Entering extend(iterable=%s)", iterable)
         for val in iterable:
             self.append(val)
+            logger.debug("<<< Exiting extend(iterable=%s)", iterable)
 
     def extendleft(self, iterable: Iterable[Any]) -> None:
         """
@@ -235,8 +265,10 @@ class Deque:
         >>> list(our_deque_2) == list(deque_collections_2)
         True
         """
+        logger.debug(">>> Entering extendleft(iterable=%s)", iterable)
         for val in iterable:
             self.appendleft(val)
+            logger.debug("<<< Exiting extendleft(iterable=%s)", iterable)
 
     def pop(self) -> Any:
         """
@@ -269,15 +301,19 @@ class Deque:
         >>> our_popped2 == collections_popped
         True
         """
+        logger.debug(">>> Entering pop()")
         # make sure the deque has elements to pop
         assert not self.is_empty(), "Deque is empty."
 
         topop = self._back
+        logger.debug("pop(self=%s): topop → %s", self, topop)
         # if only one element in the queue: point the front and back to None
         # else remove one element from back
         if self._front == self._back:
             self._front = None
+            logger.debug("pop(self=%s): self._front → %s", self, self._front)
             self._back = None
+            logger.debug("pop(self=%s): self._back → %s", self, self._back)
         else:
             self._back = self._back.prev_node  # set new back
             # drop the last node, python will deallocate memory automatically
@@ -285,6 +321,7 @@ class Deque:
 
         self._len -= 1
 
+        logger.debug("<<< Exiting pop()")
         return topop.val
 
     def popleft(self) -> Any:
@@ -316,21 +353,26 @@ class Deque:
         >>> our_popped2 == collections_popped
         True
         """
+        logger.debug(">>> Entering popleft()")
         # make sure the deque has elements to pop
         assert not self.is_empty(), "Deque is empty."
 
         topop = self._front
+        logger.debug("popleft(self=%s): topop → %s", self, topop)
         # if only one element in the queue: point the front and back to None
         # else remove one element from front
         if self._front == self._back:
             self._front = None
+            logger.debug("popleft(self=%s): self._front → %s", self, self._front)
             self._back = None
+            logger.debug("popleft(self=%s): self._back → %s", self, self._back)
         else:
             self._front = self._front.next_node  # set new front and drop the first node
             self._front.prev_node = None
 
         self._len -= 1
 
+        logger.debug("<<< Exiting popleft()")
         return topop.val
 
     def is_empty(self) -> bool:
@@ -348,6 +390,8 @@ class Deque:
         >>> list(our_empty_deque) == list(empty_deque_collections)
         True
         """
+        logger.debug(">>> Entering is_empty()")
+        logger.debug("<<< Exiting is_empty()")
         return self._front is None
 
     def __len__(self) -> int:
@@ -370,6 +414,8 @@ class Deque:
         >>> len(our_empty_deque) == len(empty_deque_collections)
         True
         """
+        logger.debug(">>> Entering __len__()")
+        logger.debug("<<< Exiting __len__()")
         return self._len
 
     def __eq__(self, other: object) -> bool:
@@ -396,12 +442,14 @@ class Deque:
         >>> (our_deque_1 == our_deque_3) == (deque_collections_1 == deque_collections_3)
         True
         """
+        logger.debug(">>> Entering __eq__(other=%s)", other)
 
         if not isinstance(other, Deque):
             return NotImplemented
 
         me = self._front
         oth = other._front
+        logger.debug("__eq__(self=%s,other=%s): oth → %s", self, other, oth)
 
         # if the length of the dequeues are not the same, they are not equal
         if len(self) != len(other):
@@ -414,6 +462,7 @@ class Deque:
             me = me.next_node
             oth = oth.next_node
 
+        logger.debug("<<< Exiting __eq__(other=%s)", other)
         return True
 
     def __iter__(self) -> Deque._Iterator:
@@ -434,6 +483,7 @@ class Deque:
         2
         3
         """
+        logger.debug(">>> Entering __iter__()")
         return Deque._Iterator(self._front)
 
     def __repr__(self) -> str:
@@ -445,13 +495,17 @@ class Deque:
         >>> our_deque
         [1, 2, 3]
         """
+        logger.debug(">>> Entering __repr__()")
         values_list = []
+        logger.debug("__repr__(self=%s): values_list → %s", self, values_list)
         aux = self._front
+        logger.debug("__repr__(self=%s): aux → %s", self, aux)
         while aux is not None:
             # append the values in a list to display
             values_list.append(aux.val)
             aux = aux.next_node
 
+        logger.debug("<<< Exiting __repr__()")
         return f"[{', '.join(repr(val) for val in values_list)}]"
 
 

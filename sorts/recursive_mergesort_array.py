@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """A merge sort which accepts an array as input and recursively
 splits an array in half and sorts and combines them.
 """
@@ -18,6 +20,9 @@ def merge(arr: list[int]) -> list[int]:
     >>> merge([])
     []
     """
+    logger.debug(">>> Entering merge(arr=%s)", arr)
+    logger.debug("merge(arr=%s): left_array → %s", arr, left_array)
+    logger.debug("merge(arr=%s): middle_length → %s", arr, middle_length)
     if len(arr) > 1:
         middle_length = len(arr) // 2  # Finds the middle of the array
         left_array = arr[
@@ -27,12 +32,17 @@ def merge(arr: list[int]) -> list[int]:
             middle_length:
         ]  # Creates an array of the elements in the second half.
         left_size = len(left_array)
+        logger.debug("merge(arr=%s): left_size → %s", arr, left_size)
         right_size = len(right_array)
+        logger.debug("merge(arr=%s): right_size → %s", arr, right_size)
         merge(left_array)  # Starts sorting the left.
         merge(right_array)  # Starts sorting the right
         left_index = 0  # Left Counter
+        logger.debug("merge(arr=%s): left_index → %s", arr, left_index)
         right_index = 0  # Right Counter
+        logger.debug("merge(arr=%s): right_index → %s", arr, right_index)
         index = 0  # Position Counter
+        logger.debug("merge(arr=%s): index → %s", arr, index)
         while (
             left_index < left_size and right_index < right_size
         ):  # Runs until the lowers size of the left and right are sorted.
@@ -55,6 +65,7 @@ def merge(arr: list[int]) -> list[int]:
             arr[index] = right_array[right_index]
             right_index += 1
             index += 1
+    logger.debug("<<< Exiting merge(arr=%s)", arr)
     return arr
 
 

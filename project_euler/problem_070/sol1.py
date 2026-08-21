@@ -32,6 +32,8 @@ https://en.wikipedia.org/wiki/Euler's_totient_function#Euler's_product_formula
 from __future__ import annotations
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_totients(max_one: int) -> list[int]:
@@ -45,13 +47,17 @@ def get_totients(max_one: int) -> list[int]:
     >>> get_totients(10)
     [0, 1, 1, 2, 2, 4, 2, 6, 4, 6]
     """
+    logger.debug(">>> Entering get_totients(max_one=%s)", max_one)
     totients = np.arange(max_one)
+    logger.debug("get_totients(max_one=%s): totients → %s", max_one, totients)
 
     for i in range(2, max_one):
         if totients[i] == i:
             x = np.arange(i, max_one, i)  # array of indexes to select
+            logger.debug("get_totients(max_one=%s): x → %s", max_one, x)
             totients[x] -= totients[x] // i
 
+    logger.debug("<<< Exiting get_totients(max_one=%s)", max_one)
     return totients.tolist()
 
 
@@ -69,6 +75,8 @@ def has_same_digits(num1: int, num2: int) -> bool:
     >>> has_same_digits(1234566, 123456)
     False
     """
+    logger.debug(">>> Entering has_same_digits(num1=%s,num2=%s)", num1, num2)
+    logger.debug("<<< Exiting has_same_digits(num1=%s,num2=%s)", num1, num2)
     return sorted(str(num1)) == sorted(str(num2))
 
 
@@ -82,10 +90,14 @@ def solution(max_n: int = 10000000) -> int:
     >>> solution(10000)
     4435
     """
+    logger.debug(">>> Entering solution(max_n=%s)", max_n)
 
     min_numerator = 1  # i
+    logger.debug("solution(max_n=%s): min_numerator → %s", max_n, min_numerator)
     min_denominator = 0  # φ(i)
+    logger.debug("solution(max_n=%s): min_denominator → %s", max_n, min_denominator)
     totients = get_totients(max_n + 1)
+    logger.debug("solution(max_n=%s): totients → %s", max_n, totients)
 
     for i in range(2, max_n + 1):
         t = totients[i]
@@ -94,6 +106,7 @@ def solution(max_n: int = 10000000) -> int:
             min_numerator = i
             min_denominator = t
 
+    logger.debug("<<< Exiting solution(max_n=%s)", max_n)
     return min_numerator
 
 

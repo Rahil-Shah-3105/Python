@@ -7,6 +7,8 @@
 #  Thank you!
 
 from data_structures.suffix_tree.suffix_tree import SuffixTree
+import logging
+logger = logging.getLogger(__name__)
 
 
 def main() -> None:
@@ -24,13 +26,19 @@ def main() -> None:
         - "xyz" (not found) --> False
         - "mon" (found) --> True
     """
+    logger.debug(">>> Entering main()")
     text = "monkey banana"
+    logger.debug("main(): text → %s", text)
     suffix_tree = SuffixTree(text)
+    logger.debug("main(): suffix_tree → %s", suffix_tree)
 
     patterns = ["ana", "ban", "na", "xyz", "mon"]
+    logger.debug("main(): patterns → %s", patterns)
     for pattern in patterns:
         found = suffix_tree.search(pattern)
+        logger.debug("main(): found → %s", found)
         print(f"Pattern '{pattern}' found: {found}")
+        logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

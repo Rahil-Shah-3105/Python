@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Test cases:
 Do you want to enter your denominations ? (Y/N) :N
@@ -55,10 +57,13 @@ def find_minimum_change(denominations: list[int], value: str) -> list[int]:
     >>> find_minimum_change([1, 5, 100, 500, 1000], 456)
     [100, 100, 100, 100, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1]
     """
+    logger.debug(">>> Entering find_minimum_change(denominations=%s,value=%s)", denominations, value)
     total_value = int(value)
+    logger.debug("find_minimum_change(denominations=%s,value=%s): total_value → %s", denominations, value, total_value)
 
     # Initialize Result
     answer = []
+    logger.debug("find_minimum_change(denominations=%s,value=%s): answer → %s", denominations, value, answer)
 
     # Traverse through all denomination
     for denomination in reversed(denominations):
@@ -67,6 +72,7 @@ def find_minimum_change(denominations: list[int], value: str) -> list[int]:
             total_value -= int(denomination)
             answer.append(denomination)  # Append the "answers" array
 
+    logger.debug("<<< Exiting find_minimum_change(denominations=%s,value=%s)", denominations, value)
     return answer
 
 

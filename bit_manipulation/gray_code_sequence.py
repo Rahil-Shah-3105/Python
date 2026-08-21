@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def gray_code(bit_count: int) -> list:
     """
     Takes in an integer n and returns a n-bit
@@ -32,6 +34,7 @@ def gray_code(bit_count: int) -> list:
         ...
     TypeError: unsupported operand type(s) for <<: 'int' and 'float'
     """
+    logger.debug(">>> Entering gray_code(bit_count=%s)", bit_count)
 
     # bit count represents no. of bits in the gray code
     if bit_count < 0:
@@ -39,11 +42,13 @@ def gray_code(bit_count: int) -> list:
 
     # get the generated string sequence
     sequence = gray_code_sequence_string(bit_count)
+    logger.debug("gray_code(bit_count=%s): sequence → %s", bit_count, sequence)
     #
     # convert them to integers
     for i in range(len(sequence)):
         sequence[i] = int(sequence[i], 2)
 
+    logger.debug("<<< Exiting gray_code(bit_count=%s)", bit_count)
     return sequence
 
 
@@ -58,6 +63,7 @@ def gray_code_sequence_string(bit_count: int) -> list:
     >>> gray_code_sequence_string(1)
     ['0', '1']
     """
+    logger.debug(">>> Entering gray_code_sequence_string(bit_count=%s)", bit_count)
 
     # The approach is a recursive one
     # Base case achieved when either n = 0 or n=1

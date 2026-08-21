@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def find_unique_number(arr: list[int]) -> int:
     """
     Given a list of integers where every element appears twice except for one,
@@ -20,14 +22,17 @@ def find_unique_number(arr: list[int]) -> int:
         ...
     TypeError: all elements must be integers
     """
+    logger.debug(">>> Entering find_unique_number(arr=%s)", arr)
     if not arr:
         raise ValueError("input list must not be empty")
     if not all(isinstance(x, int) for x in arr):
         raise TypeError("all elements must be integers")
 
     result = 0
+    logger.debug("find_unique_number(arr=%s): result → %s", arr, result)
     for num in arr:
         result ^= num
+    logger.debug("<<< Exiting find_unique_number(arr=%s)", arr)
     return result
 
 

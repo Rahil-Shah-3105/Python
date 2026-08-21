@@ -9,6 +9,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -50,6 +52,7 @@ class AdamsBashforth:
     x_final: float
 
     def __post_init__(self) -> None:
+        logger.debug(">>> Entering __post_init__()")
         if self.x_initials[-1] >= self.x_final:
             raise ValueError(
                 "The final value of x must be greater than the initial values of x."
@@ -62,6 +65,7 @@ class AdamsBashforth:
             round(x1 - x0, 10) == self.step_size
             for x0, x1 in zip(self.x_initials, self.x_initials[1:])
         ):
+            logger.debug("<<< Exiting __post_init__()")
             raise ValueError("x-values must be equally spaced according to step size.")
 
     def step_2(self) -> np.ndarray:
@@ -76,6 +80,7 @@ class AdamsBashforth:
             ...
         ValueError: Insufficient initial points information.
         """
+        logger.debug(">>> Entering step_2()")
 
         if len(self.x_initials) != 2 or len(self.y_initials) != 2:
             raise ValueError("Insufficient initial points information.")
@@ -84,7 +89,9 @@ class AdamsBashforth:
         y_0, y_1 = self.y_initials[:2]
 
         n = int((self.x_final - x_1) / self.step_size)
+        logger.debug("step_2(): n → %s", n)
         y = np.zeros(n + 2)
+        logger.debug("step_2(): y → %s", y)
         y[0] = y_0
         y[1] = y_1
 
@@ -93,8 +100,10 @@ class AdamsBashforth:
                 3 * self.func(x_1, y[i + 1]) - self.func(x_0, y[i])
             )
             x_0 = x_1
+            logger.debug("step_2(self=%s): x_0 → %s", self, x_0)
             x_1 += self.step_size
 
+        logger.debug("<<< Exiting step_2()")
         return y
 
     def step_3(self) -> np.ndarray:
@@ -110,6 +119,7 @@ class AdamsBashforth:
             ...
         ValueError: Insufficient initial points information.
         """
+        logger.debug(">>> Entering step_3()")
         if len(self.x_initials) != 3 or len(self.y_initials) != 3:
             raise ValueError("Insufficient initial points information.")
 
@@ -117,7 +127,9 @@ class AdamsBashforth:
         y_0, y_1, y_2 = self.y_initials[:3]
 
         n = int((self.x_final - x_2) / self.step_size)
+        logger.debug("step_3(): n → %s", n)
         y = np.zeros(n + 4)
+        logger.debug("step_3(): y → %s", y)
         y[0] = y_0
         y[1] = y_1
         y[2] = y_2
@@ -129,9 +141,12 @@ class AdamsBashforth:
                 + 5 * self.func(x_0, y[i])
             )
             x_0 = x_1
+            logger.debug("step_3(self=%s): x_0 → %s", self, x_0)
             x_1 = x_2
+            logger.debug("step_3(self=%s): x_1 → %s", self, x_1)
             x_2 += self.step_size
 
+        logger.debug("<<< Exiting step_3()")
         return y
 
     def step_4(self) -> np.ndarray:
@@ -150,6 +165,7 @@ class AdamsBashforth:
             ...
         ValueError: Insufficient initial points information.
         """
+        logger.debug(">>> Entering step_4()")
 
         if len(self.x_initials) != 4 or len(self.y_initials) != 4:
             raise ValueError("Insufficient initial points information.")
@@ -158,7 +174,9 @@ class AdamsBashforth:
         y_0, y_1, y_2, y_3 = self.y_initials[:4]
 
         n = int((self.x_final - x_3) / self.step_size)
+        logger.debug("step_4(): n → %s", n)
         y = np.zeros(n + 4)
+        logger.debug("step_4(): y → %s", y)
         y[0] = y_0
         y[1] = y_1
         y[2] = y_2
@@ -172,10 +190,14 @@ class AdamsBashforth:
                 - 9 * self.func(x_0, y[i])
             )
             x_0 = x_1
+            logger.debug("step_4(self=%s): x_0 → %s", self, x_0)
             x_1 = x_2
+            logger.debug("step_4(self=%s): x_1 → %s", self, x_1)
             x_2 = x_3
+            logger.debug("step_4(self=%s): x_2 → %s", self, x_2)
             x_3 += self.step_size
 
+        logger.debug("<<< Exiting step_4()")
         return y
 
     def step_5(self) -> np.ndarray:
@@ -193,6 +215,7 @@ class AdamsBashforth:
             ...
         ValueError: Insufficient initial points information.
         """
+        logger.debug(">>> Entering step_5()")
 
         if len(self.x_initials) != 5 or len(self.y_initials) != 5:
             raise ValueError("Insufficient initial points information.")
@@ -201,7 +224,9 @@ class AdamsBashforth:
         y_0, y_1, y_2, y_3, y_4 = self.y_initials[:5]
 
         n = int((self.x_final - x_4) / self.step_size)
+        logger.debug("step_5(): n → %s", n)
         y = np.zeros(n + 6)
+        logger.debug("step_5(): y → %s", y)
         y[0] = y_0
         y[1] = y_1
         y[2] = y_2
@@ -217,11 +242,16 @@ class AdamsBashforth:
                 + 251 * self.func(x_0, y[i])
             )
             x_0 = x_1
+            logger.debug("step_5(self=%s): x_0 → %s", self, x_0)
             x_1 = x_2
+            logger.debug("step_5(self=%s): x_1 → %s", self, x_1)
             x_2 = x_3
+            logger.debug("step_5(self=%s): x_2 → %s", self, x_2)
             x_3 = x_4
+            logger.debug("step_5(self=%s): x_3 → %s", self, x_3)
             x_4 += self.step_size
 
+        logger.debug("<<< Exiting step_5()")
         return y
 
 

@@ -25,6 +25,8 @@ References:
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 BALLS_PER_COLOUR = 10
 NUM_COLOURS = 7
@@ -41,11 +43,16 @@ def solution(num_picks: int = 20) -> str:
     >>> solution(30)
     '6.985042712'
     """
+    logger.debug(">>> Entering solution(num_picks=%s)", num_picks)
     total = math.comb(NUM_BALLS, num_picks)
+    logger.debug("solution(num_picks=%s): total → %s", num_picks, total)
     missing_colour = math.comb(NUM_BALLS - BALLS_PER_COLOUR, num_picks)
+    logger.debug("solution(num_picks=%s): missing_colour → %s", num_picks, missing_colour)
 
     result = NUM_COLOURS * (1 - missing_colour / total)
+    logger.debug("solution(num_picks=%s): result → %s", num_picks, result)
 
+    logger.debug("<<< Exiting solution(num_picks=%s)", num_picks)
     return f"{result:.9f}"
 
 

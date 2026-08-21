@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 | developed by: markmelnic
 | original repo: https://github.com/markmelnic/Scoring-Algorithm
@@ -29,12 +31,14 @@ def get_data(source_data: list[list[float]]) -> list[list[float]]:
     >>> get_data([[20, 60, 2012],[23, 90, 2015],[22, 50, 2011]])
     [[20.0, 23.0, 22.0], [60.0, 90.0, 50.0], [2012.0, 2015.0, 2011.0]]
     """
+    logger.debug(">>> Entering get_data(source_data=%s)", source_data)
     data_lists: list[list[float]] = []
     for data in source_data:
         for i, el in enumerate(data):
             if len(data_lists) < i + 1:
                 data_lists.append([])
             data_lists[i].append(float(el))
+    logger.debug("<<< Exiting get_data(source_data=%s)", source_data)
     return data_lists
 
 
@@ -84,6 +88,7 @@ def generate_final_scores(score_lists: list[list[float]]) -> list[float]:
     ...                        [0.25, 1.0, 0.0]])
     [2.0, 1.0, 1.3333333333333335]
     """
+    logger.debug(">>> Entering generate_final_scores(score_lists=%s)", score_lists)
     # initialize final scores
     final_scores: list[float] = [0 for i in range(len(score_lists[0]))]
 
@@ -91,6 +96,7 @@ def generate_final_scores(score_lists: list[list[float]]) -> list[float]:
         for j, ele in enumerate(slist):
             final_scores[j] = final_scores[j] + ele
 
+    logger.debug("<<< Exiting generate_final_scores(score_lists=%s)", score_lists)
     return final_scores
 
 

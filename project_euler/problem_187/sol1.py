@@ -12,6 +12,8 @@ not necessarily distinct, prime factors?
 """
 
 from math import isqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def slow_calculate_prime_numbers(max_number: int) -> list[int]:
@@ -25,9 +27,11 @@ def slow_calculate_prime_numbers(max_number: int) -> list[int]:
     >>> slow_calculate_prime_numbers(2)
     []
     """
+    logger.debug(">>> Entering slow_calculate_prime_numbers(max_number=%s)", max_number)
 
     # List containing a bool value for every number below max_number/2
     is_prime = [True] * max_number
+    logger.debug("slow_calculate_prime_numbers(max_number=%s): is_prime → %s", max_number, is_prime)
 
     for i in range(2, isqrt(max_number - 1) + 1):
         if is_prime[i]:
@@ -35,6 +39,7 @@ def slow_calculate_prime_numbers(max_number: int) -> list[int]:
             for j in range(i**2, max_number, i):
                 is_prime[j] = False
 
+    logger.debug("<<< Exiting slow_calculate_prime_numbers(max_number=%s)", max_number)
     return [i for i in range(2, max_number) if is_prime[i]]
 
 
@@ -49,6 +54,7 @@ def calculate_prime_numbers(max_number: int) -> list[int]:
     >>> calculate_prime_numbers(2)
     []
     """
+    logger.debug(">>> Entering calculate_prime_numbers(max_number=%s)", max_number)
 
     if max_number <= 2:
         return []

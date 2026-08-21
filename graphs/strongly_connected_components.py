@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 https://en.wikipedia.org/wiki/Strongly_connected_component
 
@@ -65,8 +67,10 @@ def strongly_connected_components(graph: dict[int, list[int]]) -> list[list[int]
     >>> strongly_connected_components(test_graph_2)
     [[0, 2, 1], [3, 5, 4]]
     """
+    logger.debug(">>> Entering strongly_connected_components(graph=%s)", graph)
 
     visited = len(graph) * [False]
+    logger.debug("strongly_connected_components(graph=%s): visited → %s", graph, visited)
     reversed_graph: dict[int, list[int]] = {vert: [] for vert in range(len(graph))}
 
     for vert, neighbours in graph.items():
@@ -74,17 +78,22 @@ def strongly_connected_components(graph: dict[int, list[int]]) -> list[list[int]
             reversed_graph[neighbour].append(vert)
 
     order = []
+    logger.debug("strongly_connected_components(graph=%s): order → %s", graph, order)
     for i, was_visited in enumerate(visited):
         if not was_visited:
             order += topology_sort(graph, i, visited)
 
     components_list = []
+    logger.debug("strongly_connected_components(graph=%s): components_list → %s", graph, components_list)
     visited = len(graph) * [False]
 
     for i in range(len(graph)):
         vert = order[len(graph) - i - 1]
+        logger.debug("strongly_connected_components(graph=%s): vert → %s", graph, vert)
         if not visited[vert]:
             component = find_components(reversed_graph, vert, visited)
+            logger.debug("strongly_connected_components(graph=%s): component → %s", graph, component)
             components_list.append(component)
 
+    logger.debug("<<< Exiting strongly_connected_components(graph=%s)", graph)
     return components_list

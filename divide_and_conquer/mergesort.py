@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def merge(left_half: list, right_half: list) -> list:
@@ -29,11 +31,16 @@ def merge(left_half: list, right_half: list) -> list:
     >>> merge(left_half, right_half)
     []
     """
+    logger.debug(">>> Entering merge(left_half=%s,right_half=%s)", left_half, right_half)
     sorted_array = [None] * (len(right_half) + len(left_half))
+    logger.debug("merge(left_half=%s,right_half=%s): sorted_array → %s", left_half, right_half, sorted_array)
 
     pointer1 = 0  # pointer to current index for left Half
+    logger.debug("merge(left_half=%s,right_half=%s): pointer1 → %s", left_half, right_half, pointer1)
     pointer2 = 0  # pointer to current index for the right Half
+    logger.debug("merge(left_half=%s,right_half=%s): pointer2 → %s", left_half, right_half, pointer2)
     index = 0  # pointer to current index for the sorted array Half
+    logger.debug("merge(left_half=%s,right_half=%s): index → %s", left_half, right_half, index)
 
     while pointer1 < len(left_half) and pointer2 < len(right_half):
         if left_half[pointer1] < right_half[pointer2]:
@@ -54,6 +61,7 @@ def merge(left_half: list, right_half: list) -> list:
         pointer2 += 1
         index += 1
 
+    logger.debug("<<< Exiting merge(left_half=%s,right_half=%s)", left_half, right_half)
     return sorted_array
 
 
@@ -91,18 +99,23 @@ def merge_sort(array: list) -> list:
     >>> sorted(array) == merge_sort(array)
     True
     """
+    logger.debug(">>> Entering merge_sort(array=%s)", array)
     if len(array) <= 1:
         return array
     # the actual formula to calculate the middle element = left + (right - left) // 2
     # this avoids integer overflow in case of large N
     middle = 0 + (len(array) - 0) // 2
+    logger.debug("merge_sort(array=%s): middle → %s", array, middle)
 
     # Split the array into halves till the array length becomes equal to One
     # merge the arrays of single length returned by mergeSort function and
     # pass them into the merge arrays function which merges the array
     left_half = array[:middle]
+    logger.debug("merge_sort(array=%s): left_half → %s", array, left_half)
     right_half = array[middle:]
+    logger.debug("merge_sort(array=%s): right_half → %s", array, right_half)
 
+    logger.debug("<<< Exiting merge_sort(array=%s)", array)
     return merge(merge_sort(left_half), merge_sort(right_half))
 
 

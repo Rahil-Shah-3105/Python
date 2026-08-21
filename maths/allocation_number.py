@@ -7,6 +7,8 @@ For example:
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def allocation_num(number_of_bytes: int, partitions: int) -> list[str]:
@@ -29,18 +31,24 @@ def allocation_num(number_of_bytes: int, partitions: int) -> list[str]:
         ...
     ValueError: partitions must be a positive number!
     """
+    logger.debug(">>> Entering allocation_num(number_of_bytes=%s,partitions=%s)", number_of_bytes, partitions)
     if partitions <= 0:
         raise ValueError("partitions must be a positive number!")
     if partitions > number_of_bytes:
         raise ValueError("partitions can not > number_of_bytes!")
     bytes_per_partition = number_of_bytes // partitions
+    logger.debug("allocation_num(number_of_bytes=%s,partitions=%s): bytes_per_partition → %s", number_of_bytes, partitions, bytes_per_partition)
+    logger.debug("allocation_num(number_of_bytes=%s,partitions=%s): end_bytes → %s", number_of_bytes, partitions, end_bytes)
+    logger.debug("allocation_num(number_of_bytes=%s,partitions=%s): start_bytes → %s", number_of_bytes, partitions, start_bytes)
     allocation_list = []
+    logger.debug("allocation_num(number_of_bytes=%s,partitions=%s): allocation_list → %s", number_of_bytes, partitions, allocation_list)
     for i in range(partitions):
         start_bytes = i * bytes_per_partition + 1
         end_bytes = (
             number_of_bytes if i == partitions - 1 else (i + 1) * bytes_per_partition
         )
         allocation_list.append(f"{start_bytes}-{end_bytes}")
+    logger.debug("<<< Exiting allocation_num(number_of_bytes=%s,partitions=%s)", number_of_bytes, partitions)
     return allocation_list
 
 

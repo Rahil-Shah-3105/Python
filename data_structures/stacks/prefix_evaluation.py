@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Program to evaluate a prefix expression.
 https://en.wikipedia.org/wiki/Polish_notation
@@ -20,6 +22,8 @@ def is_operand(c):
     >>> is_operand("+")
     False
     """
+    logger.debug(">>> Entering is_operand(c=%s)", c)
+    logger.debug("<<< Exiting is_operand(c=%s)", c)
     return c.isdigit()
 
 
@@ -37,7 +41,9 @@ def evaluate(expression):
     >>> evaluate("+ * 2 3 / 8 4")
     8.0
     """
+    logger.debug(">>> Entering evaluate(expression=%s)", expression)
     stack = []
+    logger.debug("evaluate(expression=%s): stack → %s", expression, stack)
 
     # iterate over the string in reverse order
     for c in expression.split()[::-1]:
@@ -49,9 +55,12 @@ def evaluate(expression):
             # pop values from stack can calculate the result
             # push the result onto the stack again
             o1 = stack.pop()
+            logger.debug("evaluate(expression=%s): o1 → %s", expression, o1)
             o2 = stack.pop()
+            logger.debug("evaluate(expression=%s): o2 → %s", expression, o2)
             stack.append(operators[c](o1, o2))
 
+    logger.debug("<<< Exiting evaluate(expression=%s)", expression)
     return stack.pop()
 
 
@@ -71,15 +80,19 @@ def evaluate_recursive(expression: list[str]):
     >>> evaluate_recursive(['/', '*', '10', '2', '+', '4', '1'])
     4.0
     """
+    logger.debug(">>> Entering evaluate_recursive(expression=%s)", expression)
 
     op = expression.pop(0)
+    logger.debug("evaluate_recursive(expression=%s): op → %s", expression, op)
     if is_operand(op):
         return int(op)
 
     operation = operators[op]
+    logger.debug("evaluate_recursive(expression=%s): operation → %s", expression, operation)
 
     a = evaluate_recursive(expression)
     b = evaluate_recursive(expression)
+    logger.debug("<<< Exiting evaluate_recursive(expression=%s)", expression)
     return operation(a, b)
 
 

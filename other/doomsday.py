@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 #!/bin/python3
 # Doomsday algorithm info: https://en.wikipedia.org/wiki/Doomsday_rule
 
@@ -31,16 +33,22 @@ def get_week_day(year: int, month: int, day: int) -> str:
     'Wednesday'
 
     """
+    logger.debug(">>> Entering get_week_day(year=%s,month=%s,day=%s)", year, month, day)
     # minimal input check:
     assert len(str(year)) > 2, "year should be in YYYY format"
     assert 1 <= month <= 12, "month should be between 1 to 12"
     assert 1 <= day <= 31, "day should be between 1 to 31"
 
+    logger.debug("get_week_day(year=%s,month=%s,day=%s): dooms_day → %s", year, month, day, dooms_day)
     # Doomsday algorithm:
     century = year // 100
+    logger.debug("get_week_day(year=%s,month=%s,day=%s): century → %s", year, month, day, century)
     century_anchor = (5 * (century % 4) + 2) % 7
+    logger.debug("get_week_day(year=%s,month=%s,day=%s): century_anchor → %s", year, month, day, century_anchor)
     centurian = year % 100
+    logger.debug("get_week_day(year=%s,month=%s,day=%s): centurian → %s", year, month, day, centurian)
     centurian_m = centurian % 12
+    logger.debug("get_week_day(year=%s,month=%s,day=%s): centurian_m → %s", year, month, day, centurian_m)
     dooms_day = (
         (centurian // 12) + centurian_m + (centurian_m // 4) + century_anchor
     ) % 7

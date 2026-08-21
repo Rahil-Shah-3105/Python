@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 == Perfect Number ==
 In number theory, a perfect number is a positive integer that is equal to the sum of
@@ -65,6 +67,7 @@ def perfect(number: int) -> bool:
       ...
     ValueError: number must be an integer
     """
+    logger.debug(">>> Entering perfect(number=%s)", number)
     if not isinstance(number, int):
         raise ValueError("number must be an integer")
     if number <= 0:

@@ -1,4 +1,6 @@
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 def double_sort(collection: list[Any]) -> list[Any]:
@@ -17,7 +19,9 @@ def double_sort(collection: list[Any]) -> list[Any]:
     >>> double_sort([-3, 10, 16, -42, 29]) == sorted([-3, 10, 16, -42, 29])
     True
     """
+    logger.debug(">>> Entering double_sort(collection=%s)", collection)
     no_of_elements = len(collection)
+    logger.debug("double_sort(collection=%s): no_of_elements → %s", collection, no_of_elements)
     for _ in range(
         int(((no_of_elements - 1) / 2) + 1)
     ):  # we don't need to traverse to end of list as
@@ -34,6 +38,7 @@ def double_sort(collection: list[Any]) -> list[Any]:
                     collection[no_of_elements - 2 - j],
                     collection[no_of_elements - 1 - j],
                 )
+    logger.debug("<<< Exiting double_sort(collection=%s)", collection)
     return collection
 
 

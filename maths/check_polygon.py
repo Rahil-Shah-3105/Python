@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def check_polygon(nums: list[float]) -> bool:
@@ -29,12 +31,15 @@ def check_polygon(nums: list[float]) -> bool:
         ...
     ValueError: All values must be greater than 0
     """
+    logger.debug(">>> Entering check_polygon(nums=%s)", nums)
     if len(nums) < 2:
         raise ValueError("Monogons and Digons are not polygons in the Euclidean space")
     if any(i <= 0 for i in nums):
         raise ValueError("All values must be greater than 0")
     copy_nums = nums.copy()
+    logger.debug("check_polygon(nums=%s): copy_nums → %s", nums, copy_nums)
     copy_nums.sort()
+    logger.debug("<<< Exiting check_polygon(nums=%s)", nums)
     return copy_nums[-1] < sum(copy_nums[:-1])
 
 

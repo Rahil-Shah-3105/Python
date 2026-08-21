@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 100: https://projecteuler.net/problem=100
 
@@ -27,12 +29,17 @@ def solution(min_total: int = 10**12) -> int:
     >>> solution(21)
     85
     """
+    logger.debug(">>> Entering solution(min_total=%s)", min_total)
 
     prev_numerator = 1
+    logger.debug("solution(min_total=%s): prev_numerator → %s", min_total, prev_numerator)
     prev_denominator = 0
+    logger.debug("solution(min_total=%s): prev_denominator → %s", min_total, prev_denominator)
 
     numerator = 1
+    logger.debug("solution(min_total=%s): numerator → %s", min_total, numerator)
     denominator = 1
+    logger.debug("solution(min_total=%s): denominator → %s", min_total, denominator)
 
     while numerator <= 2 * min_total - 1:
         prev_numerator += 2 * numerator
@@ -41,6 +48,7 @@ def solution(min_total: int = 10**12) -> int:
         prev_denominator += 2 * denominator
         denominator += 2 * prev_denominator
 
+    logger.debug("<<< Exiting solution(min_total=%s)", min_total)
     return (denominator + 1) // 2
 
 

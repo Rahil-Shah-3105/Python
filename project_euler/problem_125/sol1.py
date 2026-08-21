@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Problem 125: https://projecteuler.net/problem=125
 
@@ -26,9 +28,11 @@ def is_palindrome(n: int) -> bool:
     >>> is_palindrome(12210)
     False
     """
+    logger.debug(">>> Entering is_palindrome(n=%s)", n)
     if n % 10 == 0:
         return False
     s = str(n)
+    logger.debug("<<< Exiting is_palindrome(n=%s)", n)
     return s == s[::-1]
 
 
@@ -37,11 +41,16 @@ def solution() -> int:
     Returns the sum of all numbers less than 1e8 that are both palindromic and
     can be written as the sum of consecutive squares.
     """
+    logger.debug(">>> Entering solution()")
     answer = set()
+    logger.debug("solution(): answer → %s", answer)
     first_square = 1
+    logger.debug("solution(): first_square → %s", first_square)
     sum_squares = 5
+    logger.debug("solution(): sum_squares → %s", sum_squares)
     while sum_squares < LIMIT:
         last_square = first_square + 1
+        logger.debug("solution(): last_square → %s", last_square)
         while sum_squares < LIMIT:
             if is_palindrome(sum_squares):
                 answer.add(sum_squares)
@@ -50,6 +59,7 @@ def solution() -> int:
         first_square += 1
         sum_squares = first_square**2 + (first_square + 1) ** 2
 
+    logger.debug("<<< Exiting solution()")
     return sum(answer)
 
 

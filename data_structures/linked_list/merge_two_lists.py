@@ -6,6 +6,8 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 test_data_odd = (3, 9, -11, 0, 7, 5, 1, -1)
 test_data_even = (4, 6, 2, 0, 8, 10, 3, -2)
@@ -19,8 +21,11 @@ class Node:
 
 class SortedLinkedList:
     def __init__(self, ints: Iterable[int]) -> None:
+        logger.debug(">>> Entering __init__(ints=%s)", ints)
+        logger.debug("__init__(ints=%s): self.head → %s", ints, self.head)
         self.head: Node | None = None
         for i in sorted(ints, reverse=True):
+            logger.debug("<<< Exiting __init__(ints=%s)", ints)
             self.head = Node(i, self.head)
 
     def __iter__(self) -> Iterator[int]:
@@ -30,9 +35,12 @@ class SortedLinkedList:
         >>> tuple(SortedLinkedList(test_data_even)) == tuple(sorted(test_data_even))
         True
         """
+        logger.debug(">>> Entering __iter__()")
         node = self.head
+        logger.debug("__iter__(self=%s): node → %s", self, node)
         while node:
             yield node.data
+            logger.debug("<<< Exiting __iter__()")
             node = node.next_node
 
     def __len__(self) -> int:
@@ -45,6 +53,8 @@ class SortedLinkedList:
         >>> len(SortedLinkedList(test_data_odd))
         8
         """
+        logger.debug(">>> Entering __len__()")
+        logger.debug("<<< Exiting __len__()")
         return sum(1 for _ in self)
 
     def __str__(self) -> str:
@@ -56,6 +66,8 @@ class SortedLinkedList:
         >>> str(SortedLinkedList(test_data_even))
         '-2 -> 0 -> 2 -> 3 -> 4 -> 6 -> 8 -> 10'
         """
+        logger.debug(">>> Entering __str__()")
+        logger.debug("<<< Exiting __str__()")
         return " -> ".join([str(node) for node in self])
 
 

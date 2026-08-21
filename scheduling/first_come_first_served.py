@@ -3,6 +3,8 @@
 # without carring about their duration time
 # https://en.wikipedia.org/wiki/Scheduling_(computing)#First_come,_first_served
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def calculate_waiting_times(duration_times: list[int]) -> list[int]:
@@ -17,9 +19,12 @@ def calculate_waiting_times(duration_times: list[int]) -> list[int]:
     >>> calculate_waiting_times([10, 3])
     [0, 10]
     """
+    logger.debug(">>> Entering calculate_waiting_times(duration_times=%s)", duration_times)
     waiting_times = [0] * len(duration_times)
+    logger.debug("calculate_waiting_times(duration_times=%s): waiting_times → %s", duration_times, waiting_times)
     for i in range(1, len(duration_times)):
         waiting_times[i] = duration_times[i - 1] + waiting_times[i - 1]
+    logger.debug("<<< Exiting calculate_waiting_times(duration_times=%s)", duration_times)
     return waiting_times
 
 
@@ -55,6 +60,8 @@ def calculate_average_turnaround_time(turnaround_times: list[int]) -> float:
     >>> calculate_average_turnaround_time([10, 24])
     17.0
     """
+    logger.debug(">>> Entering calculate_average_turnaround_time(turnaround_times=%s)", turnaround_times)
+    logger.debug("<<< Exiting calculate_average_turnaround_time(turnaround_times=%s)", turnaround_times)
     return sum(turnaround_times) / len(turnaround_times)
 
 
@@ -69,6 +76,8 @@ def calculate_average_waiting_time(waiting_times: list[int]) -> float:
     >>> calculate_average_waiting_time([10, 24])
     17.0
     """
+    logger.debug(">>> Entering calculate_average_waiting_time(waiting_times=%s)", waiting_times)
+    logger.debug("<<< Exiting calculate_average_waiting_time(waiting_times=%s)", waiting_times)
     return sum(waiting_times) / len(waiting_times)
 
 

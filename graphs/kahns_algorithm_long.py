@@ -1,8 +1,14 @@
+import logging
+logger = logging.getLogger(__name__)
 # Finding longest distance in Directed Acyclic Graph using KahnsAlgorithm
 def longest_distance(graph):
+    logger.debug(">>> Entering longest_distance(graph=%s)", graph)
     indegree = [0] * len(graph)
+    logger.debug("longest_distance(graph=%s): indegree → %s", graph, indegree)
     queue = []
     long_dist = [1] * len(graph)
+    logger.debug("longest_distance(graph=%s): queue → %s", graph, queue)
+    logger.debug("longest_distance(graph=%s): long_dist → %s", graph, long_dist)
 
     for values in graph.values():
         for i in values:
@@ -14,6 +20,7 @@ def longest_distance(graph):
 
     while queue:
         vertex = queue.pop(0)
+        logger.debug("longest_distance(graph=%s): vertex → %s", graph, vertex)
         for x in graph[vertex]:
             indegree[x] -= 1
 
@@ -23,6 +30,7 @@ def longest_distance(graph):
                 queue.append(x)
 
     print(max(long_dist))
+    logger.debug("<<< Exiting longest_distance(graph=%s)", graph)
 
 
 # Adjacency list of Graph

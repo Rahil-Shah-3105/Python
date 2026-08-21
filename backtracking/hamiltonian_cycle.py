@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 A Hamiltonian cycle (Hamiltonian circuit) is a graph cycle
 through a graph that visits each node exactly once.
@@ -88,6 +90,7 @@ def util_hamilton_cycle(graph: list[list[int]], path: list[int], curr_ind: int) 
     >>> path
     [0, 1, 2, 4, 3, 0]
     """
+    logger.debug(">>> Entering util_hamilton_cycle(graph=%s,path=%s,curr_ind=%s)", graph, path, curr_ind)
 
     # Base Case
     if curr_ind == len(graph):
@@ -104,6 +107,7 @@ def util_hamilton_cycle(graph: list[list[int]], path: list[int], curr_ind: int) 
                 return True
             # Backtrack
             path[curr_ind] = -1
+    logger.debug("<<< Exiting util_hamilton_cycle(graph=%s,path=%s,curr_ind=%s)", graph, path, curr_ind)
     return False
 
 
@@ -167,10 +171,13 @@ def hamilton_cycle(graph: list[list[int]], start_index: int = 0) -> list[int]:
     >>> hamilton_cycle(graph,4)
     []
     """
+    logger.debug(">>> Entering hamilton_cycle(graph=%s,start_index=%s)", graph, start_index)
 
     # Initialize path with -1, indicating that we have not visited them yet
     path = [-1] * (len(graph) + 1)
+    logger.debug("hamilton_cycle(graph=%s,start_index=%s): path → %s", graph, start_index, path)
     # initialize start and end of path with starting index
     path[0] = path[-1] = start_index
     # evaluate and if we find answer return path either return empty array
+    logger.debug("<<< Exiting hamilton_cycle(graph=%s,start_index=%s)", graph, start_index)
     return path if util_hamilton_cycle(graph, path, 1) else []

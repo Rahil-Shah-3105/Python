@@ -1,4 +1,6 @@
 import re
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_sri_lankan_phone_number(phone: str) -> bool:
@@ -21,9 +23,12 @@ def is_sri_lankan_phone_number(phone: str) -> bool:
     >>> is_sri_lankan_phone_number("0957651234")
     False
     """
+    logger.debug(">>> Entering is_sri_lankan_phone_number(phone=%s)", phone)
 
     pattern = re.compile(r"^(?:0|94|\+94|0{2}94)7(0|1|2|4|5|6|7|8)(-| |)\d{7}$")
+    logger.debug("is_sri_lankan_phone_number(phone=%s): pattern → %s", phone, pattern)
 
+    logger.debug("<<< Exiting is_sri_lankan_phone_number(phone=%s)", phone)
     return bool(re.search(pattern, phone))
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This is a Python implementation of the circle sort algorithm
 
@@ -26,8 +28,10 @@ def circle_sort(collection: list) -> list:
     >>> all(sorted(collection) == circle_sort(collection) for collection in collections)
     True
     """
+    logger.debug(">>> Entering circle_sort(collection=%s)", collection)
 
     if len(collection) < 2:
+        logger.debug("<<< Exiting circle_sort(collection=%s)", collection)
         return collection
 
     def circle_sort_util(collection: list, low: int, high: int) -> bool:
@@ -38,14 +42,17 @@ def circle_sort(collection: list) -> list:
         >>> arr
         [3, 4, 5, 2, 1]
         """
+        logger.debug(">>> Entering circle_sort_util(collection=%s,low=%s,high=%s)", collection, low, high)
 
         swapped = False
+        logger.debug("circle_sort_util(collection=%s,low=%s,high=%s): swapped → %s", collection, low, high, swapped)
 
         if low == high:
             return swapped
 
         left = low
         right = high
+        logger.debug("circle_sort_util(collection=%s,low=%s,high=%s): right → %s", collection, low, high, right)
 
         while left < right:
             if collection[left] > collection[right]:
@@ -67,9 +74,13 @@ def circle_sort(collection: list) -> list:
             swapped = True
 
         mid = low + int((high - low) / 2)
+        logger.debug("circle_sort_util(collection=%s,low=%s,high=%s): mid → %s", collection, low, high, mid)
         left_swap = circle_sort_util(collection, low, mid)
+        logger.debug("circle_sort_util(collection=%s,low=%s,high=%s): left_swap → %s", collection, low, high, left_swap)
         right_swap = circle_sort_util(collection, mid + 1, high)
+        logger.debug("circle_sort_util(collection=%s,low=%s,high=%s): right_swap → %s", collection, low, high, right_swap)
 
+        logger.debug("<<< Exiting circle_sort_util(collection=%s,low=%s,high=%s)", collection, low, high)
         return swapped or left_swap or right_swap
 
     is_not_sorted = True

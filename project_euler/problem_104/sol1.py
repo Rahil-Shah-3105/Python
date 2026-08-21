@@ -14,6 +14,8 @@ the last nine digits are 1-9 pandigital, find k.
 """
 
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 sys.set_int_max_str_digits(0)
 
@@ -33,9 +35,12 @@ def check(number: int) -> bool:
     True
 
     """
+    logger.debug(">>> Entering check(number=%s)", number)
 
     check_last = [0] * 11
+    logger.debug("check(number=%s): check_last → %s", number, check_last)
     check_front = [0] * 11
+    logger.debug("check(number=%s): check_front → %s", number, check_front)
 
     # mark last 9 numbers
     for _ in range(9):
@@ -64,6 +69,7 @@ def check(number: int) -> bool:
     for x in range(9):
         if not check_front[x + 1]:
             f = False
+    logger.debug("<<< Exiting check(number=%s)", number)
     return f
 
 
@@ -81,8 +87,10 @@ def check1(number: int) -> bool:
     False
 
     """
+    logger.debug(">>> Entering check1(number=%s)", number)
 
     check_last = [0] * 11
+    logger.debug("check1(number=%s): check_last → %s", number, check_last)
 
     # mark last 9 numbers
     for _ in range(9):
@@ -96,6 +104,7 @@ def check1(number: int) -> bool:
     for x in range(9):
         if not check_last[x + 1]:
             f = False
+    logger.debug("<<< Exiting check1(number=%s)", number)
     return f
 
 
@@ -105,6 +114,7 @@ def solution() -> int:
     >>> solution()
     329468
     """
+    logger.debug(">>> Entering solution()")
 
     a = 1
     b = 1
@@ -114,10 +124,12 @@ def solution() -> int:
     a1 = 1
     b1 = 1
     c1 = 2
+    logger.debug("solution(): c1 → %s", c1)
     # temporary Fibonacci numbers mod 1e9
 
     # mod m=1e9, done for fast optimisation
     tocheck = [0] * 1000000
+    logger.debug("solution(): tocheck → %s", tocheck)
     m = 1000000000
 
     for x in range(1000000):
@@ -134,6 +146,7 @@ def solution() -> int:
         # perform check only if in tocheck
         if tocheck[x + 3] and check(b):
             return x + 3  # first 2 already done
+    logger.debug("<<< Exiting solution()")
     return -1
 
 

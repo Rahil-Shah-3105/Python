@@ -49,6 +49,8 @@ from __future__ import annotations
 
 from fractions import Fraction
 from math import gcd, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_sq(number: int) -> bool:
@@ -62,7 +64,10 @@ def is_sq(number: int) -> bool:
     >>> is_sq(1000000)
     True
     """
+    logger.debug(">>> Entering is_sq(number=%s)", number)
+    logger.debug("is_sq(number=%s): sq → %s", number, sq)
     sq: int = int(number**0.5)
+    logger.debug("<<< Exiting is_sq(number=%s)", number)
     return number == sq * sq
 
 
@@ -97,9 +102,12 @@ def solution(order: int = 35) -> int:
     >>> solution(20)
     19408891927
     """
+    logger.debug(">>> Entering solution(order=%s)", order)
+    logger.debug("solution(order=%s): unique_s → %s", order, unique_s)
     unique_s: set = set()
     hcf: int
     total: Fraction = Fraction(0)
+    logger.debug("solution(order=%s): total → %s", order, total)
     fraction_sum: tuple[int, int]
 
     for x_num in range(1, order + 1):
@@ -108,8 +116,11 @@ def solution(order: int = 35) -> int:
                 for y_den in range(y_num + 1, order + 1):
                     # n=1
                     z_num = x_num * y_den + x_den * y_num
+                    logger.debug("solution(order=%s): z_num → %s", order, z_num)
                     z_den = x_den * y_den
+                    logger.debug("solution(order=%s): z_den → %s", order, z_den)
                     hcf = gcd(z_num, z_den)
+                    logger.debug("solution(order=%s): hcf → %s", order, hcf)
                     z_num //= hcf
                     z_den //= hcf
                     if 0 < z_num < z_den <= order:
@@ -167,6 +178,7 @@ def solution(order: int = 35) -> int:
     for num, den in unique_s:
         total += Fraction(num, den)
 
+    logger.debug("<<< Exiting solution(order=%s)", order)
     return total.denominator + total.numerator
 
 

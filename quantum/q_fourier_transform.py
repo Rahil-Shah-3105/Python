@@ -16,6 +16,8 @@ import math
 import numpy as np
 import qiskit
 from qiskit import Aer, ClassicalRegister, QuantumCircuit, QuantumRegister, execute
+import logging
+logger = logging.getLogger(__name__)
 
 
 def quantum_fourier_transform(number_of_qubits: int = 3) -> qiskit.result.counts.Counts:
@@ -55,6 +57,7 @@ def quantum_fourier_transform(number_of_qubits: int = 3) -> qiskit.result.counts
         ...
     ValueError: number of qubits must be exact integer.
     """
+    logger.debug(">>> Entering quantum_fourier_transform(number_of_qubits=%s)", number_of_qubits)
     if isinstance(number_of_qubits, str):
         raise TypeError("number of qubits must be a integer.")
     if number_of_qubits <= 0:
@@ -65,11 +68,15 @@ def quantum_fourier_transform(number_of_qubits: int = 3) -> qiskit.result.counts
         raise ValueError("number of qubits too large to simulate(>10).")
 
     qr = QuantumRegister(number_of_qubits, "qr")
+    logger.debug("quantum_fourier_transform(number_of_qubits=%s): qr → %s", number_of_qubits, qr)
     cr = ClassicalRegister(number_of_qubits, "cr")
+    logger.debug("quantum_fourier_transform(number_of_qubits=%s): cr → %s", number_of_qubits, cr)
 
     quantum_circuit = QuantumCircuit(qr, cr)
+    logger.debug("quantum_fourier_transform(number_of_qubits=%s): quantum_circuit → %s", number_of_qubits, quantum_circuit)
 
     counter = number_of_qubits
+    logger.debug("quantum_fourier_transform(number_of_qubits=%s): counter → %s", number_of_qubits, counter)
 
     for i in range(counter):
         quantum_circuit.h(number_of_qubits - i - 1)

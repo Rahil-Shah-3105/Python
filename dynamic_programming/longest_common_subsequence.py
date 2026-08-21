@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 LCS Problem Statement: Given two sequences, find the length of longest subsequence
 present in both of them.  A subsequence is a sequence that appears in the same relative
@@ -47,16 +49,20 @@ def longest_common_subsequence(x: str, y: str):
     >>> longest_common_subsequence("ABCD", "ACBD")  # No repeated characters
     (3, 'ABD')
     """
+    logger.debug(">>> Entering longest_common_subsequence(x=%s,y=%s)", x, y)
     # find the length of strings
 
     assert x is not None
     assert y is not None
 
     m = len(x)
+    logger.debug("longest_common_subsequence(x=%s,y=%s): m → %s", x, y, m)
     n = len(y)
+    logger.debug("longest_common_subsequence(x=%s,y=%s): n → %s", x, y, n)
 
     # declaring the array for storing the dp values
     dp = [[0] * (n + 1) for _ in range(m + 1)]
+    logger.debug("longest_common_subsequence(x=%s,y=%s): dp → %s", x, y, dp)
 
     for i in range(1, m + 1):
         for j in range(1, n + 1):
@@ -65,6 +71,7 @@ def longest_common_subsequence(x: str, y: str):
             dp[i][j] = max(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1] + match)
 
     seq = ""
+    logger.debug("longest_common_subsequence(x=%s,y=%s): seq → %s", x, y, seq)
     i, j = m, n
     while i > 0 and j > 0:
         match = 1 if x[i - 1] == y[j - 1] else 0
@@ -79,6 +86,7 @@ def longest_common_subsequence(x: str, y: str):
         else:
             j -= 1
 
+    logger.debug("<<< Exiting longest_common_subsequence(x=%s,y=%s)", x, y)
     return dp[m][n], seq
 
 

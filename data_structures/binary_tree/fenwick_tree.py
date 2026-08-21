@@ -1,4 +1,6 @@
 from copy import deepcopy
+import logging
+logger = logging.getLogger(__name__)
 
 
 class FenwickTree:
@@ -16,13 +18,17 @@ class FenwickTree:
             arr (list): list of elements to initialize the tree with (optional)
             size (int): size of the Fenwick tree (if arr is None)
         """
+        logger.debug(">>> Entering __init__(arr=%s,size=%s)", arr, size)
 
         if arr is None and size is not None:
             self.size = size
+            logger.debug("__init__(self=%s,arr=%s,size=%s): self.size → %s", self, arr, size, self.size)
             self.tree = [0] * size
+            logger.debug("__init__(self=%s,arr=%s,size=%s): self.tree → %s", self, arr, size, self.tree)
         elif arr is not None:
             self.init(arr)
         else:
+            logger.debug("<<< Exiting __init__(arr=%s,size=%s)", arr, size)
             raise ValueError("Either arr or size must be specified")
 
     def init(self, arr: list[int]) -> None:
@@ -43,12 +49,16 @@ class FenwickTree:
         >>> f1.tree == f2.tree
         True
         """
+        logger.debug(">>> Entering init(arr=%s)", arr)
+        logger.debug("init(arr=%s): size → %s", arr, size)
         self.size = len(arr)
         self.tree = deepcopy(arr)
+        logger.debug("init(arr=%s): self.tree → %s", arr, self.tree)
         for i in range(1, self.size):
             j = self.next_(i)
             if j < self.size:
                 self.tree[j] += self.tree[i]
+                logger.debug("<<< Exiting init(arr=%s)", arr)
 
     def get_array(self) -> list[int]:
         """
@@ -62,19 +72,26 @@ class FenwickTree:
         >>> f.get_array() == a
         True
         """
+        logger.debug(">>> Entering get_array()")
         arr = self.tree[:]
+        logger.debug("get_array(self=%s): arr → %s", self, arr)
         for i in range(self.size - 1, 0, -1):
             j = self.next_(i)
             if j < self.size:
                 arr[j] -= arr[i]
+        logger.debug("<<< Exiting get_array()")
         return arr
 
     @staticmethod
     def next_(index: int) -> int:
+        logger.debug(">>> Entering next_(index=%s)", index)
+        logger.debug("<<< Exiting next_(index=%s)", index)
         return index + (index & (-index))
 
     @staticmethod
     def prev(index: int) -> int:
+        logger.debug(">>> Entering prev(index=%s)", index)
+        logger.debug("<<< Exiting prev(index=%s)", index)
         return index - (index & (-index))
 
     def add(self, index: int, value: int) -> None:
@@ -97,8 +114,10 @@ class FenwickTree:
         >>> f.get_array()
         [2, 4, 6, 8, 10]
         """
+        logger.debug(">>> Entering add(index=%s,value=%s)", index, value)
         if index == 0:
             self.tree[0] += value
+            logger.debug("<<< Exiting add(index=%s,value=%s)", index, value)
             return
         while index < self.size:
             self.tree[index] += value
@@ -124,7 +143,9 @@ class FenwickTree:
         >>> f.get_array()
         [1, 2, 3, 4, 5]
         """
+        logger.debug(">>> Entering update(index=%s,value=%s)", index, value)
         self.add(index, value - self.get(index))
+        logger.debug("<<< Exiting update(index=%s,value=%s)", index, value)
 
     def prefix(self, right: int) -> int:
         """
@@ -144,6 +165,7 @@ class FenwickTree:
         >>> res
         True
         """
+        logger.debug(">>> Entering prefix(right=%s)", right)
         if right == 0:
             return 0
         result = self.tree[0]
@@ -151,6 +173,7 @@ class FenwickTree:
         while right > 0:
             result += self.tree[right]
             right = self.prev(right)
+        logger.debug("<<< Exiting prefix(right=%s)", right)
         return result
 
     def query(self, left: int, right: int) -> int:
@@ -173,6 +196,8 @@ class FenwickTree:
         >>> res
         True
         """
+        logger.debug(">>> Entering query(left=%s,right=%s)", left, right)
+        logger.debug("<<< Exiting query(left=%s,right=%s)", left, right)
         return self.prefix(right) - self.prefix(left)
 
     def get(self, index: int) -> int:
@@ -193,6 +218,8 @@ class FenwickTree:
         >>> res
         True
         """
+        logger.debug(">>> Entering get(index=%s)", index)
+        logger.debug("<<< Exiting get(index=%s)", index)
         return self.query(index, index + 1)
 
     def rank_query(self, value: int) -> int:
@@ -223,6 +250,7 @@ class FenwickTree:
         >>> f.rank_query(11)
         5
         """
+        logger.debug(">>> Entering rank_query(value=%s)", value)
         value -= self.tree[0]
         if value < 0:
             return -1
@@ -238,6 +266,7 @@ class FenwickTree:
                 value -= self.tree[i + j]
                 i += j
             j //= 2
+        logger.debug("<<< Exiting rank_query(value=%s)", value)
         return i
 
 

@@ -18,6 +18,8 @@ Overview about methods
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 class XORCipher:
@@ -26,9 +28,12 @@ class XORCipher:
         simple constructor that receives a key or uses
         default key = 0
         """
+        logger.debug(">>> Entering __init__(key=%s)", key)
 
         # private field
+        logger.debug("<<< Exiting __init__(key=%s)", key)
         self.__key = key
+        logger.debug("__init__(self=%s,key=%s): self.__key → %s", self, key, self.__key)
 
     def encrypt(self, content: str, key: int) -> list[str]:
         """
@@ -44,6 +49,7 @@ class XORCipher:
         One key
         >>> XORCipher().encrypt("hallo welt", 1)
         ['i', '`', 'm', 'm', 'n', '!', 'v', 'd', 'm', 'u']
+        logger.debug(">>> Entering encrypt(content=%s,key=%s)", content, key)
 
         Normal key
         >>> XORCipher().encrypt("HALLO WELT", 32)
@@ -67,6 +73,7 @@ class XORCipher:
 
     def decrypt(self, content: str, key: int) -> list[str]:
         """
+        logger.debug(">>> Entering decrypt(content=%s,key=%s)", content, key)
         input: 'content' of type list and 'key' of type int
         output: decrypted string 'content' as a list of chars
         if key not passed the method uses the key by the constructor.
@@ -94,10 +101,12 @@ class XORCipher:
         assert isinstance(content, str)
 
         key = key or self.__key or 1
+        logger.debug("decrypt(content=%s,key=%s): key → %s", content, key, key)
 
         # make sure key is an appropriate size
         key %= 256
 
+        logger.debug("<<< Exiting decrypt(content=%s,key=%s)", content, key)
         return [chr(ord(ch) ^ key) for ch in content]
 
     def encrypt_string(self, content: str, key: int = 0) -> str:
@@ -114,6 +123,7 @@ class XORCipher:
         One key
         >>> XORCipher().encrypt_string("hallo welt", 1)
         'i`mmn!vdmu'
+        logger.debug(">>> Entering encrypt_string(content=%s,key=%s)", content, key)
 
         Normal key
         >>> XORCipher().encrypt_string("HALLO WELT", 32)
@@ -143,6 +153,7 @@ class XORCipher:
 
     def decrypt_string(self, content: str, key: int = 0) -> str:
         """
+        logger.debug(">>> Entering decrypt_string(content=%s,key=%s)", content, key)
         input: 'content' of type string and 'key' of type int
         output: decrypted string 'content'
         if key not passed the method uses the key by the constructor.
@@ -170,16 +181,20 @@ class XORCipher:
         assert isinstance(content, str)
 
         key = key or self.__key or 1
+        logger.debug("decrypt_string(content=%s,key=%s): key → %s", content, key, key)
 
         # make sure key is an appropriate size
         key %= 256
 
         # This will be returned
         ans = ""
+        logger.debug("decrypt_string(self=%s,content=%s,key=%s): ans → %s", self, content, key, ans)
+        logger.debug("decrypt_string(content=%s,key=%s): ans → %s", content, key, ans)
 
         for ch in content:
             ans += chr(ord(ch) ^ key)
 
+        logger.debug("<<< Exiting decrypt_string(content=%s,key=%s)", content, key)
         return ans
 
     def encrypt_file(self, file: str, key: int = 0) -> bool:
@@ -190,6 +205,7 @@ class XORCipher:
         if key not passed the method uses the key by the constructor.
         otherwise key = 1
         """
+        logger.debug(">>> Entering encrypt_file(file=%s,key=%s)", file, key)
 
         # precondition
         assert isinstance(file, str)
@@ -200,6 +216,7 @@ class XORCipher:
 
         try:
             with open(file) as fin, open("encrypt.out", "w+") as fout:
+                logger.error("Exception in encrypt_file(file=%s,key=%s)", file, key, exc_info=True)
                 # actual encrypt-process
                 for line in fin:
                     fout.write(self.encrypt_string(line, key))
@@ -207,6 +224,7 @@ class XORCipher:
         except OSError:
             return False
 
+        logger.debug("<<< Exiting encrypt_file(file=%s,key=%s)", file, key)
         return True
 
     def decrypt_file(self, file: str, key: int) -> bool:
@@ -217,6 +235,7 @@ class XORCipher:
         if key not passed the method uses the key by the constructor.
         otherwise key = 1
         """
+        logger.debug(">>> Entering decrypt_file(file=%s,key=%s)", file, key)
 
         # precondition
         assert isinstance(file, str)
@@ -227,6 +246,7 @@ class XORCipher:
 
         try:
             with open(file) as fin, open("decrypt.out", "w+") as fout:
+                logger.error("Exception in decrypt_file(file=%s,key=%s)", file, key, exc_info=True)
                 # actual encrypt-process
                 for line in fin:
                     fout.write(self.decrypt_string(line, key))
@@ -234,6 +254,7 @@ class XORCipher:
         except OSError:
             return False
 
+        logger.debug("<<< Exiting decrypt_file(file=%s,key=%s)", file, key)
         return True
 
 

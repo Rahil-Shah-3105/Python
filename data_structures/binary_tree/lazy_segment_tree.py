@@ -1,14 +1,22 @@
 from __future__ import annotations
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 class SegmentTree:
     def __init__(self, size: int) -> None:
+        logger.debug(">>> Entering __init__(size=%s)", size)
         self.size = size
+        logger.debug("__init__(self=%s,size=%s): self.size → %s", self, size, self.size)
         # approximate the overall size of segment tree with given value
         self.segment_tree = [0 for i in range(4 * size)]
+        logger.debug("__init__(size=%s): self.segment_tree → %s", size, self.segment_tree)
+        logger.debug("__init__(size=%s): lazy → %s", size, lazy)
+        logger.debug("__init__(size=%s): self.flag → %s", size, self.flag)
         # create array to store lazy update
+        logger.debug("<<< Exiting __init__(size=%s)", size)
         self.lazy = [0 for i in range(4 * size)]
         self.flag = [0 for i in range(4 * size)]  # flag for lazy update
 
@@ -22,6 +30,8 @@ class SegmentTree:
         >>> segment_tree.left(12)
         24
         """
+        logger.debug(">>> Entering left(idx=%s)", idx)
+        logger.debug("<<< Exiting left(idx=%s)", idx)
         return idx * 2
 
     def right(self, idx: int) -> int:
@@ -34,6 +44,8 @@ class SegmentTree:
         >>> segment_tree.right(12)
         25
         """
+        logger.debug(">>> Entering right(idx=%s)", idx)
+        logger.debug("<<< Exiting right(idx=%s)", idx)
         return idx * 2 + 1
 
     def build(
@@ -119,6 +131,8 @@ class SegmentTree:
         return max(q1, q2)
 
     def __str__(self) -> str:
+        logger.debug(">>> Entering __str__()")
+        logger.debug("<<< Exiting __str__()")
         return str([self.query(1, 1, self.size, i, i) for i in range(1, self.size + 1)])
 
 

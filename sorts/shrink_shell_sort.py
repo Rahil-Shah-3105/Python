@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This function implements the shell sort algorithm
 which is slightly faster than its pure implementation.
@@ -34,13 +36,16 @@ def shell_sort(collection: list) -> list:
     >>> shell_sort([1])
     [1]
     """
+    logger.debug(">>> Entering shell_sort(collection=%s)", collection)
 
     # Choose an initial gap value
     gap = len(collection)
+    logger.debug("shell_sort(collection=%s): gap → %s", collection, gap)
 
     # Set the gap value to be decreased by a factor of 1.3
     # after each iteration
     shrink = 1.3
+    logger.debug("shell_sort(collection=%s): shrink → %s", collection, shrink)
 
     # Continue sorting until the gap is 1
     while gap > 1:
@@ -56,6 +61,7 @@ def shell_sort(collection: list) -> list:
                 j -= gap
             collection[j] = temp
 
+    logger.debug("<<< Exiting shell_sort(collection=%s)", collection)
     return collection
 
 

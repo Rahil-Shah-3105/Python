@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Calculates the sum of two non-negative integers using bitwise operators
 Wikipedia explanation: https://en.wikipedia.org/wiki/Binary_number
@@ -33,6 +35,7 @@ def bitwise_addition_recursive(number: int, other_number: int) -> int:
         ...
     ValueError: Both arguments MUST be non-negative!
     """
+    logger.debug(">>> Entering bitwise_addition_recursive(number=%s,other_number=%s)", number, other_number)
 
     if not isinstance(number, int) or not isinstance(other_number, int):
         raise TypeError("Both arguments MUST be integers!")
@@ -41,11 +44,13 @@ def bitwise_addition_recursive(number: int, other_number: int) -> int:
         raise ValueError("Both arguments MUST be non-negative!")
 
     bitwise_sum = number ^ other_number
+    logger.debug("bitwise_addition_recursive(number=%s,other_number=%s): bitwise_sum → %s", number, other_number, bitwise_sum)
     carry = number & other_number
 
     if carry == 0:
         return bitwise_sum
 
+    logger.debug("<<< Exiting bitwise_addition_recursive(number=%s,other_number=%s)", number, other_number)
     return bitwise_addition_recursive(bitwise_sum, carry << 1)
 
 

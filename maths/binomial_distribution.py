@@ -2,6 +2,8 @@
 https://en.wikipedia.org/wiki/Binomial_distribution"""
 
 from math import factorial
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binomial_distribution(successes: int, trials: int, prob: float) -> float:
@@ -17,6 +19,7 @@ def binomial_distribution(successes: int, trials: int, prob: float) -> float:
     >>> binomial_distribution (2, 4, 0.5)
     0.375
     """
+    logger.debug(">>> Entering binomial_distribution(successes=%s,trials=%s,prob=%s)", successes, trials, prob)
     if successes > trials:
         raise ValueError("""successes must be lower or equal to trials""")
     if trials < 0 or successes < 0:
@@ -26,9 +29,12 @@ def binomial_distribution(successes: int, trials: int, prob: float) -> float:
     if not 0 < prob < 1:
         raise ValueError("prob has to be in range of 1 - 0")
     probability = (prob**successes) * ((1 - prob) ** (trials - successes))
+    logger.debug("binomial_distribution(successes=%s,trials=%s,prob=%s): probability → %s", successes, trials, prob, probability)
     # Calculate the binomial coefficient: n! / k!(n-k)!
     coefficient = float(factorial(trials))
+    logger.debug("binomial_distribution(successes=%s,trials=%s,prob=%s): coefficient → %s", successes, trials, prob, coefficient)
     coefficient /= factorial(successes) * factorial(trials - successes)
+    logger.debug("<<< Exiting binomial_distribution(successes=%s,trials=%s,prob=%s)", successes, trials, prob)
     return probability * coefficient
 
 

@@ -1,4 +1,6 @@
 from collections.abc import Callable
+import logging
+logger = logging.getLogger(__name__)
 
 
 def bisection(function: Callable[[float], float], a: float, b: float) -> float:
@@ -19,6 +21,7 @@ def bisection(function: Callable[[float], float], a: float, b: float) -> float:
         ...
     ValueError: could not find root in given interval.
     """
+    logger.debug(">>> Entering bisection(function=%s,a=%s,b=%s)", function, a, b)
     start: float = a
     end: float = b
     if function(a) == 0:  # one of the a or b is a root for the function
@@ -37,13 +40,19 @@ def bisection(function: Callable[[float], float], a: float, b: float) -> float:
                 return mid
             elif function(mid) * function(start) < 0:
                 end = mid
+                logger.debug("bisection(function=%s,a=%s,b=%s): end → %s", function, a, b, end)
             else:
                 start = mid
+                logger.debug("bisection(function=%s,a=%s,b=%s): start → %s", function, a, b, start)
             mid = start + (end - start) / 2.0
+            logger.debug("bisection(function=%s,a=%s,b=%s): mid → %s", function, a, b, mid)
+        logger.debug("<<< Exiting bisection(function=%s,a=%s,b=%s)", function, a, b)
         return mid
 
 
 def f(x: float) -> float:
+    logger.debug(">>> Entering f(x=%s)", x)
+    logger.debug("<<< Exiting f(x=%s)", x)
     return x**3 - 2 * x - 5
 
 

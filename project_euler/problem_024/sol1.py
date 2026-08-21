@@ -11,6 +11,8 @@ What is the millionth lexicographic permutation of the digits 0, 1, 2, 3, 4, 5,
 """
 
 from itertools import permutations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution():
@@ -20,7 +22,10 @@ def solution():
     >>> solution()
     '2783915460'
     """
+    logger.debug(">>> Entering solution()")
     result = list(map("".join, permutations("0123456789")))
+    logger.debug("solution(): result → %s", result)
+    logger.debug("<<< Exiting solution()")
     return result[999999]
 
 

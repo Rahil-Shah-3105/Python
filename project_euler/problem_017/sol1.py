@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Number letter counts
 Problem 17: https://projecteuler.net/problem=17
@@ -24,14 +26,18 @@ def solution(n: int = 1000) -> int:
     >>> solution(5)
     19
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
     # number of letters in zero, one, two, ..., nineteen (0 for zero since it's
     # never said aloud)
     ones_counts = [0, 3, 3, 5, 4, 4, 3, 5, 5, 4, 3, 6, 6, 8, 8, 7, 7, 9, 8, 8]
+    logger.debug("solution(n=%s): ones_counts → %s", n, ones_counts)
     # number of letters in twenty, thirty, ..., ninety (0 for numbers less than
     # 20 due to inconsistency in teens)
     tens_counts = [0, 0, 6, 6, 5, 5, 5, 7, 6, 6]
+    logger.debug("solution(n=%s): tens_counts → %s", n, tens_counts)
 
     count = 0
+    logger.debug("solution(n=%s): count → %s", n, count)
 
     for i in range(1, n + 1):
         if i < 1000:

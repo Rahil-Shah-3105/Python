@@ -1,12 +1,17 @@
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Graph:
     def __init__(self, n=0):  # a graph with Node 0,1,...,N-1
+        logger.debug(">>> Entering __init__(n=%s)", n)
         self.n = n
+        logger.debug("__init__(self=%s,n=%s): self.n → %s", self, n, self.n)
         self.w = [
             [math.inf for j in range(n)] for i in range(n)
         ]  # adjacency matrix for weight
+        logger.debug("__init__(self=%s,n=%s): self.w → %s", self, n, self.w)
         self.dp = [
             [math.inf for j in range(n)] for i in range(n)
         ]  # dp[i][j] stores minimum distance from i to j
@@ -21,7 +26,9 @@ class Graph:
         >>> g.dp[0][1]
         5
         """
+        logger.debug(">>> Entering add_edge(u=%s,v=%s,w=%s)", u, v, w)
         self.dp[u][v] = w
+        logger.debug("<<< Exiting add_edge(u=%s,v=%s,w=%s)", u, v, w)
 
     def floyd_warshall(self):
         """
@@ -37,10 +44,12 @@ class Graph:
         >>> g.show_min(2, 0)
         inf
         """
+        logger.debug(">>> Entering floyd_warshall()")
         for k in range(self.n):
             for i in range(self.n):
                 for j in range(self.n):
                     self.dp[i][j] = min(self.dp[i][j], self.dp[i][k] + self.dp[k][j])
+                    logger.debug("<<< Exiting floyd_warshall()")
 
     def show_min(self, u, v):
         """
@@ -55,6 +64,8 @@ class Graph:
         >>> g.show_min(1, 0)
         inf
         """
+        logger.debug(">>> Entering show_min(u=%s,v=%s)", u, v)
+        logger.debug("<<< Exiting show_min(u=%s,v=%s)", u, v)
         return self.dp[u][v]
 
 

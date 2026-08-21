@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def manhattan_distance(point_a: list, point_b: list) -> float:
     """
     Expectts two list of numbers representing two points in the same
@@ -34,12 +36,14 @@ def manhattan_distance(point_a: list, point_b: list) -> float:
          ...
     TypeError: Expected a list of numbers as input, found str
     """
+    logger.debug(">>> Entering manhattan_distance(point_a=%s,point_b=%s)", point_a, point_b)
 
     _validate_point(point_a)
     _validate_point(point_b)
     if len(point_a) != len(point_b):
         raise ValueError("Both points must be in the same n-dimensional space")
 
+    logger.debug("<<< Exiting manhattan_distance(point_a=%s,point_b=%s)", point_a, point_b)
     return float(sum(abs(a - b) for a, b in zip(point_a, point_b)))
 
 
@@ -62,6 +66,7 @@ def _validate_point(point: list[float]) -> None:
          ...
     TypeError: Expected a list of numbers as input, found str
     """
+    logger.debug(">>> Entering _validate_point(point=%s)", point)
     if point:
         if isinstance(point, list):
             for item in point:
@@ -75,6 +80,7 @@ def _validate_point(point: list[float]) -> None:
             msg = f"Expected a list of numbers as input, found {type(point).__name__}"
             raise TypeError(msg)
     else:
+        logger.debug("<<< Exiting _validate_point(point=%s)", point)
         raise ValueError("Missing an input")
 
 
@@ -111,12 +117,14 @@ def manhattan_distance_one_liner(point_a: list, point_b: list) -> float:
          ...
     TypeError: Expected a list of numbers as input, found str
     """
+    logger.debug(">>> Entering manhattan_distance_one_liner(point_a=%s,point_b=%s)", point_a, point_b)
 
     _validate_point(point_a)
     _validate_point(point_b)
     if len(point_a) != len(point_b):
         raise ValueError("Both points must be in the same n-dimensional space")
 
+    logger.debug("<<< Exiting manhattan_distance_one_liner(point_a=%s,point_b=%s)", point_a, point_b)
     return float(sum(abs(x - y) for x, y in zip(point_a, point_b)))
 
 

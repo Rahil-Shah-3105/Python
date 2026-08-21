@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 wiki: https://en.wikipedia.org/wiki/IPv4
 
@@ -51,7 +53,9 @@ def is_ip_v4_address_valid(ip: str) -> bool:
     >>> is_ip_v4_address_valid("1.2.3.05")
     False
     """
+    logger.debug(">>> Entering is_ip_v4_address_valid(ip=%s)", ip)
     octets = ip.split(".")
+    logger.debug("is_ip_v4_address_valid(ip=%s): octets → %s", ip, octets)
     if len(octets) != 4:
         return False
 
@@ -60,12 +64,14 @@ def is_ip_v4_address_valid(ip: str) -> bool:
             return False
 
         number = int(octet)
+        logger.debug("is_ip_v4_address_valid(ip=%s): number → %s", ip, number)
         if len(str(number)) != len(octet):
             return False
 
         if not 0 <= number <= 255:
             return False
 
+    logger.debug("<<< Exiting is_ip_v4_address_valid(ip=%s)", ip)
     return True
 
 

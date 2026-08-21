@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -25,11 +27,13 @@ class Node:
         >>> tuple(root)
         (1, 2)
         """
+        logger.debug(">>> Entering __iter__()")
         if self.left:
             yield from self.left
         yield self.data
         if self.right:
             yield from self.right
+            logger.debug("<<< Exiting __iter__()")
 
     def __len__(self) -> int:
         """
@@ -40,6 +44,8 @@ class Node:
         >>> len(root)
         2
         """
+        logger.debug(">>> Entering __len__()")
+        logger.debug("<<< Exiting __len__()")
         return sum(1 for _ in self)
 
     @property
@@ -55,7 +61,11 @@ class Node:
         >>> root.is_sum_node
         True
         """
+        logger.debug(">>> Entering is_sum_node()")
         if not self.left and not self.right:
+            logger.debug("<<< Exiting is_sum_node()")
+            logger.debug("is_sum_node(self=%s): left_sum → %s", self, left_sum)
+            logger.debug("is_sum_node(self=%s): right_sum → %s", self, right_sum)
             return True  # leaf nodes are considered sum nodes
         left_sum = sum(self.left) if self.left else 0
         right_sum = sum(self.right) if self.right else 0
@@ -93,6 +103,8 @@ class BinaryTree:
         >>> str(list(BinaryTree.build_a_tree()))
         '[1, 2, 7, 11, 15, 29, 35, 40]'
         """
+        logger.debug(">>> Entering __str__()")
+        logger.debug("<<< Exiting __str__()")
         return str(list(self))
 
     @property
@@ -103,6 +115,8 @@ class BinaryTree:
         >>> BinaryTree.build_a_sum_tree().is_sum_tree
         True
         """
+        logger.debug(">>> Entering is_sum_tree()")
+        logger.debug("<<< Exiting is_sum_tree()")
         return self.root.is_sum_node
 
     @classmethod
@@ -119,15 +133,20 @@ class BinaryTree:
         >>> list(BinaryTree.build_a_tree())
         [1, 2, 7, 11, 15, 29, 35, 40]
         """
+        logger.debug(">>> Entering build_a_tree()")
         tree = BinaryTree(Node(11))
+        logger.debug("build_a_tree(cls=%s): tree → %s", cls, tree)
+        logger.debug("build_a_tree(): tree → %s", tree)
         root = tree.root
         root.left = Node(2)
+        logger.warning("build_a_tree(cls=%s): root → %s", cls, root)
         root.right = Node(29)
         root.left.left = Node(1)
         root.left.right = Node(7)
         root.right.left = Node(15)
         root.right.right = Node(40)
         root.right.right.left = Node(35)
+        logger.debug("<<< Exiting build_a_tree()")
         return tree
 
     @classmethod
@@ -142,13 +161,18 @@ class BinaryTree:
         >>> list(BinaryTree.build_a_sum_tree())
         [4, 10, 6, 26, 3, 3]
         """
+        logger.debug(">>> Entering build_a_sum_tree()")
         tree = BinaryTree(Node(26))
+        logger.debug("build_a_sum_tree(cls=%s): tree → %s", cls, tree)
+        logger.debug("build_a_sum_tree(): tree → %s", tree)
         root = tree.root
         root.left = Node(10)
+        logger.warning("build_a_sum_tree(cls=%s): root → %s", cls, root)
         root.right = Node(3)
         root.left.left = Node(4)
         root.left.right = Node(6)
         root.right.right = Node(3)
+        logger.debug("<<< Exiting build_a_sum_tree()")
         return tree
 
 

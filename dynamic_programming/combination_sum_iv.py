@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Question:
     You are given an array of distinct integers and you have to tell how many
@@ -31,12 +33,16 @@ def combination_sum_iv(array: list[int], target: int) -> int:
     >>> combination_sum_iv([1,2,5], 5)
     9
     """
+    logger.debug(">>> Entering combination_sum_iv(array=%s,target=%s)", array, target)
 
+    logger.debug("<<< Exiting combination_sum_iv(array=%s,target=%s)", array, target)
     def count_of_possible_combinations(target: int) -> int:
+        logger.debug(">>> Entering count_of_possible_combinations(target=%s)", target)
         if target < 0:
             return 0
         if target == 0:
             return 1
+        logger.debug("<<< Exiting count_of_possible_combinations(target=%s)", target)
         return sum(count_of_possible_combinations(target - item) for item in array)
 
     return count_of_possible_combinations(target)
@@ -51,7 +57,9 @@ def combination_sum_iv_dp_array(array: list[int], target: int) -> int:
     >>> combination_sum_iv_dp_array([1,2,5], 5)
     9
     """
+    logger.debug(">>> Entering combination_sum_iv_dp_array(array=%s,target=%s)", array, target)
 
+    logger.debug("<<< Exiting combination_sum_iv_dp_array(array=%s,target=%s)", array, target)
     def count_of_possible_combinations_with_dp_array(
         target: int, dp_array: list[int]
     ) -> int:
@@ -81,8 +89,10 @@ def combination_sum_iv_bottom_up(n: int, array: list[int], target: int) -> int:
     >>> combination_sum_iv_bottom_up(3, [1,2,5], 5)
     9
     """
+    logger.debug(">>> Entering combination_sum_iv_bottom_up(n=%s,array=%s,target=%s)", n, array, target)
 
     dp_array = [0] * (target + 1)
+    logger.debug("combination_sum_iv_bottom_up(n=%s,array=%s,target=%s): dp_array → %s", n, array, target, dp_array)
     dp_array[0] = 1
 
     for i in range(1, target + 1):
@@ -90,6 +100,7 @@ def combination_sum_iv_bottom_up(n: int, array: list[int], target: int) -> int:
             if i - array[j] >= 0:
                 dp_array[i] += dp_array[i - array[j]]
 
+    logger.debug("<<< Exiting combination_sum_iv_bottom_up(n=%s,array=%s,target=%s)", n, array, target)
     return dp_array[target]
 
 

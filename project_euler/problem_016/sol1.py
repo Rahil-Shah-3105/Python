@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Problem 16: https://projecteuler.net/problem=16
 
@@ -18,14 +20,20 @@ def solution(power: int = 1000) -> int:
     >>> solution(15)
     26
     """
+    logger.debug(">>> Entering solution(power=%s)", power)
     num = 2**power
+    logger.debug("solution(power=%s): num → %s", power, num)
     string_num = str(num)
+    logger.debug("solution(power=%s): string_num → %s", power, string_num)
     list_num = list(string_num)
+    logger.debug("solution(power=%s): list_num → %s", power, list_num)
     sum_of_num = 0
+    logger.debug("solution(power=%s): sum_of_num → %s", power, sum_of_num)
 
     for i in list_num:
         sum_of_num += int(i)
 
+    logger.debug("<<< Exiting solution(power=%s)", power)
     return sum_of_num
 
 

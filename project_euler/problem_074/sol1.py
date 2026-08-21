@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 74: https://projecteuler.net/problem=74
 
@@ -63,10 +65,13 @@ def sum_digit_factorials(n: int) -> int:
     >>> sum_digit_factorials(540)
     145
     """
+    logger.debug(">>> Entering sum_digit_factorials(n=%s)", n)
     if n in CACHE_SUM_DIGIT_FACTORIALS:
         return CACHE_SUM_DIGIT_FACTORIALS[n]
     ret = sum(DIGIT_FACTORIALS[let] for let in str(n))
+    logger.debug("sum_digit_factorials(n=%s): ret → %s", n, ret)
     CACHE_SUM_DIGIT_FACTORIALS[n] = ret
+    logger.debug("<<< Exiting sum_digit_factorials(n=%s)", n)
     return ret
 
 
@@ -81,17 +86,22 @@ def chain_length(n: int, previous: set | None = None) -> int:
     >>> chain_length(178924)
     39
     """
+    logger.debug(">>> Entering chain_length(n=%s,previous=%s)", n, previous)
     previous = previous or set()
+    logger.debug("chain_length(n=%s,previous=%s): previous → %s", n, previous, previous)
     if n in CHAIN_LENGTH_CACHE:
         return CHAIN_LENGTH_CACHE[n]
     next_number = sum_digit_factorials(n)
+    logger.debug("chain_length(n=%s,previous=%s): next_number → %s", n, previous, next_number)
     if next_number in previous:
         CHAIN_LENGTH_CACHE[n] = 0
         return 0
     else:
         previous.add(n)
         ret = 1 + chain_length(next_number, previous)
+        logger.debug("chain_length(n=%s,previous=%s): ret → %s", n, previous, ret)
         CHAIN_LENGTH_CACHE[n] = ret
+        logger.debug("<<< Exiting chain_length(n=%s,previous=%s)", n, previous)
         return ret
 
 
@@ -102,6 +112,8 @@ def solution(num_terms: int = 60, max_start: int = 1000000) -> int:
     >>> solution(10,1000)
     28
     """
+    logger.debug(">>> Entering solution(num_terms=%s,max_start=%s)", num_terms, max_start)
+    logger.debug("<<< Exiting solution(num_terms=%s,max_start=%s)", num_terms, max_start)
     return sum(1 for i in range(1, max_start) if chain_length(i) == num_terms)
 
 

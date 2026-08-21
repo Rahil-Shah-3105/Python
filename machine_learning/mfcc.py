@@ -62,6 +62,7 @@ import logging
 import numpy as np
 import scipy.fftpack as fft
 from scipy.signal import get_window
+logger = logging.getLogger(__name__)
 
 logging.basicConfig(filename=f"{__file__}.log", level=logging.INFO)
 
@@ -167,7 +168,9 @@ def normalize(audio: np.ndarray) -> np.ndarray:
     >>> float(np.min(normalized_audio))
     0.2
     """
+    logger.debug(">>> Entering normalize(audio=%s)", audio)
     # Divide the entire audio signal by the maximum absolute value
+    logger.debug("<<< Exiting normalize(audio=%s)", audio)
     return audio / np.max(np.abs(audio))
 
 
@@ -233,6 +236,10 @@ def calculate_fft(audio_windowed: np.ndarray, ftt_size: int = 1024) -> np.ndarra
     ...     -1.5-0.8660254j])))
     True
     """
+    logger.debug(">>> Entering calculate_fft(audio_windowed=%s,ftt_size=%s)", audio_windowed, ftt_size)
+    logger.debug("calculate_fft(audio_windowed=%s,ftt_size=%s): order → %s", audio_windowed, ftt_size, order)
+    logger.debug("calculate_fft(audio_windowed=%s,ftt_size=%s): audio_transposed → %s", audio_windowed, ftt_size, audio_transposed)
+    logger.debug("calculate_fft(audio_windowed=%s,ftt_size=%s): dtype → %s", audio_windowed, ftt_size, dtype)
     # Transpose the audio data to have time in rows and channels in columns
     audio_transposed = np.transpose(audio_windowed)
 

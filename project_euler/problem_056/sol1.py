@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 56: https://projecteuler.net/problem=56
 
@@ -26,9 +28,11 @@ def solution(a: int = 100, b: int = 100) -> int:
     >>> solution(100,200)
     1872
     """
+    logger.debug(">>> Entering solution(a=%s,b=%s)", a, b)
 
     # RETURN the MAXIMUM from the list of SUMs of the list of INT converted from STR of
     # BASE raised to the POWER
+    logger.debug("<<< Exiting solution(a=%s,b=%s)", a, b)
     return max(
         sum(int(x) for x in str(base**power)) for base in range(a) for power in range(b)
     )

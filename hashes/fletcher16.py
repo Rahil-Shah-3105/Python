@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The Fletcher checksum is an algorithm for computing a position-dependent
 checksum devised by John G. Fletcher (1934-2012) at Lawrence Livermore Labs
@@ -21,12 +23,17 @@ def fletcher16(text: str) -> int:
     >>> fletcher16('The quick brown fox jumps over the lazy dog.')
     5655
     """
+    logger.debug(">>> Entering fletcher16(text=%s)", text)
     data = bytes(text, "ascii")
+    logger.debug("fletcher16(text=%s): data → %s", text, data)
     sum1 = 0
+    logger.debug("fletcher16(text=%s): sum1 → %s", text, sum1)
     sum2 = 0
+    logger.debug("fletcher16(text=%s): sum2 → %s", text, sum2)
     for character in data:
         sum1 = (sum1 + character) % 255
         sum2 = (sum1 + sum2) % 255
+    logger.debug("<<< Exiting fletcher16(text=%s)", text)
     return (sum2 << 8) | sum1
 
 

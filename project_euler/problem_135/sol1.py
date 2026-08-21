@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 135: https://projecteuler.net/problem=135
 
@@ -31,11 +33,14 @@ def solution(limit: int = 1000000) -> int:
     >>> solution(50050)
     292
     """
+    logger.debug(">>> Entering solution(limit=%s)", limit)
     limit = limit + 1
     frequency = [0] * limit
+    logger.debug("solution(limit=%s): frequency → %s", limit, frequency)
     for first_term in range(1, limit):
         for n in range(first_term, limit, first_term):
             common_difference = first_term + n / first_term
+            logger.debug("solution(limit=%s): common_difference → %s", limit, common_difference)
             if common_difference % 4:  # d must be divisible by 4
                 continue
             else:
@@ -47,7 +52,9 @@ def solution(limit: int = 1000000) -> int:
                     frequency[n] += 1  # so z > 0, a > d and 4d < a
 
     count = sum(1 for x in frequency[1:limit] if x == 10)
+    logger.debug("solution(limit=%s): count → %s", limit, count)
 
+    logger.debug("<<< Exiting solution(limit=%s)", limit)
     return count
 
 

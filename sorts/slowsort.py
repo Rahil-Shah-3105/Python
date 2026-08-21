@@ -10,6 +10,8 @@ Source: https://en.wikipedia.org/wiki/Slowsort
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def slowsort(sequence: list, start: int | None = None, end: int | None = None) -> None:
@@ -35,16 +37,20 @@ def slowsort(sequence: list, start: int | None = None, end: int | None = None) -
     >>> seq = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]; slowsort(seq, start = 5); seq
     [9, 8, 7, 6, 5, 0, 1, 2, 3, 4]
     """
+    logger.debug(">>> Entering slowsort(sequence=%s,start=%s,end=%s)", sequence, start, end)
     if start is None:
         start = 0
 
     if end is None:
         end = len(sequence) - 1
+        logger.debug("slowsort(sequence=%s,start=%s,end=%s): end → %s", sequence, start, end, end)
 
     if start >= end:
         return
+        logger.debug("<<< Exiting slowsort(sequence=%s,start=%s,end=%s)", sequence, start, end)
 
     mid = (start + end) // 2
+    logger.debug("slowsort(sequence=%s,start=%s,end=%s): mid → %s", sequence, start, end, mid)
 
     slowsort(sequence, start, mid)
     slowsort(sequence, mid + 1, end)

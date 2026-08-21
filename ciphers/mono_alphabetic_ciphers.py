@@ -1,4 +1,6 @@
 from typing import Literal
+import logging
+logger = logging.getLogger(__name__)
 
 LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -33,6 +35,8 @@ def encrypt_message(key: str, message: str) -> str:
     >>> encrypt_message("QWERTYUIOPASDFGHJKLZXCVBNM", "Hello World")
     'Pcssi Bidsm'
     """
+    logger.debug(">>> Entering encrypt_message(key=%s,message=%s)", key, message)
+    logger.debug("<<< Exiting encrypt_message(key=%s,message=%s)", key, message)
     return translate_message(key, message, "encrypt")
 
 
@@ -41,18 +45,27 @@ def decrypt_message(key: str, message: str) -> str:
     >>> decrypt_message("QWERTYUIOPASDFGHJKLZXCVBNM", "Hello World")
     'Itssg Vgksr'
     """
+    logger.debug(">>> Entering decrypt_message(key=%s,message=%s)", key, message)
+    logger.debug("<<< Exiting decrypt_message(key=%s,message=%s)", key, message)
     return translate_message(key, message, "decrypt")
 
 
 def main() -> None:
+    logger.debug(">>> Entering main()")
     message = "Hello World"
+    logger.debug("main(): message → %s", message)
     key = "QWERTYUIOPASDFGHJKLZXCVBNM"
     mode = "decrypt"  # set to 'encrypt' or 'decrypt'
+    logger.warning("main(): key → %s", key)
+    logger.debug("main(): key → %s", key)
+    logger.debug("main(): mode → %s", mode)
+    logger.debug("main(): translated → %s", translated)
 
     if mode == "encrypt":
         translated = encrypt_message(key, message)
     elif mode == "decrypt":
         translated = decrypt_message(key, message)
+        logger.debug("<<< Exiting main()")
     print(f"Using the key {key}, the {mode}ed message is: {translated}")
 
 

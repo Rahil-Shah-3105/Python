@@ -6,6 +6,8 @@ from collections.abc import Callable
 from math import pi, sqrt
 from random import uniform
 from statistics import mean
+import logging
+logger = logging.getLogger(__name__)
 
 
 def pi_estimator(iterations: int) -> None:
@@ -19,12 +21,17 @@ def pi_estimator(iterations: int) -> None:
     5. Multiply this value by 4 to get your estimate of pi.
     6. Print the estimated and numpy value of pi
     """
+    logger.debug(">>> Entering pi_estimator(iterations=%s)", iterations)
 
+    logger.debug("<<< Exiting pi_estimator(iterations=%s)", iterations)
     # A local function to see if a dot lands in the circle.
     def is_in_circle(x: float, y: float) -> bool:
+        logger.debug(">>> Entering is_in_circle(x=%s,y=%s)", x, y)
         distance_from_centre = sqrt((x**2) + (y**2))
+        logger.debug("is_in_circle(x=%s,y=%s): distance_from_centre → %s", x, y, distance_from_centre)
         # Our circle has a radius of 1, so a distance
         # greater than 1 would land outside the circle.
+        logger.debug("<<< Exiting is_in_circle(x=%s,y=%s)", x, y)
         return distance_from_centre <= 1
 
     # The proportion of guesses that landed in the circle
@@ -85,6 +92,8 @@ def area_under_line_estimator_check(
         >>> [function_to_integrate(x) for x in [-2.0, -1.0, 0.0, 1.0, 2.0]]
         [-2.0, -1.0, 0.0, 1.0, 2.0]
         """
+        logger.debug(">>> Entering identity_function(x=%s)", x)
+        logger.debug("<<< Exiting identity_function(x=%s)", x)
         return x
 
     estimated_value = area_under_curve_estimator(
@@ -104,13 +113,17 @@ def pi_estimator_using_area_under_curve(iterations: int) -> None:
     """
     Area under curve y = sqrt(4 - x^2) where x lies in 0 to 2 is equal to pi
     """
+    logger.debug(">>> Entering pi_estimator_using_area_under_curve(iterations=%s)", iterations)
 
+    logger.debug("<<< Exiting pi_estimator_using_area_under_curve(iterations=%s)", iterations)
     def function_to_integrate(x: float) -> float:
         """
         Represents semi-circle with radius 2
         >>> [function_to_integrate(x) for x in [-2.0, 0.0, 2.0]]
         [0.0, 2.0, 0.0]
         """
+        logger.debug(">>> Entering function_to_integrate(x=%s)", x)
+        logger.debug("<<< Exiting function_to_integrate(x=%s)", x)
         return sqrt(4.0 - x * x)
 
     estimated_value = area_under_curve_estimator(

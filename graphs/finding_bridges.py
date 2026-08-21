@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 An edge is a bridge if, after removing it count of connected components in graph will
 be increased by one. Bridges represent vulnerabilities in a connected network and are
@@ -11,6 +13,7 @@ https://www.geeksforgeeks.org/bridge-in-a-graph/
 
 
 def __get_demo_graph(index):
+    logger.debug(">>> Entering __get_demo_graph(index=%s)", index)
     return [
         {
             0: [1, 2],
@@ -55,6 +58,7 @@ def __get_demo_graph(index):
             4: [1, 2, 3],
         },
     ][index]
+    logger.debug("<<< Exiting __get_demo_graph(index=%s)", index)
 
 
 def compute_bridges(graph: dict[int, list[int]]) -> list[tuple[int, int]]:
@@ -71,13 +75,20 @@ def compute_bridges(graph: dict[int, list[int]]) -> list[tuple[int, int]]:
     >>> compute_bridges({})
     []
     """
+    logger.debug(">>> Entering compute_bridges(graph=%s)", graph)
 
+    logger.debug("<<< Exiting compute_bridges(graph=%s)", graph)
     id_ = 0
+    logger.debug("compute_bridges(graph=%s): id_ → %s", graph, id_)
     n = len(graph)  # No of vertices in graph
+    logger.debug("compute_bridges(graph=%s): n → %s", graph, n)
     low = [0] * n
+    logger.debug("compute_bridges(graph=%s): low → %s", graph, low)
     visited = [False] * n
+    logger.debug("compute_bridges(graph=%s): visited → %s", graph, visited)
 
     def dfs(at, parent, bridges, id_):
+        logger.debug(">>> Entering dfs(at=%s,parent=%s,bridges=%s,id_=%s)", at, parent, bridges, id_)
         visited[at] = True
         low[at] = id_
         id_ += 1
@@ -92,6 +103,7 @@ def compute_bridges(graph: dict[int, list[int]]) -> list[tuple[int, int]]:
             else:
                 # This edge is a back edge and cannot be a bridge
                 low[at] = min(low[at], low[to])
+                logger.debug("<<< Exiting dfs(at=%s,parent=%s,bridges=%s,id_=%s)", at, parent, bridges, id_)
 
     bridges: list[tuple[int, int]] = []
     for i in range(n):

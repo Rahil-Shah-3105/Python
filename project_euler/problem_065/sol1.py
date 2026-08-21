@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 65: https://projecteuler.net/problem=65
 
@@ -64,10 +66,13 @@ def sum_digits(num: int) -> int:
     >>> sum_digits(999001)
     28
     """
+    logger.debug(">>> Entering sum_digits(num=%s)", num)
     digit_sum = 0
+    logger.debug("sum_digits(num=%s): digit_sum → %s", num, digit_sum)
     while num > 0:
         digit_sum += num % 10
         num //= 10
+    logger.debug("<<< Exiting sum_digits(num=%s)", num)
     return digit_sum
 
 
@@ -83,8 +88,11 @@ def solution(max_n: int = 100) -> int:
     >>> solution(50)
     91
     """
+    logger.debug(">>> Entering solution(max_n=%s)", max_n)
     pre_numerator = 1
+    logger.debug("solution(max_n=%s): pre_numerator → %s", max_n, pre_numerator)
     cur_numerator = 2
+    logger.debug("solution(max_n=%s): cur_numerator → %s", max_n, cur_numerator)
 
     for i in range(2, max_n + 1):
         temp = pre_numerator
@@ -92,6 +100,7 @@ def solution(max_n: int = 100) -> int:
         pre_numerator = cur_numerator
         cur_numerator = e_cont * pre_numerator + temp
 
+    logger.debug("<<< Exiting solution(max_n=%s)", max_n)
     return sum_digits(cur_numerator)
 
 

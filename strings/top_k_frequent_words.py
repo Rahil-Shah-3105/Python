@@ -10,6 +10,9 @@ in a few lines using collections.Counter from the Python standard library:
 
 from collections import Counter
 def top_k_frequent_words(words, k_value):
+    logger.debug(">>> Entering top_k_frequent_words(words=%s,k_value=%s)", words, k_value)
+    logger.debug("top_k_frequent_words(words=%s,k_value=%s): count_by_word → %s", words, k_value, count_by_word)
+    logger.debug("<<< Exiting top_k_frequent_words(words=%s,k_value=%s)", words, k_value)
     return [x[0] for x in Counter(words).most_common(k_value)]
 """
 
@@ -17,13 +20,20 @@ from collections import Counter
 from functools import total_ordering
 
 from data_structures.heap.heap import Heap
+import logging
+logger = logging.getLogger(__name__)
 
 
 @total_ordering
 class WordCount:
     def __init__(self, word: str, count: int) -> None:
+        logger.debug(">>> Entering __init__(word=%s,count=%s)", word, count)
         self.word = word
+        logger.debug("__init__(self=%s,word=%s,count=%s): self.word → %s", self, word, count, self.word)
         self.count = count
+        logger.debug("__init__(self=%s,word=%s,count=%s): self.count → %s", self, word, count, self.count)
+        logger.debug("__init__(word=%s,count=%s): self.count → %s", word, count, self.count)
+        logger.debug("<<< Exiting __init__(word=%s,count=%s)", word, count)
 
     def __eq__(self, other: object) -> bool:
         """
@@ -38,8 +48,10 @@ class WordCount:
         >>> WordCount('a', 1).__eq__(1)
         NotImplemented
         """
+        logger.debug(">>> Entering __eq__(other=%s)", other)
         if not isinstance(other, WordCount):
             return NotImplemented
+        logger.debug("<<< Exiting __eq__(other=%s)", other)
         return self.count == other.count
 
     def __lt__(self, other: object) -> bool:
@@ -59,8 +71,10 @@ class WordCount:
         >>> WordCount('a', 1).__lt__(1)
         NotImplemented
         """
+        logger.debug(">>> Entering __lt__(other=%s)", other)
         if not isinstance(other, WordCount):
             return NotImplemented
+        logger.debug("<<< Exiting __lt__(other=%s)", other)
         return self.count < other.count
 
 

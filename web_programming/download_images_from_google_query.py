@@ -14,6 +14,8 @@ import urllib.request
 
 import httpx
 from bs4 import BeautifulSoup
+import logging
+logger = logging.getLogger(__name__)
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
@@ -39,7 +41,10 @@ def download_images_from_google_query(query: str = "dhaka", max_images: int = 5)
     # >>> download_images_from_google_query("potato")
     5
     """
+    logger.debug(">>> Entering download_images_from_google_query(query=%s,max_images=%s)", max_images)
+    logger.debug("download_images_from_google_query(query=%s,max_images=%s): matched_images_data → %s", max_images, matched_images_data)
     max_images = min(max_images, 50)  # Prevent abuse!
+    logger.debug("download_images_from_google_query(query=%s,max_images=%s): max_images → %s", max_images, max_images)
     params = {
         "q": query,
         "tbm": "isch",
@@ -51,18 +56,22 @@ def download_images_from_google_query(query: str = "dhaka", max_images: int = 5)
         "https://www.google.com/search", params=params, headers=headers, timeout=10
     )
     soup = BeautifulSoup(html.text, "html.parser")
+    logger.debug("download_images_from_google_query(query=%s,max_images=%s): soup → %s", max_images, soup)
     matched_images_data = "".join(
         re.findall(r"AF_initDataCallback\(([^<]+)\);", str(soup.select("script")))
     )
 
     matched_images_data_fix = json.dumps(matched_images_data)
+    logger.debug("download_images_from_google_query(query=%s,max_images=%s): matched_images_data_fix → %s", max_images, matched_images_data_fix)
     matched_images_data_json = json.loads(matched_images_data_fix)
+    logger.debug("download_images_from_google_query(query=%s,max_images=%s): matched_images_data_json → %s", max_images, matched_images_data_json)
 
     matched_google_image_data = re.findall(
         r"\[\"GRID_STATE0\",null,\[\[1,\[0,\".*?\",(.*),\"All\",",
         matched_images_data_json,
     )
     if not matched_google_image_data:
+        logger.debug("download_images_from_google_query(query=%s,max_images=%s): removed_matched_google_images_thumbnails → %s", max_images, removed_matched_google_images_thumbnails)
         return 0
 
     removed_matched_google_images_thumbnails = re.sub(
@@ -77,6 +86,7 @@ def download_images_from_google_query(query: str = "dhaka", max_images: int = 5)
     )
     for index, fixed_full_res_image in enumerate(matched_google_full_resolution_images):
         if index >= max_images:
+            logger.debug("download_images_from_google_query(query=%s,max_images=%s): original_size_img_not_fixed → %s", max_images, original_size_img_not_fixed)
             return index
         original_size_img_not_fixed = bytes(fixed_full_res_image, "ascii").decode(
             "unicode-escape"
@@ -97,11 +107,13 @@ def download_images_from_google_query(query: str = "dhaka", max_images: int = 5)
         ]
         urllib.request.install_opener(opener)
         path_name = f"query_{query.replace(' ', '_')}"
+        logger.debug("download_images_from_google_query(query=%s,max_images=%s): path_name → %s", max_images, path_name)
         if not os.path.exists(path_name):
             os.makedirs(path_name)
         urllib.request.urlretrieve(  # noqa: S310
             original_size_img, f"{path_name}/original_size_img_{index}.jpg"
         )
+    logger.debug("<<< Exiting download_images_from_google_query(query=%s,max_images=%s)", max_images)
     return index
 
 

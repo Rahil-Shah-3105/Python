@@ -10,6 +10,8 @@ Wikipedia: https://en.wikipedia.org/wiki/Word_ladder
 """
 
 import string
+import logging
+logger = logging.getLogger(__name__)
 
 
 def backtrack(
@@ -92,6 +94,7 @@ def word_ladder(begin_word: str, end_word: str, word_set: set[str]) -> list[str]
     >>> word_ladder("game", "code", ["came", "cage", "code", "cade", "gave"])
     ['game', 'came', 'cade', 'code']
     """
+    logger.debug(">>> Entering word_ladder(begin_word=%s,end_word=%s,word_set=%s)", begin_word, end_word, word_set)
 
     if end_word not in word_set:  # no valid transformation possible
         return []

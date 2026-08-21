@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 The function below will convert any binary string to the octal equivalent.
 
@@ -19,11 +21,15 @@ ValueError: Non-binary value was passed to the function
 
 
 def bin_to_octal(bin_string: str) -> str:
+    logger.debug(">>> Entering bin_to_octal(bin_string=%s)", bin_string)
     if not all(char in "01" for char in bin_string):
         raise ValueError("Non-binary value was passed to the function")
     if not bin_string:
         raise ValueError("Empty string was passed to the function")
     oct_string = ""
+    logger.debug("bin_to_octal(bin_string=%s): oct_string → %s", bin_string, oct_string)
+    logger.debug("bin_to_octal(bin_string=%s): bin_string_in_3_list → %s", bin_string, bin_string_in_3_list)
+    logger.debug("bin_to_octal(bin_string=%s): bin_string → %s", bin_string, bin_string)
     while len(bin_string) % 3 != 0:
         bin_string = "0" + bin_string
     bin_string_in_3_list = [
@@ -33,9 +39,11 @@ def bin_to_octal(bin_string: str) -> str:
     ]
     for bin_group in bin_string_in_3_list:
         oct_val = 0
+        logger.debug("bin_to_octal(bin_string=%s): oct_val → %s", bin_string, oct_val)
         for index, val in enumerate(bin_group):
             oct_val += int(2 ** (2 - index) * int(val))
         oct_string += str(oct_val)
+    logger.debug("<<< Exiting bin_to_octal(bin_string=%s)", bin_string)
     return oct_string
 
 

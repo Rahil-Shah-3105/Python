@@ -12,6 +12,8 @@ python3 merge_insertion_sort.py
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binary_search_insertion(sorted_list, item):
@@ -19,10 +21,13 @@ def binary_search_insertion(sorted_list, item):
     >>> binary_search_insertion([1, 2, 7, 9, 10], 4)
     [1, 2, 4, 7, 9, 10]
     """
+    logger.debug(">>> Entering binary_search_insertion(sorted_list=%s,item=%s)", sorted_list, item)
     left = 0
     right = len(sorted_list) - 1
+    logger.debug("binary_search_insertion(sorted_list=%s,item=%s): right → %s", sorted_list, item, right)
     while left <= right:
         middle = (left + right) // 2
+        logger.debug("binary_search_insertion(sorted_list=%s,item=%s): middle → %s", sorted_list, item, middle)
         if left == right:
             if sorted_list[middle] < item:
                 left = middle + 1
@@ -32,6 +37,7 @@ def binary_search_insertion(sorted_list, item):
         else:
             right = middle - 1
     sorted_list.insert(left, item)
+    logger.debug("<<< Exiting binary_search_insertion(sorted_list=%s,item=%s)", sorted_list, item)
     return sorted_list
 
 
@@ -40,12 +46,15 @@ def merge(left, right):
     >>> merge([[1, 6], [9, 10]], [[2, 3], [4, 5], [7, 8]])
     [[1, 6], [2, 3], [4, 5], [7, 8], [9, 10]]
     """
+    logger.debug(">>> Entering merge(left=%s,right=%s)", left, right)
     result = []
+    logger.debug("merge(left=%s,right=%s): result → %s", left, right, result)
     while left and right:
         if left[0][0] < right[0][0]:
             result.append(left.pop(0))
         else:
             result.append(right.pop(0))
+    logger.debug("<<< Exiting merge(left=%s,right=%s)", left, right)
     return result + left + right
 
 
@@ -54,10 +63,14 @@ def sortlist_2d(list_2d):
     >>> sortlist_2d([[9, 10], [1, 6], [7, 8], [2, 3], [4, 5]])
     [[1, 6], [2, 3], [4, 5], [7, 8], [9, 10]]
     """
+    logger.debug(">>> Entering sortlist_2d(list_2d=%s)", list_2d)
     length = len(list_2d)
+    logger.debug("sortlist_2d(list_2d=%s): length → %s", list_2d, length)
     if length <= 1:
         return list_2d
     middle = length // 2
+    logger.debug("sortlist_2d(list_2d=%s): middle → %s", list_2d, middle)
+    logger.debug("<<< Exiting sortlist_2d(list_2d=%s)", list_2d)
     return merge(sortlist_2d(list_2d[:middle]), sortlist_2d(list_2d[middle:]))
 
 
@@ -84,6 +97,7 @@ def merge_insertion_sort(collection: list[int]) -> list[int]:
     >>> all(merge_insertion_sort(p) == [0, 1, 2, 3, 4] for p in permutations)
     True
     """
+    logger.debug(">>> Entering merge_insertion_sort(collection=%s)", collection)
 
     if len(collection) <= 1:
         return collection
@@ -95,7 +109,9 @@ def merge_insertion_sort(collection: list[int]) -> list[int]:
                 -> [999, 100], [75, 40]. Leave 10000.
     """
     two_paired_list = []
+    logger.debug("merge_insertion_sort(collection=%s): two_paired_list → %s", collection, two_paired_list)
     has_last_odd_item = False
+    logger.debug("merge_insertion_sort(collection=%s): has_last_odd_item → %s", collection, has_last_odd_item)
     for i in range(0, len(collection), 2):
         if i == len(collection) - 1:
             has_last_odd_item = True
@@ -118,6 +134,7 @@ def merge_insertion_sort(collection: list[int]) -> list[int]:
                 -> [40, 75], [100, 999]
     """
     sorted_list_2d = sortlist_2d(two_paired_list)
+    logger.debug("merge_insertion_sort(collection=%s): sorted_list_2d → %s", collection, sorted_list_2d)
 
     """
     40 < 100 is sure because it has already been sorted.
@@ -163,6 +180,7 @@ def merge_insertion_sort(collection: list[int]) -> list[int]:
     """
     if has_last_odd_item:
         pivot = collection[-1]
+        logger.debug("merge_insertion_sort(collection=%s): pivot → %s", collection, pivot)
         result = binary_search_insertion(result, pivot)
 
     """
@@ -180,6 +198,7 @@ def merge_insertion_sort(collection: list[int]) -> list[int]:
            [40,   75,    100,   999,   10000]
     """
     is_last_odd_item_inserted_before_this_index = False
+    logger.debug("merge_insertion_sort(collection=%s): is_last_odd_item_inserted_before_this_index → %s", collection, is_last_odd_item_inserted_before_this_index)
     for i in range(len(sorted_list_2d) - 1):
         if result[i] == collection[-1] and has_last_odd_item:
             is_last_odd_item_inserted_before_this_index = True
@@ -191,6 +210,7 @@ def merge_insertion_sort(collection: list[int]) -> list[int]:
         else:
             result = result[: i + 1] + binary_search_insertion(result[i + 1 :], pivot)
 
+    logger.debug("<<< Exiting merge_insertion_sort(collection=%s)", collection)
     return result
 
 

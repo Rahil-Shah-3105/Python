@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from string import ascii_letters
+import logging
+logger = logging.getLogger(__name__)
 
 
 def encrypt(input_string: str, key: int, alphabet: str | None = None) -> str:
@@ -68,11 +70,14 @@ def encrypt(input_string: str, key: int, alphabet: str | None = None) -> str:
     >>> encrypt('a lowercase alphabet', 5, 'abcdefghijklmnopqrstuvwxyz')
     'f qtbjwhfxj fqumfgjy'
     """
+    logger.debug(">>> Entering encrypt(input_string=%s,key=%s,alphabet=%s)", input_string, key, alphabet)
     # Set default alphabet to lower and upper case english chars
     alpha = alphabet or ascii_letters
+    logger.debug("encrypt(input_string=%s,key=%s,alphabet=%s): alpha → %s", input_string, key, alphabet, alpha)
 
     # The final result string
     result = ""
+    logger.debug("encrypt(input_string=%s,key=%s,alphabet=%s): result → %s", input_string, key, alphabet, result)
 
     for character in input_string:
         if character not in alpha:
@@ -81,10 +86,12 @@ def encrypt(input_string: str, key: int, alphabet: str | None = None) -> str:
         else:
             # Get the index of the new key and make sure it isn't too large
             new_key = (alpha.index(character) + key) % len(alpha)
+            logger.debug("encrypt(input_string=%s,key=%s,alphabet=%s): new_key → %s", input_string, key, alphabet, new_key)
 
             # Append the encoded character to the alphabet
             result += alpha[new_key]
 
+    logger.debug("<<< Exiting encrypt(input_string=%s,key=%s,alphabet=%s)", input_string, key, alphabet)
     return result
 
 
@@ -154,9 +161,11 @@ def decrypt(input_string: str, key: int, alphabet: str | None = None) -> str:
     >>> decrypt('f qtbjwhfxj fqumfgjy', 5, 'abcdefghijklmnopqrstuvwxyz')
     'a lowercase alphabet'
     """
+    logger.debug(">>> Entering decrypt(input_string=%s,key=%s,alphabet=%s)", input_string, key, alphabet)
     # Turn on decode mode by making the key negative
     key *= -1
 
+    logger.debug("<<< Exiting decrypt(input_string=%s,key=%s,alphabet=%s)", input_string, key, alphabet)
     return encrypt(input_string, key, alphabet)
 
 
@@ -209,17 +218,21 @@ def brute_force(input_string: str, alphabet: str | None = None) -> dict[int, str
     Traceback (most recent call last):
     TypeError: 'int' object is not iterable
     """
+    logger.debug(">>> Entering brute_force(input_string=%s,alphabet=%s)", input_string, alphabet)
     # Set default alphabet to lower and upper case english chars
     alpha = alphabet or ascii_letters
+    logger.debug("brute_force(input_string=%s,alphabet=%s): alpha → %s", input_string, alphabet, alpha)
 
     # To store data on all the combinations
     brute_force_data = {}
+    logger.debug("brute_force(input_string=%s,alphabet=%s): brute_force_data → %s", input_string, alphabet, brute_force_data)
 
     # Cycle through each combination
     for key in range(1, len(alpha) + 1):
         # Decrypt the message and store the result in the data
         brute_force_data[key] = decrypt(input_string, key, alpha)
 
+    logger.debug("<<< Exiting brute_force(input_string=%s,alphabet=%s)", input_string, alphabet)
     return brute_force_data
 
 

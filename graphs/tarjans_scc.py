@@ -1,4 +1,6 @@
 from collections import deque
+import logging
+logger = logging.getLogger(__name__)
 
 
 def tarjan(g: list[list[int]]) -> list[list[int]]:
@@ -35,14 +37,21 @@ def tarjan(g: list[list[int]]) -> list[list[int]]:
     >>> sorted(tarjan(create_graph(n, list(zip(a, b)))))
     [[0], [1], [2], [3], [4], [5], [6]]
     """
+    logger.debug(">>> Entering tarjan(g=%s)", g)
 
+    logger.debug("<<< Exiting tarjan(g=%s)", g)
     n = len(g)
+    logger.debug("tarjan(g=%s): n → %s", g, n)
     stack: deque[int] = deque()
     on_stack = [False for _ in range(n)]
+    logger.debug("tarjan(g=%s): on_stack → %s", g, on_stack)
     index_of = [-1 for _ in range(n)]
+    logger.debug("tarjan(g=%s): index_of → %s", g, index_of)
     lowlink_of = index_of[:]
+    logger.debug("tarjan(g=%s): lowlink_of → %s", g, lowlink_of)
 
     def strong_connect(v: int, index: int, components: list[list[int]]) -> int:
+        logger.debug(">>> Entering strong_connect(v=%s,index=%s,components=%s)", v, index, components)
         index_of[v] = index  # the number when this node is seen
         lowlink_of[v] = index  # lowest rank node reachable from here
         index += 1
@@ -62,7 +71,9 @@ def tarjan(g: list[list[int]]) -> list[list[int]]:
 
         if lowlink_of[v] == index_of[v]:
             component = []
+            logger.debug("strong_connect(v=%s,index=%s,components=%s): component → %s", v, index, components, component)
             w = stack.pop()
+            logger.debug("strong_connect(v=%s,index=%s,components=%s): w → %s", v, index, components, w)
             on_stack[w] = False
             component.append(w)
             while w != v:
@@ -70,6 +81,7 @@ def tarjan(g: list[list[int]]) -> list[list[int]]:
                 on_stack[w] = False
                 component.append(w)
             components.append(component)
+        logger.debug("<<< Exiting strong_connect(v=%s,index=%s,components=%s)", v, index, components)
         return index
 
     components: list[list[int]] = []
@@ -89,9 +101,11 @@ def create_graph(n: int, edges: list[tuple[int, int]]) -> list[list[int]]:
     >>> create_graph(n, edges)
     [[1, 3], [2], [0], [1, 4], [5, 6], [], [5]]
     """
+    logger.debug(">>> Entering create_graph(n=%s,edges=%s)", n, edges)
     g: list[list[int]] = [[] for _ in range(n)]
     for u, v in edges:
         g[u].append(v)
+    logger.debug("<<< Exiting create_graph(n=%s,edges=%s)", n, edges)
     return g
 
 

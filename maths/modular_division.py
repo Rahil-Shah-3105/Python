@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def modular_division(a: int, b: int, n: int) -> int:
@@ -28,6 +30,7 @@ def modular_division(a: int, b: int, n: int) -> int:
     4
 
     """
+    logger.debug(">>> Entering modular_division(a=%s,b=%s,n=%s)", a, b, n)
     if n <= 1:
         raise ValueError("Modulus n must be greater than 1")
     if a <= 0:
@@ -37,6 +40,7 @@ def modular_division(a: int, b: int, n: int) -> int:
 
     (_d, _t, s) = extended_gcd(n, a)  # Implemented below
     x = (b * s) % n
+    logger.debug("<<< Exiting modular_division(a=%s,b=%s,n=%s)", a, b, n)
     return x
 
 
@@ -51,9 +55,12 @@ def invert_modulo(a: int, n: int) -> int:
     1
 
     """
+    logger.debug(">>> Entering invert_modulo(a=%s,n=%s)", a, n)
     (b, _x) = extended_euclid(a, n)  # Implemented below
     if b < 0:
         b = (b % n + n) % n
+        logger.debug("invert_modulo(a=%s,n=%s): b → %s", a, n, b)
+    logger.debug("<<< Exiting invert_modulo(a=%s,n=%s)", a, n)
     return b
 
 
@@ -74,8 +81,12 @@ def modular_division2(a: int, b: int, n: int) -> int:
     4
 
     """
+    logger.debug(">>> Entering modular_division2(a=%s,b=%s,n=%s)", a, b, n)
     s = invert_modulo(a, n)
+    logger.debug("modular_division2(a=%s,b=%s,n=%s): s → %s", a, b, n, s)
     x = (b * s) % n
+    logger.debug("modular_division2(a=%s,b=%s,n=%s): x → %s", a, b, n, x)
+    logger.debug("<<< Exiting modular_division2(a=%s,b=%s,n=%s)", a, b, n)
     return x
 
 
@@ -92,6 +103,7 @@ def extended_gcd(a: int, b: int) -> tuple[int, int, int]:
     ** extended_gcd function is used when d = gcd(a,b) is required in output
 
     """
+    logger.debug(">>> Entering extended_gcd(a=%s,b=%s)", a, b)
     assert a >= 0
     assert b >= 0
 

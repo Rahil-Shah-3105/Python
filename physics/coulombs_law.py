@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Coulomb's law states that the magnitude of the electrostatic force of attraction
 or repulsion between two point charges is directly proportional to the product
@@ -31,8 +33,10 @@ def coulombs_law(q1: float, q2: float, radius: float) -> float:
     >>> coulombs_law(50, 100, 50)
     17975103584.6
     """
+    logger.debug(">>> Entering coulombs_law(q1=%s,q2=%s,radius=%s)", q1, q2, radius)
     if radius <= 0:
         raise ValueError("The radius is always a positive number")
+    logger.debug("<<< Exiting coulombs_law(q1=%s,q2=%s,radius=%s)", q1, q2, radius)
     return round(((8.9875517923 * 10**9) * q1 * q2) / (radius**2), 2)
 
 

@@ -14,6 +14,8 @@ References:
 import math
 from collections.abc import Iterator
 from itertools import takewhile
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -35,6 +37,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(1)
     False
     """
+    logger.debug(">>> Entering is_prime(number=%s)", number)
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -47,6 +50,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.debug("<<< Exiting is_prime(number=%s)", number)
     return True
 
 
@@ -54,12 +58,15 @@ def prime_generator() -> Iterator[int]:
     """
     Generate a list sequence of prime numbers
     """
+    logger.debug(">>> Entering prime_generator()")
 
     num = 2
+    logger.debug("prime_generator(): num → %s", num)
     while True:
         if is_prime(num):
             yield num
         num += 1
+        logger.debug("<<< Exiting prime_generator()")
 
 
 def solution(n: int = 2000000) -> int:
@@ -75,7 +82,9 @@ def solution(n: int = 2000000) -> int:
     >>> solution(7)
     10
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
+    logger.debug("<<< Exiting solution(n=%s)", n)
     return sum(takewhile(lambda x: x < n, prime_generator()))
 
 

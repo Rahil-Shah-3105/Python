@@ -13,6 +13,8 @@ Examples: https://www.kaggle.com/code/earthian/apriori-association-rules-mining
 
 from collections import Counter
 from itertools import combinations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def load_data() -> list[list[str]]:
@@ -22,6 +24,8 @@ def load_data() -> list[list[str]]:
     >>> load_data()
     [['milk'], ['milk', 'butter'], ['milk', 'bread'], ['milk', 'bread', 'chips']]
     """
+    logger.debug(">>> Entering load_data()")
+    logger.debug("<<< Exiting load_data()")
     return [["milk"], ["milk", "butter"], ["milk", "bread"], ["milk", "bread", "chips"]]
 
 
@@ -45,12 +49,17 @@ def prune(itemset: list, candidates: list, length: int) -> list:
     >>> prune(itemset, candidates, 3)
     []
     """
+    logger.debug(">>> Entering prune(itemset=%s,candidates=%s,length=%s)", itemset, candidates, length)
     itemset_counter = Counter(tuple(item) for item in itemset)
+    logger.debug("prune(itemset=%s,candidates=%s,length=%s): itemset_counter → %s", itemset, candidates, length, itemset_counter)
     pruned = []
+    logger.debug("prune(itemset=%s,candidates=%s,length=%s): pruned → %s", itemset, candidates, length, pruned)
     for candidate in candidates:
         is_subsequence = True
+        logger.debug("prune(itemset=%s,candidates=%s,length=%s): is_subsequence → %s", itemset, candidates, length, is_subsequence)
         for item in candidate:
             item_tuple = tuple(item)
+            logger.debug("prune(itemset=%s,candidates=%s,length=%s): item_tuple → %s", itemset, candidates, length, item_tuple)
             if (
                 item_tuple not in itemset_counter
                 or itemset_counter[item_tuple] < length - 1
@@ -59,6 +68,7 @@ def prune(itemset: list, candidates: list, length: int) -> list:
                 break
         if is_subsequence:
             pruned.append(candidate)
+    logger.debug("<<< Exiting prune(itemset=%s,candidates=%s,length=%s)", itemset, candidates, length)
     return pruned
 
 
@@ -74,13 +84,18 @@ def apriori(data: list[list[str]], min_support: int) -> list[tuple[list[str], in
     >>> apriori(data, 3)
     []
     """
+    logger.debug(">>> Entering apriori(data=%s,min_support=%s)", data, min_support)
     itemset = [list(transaction) for transaction in data]
+    logger.debug("apriori(data=%s,min_support=%s): itemset → %s", data, min_support, itemset)
     frequent_itemsets = []
+    logger.debug("apriori(data=%s,min_support=%s): frequent_itemsets → %s", data, min_support, frequent_itemsets)
     length = 1
+    logger.debug("apriori(data=%s,min_support=%s): length → %s", data, min_support, length)
 
     while itemset:
         # Count itemset support
         counts = [0] * len(itemset)
+        logger.debug("apriori(data=%s,min_support=%s): counts → %s", data, min_support, counts)
         for transaction in data:
             for j, candidate in enumerate(itemset):
                 if all(item in transaction for item in candidate):
@@ -96,6 +111,7 @@ def apriori(data: list[list[str]], min_support: int) -> list[tuple[list[str], in
         length += 1
         itemset = prune(itemset, list(combinations(itemset, length)), length)
 
+    logger.debug("<<< Exiting apriori(data=%s,min_support=%s)", data, min_support)
     return frequent_itemsets
 
 

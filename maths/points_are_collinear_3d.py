@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Check if three points are collinear in 3D.
 
@@ -43,9 +45,11 @@ def create_vector(end_point1: Point3d, end_point2: Point3d) -> Vector3d:
     >>> create_vector((-14, -1, -8), (-7, 6, 4))
     (7, 7, 12)
     """
+    logger.debug(">>> Entering create_vector(end_point1=%s,end_point2=%s)", end_point1, end_point2)
     x = end_point2[0] - end_point1[0]
     y = end_point2[1] - end_point1[1]
     z = end_point2[2] - end_point1[2]
+    logger.debug("<<< Exiting create_vector(end_point1=%s,end_point2=%s)", end_point1, end_point2)
     return (x, y, z)
 
 
@@ -68,9 +72,12 @@ def get_3d_vectors_cross(ab: Vector3d, ac: Vector3d) -> Vector3d:
     >>> get_3d_vectors_cross((17.67, 4.7, 6.78), (-9.5, 4.78, -19.33))
     (-123.2594, 277.15110000000004, 129.11260000000001)
     """
+    logger.debug(">>> Entering get_3d_vectors_cross(ab=%s,ac=%s)", ab, ac)
     x = ab[1] * ac[2] - ab[2] * ac[1]  # *i
     y = (ab[0] * ac[2] - ab[2] * ac[0]) * -1  # *j
+    logger.debug("get_3d_vectors_cross(ab=%s,ac=%s): y → %s", ab, ac, y)
     z = ab[0] * ac[1] - ab[1] * ac[0]  # *k
+    logger.debug("<<< Exiting get_3d_vectors_cross(ab=%s,ac=%s)", ab, ac)
     return (x, y, z)
 
 
@@ -90,6 +97,8 @@ def is_zero_vector(vector: Vector3d, accuracy: int) -> bool:
     >>> is_zero_vector((-15, -74, -32), accuracy=10)
     False
     """
+    logger.debug(">>> Entering is_zero_vector(vector=%s,accuracy=%s)", vector, accuracy)
+    logger.debug("<<< Exiting is_zero_vector(vector=%s,accuracy=%s)", vector, accuracy)
     return tuple(round(x, accuracy) for x in vector) == (0, 0, 0)
 
 
@@ -121,6 +130,10 @@ def are_collinear(a: Point3d, b: Point3d, c: Point3d, accuracy: int = 10) -> boo
     ...               (-2.564606140206386, 3.937845170672183, 7))
     False
     """
+    logger.debug(">>> Entering are_collinear(a=%s,b=%s,c=%s,accuracy=%s)", a, b, c, accuracy)
     ab = create_vector(a, b)
+    logger.debug("are_collinear(a=%s,b=%s,c=%s,accuracy=%s): ab → %s", a, b, c, accuracy, ab)
     ac = create_vector(a, c)
+    logger.debug("are_collinear(a=%s,b=%s,c=%s,accuracy=%s): ac → %s", a, b, c, accuracy, ac)
+    logger.debug("<<< Exiting are_collinear(a=%s,b=%s,c=%s,accuracy=%s)", a, b, c, accuracy)
     return is_zero_vector(get_3d_vectors_cross(ab, ac), accuracy)

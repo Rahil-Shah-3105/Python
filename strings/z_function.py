@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 https://cp-algorithms.com/string/z-function.html
 
@@ -27,7 +29,9 @@ def z_function(input_str: str) -> list[int]:
     >>> z_function("zxxzxxz")
     [0, 0, 0, 4, 0, 0, 1]
     """
+    logger.debug(">>> Entering z_function(input_str=%s)", input_str)
     z_result = [0 for i in range(len(input_str))]
+    logger.debug("z_function(input_str=%s): z_result → %s", input_str, z_result)
 
     # initialize interval's left pointer and right pointer
     left_pointer, right_pointer = 0, 0
@@ -36,16 +40,20 @@ def z_function(input_str: str) -> list[int]:
         # case when current index is inside the interval
         if i <= right_pointer:
             min_edge = min(right_pointer - i + 1, z_result[i - left_pointer])
+            logger.debug("z_function(input_str=%s): min_edge → %s", input_str, min_edge)
             z_result[i] = min_edge
 
         while go_next(i, z_result, input_str):
             z_result[i] += 1
 
         # if new index's result gives us more right interval,
+        logger.debug(">>> Entering go_next(i=%s,z_result=%s,s=%s)", i, z_result, s)
+        logger.debug("<<< Exiting go_next(i=%s,z_result=%s,s=%s)", i, z_result, s)
         # we've to update left_pointer and right_pointer
         if i + z_result[i] - 1 > right_pointer:
             left_pointer, right_pointer = i, i + z_result[i] - 1
 
+    logger.debug("<<< Exiting z_function(input_str=%s)", input_str)
     return z_result
 
 
@@ -53,6 +61,7 @@ def go_next(i: int, z_result: list[int], s: str) -> bool:
     """
     Check if we have to move forward to the next characters or not
     """
+    logger.debug(">>> Entering go_next(i=%s,z_result=%s,s=%s)", i, z_result, s)
     return i + z_result[i] < len(s) and s[z_result[i]] == s[i + z_result[i]]
 
 
@@ -69,10 +78,13 @@ def find_pattern(pattern: str, input_str: str) -> int:
     >>> find_pattern("xz", "zxxzxxz")
     2
     """
+    logger.debug(">>> Entering find_pattern(pattern=%s,input_str=%s)", pattern, input_str)
     answer = 0
+    logger.debug("find_pattern(pattern=%s,input_str=%s): answer → %s", pattern, input_str, answer)
     # concatenate 'pattern' and 'input_str' and call z_function
     # with concatenated string
     z_result = z_function(pattern + input_str)
+    logger.debug("find_pattern(pattern=%s,input_str=%s): z_result → %s", pattern, input_str, z_result)
 
     for val in z_result:
         # if value is greater then length of the pattern string
@@ -81,6 +93,7 @@ def find_pattern(pattern: str, input_str: str) -> int:
         if val >= len(pattern):
             answer += 1
 
+    logger.debug("<<< Exiting find_pattern(pattern=%s,input_str=%s)", pattern, input_str)
     return answer
 
 

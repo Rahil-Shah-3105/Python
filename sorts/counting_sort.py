@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 This is pure Python implementation of counting sort algorithm
 For doctests run following command:
@@ -22,18 +24,24 @@ def counting_sort(collection):
     >>> counting_sort([-2, -5, -45])
     [-45, -5, -2]
     """
+    logger.debug(">>> Entering counting_sort(collection=%s)", collection)
     # if the collection is empty, returns empty
     if collection == []:
         return []
 
     # get some information about the collection
     coll_len = len(collection)
+    logger.debug("counting_sort(collection=%s): coll_len → %s", collection, coll_len)
     coll_max = max(collection)
+    logger.debug("counting_sort(collection=%s): coll_max → %s", collection, coll_max)
     coll_min = min(collection)
+    logger.debug("counting_sort(collection=%s): coll_min → %s", collection, coll_min)
 
     # create the counting array
     counting_arr_length = coll_max + 1 - coll_min
+    logger.debug("counting_sort(collection=%s): counting_arr_length → %s", collection, counting_arr_length)
     counting_arr = [0] * counting_arr_length
+    logger.debug("counting_sort(collection=%s): counting_arr → %s", collection, counting_arr)
 
     # count how much a number appears in the collection
     for number in collection:
@@ -46,6 +54,7 @@ def counting_sort(collection):
 
     # create the output collection
     ordered = [0] * coll_len
+    logger.debug("counting_sort(collection=%s): ordered → %s", collection, ordered)
 
     # place the elements in the output, respecting the original order (stable
     # sort) from end to begin, updating counting_arr
@@ -53,6 +62,7 @@ def counting_sort(collection):
         ordered[counting_arr[collection[i] - coll_min] - 1] = collection[i]
         counting_arr[collection[i] - coll_min] -= 1
 
+    logger.debug("<<< Exiting counting_sort(collection=%s)", collection)
     return ordered
 
 
@@ -61,6 +71,8 @@ def counting_sort_string(string):
     >>> counting_sort_string("thisisthestring")
     'eghhiiinrsssttt'
     """
+    logger.debug(">>> Entering counting_sort_string(string=%s)", string)
+    logger.debug("<<< Exiting counting_sort_string(string=%s)", string)
     return "".join([chr(i) for i in counting_sort([ord(c) for c in string])])
 
 

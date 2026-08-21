@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 72: https://projecteuler.net/problem=72
 
@@ -25,7 +27,9 @@ def solution(limit: int = 1000000) -> int:
     >>> solution(1000)
     304191
     """
+    logger.debug(">>> Entering solution(limit=%s)", limit)
     primes = set(range(3, limit, 2))
+    logger.debug("solution(limit=%s): primes → %s", limit, primes)
     primes.add(2)
     for p in range(3, limit, 2):
         if p not in primes:
@@ -33,11 +37,13 @@ def solution(limit: int = 1000000) -> int:
         primes.difference_update(set(range(p * p, limit, p)))
 
     phi = [float(n) for n in range(limit + 1)]
+    logger.debug("solution(limit=%s): phi → %s", limit, phi)
 
     for p in primes:
         for n in range(p, limit + 1, p):
             phi[n] *= 1 - 1 / p
 
+    logger.debug("<<< Exiting solution(limit=%s)", limit)
     return int(sum(phi[2:]))
 
 

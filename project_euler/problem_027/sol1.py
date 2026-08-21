@@ -21,6 +21,8 @@ n = 0.
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -44,6 +46,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(-10)
     False
     """
+    logger.debug(">>> Entering is_prime(number=%s)", number)
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -56,6 +59,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.debug("<<< Exiting is_prime(number=%s)", number)
     return True
 
 
@@ -72,11 +76,14 @@ def solution(a_limit: int = 1000, b_limit: int = 1000) -> int:
     >>> solution(-1000, -1000)
     0
     """
+    logger.debug(">>> Entering solution(a_limit=%s,b_limit=%s)", a_limit, b_limit)
     longest = [0, 0, 0]  # length, a, b
+    logger.debug("solution(a_limit=%s,b_limit=%s): longest → %s", a_limit, b_limit, longest)
     for a in range((a_limit * -1) + 1, a_limit):
         for b in range(2, b_limit):
             if is_prime(b):
                 count = 0
+                logger.debug("solution(a_limit=%s,b_limit=%s): count → %s", a_limit, b_limit, count)
                 n = 0
                 while is_prime((n**2) + (a * n) + b):
                     count += 1
@@ -84,6 +91,8 @@ def solution(a_limit: int = 1000, b_limit: int = 1000) -> int:
                 if count > longest[0]:
                     longest = [count, a, b]
     ans = longest[1] * longest[2]
+    logger.debug("solution(a_limit=%s,b_limit=%s): ans → %s", a_limit, b_limit, ans)
+    logger.debug("<<< Exiting solution(a_limit=%s,b_limit=%s)", a_limit, b_limit)
     return ans
 
 

@@ -1,5 +1,7 @@
 import string
 from math import log10
+import logging
+logger = logging.getLogger(__name__)
 
 """
     tf-idf Wikipedia: https://en.wikipedia.org/wiki/Tf%E2%80%93idf
@@ -53,11 +55,16 @@ def term_frequency(term: str, document: str) -> int:
     >>> term_frequency("to", "To be, or not to be")
     2
     """
+    logger.debug(">>> Entering term_frequency(term=%s,document=%s)", term, document)
+    logger.debug("term_frequency(term=%s,document=%s): document_without_punctuation → %s", term, document, document_without_punctuation)
     # strip all punctuation and newlines and replace it with ''
     document_without_punctuation = document.translate(
         str.maketrans("", "", string.punctuation)
     ).replace("\n", "")
     tokenize_document = document_without_punctuation.split(" ")  # word tokenization
+    logger.debug("term_frequency(term=%s,document=%s): tokenize_document → %s", term, document, tokenize_document)
+    logger.debug("term_frequency(term=%s,document=%s): tokenize_document → <redacted>", term, document)
+    logger.debug("<<< Exiting term_frequency(term=%s,document=%s)", term, document)
     return len([word for word in tokenize_document if word.lower() == term.lower()])
 
 

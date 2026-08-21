@@ -4,6 +4,8 @@ Fast Polynomial Multiplication using radix-2 fast Fourier Transform.
 
 import mpmath  # for roots of unity
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 class FFT:
@@ -50,18 +52,23 @@ class FFT:
     """
 
     def __init__(self, poly_a=None, poly_b=None):
+        logger.debug(">>> Entering __init__(poly_a=%s,poly_b=%s)", poly_a, poly_b)
         # Input as list
         self.polyA = list(poly_a or [0])[:]
+        logger.debug("__init__(poly_a=%s,poly_b=%s): self.polyA → %s", poly_a, poly_b, self.polyA)
         self.polyB = list(poly_b or [0])[:]
+        logger.debug("__init__(poly_a=%s,poly_b=%s): self.polyB → %s", poly_a, poly_b, self.polyB)
 
         # Remove leading zero coefficients
         while self.polyA[-1] == 0:
             self.polyA.pop()
         self.len_A = len(self.polyA)
+        logger.debug("__init__(poly_a=%s,poly_b=%s): self.len_A → %s", poly_a, poly_b, self.len_A)
 
         while self.polyB[-1] == 0:
             self.polyB.pop()
         self.len_B = len(self.polyB)
+        logger.debug("__init__(poly_a=%s,poly_b=%s): self.len_B → %s", poly_a, poly_b, self.len_B)
 
         # Add 0 to make lengths equal a power of 2
         self.c_max_length = int(
@@ -74,23 +81,31 @@ class FFT:
             self.polyB.append(0)
         # A complex root used for the fourier transform
         self.root = complex(mpmath.root(x=1, n=self.c_max_length, k=1))
+        logger.debug("__init__(poly_a=%s,poly_b=%s): self.root → %s", poly_a, poly_b, self.root)
 
         # The product
+        logger.debug("<<< Exiting __init__(poly_a=%s,poly_b=%s)", poly_a, poly_b)
         self.product = self.__multiply()
+        logger.debug("__init__(poly_a=%s,poly_b=%s): self.product → %s", poly_a, poly_b, self.product)
 
     # Discrete fourier transform of A and B
     def __dft(self, which):
+        logger.debug(">>> Entering __dft(which=%s)", which)
         dft = [[x] for x in self.polyA] if which == "A" else [[x] for x in self.polyB]
         # Corner case
         if len(dft) <= 1:
             return dft[0]
         next_ncol = self.c_max_length // 2
+        logger.debug("__dft(self=%s,which=%s): next_ncol → %s", self, which, next_ncol)
         while next_ncol > 0:
             new_dft = [[] for i in range(next_ncol)]
+            logger.debug("__dft(self=%s,which=%s): new_dft → %s", self, which, new_dft)
+            logger.warning("__dft(self=%s,which=%s): root → %s", self, which, root)
             root = self.root**next_ncol
 
             # First half of next step
             current_root = 1
+            logger.debug("__dft(self=%s,which=%s): current_root → %s", self, which, current_root)
             for j in range(self.c_max_length // (next_ncol * 2)):
                 for i in range(next_ncol):
                     new_dft[i].append(dft[i][j] + current_root * dft[i + next_ncol][j])

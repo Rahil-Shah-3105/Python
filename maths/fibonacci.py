@@ -21,19 +21,26 @@ from time import time
 
 import numpy as np
 from numpy import ndarray
+import logging
+logger = logging.getLogger(__name__)
 
 
 def time_func(func, *args, **kwargs):
     """
     Times the execution of a function with parameters
     """
+    logger.debug(">>> Entering time_func(func=%s)", func)
     start = time()
+    logger.debug("time_func(func=%s): start → %s", func, start)
     output = func(*args, **kwargs)
+    logger.debug("time_func(func=%s): output → %s", func, output)
     end = time()
+    logger.debug("time_func(func=%s): end → %s", func, end)
     if int(end - start) > 0:
         print(f"{func.__name__} runtime: {(end - start):0.4f} s")
     else:
         print(f"{func.__name__} runtime: {(end - start) * 1000:0.4f} ms")
+    logger.debug("<<< Exiting time_func(func=%s)", func)
     return output
 
 
@@ -53,6 +60,7 @@ def fib_iterative_yield(n: int) -> Iterator[int]:
         ...
     ValueError: n is negative
     """
+    logger.debug(">>> Entering fib_iterative_yield(n=%s)", n)
     if n < 0:
         raise ValueError("n is negative")
     a, b = 0, 1
@@ -60,6 +68,7 @@ def fib_iterative_yield(n: int) -> Iterator[int]:
     for _ in range(n):
         yield b
         a, b = b, a + b
+        logger.debug("<<< Exiting fib_iterative_yield(n=%s)", n)
 
 
 def fib_iterative(n: int) -> list[int]:
@@ -78,13 +87,16 @@ def fib_iterative(n: int) -> list[int]:
         ...
     ValueError: n is negative
     """
+    logger.debug(">>> Entering fib_iterative(n=%s)", n)
     if n < 0:
         raise ValueError("n is negative")
     if n == 0:
         return [0]
     fib = [0, 1]
+    logger.debug("fib_iterative(n=%s): fib → %s", n, fib)
     for _ in range(n - 1):
         fib.append(fib[-1] + fib[-2])
+    logger.debug("<<< Exiting fib_iterative(n=%s)", n)
     return fib
 
 
@@ -104,7 +116,9 @@ def fib_recursive(n: int) -> list[int]:
         ...
     ValueError: n is negative
     """
+    logger.debug(">>> Entering fib_recursive(n=%s)", n)
 
+    logger.debug("<<< Exiting fib_recursive(n=%s)", n)
     def fib_recursive_term(i: int) -> int:
         """
         Calculates the i-th (0-indexed) Fibonacci number using recursion
@@ -121,10 +135,12 @@ def fib_recursive(n: int) -> list[int]:
             ...
         ValueError: n is negative
         """
+        logger.debug(">>> Entering fib_recursive_term(i=%s)", i)
         if i < 0:
             raise ValueError("n is negative")
         if i < 2:
             return i
+        logger.debug("<<< Exiting fib_recursive_term(i=%s)", i)
         return fib_recursive_term(i - 1) + fib_recursive_term(i - 2)
 
     if n < 0:
@@ -148,6 +164,7 @@ def fib_recursive_cached(n: int) -> list[int]:
         ...
     ValueError: n is negative
     """
+    logger.debug(">>> Entering fib_recursive_cached(n=%s)", n)
 
     @functools.cache
     def fib_recursive_term(i: int) -> int:
@@ -181,18 +198,23 @@ def fib_memoization(n: int) -> list[int]:
         ...
     ValueError: n is negative
     """
+    logger.debug(">>> Entering fib_memoization(n=%s)", n)
     if n < 0:
         raise ValueError("n is negative")
     # Cache must be outside recursive function
     # other it will reset every time it calls itself.
     cache: dict[int, int] = {0: 0, 1: 1, 2: 1}  # Prefilled cache
+    logger.debug("<<< Exiting fib_memoization(n=%s)", n)
 
     def rec_fn_memoized(num: int) -> int:
+        logger.debug(">>> Entering rec_fn_memoized(num=%s)", num)
         if num in cache:
             return cache[num]
 
         value = rec_fn_memoized(num - 1) + rec_fn_memoized(num - 2)
+        logger.debug("rec_fn_memoized(num=%s): value → %s", num, value)
         cache[num] = value
+        logger.debug("<<< Exiting rec_fn_memoized(num=%s)", num)
         return value
 
     return [rec_fn_memoized(i) for i in range(n + 1)]
@@ -226,12 +248,16 @@ def fib_binet(n: int) -> list[int]:
         ...
     ValueError: n is too large
     """
+    logger.debug(">>> Entering fib_binet(n=%s)", n)
     if n < 0:
         raise ValueError("n is negative")
     if n >= 1475:
         raise ValueError("n is too large")
     sqrt_5 = sqrt(5)
+    logger.debug("fib_binet(n=%s): sqrt_5 → %s", n, sqrt_5)
     phi = (1 + sqrt_5) / 2
+    logger.debug("fib_binet(n=%s): phi → %s", n, phi)
+    logger.debug("<<< Exiting fib_binet(n=%s)", n)
     return [round(phi**i / sqrt_5) for i in range(n + 1)]
 
 
@@ -267,8 +293,11 @@ def matrix_pow_np(m: ndarray, power: int) -> ndarray:
         ...
     ValueError: power is negative
     """
+    logger.debug(">>> Entering matrix_pow_np(m=%s,power=%s)", m, power)
     result = np.array([[1, 0], [0, 1]], dtype=int)  # Identity Matrix
+    logger.debug("matrix_pow_np(m=%s,power=%s): result → %s", m, power, result)
     base = m
+    logger.debug("matrix_pow_np(m=%s,power=%s): base → %s", m, power, base)
     if power < 0:  # Negative power is not allowed
         raise ValueError("power is negative")
     while power:
@@ -276,6 +305,7 @@ def matrix_pow_np(m: ndarray, power: int) -> ndarray:
             result = np.dot(result, base)
         base = np.dot(base, base)
         power //= 2
+    logger.debug("<<< Exiting matrix_pow_np(m=%s,power=%s)", m, power)
     return result
 
 
@@ -307,6 +337,7 @@ def fib_matrix_np(n: int) -> int:
         ...
     ValueError: n is negative
     """
+    logger.debug(">>> Entering fib_matrix_np(n=%s)", n)
     if n < 0:
         raise ValueError("n is negative")
     if n == 0:
@@ -314,6 +345,7 @@ def fib_matrix_np(n: int) -> int:
 
     m = np.array([[1, 1], [1, 0]], dtype=int)
     result = matrix_pow_np(m, n - 1)
+    logger.debug("<<< Exiting fib_matrix_np(n=%s)", n)
     return int(result[0, 0])
 
 

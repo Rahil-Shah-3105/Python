@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 from queue import Queue
+import logging
+logger = logging.getLogger(__name__)
 
 
 def swap(a: int, b: int) -> tuple[int, int]:
@@ -18,9 +20,11 @@ def swap(a: int, b: int) -> tuple[int, int]:
     >>> swap(3,-4)
     (-4, 3)
     """
+    logger.debug(">>> Entering swap(a=%s,b=%s)", a, b)
     a ^= b
     b ^= a
     a ^= b
+    logger.debug("<<< Exiting swap(a=%s,b=%s)", a, b)
     return a, b
 
 
@@ -45,11 +49,13 @@ def create_sparse(max_node: int, parent: list[list[int]]) -> list[list[int]]:
     >>> parent[1]
     [0, 0]
     """
+    logger.debug(">>> Entering create_sparse(max_node=%s,parent=%s)", max_node, parent)
     j = 1
     while (1 << j) < max_node:
         for i in range(1, max_node + 1):
             parent[j][i] = parent[j - 1][parent[j - 1][i]]
         j += 1
+    logger.debug("<<< Exiting create_sparse(max_node=%s,parent=%s)", max_node, parent)
     return parent
 
 
@@ -137,11 +143,15 @@ def breadth_first_search(
 
 
 def main() -> None:
+    logger.debug(">>> Entering main()")
     max_node = 13
+    logger.debug("main(): max_node → %s", max_node)
     # initializing with 0
     parent = [[0 for _ in range(max_node + 10)] for _ in range(20)]
+    logger.debug("main(): parent → %s", parent)
     # initializing with -1 which means every node is unvisited
     level = [-1 for _ in range(max_node + 10)]
+    logger.debug("main(): level → %s", level)
     graph: dict[int, list[int]] = {
         1: [2, 3, 4],
         2: [5],
@@ -165,6 +175,7 @@ def main() -> None:
     print("LCA of node 6 and 7 is: ", lowest_common_ancestor(6, 7, level, parent))
     print("LCA of node 4 and 12 is: ", lowest_common_ancestor(4, 12, level, parent))
     print("LCA of node 8 and 8 is: ", lowest_common_ancestor(8, 8, level, parent))
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

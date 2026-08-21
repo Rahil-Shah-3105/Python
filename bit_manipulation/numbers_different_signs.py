@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Author  : Alexander Pantyukhin
 Date    : November 30, 2022
@@ -30,6 +32,8 @@ def different_signs(num1: int, num2: int) -> bool:
     >>> different_signs(2, 0)
     False
     """
+    logger.debug(">>> Entering different_signs(num1=%s,num2=%s)", num1, num2)
+    logger.debug("<<< Exiting different_signs(num1=%s,num2=%s)", num1, num2)
     return num1 ^ num2 < 0
 
 

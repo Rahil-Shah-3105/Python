@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 """
 Project Euler Problem 9: https://projecteuler.net/problem=9
 
@@ -30,6 +32,8 @@ def get_squares(n: int) -> list[int]:
     >>> get_squares(4)
     [0, 1, 4, 9]
     """
+    logger.debug(">>> Entering get_squares(n=%s)", n)
+    logger.debug("<<< Exiting get_squares(n=%s)", n)
     return [number * number for number in range(n)]
 
 
@@ -42,9 +46,12 @@ def solution(n: int = 1000) -> int:
     >>> solution(36)
     1620
     """
+    logger.debug(">>> Entering solution(n=%s)", n)
 
     squares = get_squares(n)
+    logger.debug("solution(n=%s): squares → %s", n, squares)
     squares_set = set(squares)
+    logger.debug("solution(n=%s): squares_set → %s", n, squares_set)
     for a in range(1, n // 3):
         for b in range(a + 1, (n - a) // 2 + 1):
             if (

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # Python program for generating diamond pattern in Python 3.7+
 
 
@@ -16,13 +18,16 @@ def floyd(n):
         >>> floyd(5)
         '    * \\n   * * \\n  * * * \\n * * * * \\n* * * * * \\n'
     """
+    logger.debug(">>> Entering floyd(n=%s)", n)
     result = ""
+    logger.debug("floyd(n=%s): result → %s", n, result)
     for i in range(n):
         for _ in range(n - i - 1):  # printing spaces
             result += " "
         for _ in range(i + 1):  # printing stars
             result += "* "
         result += "\n"
+    logger.debug("<<< Exiting floyd(n=%s)", n)
     return result
 
 
@@ -41,13 +46,16 @@ def reverse_floyd(n):
         >>> reverse_floyd(5)
         '* * * * * \\n * * * * \\n  * * * \\n   * * \\n    * \\n     '
     """
+    logger.debug(">>> Entering reverse_floyd(n=%s)", n)
     result = ""
+    logger.debug("reverse_floyd(n=%s): result → %s", n, result)
     for i in range(n, 0, -1):
         for _ in range(i, 0, -1):  # printing stars
             result += "* "
         result += "\n"
         for _ in range(n - i + 1, 0, -1):  # printing spaces
             result += " "
+    logger.debug("<<< Exiting reverse_floyd(n=%s)", n)
     return result
 
 
@@ -66,10 +74,14 @@ def pretty_print(n):
         >>> pretty_print(3)
         '  * \\n * * \\n* * * \\n* * * \\n * * \\n  * \\n   '
     """
+    logger.debug(">>> Entering pretty_print(n=%s)", n)
     if n <= 0:
         return "       ...       ....        nothing printing :("
     upper_half = floyd(n)  # upper half
+    logger.debug("pretty_print(n=%s): upper_half → %s", n, upper_half)
     lower_half = reverse_floyd(n)  # lower half
+    logger.debug("pretty_print(n=%s): lower_half → %s", n, lower_half)
+    logger.debug("<<< Exiting pretty_print(n=%s)", n)
     return upper_half + lower_half
 
 

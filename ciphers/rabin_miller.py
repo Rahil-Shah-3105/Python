@@ -1,9 +1,12 @@
 # Primality Testing with the Rabin-Miller Algorithm
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 def rabin_miller(num: int) -> bool:
+    logger.debug(">>> Entering rabin_miller(num=%s)", num)
     s = num - 1
     t = 0
 
@@ -13,7 +16,9 @@ def rabin_miller(num: int) -> bool:
 
     for _ in range(5):
         a = random.randrange(2, num - 1)
+        logger.debug("rabin_miller(num=%s): a → %s", num, a)
         v = pow(a, s, num)
+        logger.debug("rabin_miller(num=%s): v → %s", num, v)
         if v != 1:
             i = 0
             while v != (num - 1):
@@ -22,11 +27,14 @@ def rabin_miller(num: int) -> bool:
                 else:
                     i = i + 1
                     v = (v**2) % num
+    logger.debug("<<< Exiting rabin_miller(num=%s)", num)
     return True
 
 
 def is_prime_low_num(num: int) -> bool:
+    logger.debug(">>> Entering is_prime_low_num(num=%s)", num)
     if num < 2:
+        logger.debug("is_prime_low_num(num=%s): low_primes → %s", num, low_primes)
         return False
 
     low_primes = [
@@ -207,13 +215,17 @@ def is_prime_low_num(num: int) -> bool:
         if (num % prime) == 0:
             return False
 
+    logger.debug("<<< Exiting is_prime_low_num(num=%s)", num)
     return rabin_miller(num)
 
 
 def generate_large_prime(keysize: int = 1024) -> int:
+    logger.debug(">>> Entering generate_large_prime(keysize=%s)", keysize)
     while True:
         num = random.randrange(2 ** (keysize - 1), 2 ** (keysize))
+        logger.debug("generate_large_prime(keysize=%s): num → %s", keysize, num)
         if is_prime_low_num(num):
+            logger.debug("<<< Exiting generate_large_prime(keysize=%s)", keysize)
             return num
 
 

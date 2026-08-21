@@ -5,6 +5,8 @@ Approximates the area under the curve using the trapezoidal rule
 from __future__ import annotations
 
 from collections.abc import Callable
+import logging
+logger = logging.getLogger(__name__)
 
 
 def trapezoidal_area(
@@ -22,11 +24,13 @@ def trapezoidal_area(
     :param steps: an accuracy gauge; more steps increases the accuracy
     :return: a float representing the length of the curve
 
+    logger.debug("<<< Exiting f(x=%s)", x)
     >>> def f(x):
     ...    return 5
     >>> '%.3f' % trapezoidal_area(f, 12.0, 14.0, 1000)
     '10.000'
 
+    logger.debug(">>> Entering f(x=%s)", x)
     >>> def f(x):
     ...    return 9*x**2
     >>> '%.4f' % trapezoidal_area(f, -4.0, 0, 10000)

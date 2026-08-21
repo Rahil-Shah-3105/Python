@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -11,13 +13,17 @@ class Node:
     right: Node | None = None
 
     def __iter__(self) -> Iterator[int]:
+        logger.debug(">>> Entering __iter__()")
         if self.left:
             yield from self.left
         yield self.data
         if self.right:
             yield from self.right
+            logger.debug("<<< Exiting __iter__()")
 
     def __len__(self) -> int:
+        logger.debug(">>> Entering __len__()")
+        logger.debug("<<< Exiting __len__()")
         return sum(1 for _ in self)
 
     def is_full(self) -> bool:
@@ -28,6 +34,8 @@ class Node:
         return False
 
 
+        logger.debug(">>> Entering is_full()")
+        logger.debug("<<< Exiting is_full()")
 @dataclass
 class BinaryTree:
     root: Node
@@ -48,9 +56,13 @@ class BinaryTree:
         >>> list(binary_tree)
         [1, 2, 3]
         """
+        logger.debug(">>> Entering small_tree()")
         binary_tree = BinaryTree(Node(2))
+        logger.debug("small_tree(): binary_tree → %s", binary_tree)
+        logger.debug("small_tree(cls=%s): binary_tree → %s", cls, binary_tree)
         binary_tree.root.left = Node(1)
         binary_tree.root.right = Node(3)
+        logger.debug("<<< Exiting small_tree()")
         return binary_tree
 
     @classmethod
@@ -63,13 +75,17 @@ class BinaryTree:
         >>> list(binary_tree)
         [1, 2, 3, 4, 5, 6, 7]
         """
+        logger.debug(">>> Entering medium_tree()")
         binary_tree = BinaryTree(Node(4))
+        logger.debug("medium_tree(): binary_tree → %s", binary_tree)
+        logger.debug("medium_tree(cls=%s): binary_tree → %s", cls, binary_tree)
         binary_tree.root.left = two = Node(2)
         two.left = Node(1)
         two.right = Node(3)
         binary_tree.root.right = five = Node(5)
         five.right = six = Node(6)
         six.right = Node(7)
+        logger.debug("<<< Exiting medium_tree()")
         return binary_tree
 
     def depth(self) -> int:
@@ -83,11 +99,15 @@ class BinaryTree:
         >>> BinaryTree.medium_tree().depth()
         4
         """
+        logger.debug(">>> Entering depth()")
+        logger.debug("<<< Exiting depth()")
         return self._depth(self.root)
 
     def _depth(self, node: Node | None) -> int:
+        logger.debug(">>> Entering _depth(node=%s)", node)
         if not node:
             return 0
+        logger.debug("<<< Exiting _depth(node=%s)", node)
         return 1 + max(self._depth(node.left), self._depth(node.right))
 
     def is_full(self) -> bool:
@@ -101,6 +121,7 @@ class BinaryTree:
         >>> BinaryTree.medium_tree().is_full()
         False
         """
+        logger.debug(">>> Entering is_full()")
         return self.root.is_full()
 
 

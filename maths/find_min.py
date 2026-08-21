@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_min_iterative(nums: list[int | float]) -> int | float:
@@ -20,11 +22,14 @@ def find_min_iterative(nums: list[int | float]) -> int | float:
         ...
     ValueError: find_min_iterative() arg is an empty sequence
     """
+    logger.debug(">>> Entering find_min_iterative(nums=%s)", nums)
     if len(nums) == 0:
         raise ValueError("find_min_iterative() arg is an empty sequence")
     min_num = nums[0]
+    logger.debug("find_min_iterative(nums=%s): min_num → %s", nums, min_num)
     for num in nums:
         min_num = min(min_num, num)
+    logger.debug("<<< Exiting find_min_iterative(nums=%s)", nums)
     return min_num
 
 
@@ -61,6 +66,7 @@ def find_min_recursive(nums: list[int | float], left: int, right: int) -> int | 
         ...
     IndexError: list index out of range
     """
+    logger.debug(">>> Entering find_min_recursive(nums=%s,left=%s,right=%s)", nums, left, right)
     if len(nums) == 0:
         raise ValueError("find_min_recursive() arg is an empty sequence")
     if (
@@ -71,6 +77,9 @@ def find_min_recursive(nums: list[int | float], left: int, right: int) -> int | 
     ):
         raise IndexError("list index out of range")
     if left == right:
+        logger.debug("find_min_recursive(nums=%s,left=%s,right=%s): right_min → %s", nums, left, right, right_min)
+        logger.debug("find_min_recursive(nums=%s,left=%s,right=%s): mid → %s", nums, left, right, mid)
+        logger.debug("find_min_recursive(nums=%s,left=%s,right=%s): left_min → %s", nums, left, right, left_min)
         return nums[left]
     mid = (left + right) >> 1  # the middle
     left_min = find_min_recursive(nums, left, mid)  # find min in range[left, mid]
@@ -78,6 +87,7 @@ def find_min_recursive(nums: list[int | float], left: int, right: int) -> int | 
         nums, mid + 1, right
     )  # find min in range[mid + 1, right]
 
+    logger.debug("<<< Exiting find_min_recursive(nums=%s,left=%s,right=%s)", nums, left, right)
     return left_min if left_min <= right_min else right_min
 
 
