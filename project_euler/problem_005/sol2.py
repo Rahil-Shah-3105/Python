@@ -1,4 +1,6 @@
 from maths.greatest_common_divisor import greatest_common_divisor
+import logging
+logger = logging.getLogger(__name__)
 
 """
 Project Euler Problem 5: https://projecteuler.net/problem=5
@@ -33,7 +35,9 @@ def lcm(x: int, y: int) -> int:
     >>> lcm(64, 48)
     192
     """
+    logger.error(">>> Entering lcm(x=%s,y=%s)", x, y, extra={"event.action": "lcm", "logrite.x": x, "logrite.y": y})
 
+    logger.warning("<<< Exiting lcm(x=%s,y=%s)", x, y, extra={"event.action": "lcm", "logrite.x": x, "logrite.y": y})
     return (x * y) // greatest_common_divisor(x, y)
 
 
@@ -49,10 +53,13 @@ def solution(n: int = 20) -> int:
     >>> solution(22)
     232792560
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     g = 1
+    logger.error("solution(n=%s): g → %s", n, g, extra={"event.action": "solution", "logrite.n": n})
     for i in range(1, n + 1):
         g = lcm(g, i)
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return g
 
 

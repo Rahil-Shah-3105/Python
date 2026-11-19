@@ -20,6 +20,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import TypeVar
+import logging
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound="Point")
 
@@ -46,8 +48,12 @@ class Point:
             x_coordinate: The x-coordinate (horizontal position) of the point
             y_coordinate: The y-coordinate (vertical position) of the point
         """
+        logger.error(">>> Entering __init__(x_coordinate=%s,y_coordinate=%s)", x_coordinate, y_coordinate, extra={"event.action": "__init__", "logrite.x_coordinate": x_coordinate, "logrite.y_coordinate": y_coordinate})
         self.x = float(x_coordinate)
+        logger.warning("<<< Exiting __init__(x_coordinate=%s,y_coordinate=%s)", x_coordinate, y_coordinate, extra={"event.action": "__init__", "logrite.x_coordinate": x_coordinate, "logrite.y_coordinate": y_coordinate})
+        logger.error("__init__(x_coordinate=%s,y_coordinate=%s): self.x → %s", x_coordinate, y_coordinate, self.x, extra={"event.action": "__init__", "logrite.x_coordinate": x_coordinate, "logrite.y_coordinate": y_coordinate})
         self.y = float(y_coordinate)
+        logger.error("__init__(x_coordinate=%s,y_coordinate=%s): self.y → %s", x_coordinate, y_coordinate, self.y, extra={"event.action": "__init__", "logrite.x_coordinate": x_coordinate, "logrite.y_coordinate": y_coordinate})
 
     def __eq__(self, other: object) -> bool:
         """
@@ -58,8 +64,10 @@ class Point:
         >>> Point(1, 2) == Point(2, 1)
         False
         """
+        logger.error(">>> Entering __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
         if not isinstance(other, Point):
             return NotImplemented
+        logger.warning("<<< Exiting __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
         return self.x == other.x and self.y == other.y
 
     def __lt__(self, other: Point) -> bool:
@@ -73,8 +81,10 @@ class Point:
         >>> Point(2, 2) < Point(1, 2)
         False
         """
+        logger.error(">>> Entering __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
         if self.y == other.y:
             return self.x < other.x
+        logger.warning("<<< Exiting __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
         return self.y < other.y
 
     def euclidean_distance(self, other: Point) -> float:
@@ -86,6 +96,8 @@ class Point:
         >>> Point(1, 1).euclidean_distance(Point(4, 5))
         5.0
         """
+        logger.error(">>> Entering euclidean_distance(other=%s)", other, extra={"event.action": "euclidean_distance", "logrite.other": other})
+        logger.warning("<<< Exiting euclidean_distance(other=%s)", other, extra={"event.action": "euclidean_distance", "logrite.other": other})
         return ((self.x - other.x) ** 2 + (self.y - other.y) ** 2) ** 0.5
 
     def consecutive_orientation(self, point_a: Point, point_b: Point) -> float:
@@ -105,6 +117,8 @@ class Point:
         >>> Point(0, 0).consecutive_orientation(Point(1, 0), Point(2, 0))
         0.0
         """
+        logger.error(">>> Entering consecutive_orientation(point_a=%s,point_b=%s)", point_a, point_b, extra={"event.action": "consecutive_orientation", "logrite.point_a": point_a, "logrite.point_b": point_b})
+        logger.warning("<<< Exiting consecutive_orientation(point_a=%s,point_b=%s)", point_a, point_b, extra={"event.action": "consecutive_orientation", "logrite.point_a": point_a, "logrite.point_b": point_b})
         return (point_a.x - self.x) * (point_b.y - point_a.y) - (point_a.y - self.y) * (
             point_b.x - point_a.x
         )
@@ -143,6 +157,7 @@ def graham_scan(points: Sequence[Point]) -> list[Point]:
     >>> Point(0, 0) in hull and Point(1, 0) in hull and Point(0.5, 1) in hull
     True
     """
+    logger.error(">>> Entering graham_scan(points=%s)", points, extra={"event.action": "graham_scan", "logrite.points": points})
     if len(points) <= 2:
         return []
 
@@ -153,6 +168,7 @@ def graham_scan(points: Sequence[Point]) -> list[Point]:
     points_list = [p for p in points if p != min_point]
     if not points_list:
         # Edge case where all points are the same
+        logger.warning("<<< Exiting graham_scan(points=%s)", points, extra={"event.action": "graham_scan", "logrite.points": points})
         return []
 
     def polar_angle_key(point: Point) -> tuple[float, float, float]:
@@ -162,6 +178,7 @@ def graham_scan(points: Sequence[Point]) -> list[Point]:
         Points are sorted counter-clockwise. When two points have the same angle,
         the farther point comes first (we'll remove duplicates later).
         """
+        logger.error(">>> Entering polar_angle_key(point=%s)", point, extra={"event.action": "polar_angle_key", "logrite.point": point})
         # We use a dummy third point (min_point itself) to calculate relative angles
         # Instead, we'll compute the angle between points
         dx = point.x - min_point.x
@@ -170,12 +187,16 @@ def graham_scan(points: Sequence[Point]) -> list[Point]:
         # Use atan2 for angle, but we can also use cross product for comparison
         # For sorting, we compare orientations between consecutive points
         distance = min_point.euclidean_distance(point)
+        logger.error("polar_angle_key(point=%s): distance → %s", point, distance, extra={"event.action": "polar_angle_key", "logrite.point": point})
+        logger.warning("<<< Exiting polar_angle_key(point=%s)", point, extra={"event.action": "polar_angle_key", "logrite.point": point})
         return (dx, dy, -distance)  # Negative distance to sort farther points first
 
     # Sort by polar angle using a comparison based on cross product
     def compare_points(point_a: Point, point_b: Point) -> int:
         """Compare two points by polar angle relative to min_point."""
+        logger.error(">>> Entering compare_points(point_a=%s,point_b=%s)", point_a, point_b, extra={"event.action": "compare_points", "logrite.point_a": point_a, "logrite.point_b": point_b})
         orientation = min_point.consecutive_orientation(point_a, point_b)
+        logger.error("compare_points(point_a=%s,point_b=%s): orientation → %s", point_a, point_b, orientation, extra={"event.action": "compare_points", "logrite.point_a": point_a, "logrite.point_b": point_b})
         if orientation < 0.0:
             return 1  # point_a comes after point_b (clockwise)
         elif orientation > 0.0:
@@ -189,6 +210,7 @@ def graham_scan(points: Sequence[Point]) -> list[Point]:
             elif dist_b > dist_a:
                 return 1
             else:
+                logger.warning("<<< Exiting compare_points(point_a=%s,point_b=%s)", point_a, point_b, extra={"event.action": "compare_points", "logrite.point_a": point_a, "logrite.point_b": point_b})
                 return 0
 
     from functools import cmp_to_key

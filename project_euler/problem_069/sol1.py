@@ -22,6 +22,8 @@ It can be seen that n=6 produces a maximum n/φ(n) for n ≤ 10.
 
 Find the value of n ≤ 1,000,000 for which n/φ(n) is a maximum.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 10**6) -> int:
@@ -43,11 +45,13 @@ def solution(n: int = 10**6) -> int:
     2310
 
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     if n <= 0:
         raise ValueError("Please enter an integer greater than 0")
 
     phi = list(range(n + 1))
+    logger.error("solution(n=%s): phi → %s", n, phi, extra={"event.action": "solution", "logrite.n": n})
     for number in range(2, n + 1):
         if phi[number] == number:
             phi[number] -= 1

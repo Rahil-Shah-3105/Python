@@ -35,6 +35,8 @@ for each number can be formed by increasing the largest element.
 References:
 - https://en.wikipedia.org/wiki/Addition_chain
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solve(nums: list[int], goal: int, depth: int) -> bool:
@@ -47,6 +49,7 @@ def solve(nums: list[int], goal: int, depth: int) -> bool:
     >>> solve([1], 2, 0)
     False
     """
+    logger.error(">>> Entering solve(nums=%s,goal=%s,depth=%s)", nums, goal, depth, extra={"event.action": "solve", "logrite.nums": nums, "logrite.goal": goal, "logrite.depth": depth})
     if len(nums) > depth:
         return False
     for el in nums:
@@ -56,6 +59,7 @@ def solve(nums: list[int], goal: int, depth: int) -> bool:
         if solve(nums=nums, goal=goal, depth=depth):
             return True
         del nums[-1]
+    logger.warning("<<< Exiting solve(nums=%s,goal=%s,depth=%s)", nums, goal, depth, extra={"event.action": "solve", "logrite.nums": nums, "logrite.goal": goal, "logrite.depth": depth})
     return False
 
 
@@ -73,7 +77,9 @@ def solution(n: int = 200) -> int:
     >>> solution(15)
     50
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     total = 0
+    logger.error("solution(n=%s): total → %s", n, total, extra={"event.action": "solution", "logrite.n": n})
     for i in range(2, n + 1):
         max_length = 0
         while True:
@@ -82,6 +88,7 @@ def solution(n: int = 200) -> int:
             if solve(nums=nums, goal=i, depth=max_length):
                 break
         total += max_length
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return total
 
 

@@ -1,4 +1,6 @@
 from collections import deque
+import logging
+logger = logging.getLogger(__name__)
 
 
 def tarjan(g: list[list[int]]) -> list[list[int]]:
@@ -35,14 +37,20 @@ def tarjan(g: list[list[int]]) -> list[list[int]]:
     >>> sorted(tarjan(create_graph(n, list(zip(a, b)))))
     [[0], [1], [2], [3], [4], [5], [6]]
     """
+    logger.error(">>> Entering tarjan(g=%s)", g, extra={"event.action": "tarjan", "logrite.g": g})
 
     n = len(g)
+    logger.error("tarjan(g=%s): n → %s", g, n, extra={"event.action": "tarjan", "logrite.g": g})
     stack: deque[int] = deque()
     on_stack = [False for _ in range(n)]
+    logger.error("tarjan(g=%s): on_stack → %s", g, on_stack, extra={"event.action": "tarjan", "logrite.g": g})
     index_of = [-1 for _ in range(n)]
+    logger.error("tarjan(g=%s): index_of → %s", g, index_of, extra={"event.action": "tarjan", "logrite.g": g})
     lowlink_of = index_of[:]
+    logger.warning("<<< Exiting tarjan(g=%s)", g, extra={"event.action": "tarjan", "logrite.g": g})
 
     def strong_connect(v: int, index: int, components: list[list[int]]) -> int:
+        logger.error(">>> Entering strong_connect(v=%s,index=%s,components=%s)", v, index, components, extra={"event.action": "strong_connect", "logrite.v": v, "logrite.index": index, "logrite.components": components})
         index_of[v] = index  # the number when this node is seen
         lowlink_of[v] = index  # lowest rank node reachable from here
         index += 1
@@ -63,6 +71,7 @@ def tarjan(g: list[list[int]]) -> list[list[int]]:
         if lowlink_of[v] == index_of[v]:
             component = []
             w = stack.pop()
+            logger.error("strong_connect(v=%s,index=%s,components=%s): w → %s", v, index, components, w, extra={"event.action": "strong_connect", "logrite.v": v, "logrite.index": index, "logrite.components": components})
             on_stack[w] = False
             component.append(w)
             while w != v:
@@ -70,6 +79,7 @@ def tarjan(g: list[list[int]]) -> list[list[int]]:
                 on_stack[w] = False
                 component.append(w)
             components.append(component)
+        logger.warning("<<< Exiting strong_connect(v=%s,index=%s,components=%s)", v, index, components, extra={"event.action": "strong_connect", "logrite.v": v, "logrite.index": index, "logrite.components": components})
         return index
 
     components: list[list[int]] = []
@@ -89,9 +99,11 @@ def create_graph(n: int, edges: list[tuple[int, int]]) -> list[list[int]]:
     >>> create_graph(n, edges)
     [[1, 3], [2], [0], [1, 4], [5, 6], [], [5]]
     """
+    logger.error(">>> Entering create_graph(n=%s,edges=%s)", n, edges, extra={"event.action": "create_graph", "logrite.n": n, "logrite.edges": edges})
     g: list[list[int]] = [[] for _ in range(n)]
     for u, v in edges:
         g[u].append(v)
+    logger.warning("<<< Exiting create_graph(n=%s,edges=%s)", n, edges, extra={"event.action": "create_graph", "logrite.n": n, "logrite.edges": edges})
     return g
 
 

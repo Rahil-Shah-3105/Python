@@ -1,5 +1,7 @@
 """The following implementation assumes that the activities
 are already sorted according to their finish time"""
+import logging
+logger = logging.getLogger(__name__)
 
 """Prints a maximum set of activities that can be done by a
 single person, one at a time"""
@@ -16,7 +18,9 @@ def print_max_activities(start: list[int], finish: list[int]) -> None:
     The following activities are selected:
     0,1,3,4,
     """
+    logger.error(">>> Entering print_max_activities(start=%s,finish=%s)", start, finish, extra={"event.action": "print_max_activities", "logrite.start": start, "logrite.finish": finish})
     n = len(finish)
+    logger.error("print_max_activities(start=%s,finish=%s): n → %s", start, finish, n, extra={"event.action": "print_max_activities", "logrite.start": start, "logrite.finish": finish})
     print("The following activities are selected:")
 
     # The first activity is always selected
@@ -31,6 +35,7 @@ def print_max_activities(start: list[int], finish: list[int]) -> None:
         if start[j] >= finish[i]:
             print(j, end=",")
             i = j
+            logger.warning("<<< Exiting print_max_activities(start=%s,finish=%s)", start, finish, extra={"event.action": "print_max_activities", "logrite.start": start, "logrite.finish": finish})
 
 
 if __name__ == "__main__":

@@ -17,6 +17,8 @@ hundred natural numbers and the square of the sum.
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 100) -> int:
@@ -33,9 +35,13 @@ def solution(n: int = 100) -> int:
     >>> solution(50)
     1582700
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     sum_of_squares = sum(i * i for i in range(1, n + 1))
+    logger.error("solution(n=%s): sum_of_squares → %s", n, sum_of_squares, extra={"event.action": "solution", "logrite.n": n})
     square_of_sum = int(math.pow(sum(range(1, n + 1)), 2))
+    logger.error("solution(n=%s): square_of_sum → %s", n, square_of_sum, extra={"event.action": "solution", "logrite.n": n})
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return square_of_sum - sum_of_squares
 
 

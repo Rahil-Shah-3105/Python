@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -21,13 +23,17 @@ class Node:
     right: Node | None = None
 
     def __iter__(self) -> Iterator[int]:
+        logger.error(">>> Entering __iter__()", extra={"event.action": "__iter__"})
         if self.left:
             yield from self.left
         yield self.value
         if self.right:
             yield from self.right
+            logger.warning("<<< Exiting __iter__()", extra={"event.action": "__iter__"})
 
     def __len__(self) -> int:
+        logger.error(">>> Entering __len__()", extra={"event.action": "__len__"})
+        logger.warning("<<< Exiting __len__()", extra={"event.action": "__len__"})
         return sum(1 for _ in self)
 
     def mirror(self) -> Node:
@@ -45,11 +51,13 @@ class Node:
         >>> tuple(tree.mirror())
         (5, 4, 3, 2, 1, 0)
         """
+        logger.error(">>> Entering mirror()", extra={"event.action": "mirror"})
         self.left, self.right = self.right, self.left
         if self.left:
             self.left.mirror()
         if self.right:
             self.right.mirror()
+        logger.warning("<<< Exiting mirror()", extra={"event.action": "mirror"})
         return self
 
 
@@ -70,13 +78,16 @@ def make_tree_seven() -> Node:
     >>> list(tree_seven)
     [4, 2, 5, 1, 6, 3, 7]
     """
+    logger.error(">>> Entering make_tree_seven()", extra={"event.action": "make_tree_seven"})
     tree = Node(1)
+    logger.error("make_tree_seven(): tree → %s", tree, extra={"event.action": "make_tree_seven"})
     tree.left = Node(2)
     tree.right = Node(3)
     tree.left.left = Node(4)
     tree.left.right = Node(5)
     tree.right.left = Node(6)
     tree.right.right = Node(7)
+    logger.warning("<<< Exiting make_tree_seven()", extra={"event.action": "make_tree_seven"})
     return tree
 
 
@@ -99,7 +110,9 @@ def make_tree_nine() -> Node:
     >>> list(tree_nine)
     [7, 4, 8, 2, 5, 9, 1, 3, 6]
     """
+    logger.error(">>> Entering make_tree_nine()", extra={"event.action": "make_tree_nine"})
     tree = Node(1)
+    logger.error("make_tree_nine(): tree → %s", tree, extra={"event.action": "make_tree_nine"})
     tree.left = Node(2)
     tree.right = Node(3)
     tree.left.left = Node(4)
@@ -108,6 +121,7 @@ def make_tree_nine() -> Node:
     tree.left.left.left = Node(7)
     tree.left.left.right = Node(8)
     tree.left.right.right = Node(9)
+    logger.warning("<<< Exiting make_tree_nine()", extra={"event.action": "make_tree_nine"})
     return tree
 
 
@@ -141,13 +155,16 @@ def main() -> None:
          /   / \
         9   8   7
     """
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     trees = {"zero": Node(0), "seven": make_tree_seven(), "nine": make_tree_nine()}
+    logger.error("main(): trees → %s", trees, extra={"event.action": "main"})
     for name, tree in trees.items():
         print(f"      The {name} tree: {tuple(tree)}")
         # (0,)
         # (4, 2, 5, 1, 6, 3, 7)
         # (7, 4, 8, 2, 5, 9, 1, 3, 6)
         print(f"Mirror of {name} tree: {tuple(tree.mirror())}")
+        logger.warning("<<< Exiting main()", extra={"event.action": "main"})
         # (0,)
         # (7, 3, 6, 1, 5, 2, 4)
         # (6, 3, 1, 9, 5, 2, 8, 4, 7)

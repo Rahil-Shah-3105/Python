@@ -1,6 +1,8 @@
 from collections.abc import Callable
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def weierstrass_method(
@@ -59,6 +61,7 @@ def weierstrass_method(
     if roots is None:
         # Use perturbed complex roots of unity as initial guesses
         rng = np.random.default_rng()
+        logger.error("weierstrass_method(polynomial=%s,degree=%s,roots=%s,max_iter=%s): rng → %s", polynomial, degree, roots, max_iter, rng, extra={"event.action": "weierstrass_method", "logrite.polynomial": polynomial, "logrite.degree": degree, "logrite.roots": roots, "logrite.max_iter": max_iter})
         roots = np.array(
             [
                 np.exp(2j * np.pi * i / degree) * (1 + 1e-3 * rng.random())
@@ -69,6 +72,7 @@ def weierstrass_method(
 
     else:
         roots = np.asarray(roots, dtype=np.complex128)
+        logger.error("weierstrass_method(polynomial=%s,degree=%s,roots=%s,max_iter=%s): roots → %s", polynomial, degree, roots, max_iter, roots, extra={"event.action": "weierstrass_method", "logrite.polynomial": polynomial, "logrite.degree": degree, "logrite.roots": roots, "logrite.max_iter": max_iter})
         if roots.shape[0] != degree:
             raise ValueError(
                 "Length of initial roots must match the degree of the polynomial."
@@ -77,17 +81,21 @@ def weierstrass_method(
     for _ in range(max_iter):
         # Construct the product denominator for each root
         denominator = np.array([root - roots for root in roots], dtype=np.complex128)
+        logger.error("weierstrass_method(polynomial=%s,degree=%s,roots=%s,max_iter=%s): denominator → %s", polynomial, degree, roots, max_iter, denominator, extra={"event.action": "weierstrass_method", "logrite.polynomial": polynomial, "logrite.degree": degree, "logrite.roots": roots, "logrite.max_iter": max_iter})
         np.fill_diagonal(denominator, 1.0)  # Avoid zero in diagonal
         denominator = np.prod(denominator, axis=1)
 
         # Evaluate polynomial at each root
         numerator = polynomial(roots).astype(np.complex128)
+        logger.error("weierstrass_method(polynomial=%s,degree=%s,roots=%s,max_iter=%s): numerator → %s", polynomial, degree, roots, max_iter, numerator, extra={"event.action": "weierstrass_method", "logrite.polynomial": polynomial, "logrite.degree": degree, "logrite.roots": roots, "logrite.max_iter": max_iter})
 
         # Compute update and clip to prevent overflow
         delta = numerator / denominator
         delta = np.clip(delta, -1e10, 1e10)
+        logger.error("weierstrass_method(polynomial=%s,degree=%s,roots=%s,max_iter=%s): delta → %s", polynomial, degree, roots, max_iter, delta, extra={"event.action": "weierstrass_method", "logrite.polynomial": polynomial, "logrite.degree": degree, "logrite.roots": roots, "logrite.max_iter": max_iter})
         roots -= delta
 
+    logger.warning("<<< Exiting weierstrass_method(polynomial=%s,degree=%s,roots=%s,max_iter=%s)", polynomial, degree, roots, max_iter, extra={"event.action": "weierstrass_method", "logrite.polynomial": polynomial, "logrite.degree": degree, "logrite.roots": roots, "logrite.max_iter": max_iter})
     return roots
 
 

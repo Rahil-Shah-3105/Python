@@ -10,6 +10,8 @@ It can be seen that P4 + P7 = 22 + 70 = 92 = P8. However, their difference,
 Find the pair of pentagonal numbers, Pj and Pk, for which their sum and difference
 are pentagonal and D = |Pk - Pj| is minimised; what is the value of D?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_pentagonal(n: int) -> bool:
@@ -22,7 +24,10 @@ def is_pentagonal(n: int) -> bool:
     >>> is_pentagonal(2380)
     True
     """
+    logger.error(">>> Entering is_pentagonal(n=%s)", n, extra={"event.action": "is_pentagonal", "logrite.n": n})
     root = (1 + 24 * n) ** 0.5
+    logger.error("is_pentagonal(n=%s): root → %s", n, root, extra={"event.action": "is_pentagonal", "logrite.n": n})
+    logger.warning("<<< Exiting is_pentagonal(n=%s)", n, extra={"event.action": "is_pentagonal", "logrite.n": n})
     return ((1 + root) / 6) % 1 == 0
 
 
@@ -33,7 +38,9 @@ def solution(limit: int = 5000) -> int:
     >>> solution(5000)
     5482660
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     pentagonal_nums = [(i * (3 * i - 1)) // 2 for i in range(1, limit)]
+    logger.error("solution(limit=%s): pentagonal_nums → %s", limit, pentagonal_nums, extra={"event.action": "solution", "logrite.limit": limit})
     for i, pentagonal_i in enumerate(pentagonal_nums):
         for j in range(i, len(pentagonal_nums)):
             pentagonal_j = pentagonal_nums[j]

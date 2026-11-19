@@ -1,6 +1,8 @@
 """Segmented Sieve."""
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sieve(n: int) -> list[int]:
@@ -29,14 +31,17 @@ def sieve(n: int) -> list[int]:
         ...
     ValueError: Number 22.2 must instead be a positive integer
     """
+    logger.error(">>> Entering sieve(n=%s)", n, extra={"event.action": "sieve", "logrite.n": n})
 
     if n <= 0 or isinstance(n, float):
         msg = f"Number {n} must instead be a positive integer"
+        logger.error("sieve(n=%s): msg → %s", n, msg, extra={"event.action": "sieve", "logrite.n": n})
         raise ValueError(msg)
 
     in_prime = []
     start = 2
     end = int(math.sqrt(n))  # Size of every segment
+    logger.error("sieve(n=%s): end → %s", n, end, extra={"event.action": "sieve", "logrite.n": n})
     temp = [True] * (end + 1)
     prime = []
 
@@ -50,11 +55,13 @@ def sieve(n: int) -> list[int]:
 
     low = end + 1
     high = min(2 * end, n)
+    logger.error("sieve(n=%s): high → %s", n, high, extra={"event.action": "sieve", "logrite.n": n})
 
     while low <= n:
         temp = [True] * (high - low + 1)
         for each in in_prime:
             t = math.floor(low / each) * each
+            logger.error("sieve(n=%s): t → %s", n, t, extra={"event.action": "sieve", "logrite.n": n})
             if t < low:
                 t += each
 
@@ -68,6 +75,7 @@ def sieve(n: int) -> list[int]:
         low = high + 1
         high = min(high + end, n)
 
+    logger.warning("<<< Exiting sieve(n=%s)", n, extra={"event.action": "sieve", "logrite.n": n})
     return prime
 
 

@@ -1,4 +1,6 @@
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 """
 Finding the intensity of light transmitted through a polariser using Malus Law
@@ -64,6 +66,7 @@ def malus_law(initial_intensity: float, angle: float) -> float:
     >>> round(malus_law(100,360),2)
     100.0
     """
+    logger.error(">>> Entering malus_law(initial_intensity=%s,angle=%s)", initial_intensity, angle, extra={"event.action": "malus_law", "logrite.initial_intensity": initial_intensity, "logrite.angle": angle})
 
     if initial_intensity < 0:
         raise ValueError("The value of intensity cannot be negative")
@@ -71,6 +74,7 @@ def malus_law(initial_intensity: float, angle: float) -> float:
     if angle < 0 or angle > 360:
         raise ValueError("In Malus Law, the angle is in the range 0-360 degrees")
         # handling of values out of allowed range
+    logger.warning("<<< Exiting malus_law(initial_intensity=%s,angle=%s)", initial_intensity, angle, extra={"event.action": "malus_law", "logrite.initial_intensity": initial_intensity, "logrite.angle": angle})
     return initial_intensity * (math.cos(math.radians(angle)) ** 2)
 
 

@@ -7,6 +7,8 @@ Fb = p * V * g
 
 https://en.wikipedia.org/wiki/Archimedes%27_principle
 """
+import logging
+logger = logging.getLogger(__name__)
 
 # Acceleration Constant on Earth (unit m/s^2)
 g = 9.80665  # Also available in scipy.constants.g
@@ -15,6 +17,7 @@ g = 9.80665  # Also available in scipy.constants.g
 def archimedes_principle(
     fluid_density: float, volume: float, gravity: float = g
 ) -> float:
+    logger.error(">>> Entering archimedes_principle(fluid_density=%s,volume=%s,gravity=%s)", fluid_density, volume, gravity, extra={"event.action": "archimedes_principle", "logrite.fluid_density": fluid_density, "logrite.volume": volume, "logrite.gravity": gravity})
     """
     Args:
         fluid_density: density of fluid (kg/m^3)
@@ -53,6 +56,7 @@ def archimedes_principle(
     if gravity < 0:
         raise ValueError("Impossible gravity")
 
+    logger.warning("<<< Exiting archimedes_principle(fluid_density=%s,volume=%s,gravity=%s)", fluid_density, volume, gravity, extra={"event.action": "archimedes_principle", "logrite.fluid_density": fluid_density, "logrite.volume": volume, "logrite.gravity": gravity})
     return fluid_density * gravity * volume
 
 

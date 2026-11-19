@@ -14,6 +14,8 @@ Following is the truth table of a Two Input AND Gate:
 
 Refer - https://www.geeksforgeeks.org/logic-gates/
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def and_gate(input_1: int, input_2: int) -> int:
@@ -29,6 +31,8 @@ def and_gate(input_1: int, input_2: int) -> int:
     >>> and_gate(1, 1)
     1
     """
+    logger.error(">>> Entering and_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "and_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
+    logger.warning("<<< Exiting and_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "and_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
     return int(input_1 and input_2)
 
 
@@ -41,6 +45,8 @@ def n_input_and_gate(inputs: list[int]) -> int:
     >>> n_input_and_gate([1, 1, 1, 1, 1])
     1
     """
+    logger.error(">>> Entering n_input_and_gate(inputs=%s)", inputs, extra={"event.action": "n_input_and_gate"})
+    logger.warning("<<< Exiting n_input_and_gate(inputs=%s)", inputs, extra={"event.action": "n_input_and_gate"})
     return int(all(inputs))
 
 

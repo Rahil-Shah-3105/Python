@@ -1,4 +1,6 @@
 from sklearn.neural_network import MLPClassifier
+import logging
+logger = logging.getLogger(__name__)
 
 X = [[0.0, 0.0], [1.0, 1.0], [1.0, 0.0], [0.0, 1.0]]
 y = [0, 1, 0, 0]
@@ -20,6 +22,8 @@ def wrapper(y):
     >>> [int(x) for x in wrapper(Y)]
     [0, 0, 1]
     """
+    logger.error(">>> Entering wrapper(y=%s)", y, extra={"event.action": "wrapper", "logrite.y": y})
+    logger.warning("<<< Exiting wrapper(y=%s)", y, extra={"event.action": "wrapper", "logrite.y": y})
     return list(y)
 
 

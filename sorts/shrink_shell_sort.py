@@ -19,6 +19,8 @@ The reason this is more efficient is that it reduces
 the number of comparisons that need to be made. By
 using a smaller gap, the list is sorted more quickly.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def shell_sort(collection: list) -> list:
@@ -34,9 +36,11 @@ def shell_sort(collection: list) -> list:
     >>> shell_sort([1])
     [1]
     """
+    logger.error(">>> Entering shell_sort(collection=%s)", collection, extra={"event.action": "shell_sort", "logrite.collection": collection})
 
     # Choose an initial gap value
     gap = len(collection)
+    logger.error("shell_sort(collection=%s): gap → %s", collection, gap, extra={"event.action": "shell_sort", "logrite.collection": collection})
 
     # Set the gap value to be decreased by a factor of 1.3
     # after each iteration
@@ -56,6 +60,7 @@ def shell_sort(collection: list) -> list:
                 j -= gap
             collection[j] = temp
 
+    logger.warning("<<< Exiting shell_sort(collection=%s)", collection, extra={"event.action": "shell_sort", "logrite.collection": collection})
     return collection
 
 

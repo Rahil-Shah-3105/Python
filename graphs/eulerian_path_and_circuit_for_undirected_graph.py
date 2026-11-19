@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # Eulerian Path is a path in graph that visits every edge exactly once.
 # Eulerian Circuit is an Eulerian Path which starts and ends on the same
 # vertex.
@@ -7,16 +9,20 @@
 
 # using dfs for finding eulerian path traversal
 def dfs(u, graph, visited_edge, path=None):
+    logger.error(">>> Entering dfs(u=%s,graph=%s,visited_edge=%s,path=%s)", u, graph, visited_edge, path, extra={"event.action": "dfs", "logrite.u": u, "logrite.graph": graph, "logrite.visited_edge": visited_edge, "logrite.path": path})
     path = (path or []) + [u]
+    logger.error("dfs(u=%s,graph=%s,visited_edge=%s,path=%s): path → %s", u, graph, visited_edge, path, path, extra={"event.action": "dfs", "logrite.u": u, "logrite.graph": graph, "logrite.visited_edge": visited_edge, "logrite.path": path})
     for v in graph[u]:
         if visited_edge[u][v] is False:
             visited_edge[u][v], visited_edge[v][u] = True, True
             path = dfs(v, graph, visited_edge, path)
+    logger.warning("<<< Exiting dfs(u=%s,graph=%s,visited_edge=%s,path=%s)", u, graph, visited_edge, path, extra={"event.action": "dfs", "logrite.u": u, "logrite.graph": graph, "logrite.visited_edge": visited_edge, "logrite.path": path})
     return path
 
 
 # for checking in graph has euler path or circuit
 def check_circuit_or_path(graph, max_node):
+    logger.error(">>> Entering check_circuit_or_path(graph=%s,max_node=%s)", graph, max_node, extra={"event.action": "check_circuit_or_path", "logrite.graph": graph, "logrite.max_node": max_node})
     odd_degree_nodes = 0
     odd_node = -1
     for i in range(max_node):
@@ -29,15 +35,19 @@ def check_circuit_or_path(graph, max_node):
         return 1, odd_node
     if odd_degree_nodes == 2:
         return 2, odd_node
+    logger.warning("<<< Exiting check_circuit_or_path(graph=%s,max_node=%s)", graph, max_node, extra={"event.action": "check_circuit_or_path", "logrite.graph": graph, "logrite.max_node": max_node})
     return 3, odd_node
 
 
 def check_euler(graph, max_node):
+    logger.error(">>> Entering check_euler(graph=%s,max_node=%s)", graph, max_node, extra={"event.action": "check_euler", "logrite.graph": graph, "logrite.max_node": max_node})
     visited_edge = [[False for _ in range(max_node + 1)] for _ in range(max_node + 1)]
+    logger.error("check_euler(graph=%s,max_node=%s): visited_edge → %s", graph, max_node, visited_edge, extra={"event.action": "check_euler", "logrite.graph": graph, "logrite.max_node": max_node})
     check, odd_node = check_circuit_or_path(graph, max_node)
     if check == 3:
         print("graph is not Eulerian")
         print("no path")
+        logger.warning("<<< Exiting check_euler(graph=%s,max_node=%s)", graph, max_node, extra={"event.action": "check_euler", "logrite.graph": graph, "logrite.max_node": max_node})
         return
     start_node = 1
     if check == 2:
@@ -50,6 +60,7 @@ def check_euler(graph, max_node):
 
 
 def main():
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     g1 = {1: [2, 3, 4], 2: [1, 3], 3: [1, 2], 4: [1, 5], 5: [4]}
     g2 = {1: [2, 3, 4, 5], 2: [1, 3], 3: [1, 2], 4: [1, 5], 5: [1, 4]}
     g3 = {1: [2, 3, 4], 2: [1, 3, 4], 3: [1, 2], 4: [1, 2, 5], 5: [4]}
@@ -65,6 +76,7 @@ def main():
     check_euler(g3, max_node)
     check_euler(g4, max_node)
     check_euler(g5, max_node)
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

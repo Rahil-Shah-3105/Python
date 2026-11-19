@@ -5,6 +5,8 @@ the string can be segmented into a sequence of one or more dictionary words.
 
 Wikipedia: https://en.wikipedia.org/wiki/Word_break_problem
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def backtrack(input_string: str, word_dict: set[str], start: int) -> bool:
@@ -30,6 +32,7 @@ def backtrack(input_string: str, word_dict: set[str], start: int) -> bool:
     >>> backtrack("catsandog", {"cats", "dog", "sand", "and", "cat"}, 0)
     False
     """
+    logger.error(">>> Entering backtrack(input_string=%s,word_dict=%s,start=%s)", input_string, word_dict, start, extra={"event.action": "backtrack", "logrite.input_string": input_string, "logrite.word_dict": word_dict, "logrite.start": start})
 
     # Base case: if the starting index has reached the end of the string
     if start == len(input_string):
@@ -42,6 +45,7 @@ def backtrack(input_string: str, word_dict: set[str], start: int) -> bool:
         ):
             return True
 
+    logger.warning("<<< Exiting backtrack(input_string=%s,word_dict=%s,start=%s)", input_string, word_dict, start, extra={"event.action": "backtrack", "logrite.input_string": input_string, "logrite.word_dict": word_dict, "logrite.start": start})
     return False
 
 
@@ -70,5 +74,7 @@ def word_break(input_string: str, word_dict: set[str]) -> bool:
     >>> word_break("applepenapple", {})
     False
     """
+    logger.error(">>> Entering word_break(input_string=%s,word_dict=%s)", input_string, word_dict, extra={"event.action": "word_break", "logrite.input_string": input_string, "logrite.word_dict": word_dict})
 
+    logger.warning("<<< Exiting word_break(input_string=%s,word_dict=%s)", input_string, word_dict, extra={"event.action": "word_break", "logrite.input_string": input_string, "logrite.word_dict": word_dict})
     return backtrack(input_string, word_dict, 0)

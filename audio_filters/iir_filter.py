@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 class IIRFilter:
@@ -24,17 +26,24 @@ class IIRFilter:
     """
 
     def __init__(self, order: int) -> None:
+        logger.error(">>> Entering __init__(order=%s)", order, extra={"event.action": "__init__", "logrite.order": order})
         self.order = order
+        logger.debug("__init__(self=%s,order=%s): self.order → %s", self, order, self.order, extra={"event.action": "__init__", "logrite.order": order})
 
         # a_{0} ... a_{k}
         self.a_coeffs = [1.0] + [0.0] * order
+        logger.debug("__init__(self=%s,order=%s): self.a_coeffs → %s", self, order, self.a_coeffs, extra={"event.action": "__init__", "logrite.order": order})
         # b_{0} ... b_{k}
         self.b_coeffs = [1.0] + [0.0] * order
+        logger.debug("__init__(self=%s,order=%s): self.b_coeffs → %s", self, order, self.b_coeffs, extra={"event.action": "__init__", "logrite.order": order})
 
         # x[n-1] ... x[n-k]
         self.input_history = [0.0] * self.order
+        logger.debug("__init__(self=%s,order=%s): self.input_history → %s", self, order, self.input_history, extra={"event.action": "__init__", "logrite.order": order})
         # y[n-1] ... y[n-k]
+        logger.warning("<<< Exiting __init__(order=%s)", order, extra={"event.action": "__init__", "logrite.order": order})
         self.output_history = [0.0] * self.order
+        logger.debug("__init__(self=%s,order=%s): self.output_history → %s", self, order, self.output_history, extra={"event.action": "__init__", "logrite.order": order})
 
     def set_coefficients(self, a_coeffs: list[float], b_coeffs: list[float]) -> None:
         """
@@ -52,6 +61,8 @@ class IIRFilter:
         >>> filt = IIRFilter(2)
         >>> filt.set_coefficients(a_coeffs, b_coeffs)
         """
+        logger.error(">>> Entering set_coefficients(a_coeffs=%s,b_coeffs=%s)", a_coeffs, b_coeffs, extra={"event.action": "set_coefficients", "logrite.a_coeffs": a_coeffs, "logrite.b_coeffs": b_coeffs})
+        logger.debug("set_coefficients(self=%s,a_coeffs=%s,b_coeffs=%s): filt → %s", self, a_coeffs, b_coeffs, filt, extra={"event.action": "set_coefficients", "logrite.a_coeffs": a_coeffs, "logrite.b_coeffs": b_coeffs})
         if len(a_coeffs) < self.order:
             a_coeffs = [1.0, *a_coeffs]
 
@@ -67,10 +78,13 @@ class IIRFilter:
                 f"Expected b_coeffs to have {self.order + 1} elements "
                 f"for {self.order}-order filter, got {len(a_coeffs)}"
             )
+            logger.warning("<<< Exiting set_coefficients(a_coeffs=%s,b_coeffs=%s)", a_coeffs, b_coeffs, extra={"event.action": "set_coefficients", "logrite.a_coeffs": a_coeffs, "logrite.b_coeffs": b_coeffs})
             raise ValueError(msg)
 
         self.a_coeffs = a_coeffs
+        logger.debug("set_coefficients(self=%s,a_coeffs=%s,b_coeffs=%s): self.a_coeffs → %s", self, a_coeffs, b_coeffs, self.a_coeffs, extra={"event.action": "set_coefficients", "logrite.a_coeffs": a_coeffs, "logrite.b_coeffs": b_coeffs})
         self.b_coeffs = b_coeffs
+        logger.debug("set_coefficients(self=%s,a_coeffs=%s,b_coeffs=%s): self.b_coeffs → %s", self, a_coeffs, b_coeffs, self.b_coeffs, extra={"event.action": "set_coefficients", "logrite.a_coeffs": a_coeffs, "logrite.b_coeffs": b_coeffs})
 
     def process(self, sample: float) -> float:
         """
@@ -80,7 +94,9 @@ class IIRFilter:
         >>> filt.process(0)
         0.0
         """
+        logger.error(">>> Entering process(sample=%s)", sample, extra={"event.action": "process", "logrite.sample": sample})
         result = 0.0
+        logger.error("process(sample=%s): result → %s", sample, result, extra={"event.action": "process", "logrite.sample": sample})
 
         # Start at index 1 and do index 0 at the end.
         for i in range(1, self.order + 1):
@@ -97,4 +113,5 @@ class IIRFilter:
         self.input_history[0] = sample
         self.output_history[0] = result
 
+        logger.warning("<<< Exiting process(sample=%s)", sample, extra={"event.action": "process", "logrite.sample": sample})
         return result

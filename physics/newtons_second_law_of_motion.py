@@ -60,6 +60,8 @@ Output::
    |______________|_______________________|___________|
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def newtons_second_law_of_motion(mass: float, acceleration: float) -> float:
@@ -71,11 +73,14 @@ def newtons_second_law_of_motion(mass: float, acceleration: float) -> float:
     >>> newtons_second_law_of_motion(2.0, 1)
     2.0
     """
+    logger.error(">>> Entering newtons_second_law_of_motion(mass=%s,acceleration=%s)", mass, acceleration, extra={"event.action": "newtons_second_law_of_motion", "logrite.mass": mass, "logrite.acceleration": acceleration})
     force = 0.0
     try:
         force = mass * acceleration
     except Exception:
+        logger.error("Exception in newtons_second_law_of_motion(mass=%s,acceleration=%s)", mass, acceleration, exc_info=True, extra={"event.action": "newtons_second_law_of_motion", "event.category": "process", "logrite.mass": mass, "logrite.acceleration": acceleration})
         return -0.0
+    logger.warning("<<< Exiting newtons_second_law_of_motion(mass=%s,acceleration=%s)", mass, acceleration, extra={"event.action": "newtons_second_law_of_motion", "logrite.mass": mass, "logrite.acceleration": acceleration})
     return force
 
 

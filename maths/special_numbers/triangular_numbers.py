@@ -6,6 +6,8 @@ triangular number.
 For more information about triangular numbers, refer to:
 https://en.wikipedia.org/wiki/Triangular_number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def triangular_number(position: int) -> int:
@@ -31,9 +33,11 @@ def triangular_number(position: int) -> int:
         ...
     ValueError: param `position` must be non-negative
     """
+    logger.error(">>> Entering triangular_number(position=%s)", position, extra={"event.action": "triangular_number", "logrite.position": position})
     if position < 0:
         raise ValueError("param `position` must be non-negative")
 
+    logger.warning("<<< Exiting triangular_number(position=%s)", position, extra={"event.action": "triangular_number", "logrite.position": position})
     return position * (position + 1) // 2
 
 

@@ -15,6 +15,8 @@ NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
 from __future__ import annotations
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -41,6 +43,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(67483)
     False
     """
+    logger.error(">>> Entering is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -53,6 +56,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.warning("<<< Exiting is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
     return True
 
 
@@ -66,11 +70,14 @@ def list_truncated_nums(n: int) -> list[int]:
     >>> list_truncated_nums(58)
     [58, 8, 5]
     """
+    logger.error(">>> Entering list_truncated_nums(n=%s)", n, extra={"event.action": "list_truncated_nums", "logrite.n": n})
     str_num = str(n)
+    logger.error("list_truncated_nums(n=%s): str_num → %s", n, str_num, extra={"event.action": "list_truncated_nums", "logrite.n": n})
     list_nums = [n]
     for i in range(1, len(str_num)):
         list_nums.append(int(str_num[i:]))
         list_nums.append(int(str_num[:-i]))
+    logger.warning("<<< Exiting list_truncated_nums(n=%s)", n, extra={"event.action": "list_truncated_nums", "logrite.n": n})
     return list_nums
 
 
@@ -85,6 +92,8 @@ def validate(n: int) -> bool:
     >>> validate(3797)
     True
     """
+    logger.error(">>> Entering validate(n=%s)", n, extra={"event.action": "validate", "logrite.n": n})
+    logger.warning("<<< Exiting validate(n=%s)", n, extra={"event.action": "validate", "logrite.n": n})
     return not (
         len(str(n)) > 3
         and (not is_prime(int(str(n)[-3:])) or not is_prime(int(str(n)[:3])))
@@ -97,14 +106,17 @@ def compute_truncated_primes(count: int = 11) -> list[int]:
     >>> compute_truncated_primes(11)
     [23, 37, 53, 73, 313, 317, 373, 797, 3137, 3797, 739397]
     """
+    logger.error(">>> Entering compute_truncated_primes(count=%s)", count, extra={"event.action": "compute_truncated_primes", "logrite.count": count})
     list_truncated_primes: list[int] = []
     num = 13
     while len(list_truncated_primes) != count:
         if validate(num):
             list_nums = list_truncated_nums(num)
+            logger.error("compute_truncated_primes(count=%s): list_nums → %s", count, list_nums, extra={"event.action": "compute_truncated_primes", "logrite.count": count})
             if all(is_prime(i) for i in list_nums):
                 list_truncated_primes.append(num)
         num += 2
+    logger.warning("<<< Exiting compute_truncated_primes(count=%s)", count, extra={"event.action": "compute_truncated_primes", "logrite.count": count})
     return list_truncated_primes
 
 
@@ -112,6 +124,8 @@ def solution() -> int:
     """
     Returns the sum of truncated primes
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return sum(compute_truncated_primes(11))
 
 

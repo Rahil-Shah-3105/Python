@@ -35,6 +35,8 @@ count of current primes.
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -61,6 +63,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(67483)
     False
     """
+    logger.error(">>> Entering is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -73,6 +76,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.warning("<<< Exiting is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
     return True
 
 
@@ -88,6 +92,7 @@ def solution(ratio: float = 0.1) -> int:
     >>> solution(.111)
     11317
     """
+    logger.error(">>> Entering solution(ratio=%s)", ratio, extra={"event.action": "solution", "logrite.ratio": ratio})
 
     j = 3
     primes = 3
@@ -96,6 +101,7 @@ def solution(ratio: float = 0.1) -> int:
         for i in range(j * j + j + 1, (j + 2) * (j + 2), j + 1):
             primes += is_prime(i)
         j += 2
+    logger.warning("<<< Exiting solution(ratio=%s)", ratio, extra={"event.action": "solution", "logrite.ratio": ratio})
     return j
 
 

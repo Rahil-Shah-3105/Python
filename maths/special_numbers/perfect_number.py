@@ -10,6 +10,8 @@ Other examples of Perfect Numbers: 28, 486, ...
 
 https://en.wikipedia.org/wiki/Perfect_number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def perfect(number: int) -> bool:
@@ -57,6 +59,7 @@ def perfect(number: int) -> bool:
       ...
     ValueError: number must be an integer
     """
+    logger.error(">>> Entering perfect(number=%s)", number, extra={"event.action": "perfect", "logrite.number": number})
     if not isinstance(number, int):
         raise ValueError("number must be an integer")
     if number <= 0:

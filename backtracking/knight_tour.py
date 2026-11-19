@@ -1,6 +1,8 @@
 # Knight Tour Intro: https://www.youtube.com/watch?v=ab_dY3dZFHM
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_valid_pos(position: tuple[int, int], n: int) -> list[tuple[int, int]]:
@@ -10,6 +12,7 @@ def get_valid_pos(position: tuple[int, int], n: int) -> list[tuple[int, int]]:
     >>> get_valid_pos((1, 3), 4)
     [(2, 1), (0, 1), (3, 2)]
     """
+    logger.error(">>> Entering get_valid_pos(position=%s,n=%s)", position, n, extra={"event.action": "get_valid_pos", "logrite.position": position, "logrite.n": n})
 
     y, x = position
     positions = [
@@ -29,6 +32,7 @@ def get_valid_pos(position: tuple[int, int], n: int) -> list[tuple[int, int]]:
         if 0 <= y_test < n and 0 <= x_test < n:
             permissible_positions.append(inner_position)
 
+    logger.warning("<<< Exiting get_valid_pos(position=%s,n=%s)", position, n, extra={"event.action": "get_valid_pos", "logrite.position": position, "logrite.n": n})
     return permissible_positions
 
 
@@ -42,13 +46,16 @@ def is_complete(board: list[list[int]]) -> bool:
     >>> is_complete([[1, 2], [3, 0]])
     False
     """
+    logger.error(">>> Entering is_complete(board=%s)", board, extra={"event.action": "is_complete", "logrite.board": board})
 
+    logger.warning("<<< Exiting is_complete(board=%s)", board, extra={"event.action": "is_complete", "logrite.board": board})
     return not any(elem == 0 for row in board for elem in row)
 
 
 def open_knight_tour_helper(
     board: list[list[int]], pos: tuple[int, int], curr: int
 ) -> bool:
+    logger.error(">>> Entering open_knight_tour_helper(board=%s,pos=%s,curr=%s)", board, pos, curr, extra={"event.action": "open_knight_tour_helper", "logrite.board": board, "logrite.pos": pos, "logrite.curr": curr})
     """
     Helper function to solve knight tour problem.
     """
@@ -65,6 +72,7 @@ def open_knight_tour_helper(
                 return True
             board[y][x] = 0
 
+    logger.warning("<<< Exiting open_knight_tour_helper(board=%s,pos=%s,curr=%s)", board, pos, curr, extra={"event.action": "open_knight_tour_helper", "logrite.board": board, "logrite.pos": pos, "logrite.curr": curr})
     return False
 
 
@@ -81,8 +89,10 @@ def open_knight_tour(n: int) -> list[list[int]]:
         ...
     ValueError: Open Knight Tour cannot be performed on a board of size 2
     """
+    logger.error(">>> Entering open_knight_tour(n=%s)", n, extra={"event.action": "open_knight_tour", "logrite.n": n})
 
     board = [[0 for i in range(n)] for j in range(n)]
+    logger.error("open_knight_tour(n=%s): board → %s", n, board, extra={"event.action": "open_knight_tour", "logrite.n": n})
 
     for i in range(n):
         for j in range(n):

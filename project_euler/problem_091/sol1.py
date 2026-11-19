@@ -12,6 +12,8 @@ Given that 0 ≤ x1, y1, x2, y2 ≤ 50, how many right triangles can be formed?
 """
 
 from itertools import combinations, product
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_right(x1: int, y1: int, x2: int, y2: int) -> bool:
@@ -25,11 +27,13 @@ def is_right(x1: int, y1: int, x2: int, y2: int) -> bool:
     >>> is_right(1, 0, 2, 2)
     False
     """
+    logger.error(">>> Entering is_right(x1=%s,y1=%s,x2=%s,y2=%s)", x1, y1, x2, y2, extra={"event.action": "is_right", "logrite.x1": x1, "logrite.y1": y1, "logrite.x2": x2, "logrite.y2": y2})
     if x1 == y1 == 0 or x2 == y2 == 0:
         return False
     a_square = x1 * x1 + y1 * y1
     b_square = x2 * x2 + y2 * y2
     c_square = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)
+    logger.warning("<<< Exiting is_right(x1=%s,y1=%s,x2=%s,y2=%s)", x1, y1, x2, y2, extra={"event.action": "is_right", "logrite.x1": x1, "logrite.y1": y1, "logrite.x2": x2, "logrite.y2": y2})
     return (
         a_square + b_square == c_square
         or a_square + c_square == b_square
@@ -47,6 +51,8 @@ def solution(limit: int = 50) -> int:
     >>> solution(10)
     448
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
+    logger.warning("<<< Exiting solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     return sum(
         1
         for pt1, pt2 in combinations(product(range(limit + 1), repeat=2), 2)

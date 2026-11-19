@@ -3,6 +3,8 @@ Base32 encoding and decoding
 
 https://en.wikipedia.org/wiki/Base32
 """
+import logging
+logger = logging.getLogger(__name__)
 
 B32_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
 
@@ -16,9 +18,12 @@ def base32_encode(data: bytes) -> bytes:
     >>> base32_encode(b"some long complex string")
     b'ONXW2ZJANRXW4ZZAMNXW24DMMV4CA43UOJUW4ZY='
     """
+    logger.error(">>> Entering base32_encode(data=%s)", data, extra={"event.action": "base32_encode"})
     binary_data = "".join(bin(ord(d))[2:].zfill(8) for d in data.decode("utf-8"))
+    logger.error("base32_encode(data=%s): binary_data → %s", data, binary_data, extra={"event.action": "base32_encode"})
     binary_data = binary_data.ljust(5 * ((len(binary_data) // 5) + 1), "0")
     b32_chunks = map("".join, zip(*[iter(binary_data)] * 5))
+    logger.error("base32_encode(data=%s): b32_chunks → %s", data, b32_chunks, extra={"event.action": "base32_encode"})
     b32_result = "".join(B32_CHARSET[int(chunk, 2)] for chunk in b32_chunks)
     return bytes(b32_result.ljust(8 * ((len(b32_result) // 8) + 1), "="), "utf-8")
 

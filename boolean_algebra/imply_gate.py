@@ -15,6 +15,8 @@ Following is the truth table of an IMPLY Gate:
 
 Refer - https://en.wikipedia.org/wiki/IMPLY_gate
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def imply_gate(input_1: int, input_2: int) -> int:
@@ -30,6 +32,8 @@ def imply_gate(input_1: int, input_2: int) -> int:
     >>> imply_gate(1, 1)
     1
     """
+    logger.error(">>> Entering imply_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "imply_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
+    logger.warning("<<< Exiting imply_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "imply_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
     return int(input_1 == 0 or input_2 == 1)
 
 
@@ -76,12 +80,15 @@ def recursive_imply_list(input_list: list[int]) -> int:
     >>> recursive_imply_list([1, 1, 1])
     1
     """
+    logger.error(">>> Entering recursive_imply_list(input_list=%s)", input_list, extra={"event.action": "recursive_imply_list", "logrite.input_list": input_list})
     if len(input_list) < 2:
         raise ValueError("Input list must contain at least two elements")
     first_implication = imply_gate(input_list[0], input_list[1])
+    logger.error("recursive_imply_list(input_list=%s): first_implication → %s", input_list, first_implication, extra={"event.action": "recursive_imply_list", "logrite.input_list": input_list})
     if len(input_list) == 2:
         return first_implication
     new_list = [first_implication, *input_list[2:]]
+    logger.warning("<<< Exiting recursive_imply_list(input_list=%s)", input_list, extra={"event.action": "recursive_imply_list", "logrite.input_list": input_list})
     return recursive_imply_list(new_list)
 
 

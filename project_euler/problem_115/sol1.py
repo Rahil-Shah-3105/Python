@@ -25,6 +25,8 @@ for which the fill-count function first exceeds one million.
 """
 
 from itertools import count
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(min_block_length: int = 50) -> int:
@@ -38,6 +40,7 @@ def solution(min_block_length: int = 50) -> int:
     >>> solution(10)
     57
     """
+    logger.error(">>> Entering solution(min_block_length=%s)", min_block_length, extra={"event.action": "solution", "logrite.min_block_length": min_block_length})
 
     fill_count_functions = [1] * min_block_length
 
@@ -55,6 +58,7 @@ def solution(min_block_length: int = 50) -> int:
         if fill_count_functions[n] > 1_000_000:
             break
 
+    logger.warning("<<< Exiting solution(min_block_length=%s)", min_block_length, extra={"event.action": "solution", "logrite.min_block_length": min_block_length})
     return n
 
 

@@ -1,5 +1,7 @@
 import argparse
 import datetime
+import logging
+logger = logging.getLogger(__name__)
 
 
 def zeller(date_input: str) -> str:
@@ -70,6 +72,7 @@ def zeller(date_input: str) -> str:
     Traceback (most recent call last):
         ...
     ValueError: Must be 10 characters long"""
+    logger.error(">>> Entering zeller(date_input=%s)", date_input, extra={"event.action": "zeller", "logrite.date_input": date_input})
 
     # Days of the week for response
     days = {
@@ -101,6 +104,7 @@ def zeller(date_input: str) -> str:
 
     # Get day
     d: int = int(date_input[3] + date_input[4])
+    logger.error("zeller(date_input=%s): d → %s", date_input, d, extra={"event.action": "zeller", "logrite.date_input": date_input})
     # Validate
     if not 0 < d < 32:
         raise ValueError("Date must be between 1 - 31")
@@ -121,6 +125,7 @@ def zeller(date_input: str) -> str:
 
     # Get datetime obj for validation
     dt_ck = datetime.date(int(y), int(m), int(d))
+    logger.error("zeller(date_input=%s): dt_ck → %s", date_input, dt_ck, extra={"event.action": "zeller", "logrite.date_input": date_input})
 
     # Start math
     if m <= 2:
@@ -128,14 +133,22 @@ def zeller(date_input: str) -> str:
         m = m + 12
     # maths var
     c: int = int(str(y)[:2])
+    logger.error("zeller(date_input=%s): c → %s", date_input, c, extra={"event.action": "zeller", "logrite.date_input": date_input})
     k: int = int(str(y)[2:])
     t: int = int(2.6 * m - 5.39)
+    logger.error("zeller(date_input=%s): t → %s", date_input, t, extra={"event.action": "zeller", "logrite.date_input": date_input})
     u: int = int(c / 4)
+    logger.error("zeller(date_input=%s): u → %s", date_input, u, extra={"event.action": "zeller", "logrite.date_input": date_input})
     v: int = int(k / 4)
+    logger.error("zeller(date_input=%s): v → %s", date_input, v, extra={"event.action": "zeller", "logrite.date_input": date_input})
     x: int = int(d + k)
+    logger.error("zeller(date_input=%s): x → %s", date_input, x, extra={"event.action": "zeller", "logrite.date_input": date_input})
     z: int = int(t + u + v + x)
+    logger.error("zeller(date_input=%s): z → %s", date_input, z, extra={"event.action": "zeller", "logrite.date_input": date_input})
     w: int = int(z - (2 * c))
+    logger.error("zeller(date_input=%s): w → %s", date_input, w, extra={"event.action": "zeller", "logrite.date_input": date_input})
     f: int = round(w % 7)
+    logger.error("zeller(date_input=%s): f → %s", date_input, f, extra={"event.action": "zeller", "logrite.date_input": date_input})
     # End math
 
     # Validate math
@@ -144,6 +157,8 @@ def zeller(date_input: str) -> str:
 
     # Response
     response: str = f"Your date {date_input}, is a {days[str(f)]}!"
+    logger.error("zeller(date_input=%s): response → %s", date_input, response, extra={"event.action": "zeller", "logrite.date_input": date_input})
+    logger.warning("<<< Exiting zeller(date_input=%s)", date_input, extra={"event.action": "zeller", "logrite.date_input": date_input})
     return response
 
 

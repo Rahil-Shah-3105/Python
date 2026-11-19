@@ -6,6 +6,8 @@ oscillations of the caesium atom.
 
 https://en.wikipedia.org/wiki/Unit_of_time
 """
+import logging
+logger = logging.getLogger(__name__)
 
 time_chart: dict[str, float] = {
     "seconds": 1.0,
@@ -59,15 +61,20 @@ def convert_time(time_value: float, unit_from: str, unit_to: str) -> float:
         ...
     ValueError: Invalid unit hot is not in seconds, minutes, hours, days, weeks, ...
     """
+    logger.error(">>> Entering convert_time(time_value=%s,unit_from=%s,unit_to=%s)", time_value, unit_from, unit_to, extra={"event.action": "convert_time", "logrite.time_value": time_value, "logrite.unit_from": unit_from, "logrite.unit_to": unit_to})
     if not isinstance(time_value, (int, float)) or time_value < 0:
         msg = "'time_value' must be a non-negative number."
+        logger.error("convert_time(time_value=%s,unit_from=%s,unit_to=%s): msg → %s", time_value, unit_from, unit_to, msg, extra={"event.action": "convert_time", "logrite.time_value": time_value, "logrite.unit_from": unit_from, "logrite.unit_to": unit_to})
         raise ValueError(msg)
 
     unit_from = unit_from.lower()
+    logger.error("convert_time(time_value=%s,unit_from=%s,unit_to=%s): unit_from → %s", time_value, unit_from, unit_to, unit_from, extra={"event.action": "convert_time", "logrite.time_value": time_value, "logrite.unit_from": unit_from, "logrite.unit_to": unit_to})
     unit_to = unit_to.lower()
+    logger.error("convert_time(time_value=%s,unit_from=%s,unit_to=%s): unit_to → %s", time_value, unit_from, unit_to, unit_to, extra={"event.action": "convert_time", "logrite.time_value": time_value, "logrite.unit_from": unit_from, "logrite.unit_to": unit_to})
     if unit_from not in time_chart or unit_to not in time_chart:
         invalid_unit = unit_from if unit_from not in time_chart else unit_to
         msg = f"Invalid unit {invalid_unit} is not in {', '.join(time_chart)}."
+        logger.warning("<<< Exiting convert_time(time_value=%s,unit_from=%s,unit_to=%s)", time_value, unit_from, unit_to, extra={"event.action": "convert_time", "logrite.time_value": time_value, "logrite.unit_from": unit_from, "logrite.unit_to": unit_to})
         raise ValueError(msg)
 
     return round(

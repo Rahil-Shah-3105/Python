@@ -2,6 +2,8 @@
 
 from collections import Counter
 from timeit import timeit
+import logging
+logger = logging.getLogger(__name__)
 
 # Problem Description:
 # Check if characters of the given string can be rearranged to form a palindrome.
@@ -11,6 +13,7 @@ from timeit import timeit
 def can_string_be_rearranged_as_palindrome_counter(
     input_str: str = "",
 ) -> bool:
+    logger.error(">>> Entering can_string_be_rearranged_as_palindrome_counter(input_str=%s)", input_str, extra={"event.action": "can_string_be_rearranged_as_palindrome_counter", "logrite.input_str": input_str})
     """
     A Palindrome is a String that reads the same forward as it does backwards.
     Examples of Palindromes mom, dad, malayalam
@@ -23,6 +26,8 @@ def can_string_be_rearranged_as_palindrome_counter(
     >>> can_string_be_rearranged_as_palindrome_counter("A man a plan a canal Panama")
     True
     """
+    logger.error("can_string_be_rearranged_as_palindrome_counter(input_str=%s): input_str → %s", input_str, input_str, extra={"event.action": "can_string_be_rearranged_as_palindrome_counter", "logrite.input_str": input_str})
+    logger.warning("<<< Exiting can_string_be_rearranged_as_palindrome_counter(input_str=%s)", input_str, extra={"event.action": "can_string_be_rearranged_as_palindrome_counter", "logrite.input_str": input_str})
     return sum(c % 2 for c in Counter(input_str.replace(" ", "").lower()).values()) < 2
 
 
@@ -39,6 +44,7 @@ def can_string_be_rearranged_as_palindrome(input_str: str = "") -> bool:
     >>> can_string_be_rearranged_as_palindrome_counter("A man a plan a canal Panama")
     True
     """
+    logger.error(">>> Entering can_string_be_rearranged_as_palindrome(input_str=%s)", input_str, extra={"event.action": "can_string_be_rearranged_as_palindrome", "logrite.input_str": input_str})
     if len(input_str) == 0:
         return True
     lower_case_input_str = input_str.replace(" ", "").lower()
@@ -72,6 +78,7 @@ def can_string_be_rearranged_as_palindrome(input_str: str = "") -> bool:
     for character_count in character_freq_dict.values():
         if character_count % 2:
             odd_char += 1
+    logger.warning("<<< Exiting can_string_be_rearranged_as_palindrome(input_str=%s)", input_str, extra={"event.action": "can_string_be_rearranged_as_palindrome", "logrite.input_str": input_str})
     return not odd_char > 1
 
 
@@ -79,7 +86,9 @@ def benchmark(input_str: str = "") -> None:
     """
     Benchmark code for comparing above 2 functions
     """
+    logger.error(">>> Entering benchmark(input_str=%s)", input_str, extra={"event.action": "benchmark", "logrite.input_str": input_str})
     print("\nFor string = ", input_str, ":")
+    logger.warning("<<< Exiting benchmark(input_str=%s)", input_str, extra={"event.action": "benchmark", "logrite.input_str": input_str})
     print(
         "> can_string_be_rearranged_as_palindrome_counter()",
         "\tans =",

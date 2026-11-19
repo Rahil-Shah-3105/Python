@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import math
 from collections.abc import Callable
+import logging
+logger = logging.getLogger(__name__)
 
 
 def line_length(
@@ -10,6 +12,7 @@ def line_length(
     x_end: float,
     steps: int = 100,
 ) -> float:
+    logger.error(">>> Entering line_length(fnc=%s,x_start=%s,x_end=%s,steps=%s)", fnc, x_start, x_end, steps, extra={"event.action": "line_length", "logrite.fnc": fnc, "logrite.x_start": x_start, "logrite.x_end": x_end, "logrite.steps": steps})
     """
     Approximates the arc length of a line segment by treating the curve as a
     sequence of linear lines and summing their lengths
@@ -42,19 +45,24 @@ def line_length(
     for _ in range(steps):
         # Approximates curve as a sequence of linear lines and sums their length
         x2 = (x_end - x_start) / steps + x1
+        logger.error("line_length(fnc=%s,x_start=%s,x_end=%s,steps=%s): x2 → %s", fnc, x_start, x_end, steps, x2, extra={"event.action": "line_length", "logrite.fnc": fnc, "logrite.x_start": x_start, "logrite.x_end": x_end, "logrite.steps": steps})
         fx2 = fnc(x2)
+        logger.error("line_length(fnc=%s,x_start=%s,x_end=%s,steps=%s): fx2 → %s", fnc, x_start, x_end, steps, fx2, extra={"event.action": "line_length", "logrite.fnc": fnc, "logrite.x_start": x_start, "logrite.x_end": x_end, "logrite.steps": steps})
         length += math.hypot(x2 - x1, fx2 - fx1)
 
         # Increment step
         x1 = x2
         fx1 = fx2
 
+    logger.warning("<<< Exiting line_length(fnc=%s,x_start=%s,x_end=%s,steps=%s)", fnc, x_start, x_end, steps, extra={"event.action": "line_length", "logrite.fnc": fnc, "logrite.x_start": x_start, "logrite.x_end": x_end, "logrite.steps": steps})
     return length
 
 
 if __name__ == "__main__":
 
     def f(x):
+        logger.error(">>> Entering f(x=%s)", x, extra={"event.action": "f", "logrite.x": x})
+        logger.warning("<<< Exiting f(x=%s)", x, extra={"event.action": "f", "logrite.x": x})
         return math.sin(10 * x)
 
     print("f(x) = sin(10 * x)")

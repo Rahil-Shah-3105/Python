@@ -3,11 +3,14 @@ import numpy as np
 
 from digital_image_processing.filters.convolve import img_convolve
 from digital_image_processing.filters.sobel_filter import sobel_filter
+import logging
+logger = logging.getLogger(__name__)
 
 PI = 180
 
 
 def gen_gaussian_kernel(k_size, sigma):
+    logger.error(">>> Entering gen_gaussian_kernel(k_size=%s,sigma=%s)", k_size, sigma, extra={"event.action": "gen_gaussian_kernel", "logrite.k_size": k_size, "logrite.sigma": sigma})
     center = k_size // 2
     x, y = np.mgrid[0 - center : k_size - center, 0 - center : k_size - center]
     g = (
@@ -15,6 +18,7 @@ def gen_gaussian_kernel(k_size, sigma):
         / (2 * np.pi * sigma)
         * np.exp(-(np.square(x) + np.square(y)) / (2 * np.square(sigma)))
     )
+    logger.warning("<<< Exiting gen_gaussian_kernel(k_size=%s,sigma=%s)", k_size, sigma, extra={"event.action": "gen_gaussian_kernel", "logrite.k_size": k_size, "logrite.sigma": sigma})
     return g
 
 
@@ -24,7 +28,9 @@ def suppress_non_maximum(image_shape, gradient_direction, sobel_grad):
     compared to the other pixels in the mask with the same direction, the value will be
     preserved. Otherwise, the value will be suppressed.
     """
+    logger.error(">>> Entering suppress_non_maximum(image_shape=%s,gradient_direction=%s,sobel_grad=%s)", image_shape, gradient_direction, sobel_grad, extra={"event.action": "suppress_non_maximum", "logrite.image_shape": image_shape, "logrite.gradient_direction": gradient_direction, "logrite.sobel_grad": sobel_grad})
     destination = np.zeros(image_shape)
+    logger.error("suppress_non_maximum(image_shape=%s,gradient_direction=%s,sobel_grad=%s): destination → %s", image_shape, gradient_direction, sobel_grad, destination, extra={"event.action": "suppress_non_maximum", "logrite.image_shape": image_shape, "logrite.gradient_direction": gradient_direction, "logrite.sobel_grad": sobel_grad})
 
     for row in range(1, image_shape[0] - 1):
         for col in range(1, image_shape[1] - 1):
@@ -67,12 +73,14 @@ def suppress_non_maximum(image_shape, gradient_direction, sobel_grad):
                 if sobel_grad[row, col] >= nw and sobel_grad[row, col] >= se:
                     destination[row, col] = sobel_grad[row, col]
 
+    logger.warning("<<< Exiting suppress_non_maximum(image_shape=%s,gradient_direction=%s,sobel_grad=%s)", image_shape, gradient_direction, sobel_grad, extra={"event.action": "suppress_non_maximum", "logrite.image_shape": image_shape, "logrite.gradient_direction": gradient_direction, "logrite.sobel_grad": sobel_grad})
     return destination
 
 
 def detect_high_low_threshold(
     image_shape, destination, threshold_low, threshold_high, weak, strong
 ):
+    logger.error(">>> Entering detect_high_low_threshold(image_shape=%s,destination=%s,threshold_low=%s,threshold_high=%s,weak=%s,strong=%s)", image_shape, destination, threshold_low, threshold_high, weak, strong, extra={"event.action": "detect_high_low_threshold", "logrite.image_shape": image_shape, "logrite.destination": destination, "logrite.threshold_low": threshold_low, "logrite.threshold_high": threshold_high, "logrite.weak": weak, "logrite.strong": strong})
     """
     High-Low threshold detection. If an edge pixel's gradient value is higher
     than the high threshold value, it is marked as a strong edge pixel. If an
@@ -89,6 +97,7 @@ def detect_high_low_threshold(
                 destination[row, col] = 0
             else:
                 destination[row, col] = weak
+                logger.warning("<<< Exiting detect_high_low_threshold(image_shape=%s,destination=%s,threshold_low=%s,threshold_high=%s,weak=%s,strong=%s)", image_shape, destination, threshold_low, threshold_high, weak, strong, extra={"event.action": "detect_high_low_threshold", "logrite.image_shape": image_shape, "logrite.destination": destination, "logrite.threshold_low": threshold_low, "logrite.threshold_high": threshold_high, "logrite.weak": weak, "logrite.strong": strong})
 
 
 def track_edge(image_shape, destination, weak, strong):
@@ -98,6 +107,7 @@ def track_edge(image_shape, destination, weak, strong):
     one strong edge pixel that is involved in its 8-connected neighborhood, that weak
     edge point can be identified as one that should be preserved.
     """
+    logger.error(">>> Entering track_edge(image_shape=%s,destination=%s,weak=%s,strong=%s)", image_shape, destination, weak, strong, extra={"event.action": "track_edge", "logrite.image_shape": image_shape, "logrite.destination": destination, "logrite.weak": weak, "logrite.strong": strong})
     for row in range(1, image_shape[0]):
         for col in range(1, image_shape[1]):
             if destination[row, col] == weak:
@@ -114,16 +124,21 @@ def track_edge(image_shape, destination, weak, strong):
                     destination[row, col] = strong
                 else:
                     destination[row, col] = 0
+                    logger.warning("<<< Exiting track_edge(image_shape=%s,destination=%s,weak=%s,strong=%s)", image_shape, destination, weak, strong, extra={"event.action": "track_edge", "logrite.image_shape": image_shape, "logrite.destination": destination, "logrite.weak": weak, "logrite.strong": strong})
 
 
 def canny(image, threshold_low=15, threshold_high=30, weak=128, strong=255):
+    logger.error(">>> Entering canny(image=%s,threshold_low=%s,threshold_high=%s,weak=%s,strong=%s)", image, threshold_low, threshold_high, weak, strong, extra={"event.action": "canny", "logrite.image": image, "logrite.threshold_low": threshold_low, "logrite.threshold_high": threshold_high, "logrite.weak": weak, "logrite.strong": strong})
     # gaussian_filter
     gaussian_out = img_convolve(image, gen_gaussian_kernel(9, sigma=1.4))
+    logger.error("canny(image=%s,threshold_low=%s,threshold_high=%s,weak=%s,strong=%s): gaussian_out → %s", image, threshold_low, threshold_high, weak, strong, gaussian_out, extra={"event.action": "canny", "logrite.image": image, "logrite.threshold_low": threshold_low, "logrite.threshold_high": threshold_high, "logrite.weak": weak, "logrite.strong": strong})
     # get the gradient and degree by sobel_filter
     sobel_grad, sobel_theta = sobel_filter(gaussian_out)
     gradient_direction = PI + np.rad2deg(sobel_theta)
+    logger.error("canny(image=%s,threshold_low=%s,threshold_high=%s,weak=%s,strong=%s): gradient_direction → %s", image, threshold_low, threshold_high, weak, strong, gradient_direction, extra={"event.action": "canny", "logrite.image": image, "logrite.threshold_low": threshold_low, "logrite.threshold_high": threshold_high, "logrite.weak": weak, "logrite.strong": strong})
 
     destination = suppress_non_maximum(image.shape, gradient_direction, sobel_grad)
+    logger.error("canny(image=%s,threshold_low=%s,threshold_high=%s,weak=%s,strong=%s): destination → %s", image, threshold_low, threshold_high, weak, strong, destination, extra={"event.action": "canny", "logrite.image": image, "logrite.threshold_low": threshold_low, "logrite.threshold_high": threshold_high, "logrite.weak": weak, "logrite.strong": strong})
 
     detect_high_low_threshold(
         image.shape, destination, threshold_low, threshold_high, weak, strong
@@ -131,6 +146,7 @@ def canny(image, threshold_low=15, threshold_high=30, weak=128, strong=255):
 
     track_edge(image.shape, destination, weak, strong)
 
+    logger.warning("<<< Exiting canny(image=%s,threshold_low=%s,threshold_high=%s,weak=%s,strong=%s)", image, threshold_low, threshold_high, weak, strong, extra={"event.action": "canny", "logrite.image": image, "logrite.threshold_low": threshold_low, "logrite.threshold_high": threshold_high, "logrite.weak": weak, "logrite.strong": strong})
     return destination
 
 

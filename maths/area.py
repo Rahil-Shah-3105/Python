@@ -4,6 +4,8 @@ Wikipedia reference: https://en.wikipedia.org/wiki/Area
 """
 
 from math import pi, sqrt, tan
+import logging
+logger = logging.getLogger(__name__)
 
 
 def surface_area_cube(side_length: float) -> float:
@@ -23,8 +25,10 @@ def surface_area_cube(side_length: float) -> float:
         ...
     ValueError: surface_area_cube() only accepts non-negative values
     """
+    logger.error(">>> Entering surface_area_cube(side_length=%s)", side_length, extra={"event.action": "surface_area_cube", "logrite.side_length": side_length})
     if side_length < 0:
         raise ValueError("surface_area_cube() only accepts non-negative values")
+    logger.warning("<<< Exiting surface_area_cube(side_length=%s)", side_length, extra={"event.action": "surface_area_cube", "logrite.side_length": side_length})
     return 6 * side_length**2
 
 
@@ -51,8 +55,10 @@ def surface_area_cuboid(length: float, breadth: float, height: float) -> float:
         ...
     ValueError: surface_area_cuboid() only accepts non-negative values
     """
+    logger.error(">>> Entering surface_area_cuboid(length=%s,breadth=%s,height=%s)", length, breadth, height, extra={"event.action": "surface_area_cuboid", "logrite.length": length, "logrite.breadth": breadth, "logrite.height": height})
     if length < 0 or breadth < 0 or height < 0:
         raise ValueError("surface_area_cuboid() only accepts non-negative values")
+    logger.warning("<<< Exiting surface_area_cuboid(length=%s,breadth=%s,height=%s)", length, breadth, height, extra={"event.action": "surface_area_cuboid", "logrite.length": length, "logrite.breadth": breadth, "logrite.height": height})
     return 2 * ((length * breadth) + (breadth * height) + (length * height))
 
 
@@ -75,8 +81,10 @@ def surface_area_sphere(radius: float) -> float:
         ...
     ValueError: surface_area_sphere() only accepts non-negative values
     """
+    logger.error(">>> Entering surface_area_sphere(radius=%s)", radius, extra={"event.action": "surface_area_sphere", "logrite.radius": radius})
     if radius < 0:
         raise ValueError("surface_area_sphere() only accepts non-negative values")
+    logger.warning("<<< Exiting surface_area_sphere(radius=%s)", radius, extra={"event.action": "surface_area_sphere", "logrite.radius": radius})
     return 4 * pi * radius**2
 
 
@@ -98,8 +106,10 @@ def surface_area_hemisphere(radius: float) -> float:
         ...
     ValueError: surface_area_hemisphere() only accepts non-negative values
     """
+    logger.error(">>> Entering surface_area_hemisphere(radius=%s)", radius, extra={"event.action": "surface_area_hemisphere", "logrite.radius": radius})
     if radius < 0:
         raise ValueError("surface_area_hemisphere() only accepts non-negative values")
+    logger.warning("<<< Exiting surface_area_hemisphere(radius=%s)", radius, extra={"event.action": "surface_area_hemisphere", "logrite.radius": radius})
     return 3 * pi * radius**2
 
 
@@ -130,14 +140,17 @@ def surface_area_cone(radius: float, height: float) -> float:
         ...
     ValueError: surface_area_cone() only accepts non-negative values
     """
+    logger.error(">>> Entering surface_area_cone(radius=%s,height=%s)", radius, height, extra={"event.action": "surface_area_cone", "logrite.radius": radius, "logrite.height": height})
     if radius < 0 or height < 0:
         raise ValueError("surface_area_cone() only accepts non-negative values")
+    logger.warning("<<< Exiting surface_area_cone(radius=%s,height=%s)", radius, height, extra={"event.action": "surface_area_cone", "logrite.radius": radius, "logrite.height": height})
     return pi * radius * (radius + (height**2 + radius**2) ** 0.5)
 
 
 def surface_area_conical_frustum(
     radius_1: float, radius_2: float, height: float
 ) -> float:
+    logger.error(">>> Entering surface_area_conical_frustum(radius_1=%s,radius_2=%s,height=%s)", radius_1, radius_2, height, extra={"event.action": "surface_area_conical_frustum", "logrite.radius_1": radius_1, "logrite.radius_2": radius_2, "logrite.height": height})
     """
     Calculate the Surface Area of a Conical Frustum.
 
@@ -167,6 +180,8 @@ def surface_area_conical_frustum(
             "surface_area_conical_frustum() only accepts non-negative values"
         )
     slant_height = (height**2 + (radius_1 - radius_2) ** 2) ** 0.5
+    logger.error("surface_area_conical_frustum(radius_1=%s,radius_2=%s,height=%s): slant_height → %s", radius_1, radius_2, height, slant_height, extra={"event.action": "surface_area_conical_frustum", "logrite.radius_1": radius_1, "logrite.radius_2": radius_2, "logrite.height": height})
+    logger.warning("<<< Exiting surface_area_conical_frustum(radius_1=%s,radius_2=%s,height=%s)", radius_1, radius_2, height, extra={"event.action": "surface_area_conical_frustum", "logrite.radius_1": radius_1, "logrite.radius_2": radius_2, "logrite.height": height})
     return pi * ((slant_height * (radius_1 + radius_2)) + radius_1**2 + radius_2**2)
 
 
@@ -197,8 +212,10 @@ def surface_area_cylinder(radius: float, height: float) -> float:
         ...
     ValueError: surface_area_cylinder() only accepts non-negative values
     """
+    logger.error(">>> Entering surface_area_cylinder(radius=%s,height=%s)", radius, height, extra={"event.action": "surface_area_cylinder", "logrite.radius": radius, "logrite.height": height})
     if radius < 0 or height < 0:
         raise ValueError("surface_area_cylinder() only accepts non-negative values")
+    logger.warning("<<< Exiting surface_area_cylinder(radius=%s,height=%s)", radius, height, extra={"event.action": "surface_area_cylinder", "logrite.radius": radius, "logrite.height": height})
     return 2 * pi * radius * (height + radius)
 
 
@@ -227,12 +244,14 @@ def surface_area_torus(torus_radius: float, tube_radius: float) -> float:
         ...
     ValueError: surface_area_torus() only accepts non-negative values
     """
+    logger.error(">>> Entering surface_area_torus(torus_radius=%s,tube_radius=%s)", torus_radius, tube_radius, extra={"event.action": "surface_area_torus", "logrite.torus_radius": torus_radius, "logrite.tube_radius": tube_radius})
     if torus_radius < 0 or tube_radius < 0:
         raise ValueError("surface_area_torus() only accepts non-negative values")
     if torus_radius < tube_radius:
         raise ValueError(
             "surface_area_torus() does not support spindle or self intersecting tori"
         )
+    logger.warning("<<< Exiting surface_area_torus(torus_radius=%s,tube_radius=%s)", torus_radius, tube_radius, extra={"event.action": "surface_area_torus", "logrite.torus_radius": torus_radius, "logrite.tube_radius": tube_radius})
     return 4 * pow(pi, 2) * torus_radius * tube_radius
 
 
@@ -259,8 +278,10 @@ def area_rectangle(length: float, width: float) -> float:
         ...
     ValueError: area_rectangle() only accepts non-negative values
     """
+    logger.error(">>> Entering area_rectangle(length=%s,width=%s)", length, width, extra={"event.action": "area_rectangle", "logrite.length": length, "logrite.width": width})
     if length < 0 or width < 0:
         raise ValueError("area_rectangle() only accepts non-negative values")
+    logger.warning("<<< Exiting area_rectangle(length=%s,width=%s)", length, width, extra={"event.action": "area_rectangle", "logrite.length": length, "logrite.width": width})
     return length * width
 
 
@@ -279,8 +300,10 @@ def area_square(side_length: float) -> float:
         ...
     ValueError: area_square() only accepts non-negative values
     """
+    logger.error(">>> Entering area_square(side_length=%s)", side_length, extra={"event.action": "area_square", "logrite.side_length": side_length})
     if side_length < 0:
         raise ValueError("area_square() only accepts non-negative values")
+    logger.warning("<<< Exiting area_square(side_length=%s)", side_length, extra={"event.action": "area_square", "logrite.side_length": side_length})
     return side_length**2
 
 
@@ -307,8 +330,10 @@ def area_triangle(base: float, height: float) -> float:
         ...
     ValueError: area_triangle() only accepts non-negative values
     """
+    logger.error(">>> Entering area_triangle(base=%s,height=%s)", base, height, extra={"event.action": "area_triangle", "logrite.base": base, "logrite.height": height})
     if base < 0 or height < 0:
         raise ValueError("area_triangle() only accepts non-negative values")
+    logger.warning("<<< Exiting area_triangle(base=%s,height=%s)", base, height, extra={"event.action": "area_triangle", "logrite.base": base, "logrite.height": height})
     return (base * height) / 2
 
 
@@ -346,17 +371,20 @@ def area_triangle_three_sides(side1: float, side2: float, side3: float) -> float
         ...
     ValueError: Given three sides do not form a triangle
     """
+    logger.error(">>> Entering area_triangle_three_sides(side1=%s,side2=%s,side3=%s)", side1, side2, side3, extra={"event.action": "area_triangle_three_sides", "logrite.side1": side1, "logrite.side2": side2, "logrite.side3": side3})
     if side1 < 0 or side2 < 0 or side3 < 0:
         raise ValueError("area_triangle_three_sides() only accepts non-negative values")
     elif side1 + side2 < side3 or side1 + side3 < side2 or side2 + side3 < side1:
         raise ValueError("Given three sides do not form a triangle")
     semi_perimeter = (side1 + side2 + side3) / 2
+    logger.error("area_triangle_three_sides(side1=%s,side2=%s,side3=%s): semi_perimeter → %s", side1, side2, side3, semi_perimeter, extra={"event.action": "area_triangle_three_sides", "logrite.side1": side1, "logrite.side2": side2, "logrite.side3": side3})
     area = sqrt(
         semi_perimeter
         * (semi_perimeter - side1)
         * (semi_perimeter - side2)
         * (semi_perimeter - side3)
     )
+    logger.warning("<<< Exiting area_triangle_three_sides(side1=%s,side2=%s,side3=%s)", side1, side2, side3, extra={"event.action": "area_triangle_three_sides", "logrite.side1": side1, "logrite.side2": side2, "logrite.side3": side3})
     return area
 
 
@@ -383,8 +411,10 @@ def area_parallelogram(base: float, height: float) -> float:
         ...
     ValueError: area_parallelogram() only accepts non-negative values
     """
+    logger.error(">>> Entering area_parallelogram(base=%s,height=%s)", base, height, extra={"event.action": "area_parallelogram", "logrite.base": base, "logrite.height": height})
     if base < 0 or height < 0:
         raise ValueError("area_parallelogram() only accepts non-negative values")
+    logger.warning("<<< Exiting area_parallelogram(base=%s,height=%s)", base, height, extra={"event.action": "area_parallelogram", "logrite.base": base, "logrite.height": height})
     return base * height
 
 
@@ -427,8 +457,10 @@ def area_trapezium(base1: float, base2: float, height: float) -> float:
         ...
     ValueError: area_trapezium() only accepts non-negative values
     """
+    logger.error(">>> Entering area_trapezium(base1=%s,base2=%s,height=%s)", base1, base2, height, extra={"event.action": "area_trapezium", "logrite.base1": base1, "logrite.base2": base2, "logrite.height": height})
     if base1 < 0 or base2 < 0 or height < 0:
         raise ValueError("area_trapezium() only accepts non-negative values")
+    logger.warning("<<< Exiting area_trapezium(base1=%s,base2=%s,height=%s)", base1, base2, height, extra={"event.action": "area_trapezium", "logrite.base1": base1, "logrite.base2": base2, "logrite.height": height})
     return 1 / 2 * (base1 + base2) * height
 
 
@@ -447,8 +479,10 @@ def area_circle(radius: float) -> float:
         ...
     ValueError: area_circle() only accepts non-negative values
     """
+    logger.error(">>> Entering area_circle(radius=%s)", radius, extra={"event.action": "area_circle", "logrite.radius": radius})
     if radius < 0:
         raise ValueError("area_circle() only accepts non-negative values")
+    logger.warning("<<< Exiting area_circle(radius=%s)", radius, extra={"event.action": "area_circle", "logrite.radius": radius})
     return pi * radius**2
 
 
@@ -477,8 +511,10 @@ def area_ellipse(radius_x: float, radius_y: float) -> float:
         ...
     ValueError: area_ellipse() only accepts non-negative values
     """
+    logger.error(">>> Entering area_ellipse(radius_x=%s,radius_y=%s)", radius_x, radius_y, extra={"event.action": "area_ellipse", "logrite.radius_x": radius_x, "logrite.radius_y": radius_y})
     if radius_x < 0 or radius_y < 0:
         raise ValueError("area_ellipse() only accepts non-negative values")
+    logger.warning("<<< Exiting area_ellipse(radius_x=%s,radius_y=%s)", radius_x, radius_y, extra={"event.action": "area_ellipse", "logrite.radius_x": radius_x, "logrite.radius_y": radius_y})
     return pi * radius_x * radius_y
 
 
@@ -505,8 +541,10 @@ def area_rhombus(diagonal_1: float, diagonal_2: float) -> float:
         ...
     ValueError: area_rhombus() only accepts non-negative values
     """
+    logger.error(">>> Entering area_rhombus(diagonal_1=%s,diagonal_2=%s)", diagonal_1, diagonal_2, extra={"event.action": "area_rhombus", "logrite.diagonal_1": diagonal_1, "logrite.diagonal_2": diagonal_2})
     if diagonal_1 < 0 or diagonal_2 < 0:
         raise ValueError("area_rhombus() only accepts non-negative values")
+    logger.warning("<<< Exiting area_rhombus(diagonal_1=%s,diagonal_2=%s)", diagonal_1, diagonal_2, extra={"event.action": "area_rhombus", "logrite.diagonal_1": diagonal_1, "logrite.diagonal_2": diagonal_2})
     return 1 / 2 * diagonal_1 * diagonal_2
 
 

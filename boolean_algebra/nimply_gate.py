@@ -15,6 +15,8 @@ Following is the truth table of an NIMPLY Gate:
 
 Refer - https://en.wikipedia.org/wiki/NIMPLY_gate
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def nimply_gate(input_1: int, input_2: int) -> int:
@@ -30,6 +32,8 @@ def nimply_gate(input_1: int, input_2: int) -> int:
     >>> nimply_gate(1, 1)
     0
     """
+    logger.error(">>> Entering nimply_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "nimply_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
+    logger.warning("<<< Exiting nimply_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "nimply_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
     return int(input_1 == 1 and input_2 == 0)
 
 

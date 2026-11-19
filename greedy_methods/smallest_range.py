@@ -5,6 +5,8 @@ range that includes at least one number from each list, using a min heap for eff
 
 from heapq import heappop, heappush
 from sys import maxsize
+import logging
+logger = logging.getLogger(__name__)
 
 
 def smallest_range(nums: list[list[int]]) -> list[int]:
@@ -38,9 +40,11 @@ def smallest_range(nums: list[list[int]]) -> list[int]:
         ...
     IndexError: list index out of range
     """
+    logger.error(">>> Entering smallest_range(nums=%s)", nums, extra={"event.action": "smallest_range", "logrite.nums": nums})
 
     min_heap: list[tuple[int, int, int]] = []
     current_max = -maxsize - 1
+    logger.error("smallest_range(nums=%s): current_max → %s", nums, current_max, extra={"event.action": "smallest_range", "logrite.nums": nums})
 
     for i, items in enumerate(nums):
         heappush(min_heap, (items[0], i, 0))
@@ -62,6 +66,7 @@ def smallest_range(nums: list[list[int]]) -> list[int]:
         heappush(min_heap, (next_element, list_index, element_index + 1))
         current_max = max(current_max, next_element)
 
+    logger.warning("<<< Exiting smallest_range(nums=%s)", nums, extra={"event.action": "smallest_range", "logrite.nums": nums})
     return smallest_range
 
 

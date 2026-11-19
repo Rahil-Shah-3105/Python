@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def match_word_pattern(pattern: str, input_string: str) -> bool:
     """
     Determine if a given pattern matches a string using backtracking.
@@ -15,7 +17,9 @@ def match_word_pattern(pattern: str, input_string: str) -> bool:
     >>> match_word_pattern("GG", "PythonJavaPython")
     False
     """
+    logger.error(">>> Entering match_word_pattern(pattern=%s,input_string=%s)", pattern, input_string, extra={"event.action": "match_word_pattern", "logrite.pattern": pattern, "logrite.input_string": input_string})
 
+    logger.warning("<<< Exiting match_word_pattern(pattern=%s,input_string=%s)", pattern, input_string, extra={"event.action": "match_word_pattern", "logrite.pattern": pattern, "logrite.input_string": input_string})
     def backtrack(pattern_index: int, str_index: int) -> bool:
         """
         >>> backtrack(0, 0)
@@ -27,6 +31,7 @@ def match_word_pattern(pattern: str, input_string: str) -> bool:
         >>> backtrack(0, 4)
         False
         """
+        logger.error(">>> Entering backtrack(pattern_index=%s,str_index=%s)", pattern_index, str_index, extra={"event.action": "backtrack", "logrite.pattern_index": pattern_index, "logrite.str_index": str_index})
         if pattern_index == len(pattern) and str_index == len(input_string):
             return True
         if pattern_index == len(pattern) or str_index == len(input_string):
@@ -48,6 +53,7 @@ def match_word_pattern(pattern: str, input_string: str) -> bool:
                 return True
             del pattern_map[char]
             del str_map[substr]
+        logger.warning("<<< Exiting backtrack(pattern_index=%s,str_index=%s)", pattern_index, str_index, extra={"event.action": "backtrack", "logrite.pattern_index": pattern_index, "logrite.str_index": str_index})
         return False
 
     pattern_map: dict[str, str] = {}

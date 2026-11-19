@@ -7,6 +7,8 @@ from string import ascii_lowercase, digits
 
 import cv2
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 # Parameters
 OUTPUT_SIZE = (720, 1280)  # Height, Width
@@ -24,9 +26,11 @@ def main() -> None:
     Update new images and annotations.
     Save images and annotations in output dir.
     """
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     img_paths, annos = get_dataset(LABEL_DIR, IMG_DIR)
     for index in range(NUMBER_IMAGES):
         idxs = random.sample(range(len(annos)), 4)
+        logger.error("main(): idxs → %s", idxs, extra={"event.action": "main"})
         new_image, new_annos, path = update_image_and_anno(
             img_paths,
             annos,
@@ -38,8 +42,11 @@ def main() -> None:
 
         # Get random string code: '7b7ad245cdff75241935e4dd860f3bad'
         letter_code = random_chars(32)
+        logger.error("main(): letter_code → %s", letter_code, extra={"event.action": "main"})
         file_name = path.split(os.sep)[-1].rsplit(".", 1)[0]
+        logger.error("main(): file_name → %s", file_name, extra={"event.action": "main"})
         file_root = f"{OUTPUT_DIR}/{file_name}_MOSAIC_{letter_code}"
+        logger.error("main(): file_root → %s", file_root, extra={"event.action": "main"})
         cv2.imwrite(f"{file_root}.jpg", new_image, [cv2.IMWRITE_JPEG_QUALITY, 85])
         print(f"Succeeded {index + 1}/{NUMBER_IMAGES} with {file_name}")
         annos_list = []
@@ -49,9 +56,11 @@ def main() -> None:
             x_center = anno[1] + width / 2
             y_center = anno[2] + height / 2
             obj = f"{anno[0]} {x_center} {y_center} {width} {height}"
+            logger.error("main(): obj → %s", obj, extra={"event.action": "main"})
             annos_list.append(obj)
         with open(f"{file_root}.txt", "w") as outfile:
             outfile.write("\n".join(line for line in annos_list))
+            logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 def get_dataset(label_dir: str, img_dir: str) -> tuple[list, list]:
@@ -60,27 +69,37 @@ def get_dataset(label_dir: str, img_dir: str) -> tuple[list, list]:
     - img_dir <type: str>: Path to folder contain images
     Return <type: list>: List of images path and labels
     """
+    logger.error(">>> Entering get_dataset(label_dir=%s,img_dir=%s)", label_dir, img_dir, extra={"event.action": "get_dataset", "logrite.label_dir": label_dir, "logrite.img_dir": img_dir})
     img_paths = []
     labels = []
     for label_file in glob.glob(os.path.join(label_dir, "*.txt")):
         label_name = label_file.split(os.sep)[-1].rsplit(".", 1)[0]
+        logger.error("get_dataset(label_dir=%s,img_dir=%s): label_name → %s", label_dir, img_dir, label_name, extra={"event.action": "get_dataset", "logrite.label_dir": label_dir, "logrite.img_dir": img_dir})
         with open(label_file) as in_file:
             obj_lists = in_file.readlines()
+            logger.error("get_dataset(label_dir=%s,img_dir=%s): obj_lists → %s", label_dir, img_dir, obj_lists, extra={"event.action": "get_dataset", "logrite.label_dir": label_dir, "logrite.img_dir": img_dir})
         img_path = os.path.join(img_dir, f"{label_name}.jpg")
+        logger.error("get_dataset(label_dir=%s,img_dir=%s): img_path → %s", label_dir, img_dir, img_path, extra={"event.action": "get_dataset", "logrite.label_dir": label_dir, "logrite.img_dir": img_dir})
 
         boxes = []
         for obj_list in obj_lists:
             obj = obj_list.rstrip("\n").split(" ")
+            logger.error("get_dataset(label_dir=%s,img_dir=%s): obj → %s", label_dir, img_dir, obj, extra={"event.action": "get_dataset", "logrite.label_dir": label_dir, "logrite.img_dir": img_dir})
             xmin = float(obj[1]) - float(obj[3]) / 2
+            logger.error("get_dataset(label_dir=%s,img_dir=%s): xmin → %s", label_dir, img_dir, xmin, extra={"event.action": "get_dataset", "logrite.label_dir": label_dir, "logrite.img_dir": img_dir})
             ymin = float(obj[2]) - float(obj[4]) / 2
+            logger.error("get_dataset(label_dir=%s,img_dir=%s): ymin → %s", label_dir, img_dir, ymin, extra={"event.action": "get_dataset", "logrite.label_dir": label_dir, "logrite.img_dir": img_dir})
             xmax = float(obj[1]) + float(obj[3]) / 2
+            logger.error("get_dataset(label_dir=%s,img_dir=%s): xmax → %s", label_dir, img_dir, xmax, extra={"event.action": "get_dataset", "logrite.label_dir": label_dir, "logrite.img_dir": img_dir})
             ymax = float(obj[2]) + float(obj[4]) / 2
+            logger.error("get_dataset(label_dir=%s,img_dir=%s): ymax → %s", label_dir, img_dir, ymax, extra={"event.action": "get_dataset", "logrite.label_dir": label_dir, "logrite.img_dir": img_dir})
 
             boxes.append([int(obj[0]), xmin, ymin, xmax, ymax])
         if not boxes:
             continue
         img_paths.append(img_path)
         labels.append(boxes)
+    logger.warning("<<< Exiting get_dataset(label_dir=%s,img_dir=%s)", label_dir, img_dir, extra={"event.action": "get_dataset", "logrite.label_dir": label_dir, "logrite.img_dir": img_dir})
     return img_paths, labels
 
 
@@ -90,6 +109,17 @@ def update_image_and_anno(
     idxs: list[int],
     output_size: tuple[int, int],
     scale_range: tuple[float, float],
+logger.error(">>> Entering update_image_and_anno(all_img_list=%s,all_annos=%s,idxs=%s,output_size=%s,scale_range=%s,filter_scale=%s)", all_img_list, all_annos, idxs, output_size, scale_range, filter_scale, extra={"event.action": "update_image_and_anno", "logrite.all_img_list": all_img_list, "logrite.all_annos": all_annos, "logrite.idxs": idxs, "logrite.output_size": output_size, "logrite.scale_range": scale_range, "logrite.filter_scale": filter_scale})
+logger.error("update_image_and_anno(all_img_list=%s,all_annos=%s,idxs=%s,output_size=%s,scale_range=%s,filter_scale=%s): output_img → %s", all_img_list, all_annos, idxs, output_size, scale_range, filter_scale, output_img, extra={"event.action": "update_image_and_anno", "logrite.all_img_list": all_img_list, "logrite.all_annos": all_annos, "logrite.idxs": idxs, "logrite.output_size": output_size, "logrite.scale_range": scale_range, "logrite.filter_scale": filter_scale})
+logger.error("update_image_and_anno(all_img_list=%s,all_annos=%s,idxs=%s,output_size=%s,scale_range=%s,filter_scale=%s): scale_x → %s", all_img_list, all_annos, idxs, output_size, scale_range, filter_scale, scale_x, extra={"event.action": "update_image_and_anno", "logrite.all_img_list": all_img_list, "logrite.all_annos": all_annos, "logrite.idxs": idxs, "logrite.output_size": output_size, "logrite.scale_range": scale_range, "logrite.filter_scale": filter_scale})
+logger.error("update_image_and_anno(all_img_list=%s,all_annos=%s,idxs=%s,output_size=%s,scale_range=%s,filter_scale=%s): scale_y → %s", all_img_list, all_annos, idxs, output_size, scale_range, filter_scale, scale_y, extra={"event.action": "update_image_and_anno", "logrite.all_img_list": all_img_list, "logrite.all_annos": all_annos, "logrite.idxs": idxs, "logrite.output_size": output_size, "logrite.scale_range": scale_range, "logrite.filter_scale": filter_scale})
+logger.error("update_image_and_anno(all_img_list=%s,all_annos=%s,idxs=%s,output_size=%s,scale_range=%s,filter_scale=%s): divid_point_x → %s", all_img_list, all_annos, idxs, output_size, scale_range, filter_scale, divid_point_x, extra={"event.action": "update_image_and_anno", "logrite.all_img_list": all_img_list, "logrite.all_annos": all_annos, "logrite.idxs": idxs, "logrite.output_size": output_size, "logrite.scale_range": scale_range, "logrite.filter_scale": filter_scale})
+logger.error("update_image_and_anno(all_img_list=%s,all_annos=%s,idxs=%s,output_size=%s,scale_range=%s,filter_scale=%s): divid_point_y → %s", all_img_list, all_annos, idxs, output_size, scale_range, filter_scale, divid_point_y, extra={"event.action": "update_image_and_anno", "logrite.all_img_list": all_img_list, "logrite.all_annos": all_annos, "logrite.idxs": idxs, "logrite.output_size": output_size, "logrite.scale_range": scale_range, "logrite.filter_scale": filter_scale})
+logger.error("update_image_and_anno(all_img_list=%s,all_annos=%s,idxs=%s,output_size=%s,scale_range=%s,filter_scale=%s): xmin → %s", all_img_list, all_annos, idxs, output_size, scale_range, filter_scale, xmin, extra={"event.action": "update_image_and_anno", "logrite.all_img_list": all_img_list, "logrite.all_annos": all_annos, "logrite.idxs": idxs, "logrite.output_size": output_size, "logrite.scale_range": scale_range, "logrite.filter_scale": filter_scale})
+logger.error("update_image_and_anno(all_img_list=%s,all_annos=%s,idxs=%s,output_size=%s,scale_range=%s,filter_scale=%s): ymin → %s", all_img_list, all_annos, idxs, output_size, scale_range, filter_scale, ymin, extra={"event.action": "update_image_and_anno", "logrite.all_img_list": all_img_list, "logrite.all_annos": all_annos, "logrite.idxs": idxs, "logrite.output_size": output_size, "logrite.scale_range": scale_range, "logrite.filter_scale": filter_scale})
+logger.error("update_image_and_anno(all_img_list=%s,all_annos=%s,idxs=%s,output_size=%s,scale_range=%s,filter_scale=%s): xmax → %s", all_img_list, all_annos, idxs, output_size, scale_range, filter_scale, xmax, extra={"event.action": "update_image_and_anno", "logrite.all_img_list": all_img_list, "logrite.all_annos": all_annos, "logrite.idxs": idxs, "logrite.output_size": output_size, "logrite.scale_range": scale_range, "logrite.filter_scale": filter_scale})
+logger.error("update_image_and_anno(all_img_list=%s,all_annos=%s,idxs=%s,output_size=%s,scale_range=%s,filter_scale=%s): ymax → %s", all_img_list, all_annos, idxs, output_size, scale_range, filter_scale, ymax, extra={"event.action": "update_image_and_anno", "logrite.all_img_list": all_img_list, "logrite.all_annos": all_annos, "logrite.idxs": idxs, "logrite.output_size": output_size, "logrite.scale_range": scale_range, "logrite.filter_scale": filter_scale})
+logger.warning("<<< Exiting update_image_and_anno(all_img_list=%s,all_annos=%s,idxs=%s,output_size=%s,scale_range=%s,filter_scale=%s)", all_img_list, all_annos, idxs, output_size, scale_range, filter_scale, extra={"event.action": "update_image_and_anno", "logrite.all_img_list": all_img_list, "logrite.all_annos": all_annos, "logrite.idxs": idxs, "logrite.output_size": output_size, "logrite.scale_range": scale_range, "logrite.filter_scale": filter_scale})
     filter_scale: float = 0.0,
 ) -> tuple[list, list, str]:
     """
@@ -176,8 +206,10 @@ def random_chars(number_char: int) -> str:
     >>> len(random_chars(32))
     32
     """
+    logger.error(">>> Entering random_chars(number_char=%s)", number_char, extra={"event.action": "random_chars", "logrite.number_char": number_char})
     assert number_char > 1, "The number of character should greater than 1"
     letter_code = ascii_lowercase + digits
+    logger.warning("<<< Exiting random_chars(number_char=%s)", number_char, extra={"event.action": "random_chars", "logrite.number_char": number_char})
     return "".join(random.choice(letter_code) for _ in range(number_char))
 
 

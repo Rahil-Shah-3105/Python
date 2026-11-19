@@ -7,6 +7,8 @@ How many such routes are there through a 20x20 grid?
 """
 
 from math import factorial
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 20) -> int:
@@ -25,10 +27,12 @@ def solution(n: int = 20) -> int:
     >>> solution(1)
     2
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     n = 2 * n  # middle entry of odd rows starting at row 3 is the solution for n = 1,
     # 2, 3,...
     k = n // 2
 
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return int(factorial(n) / (factorial(k) * factorial(n - k)))
 
 

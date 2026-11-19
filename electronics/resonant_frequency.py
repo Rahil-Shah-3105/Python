@@ -11,6 +11,8 @@ Source: https://en.wikipedia.org/wiki/LC_circuit
 from __future__ import annotations
 
 from math import pi, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def resonant_frequency(inductance: float, capacitance: float) -> tuple:
@@ -30,6 +32,7 @@ def resonant_frequency(inductance: float, capacitance: float) -> tuple:
       ...
     ValueError: Capacitance cannot be 0 or negative
     """
+    logger.error(">>> Entering resonant_frequency(inductance=%s,capacitance=%s)", inductance, capacitance, extra={"event.action": "resonant_frequency", "logrite.inductance": inductance, "logrite.capacitance": capacitance})
 
     if inductance <= 0:
         raise ValueError("Inductance cannot be 0 or negative")
@@ -38,6 +41,7 @@ def resonant_frequency(inductance: float, capacitance: float) -> tuple:
         raise ValueError("Capacitance cannot be 0 or negative")
 
     else:
+        logger.warning("<<< Exiting resonant_frequency(inductance=%s,capacitance=%s)", inductance, capacitance, extra={"event.action": "resonant_frequency", "logrite.inductance": inductance, "logrite.capacitance": capacitance})
         return (
             "Resonant frequency",
             float(1 / (2 * pi * (sqrt(inductance * capacitance)))),

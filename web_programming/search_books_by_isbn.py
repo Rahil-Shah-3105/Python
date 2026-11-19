@@ -14,6 +14,8 @@ ISBN: https://en.wikipedia.org/wiki/International_Standard_Book_Number
 from json import JSONDecodeError
 
 import httpx
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_openlibrary_data(olid: str = "isbn/0140328726") -> dict:
@@ -28,9 +30,13 @@ def get_openlibrary_data(olid: str = "isbn/0140328726") -> dict:
     # >>> get_openlibrary_data(olid='/authors/OL7353617A')  # doctest: +ELLIPSIS
     {'name': 'Adrian Brisku', 'created': {'type': '/type/datetime', ...
     """
+    logger.error(">>> Entering get_openlibrary_data(olid=%s)", olid, extra={"event.action": "get_openlibrary_data", "logrite.olid": olid})
     new_olid = olid.strip().strip("/")  # Remove leading/trailing whitespace & slashes
+    logger.warning("<<< Exiting get_openlibrary_data(olid=%s)", olid, extra={"event.action": "get_openlibrary_data", "logrite.olid": olid})
+    logger.error("get_openlibrary_data(olid=%s): new_olid → %s", olid, new_olid, extra={"event.action": "get_openlibrary_data", "logrite.olid": olid})
     if new_olid.count("/") != 1:
         msg = f"{olid} is not a valid Open Library olid"
+        logger.error("get_openlibrary_data(olid=%s): msg → %s", olid, msg, extra={"event.action": "get_openlibrary_data", "logrite.olid": olid})
         raise ValueError(msg)
     return httpx.get(
         f"https://openlibrary.org/{new_olid}.json", timeout=10, follow_redirects=True
@@ -41,6 +47,7 @@ def summarize_book(ol_book_data: dict) -> dict:
     """
     Given Open Library book data, return a summary as a Python dict.
     """
+    logger.error(">>> Entering summarize_book(ol_book_data=%s)", ol_book_data, extra={"event.action": "summarize_book", "logrite.ol_book_data": ol_book_data})
     desired_keys = {
         "title": "Title",
         "publish_date": "Publish date",
@@ -50,12 +57,14 @@ def summarize_book(ol_book_data: dict) -> dict:
         "isbn_13": "ISBN (13)",
     }
     data = {better_key: ol_book_data[key] for key, better_key in desired_keys.items()}
+    logger.error("summarize_book(ol_book_data=%s): data → %s", ol_book_data, data, extra={"event.action": "summarize_book", "logrite.ol_book_data": ol_book_data})
     data["Authors"] = [
         get_openlibrary_data(author["key"])["name"] for author in data["Authors"]
     ]
     for key, value in data.items():
         if isinstance(value, list):
             data[key] = ", ".join(value)
+    logger.warning("<<< Exiting summarize_book(ol_book_data=%s)", ol_book_data, extra={"event.action": "summarize_book", "logrite.ol_book_data": ol_book_data})
     return data
 
 

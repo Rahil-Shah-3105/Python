@@ -26,6 +26,8 @@ Examples for doctest:
 """
 
 from random import randint, random
+import logging
+logger = logging.getLogger(__name__)
 
 
 def construct_highway(
@@ -36,6 +38,7 @@ def construct_highway(
     random_speed: bool = False,
     max_speed: int = 5,
 ) -> list:
+    logger.error(">>> Entering construct_highway(number_of_cells=%s,frequency=%s,initial_speed=%s,random_frequency=%s,random_speed=%s,max_speed=%s)", number_of_cells, frequency, initial_speed, random_frequency, random_speed, max_speed, extra={"event.action": "construct_highway", "logrite.number_of_cells": number_of_cells, "logrite.frequency": frequency, "logrite.initial_speed": initial_speed, "logrite.random_frequency": random_frequency, "logrite.random_speed": random_speed, "logrite.max_speed": max_speed})
     """
     Build the highway following the parameters given
     >>> construct_highway(10, 2, 6)
@@ -47,6 +50,7 @@ def construct_highway(
     highway = [[-1] * number_of_cells]  # Create a highway without any car
     i = 0
     initial_speed = max(initial_speed, 0)
+    logger.error("construct_highway(number_of_cells=%s,frequency=%s,initial_speed=%s,random_frequency=%s,random_speed=%s,max_speed=%s): initial_speed → %s", number_of_cells, frequency, initial_speed, random_frequency, random_speed, max_speed, initial_speed, extra={"event.action": "construct_highway", "logrite.number_of_cells": number_of_cells, "logrite.frequency": frequency, "logrite.initial_speed": initial_speed, "logrite.random_frequency": random_frequency, "logrite.random_speed": random_speed, "logrite.max_speed": max_speed})
     while i < number_of_cells:
         highway[0][i] = (
             randint(0, max_speed) if random_speed else initial_speed
@@ -54,6 +58,7 @@ def construct_highway(
         i += (
             randint(1, max_speed * 2) if random_frequency else frequency
         )  # Arbitrary number, may need tuning
+    logger.warning("<<< Exiting construct_highway(number_of_cells=%s,frequency=%s,initial_speed=%s,random_frequency=%s,random_speed=%s,max_speed=%s)", number_of_cells, frequency, initial_speed, random_frequency, random_speed, max_speed, extra={"event.action": "construct_highway", "logrite.number_of_cells": number_of_cells, "logrite.frequency": frequency, "logrite.initial_speed": initial_speed, "logrite.random_frequency": random_frequency, "logrite.random_speed": random_speed, "logrite.max_speed": max_speed})
     return highway
 
 
@@ -67,6 +72,7 @@ def get_distance(highway_now: list, car_index: int) -> int:
     >>> get_distance([-1, -1, -1, -1, 2, -1, -1, -1, 3], -1)
     4
     """
+    logger.error(">>> Entering get_distance(highway_now=%s,car_index=%s)", highway_now, car_index, extra={"event.action": "get_distance", "logrite.highway_now": highway_now, "logrite.car_index": car_index})
 
     distance = 0
     cells = highway_now[car_index + 1 :]
@@ -75,6 +81,7 @@ def get_distance(highway_now: list, car_index: int) -> int:
             return distance  # we have the distance we wanted
         distance += 1
     # Here if the car is near the end of the highway
+    logger.warning("<<< Exiting get_distance(highway_now=%s,car_index=%s)", highway_now, car_index, extra={"event.action": "get_distance", "logrite.highway_now": highway_now, "logrite.car_index": car_index})
     return distance + get_distance(highway_now, -1)
 
 
@@ -86,8 +93,10 @@ def update(highway_now: list, probability: float, max_speed: int) -> list:
     >>> update([-1, -1, 2, -1, -1, -1, -1, 3], 0.0, 5)
     [-1, -1, 3, -1, -1, -1, -1, 1]
     """
+    logger.error(">>> Entering update(highway_now=%s,probability=%s,max_speed=%s)", highway_now, probability, max_speed, extra={"event.action": "update", "logrite.highway_now": highway_now, "logrite.probability": probability, "logrite.max_speed": max_speed})
 
     number_of_cells = len(highway_now)
+    logger.error("update(highway_now=%s,probability=%s,max_speed=%s): number_of_cells → %s", highway_now, probability, max_speed, number_of_cells, extra={"event.action": "update", "logrite.highway_now": highway_now, "logrite.probability": probability, "logrite.max_speed": max_speed})
     # Beforce calculations, the highway is empty
     next_highway = [-1] * number_of_cells
 
@@ -97,17 +106,20 @@ def update(highway_now: list, probability: float, max_speed: int) -> list:
             next_highway[car_index] = min(highway_now[car_index] + 1, max_speed)
             # Number of empty cell before the next car
             dn = get_distance(highway_now, car_index) - 1
+            logger.error("update(highway_now=%s,probability=%s,max_speed=%s): dn → %s", highway_now, probability, max_speed, dn, extra={"event.action": "update", "logrite.highway_now": highway_now, "logrite.probability": probability, "logrite.max_speed": max_speed})
             # We can't have the car causing an accident
             next_highway[car_index] = min(next_highway[car_index], dn)
             if random() < probability:
                 # Randomly, a driver will slow down
                 next_highway[car_index] = max(next_highway[car_index] - 1, 0)
+    logger.warning("<<< Exiting update(highway_now=%s,probability=%s,max_speed=%s)", highway_now, probability, max_speed, extra={"event.action": "update", "logrite.highway_now": highway_now, "logrite.probability": probability, "logrite.max_speed": max_speed})
     return next_highway
 
 
 def simulate(
     highway: list, number_of_update: int, probability: float, max_speed: int
 ) -> list:
+    logger.error(">>> Entering simulate(highway=%s,number_of_update=%s,probability=%s,max_speed=%s)", highway, number_of_update, probability, max_speed, extra={"event.action": "simulate", "logrite.highway": highway, "logrite.number_of_update": number_of_update, "logrite.probability": probability, "logrite.max_speed": max_speed})
     """
     The main function, it will simulate the evolution of the highway
     >>> simulate([[-1, 2, -1, -1, -1, 3]], 2, 0.0, 3)
@@ -117,9 +129,11 @@ def simulate(
     """
 
     number_of_cells = len(highway[0])
+    logger.error("simulate(highway=%s,number_of_update=%s,probability=%s,max_speed=%s): number_of_cells → %s", highway, number_of_update, probability, max_speed, number_of_cells, extra={"event.action": "simulate", "logrite.highway": highway, "logrite.number_of_update": number_of_update, "logrite.probability": probability, "logrite.max_speed": max_speed})
 
     for i in range(number_of_update):
         next_speeds_calculated = update(highway[i], probability, max_speed)
+        logger.error("simulate(highway=%s,number_of_update=%s,probability=%s,max_speed=%s): next_speeds_calculated → %s", highway, number_of_update, probability, max_speed, next_speeds_calculated, extra={"event.action": "simulate", "logrite.highway": highway, "logrite.number_of_update": number_of_update, "logrite.probability": probability, "logrite.max_speed": max_speed})
         real_next_speeds = [-1] * number_of_cells
 
         for car_index in range(number_of_cells):
@@ -131,6 +145,7 @@ def simulate(
                 real_next_speeds[index] = speed
         highway.append(real_next_speeds)
 
+    logger.warning("<<< Exiting simulate(highway=%s,number_of_update=%s,probability=%s,max_speed=%s)", highway, number_of_update, probability, max_speed, extra={"event.action": "simulate", "logrite.highway": highway, "logrite.number_of_update": number_of_update, "logrite.probability": probability, "logrite.max_speed": max_speed})
     return highway
 
 

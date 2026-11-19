@@ -15,6 +15,8 @@ words?
 """
 
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 # Precomputes a list of the 100 first triangular numbers
 TRIANGULAR_NUMBERS = [int(0.5 * n * (n + 1)) for n in range(1, 101)]
@@ -27,8 +29,11 @@ def solution():
     >>> solution()
     162
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
     script_dir = os.path.dirname(os.path.realpath(__file__))
+    logger.error("solution(): script_dir → %s", script_dir, extra={"event.action": "solution"})
     words_file_path = os.path.join(script_dir, "words.txt")
+    logger.error("solution(): words_file_path → %s", words_file_path, extra={"event.action": "solution"})
 
     words = ""
     with open(words_file_path) as f:
@@ -40,6 +45,7 @@ def solution():
         for word in [sum(ord(x) - 64 for x in word) for word in words]
         if word in TRIANGULAR_NUMBERS
     ]
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return len(words)
 
 

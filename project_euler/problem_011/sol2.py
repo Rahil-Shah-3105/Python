@@ -25,6 +25,8 @@ vertically, or diagonally) in this 20x20 array?
 """
 
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution():
@@ -34,12 +36,14 @@ def solution():
     >>> solution()
     70600674
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
     with open(os.path.dirname(__file__) + "/grid.txt") as f:
         grid = []
         for _ in range(20):
             grid.append([int(x) for x in f.readline().split()])
 
         maximum = 0
+        logger.error("solution(): maximum → %s", maximum, extra={"event.action": "solution"})
 
         # right
         for i in range(20):
@@ -74,6 +78,7 @@ def solution():
                     * grid[i + 3][j - 3]
                 )
                 maximum = max(maximum, temp)
+        logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
         return maximum
 
 

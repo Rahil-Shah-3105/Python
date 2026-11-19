@@ -9,6 +9,8 @@ python3 -m doctest -v sentinel_linear_search.py
 For manual testing run:
 python sentinel_linear_search.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sentinel_linear_search(sequence, target):
@@ -31,6 +33,7 @@ def sentinel_linear_search(sequence, target):
     >>> sentinel_linear_search([0, 5, 7, 10, 15], 6)
 
     """
+    logger.error(">>> Entering sentinel_linear_search(sequence=%s,target=%s)", sequence, target, extra={"event.action": "sentinel_linear_search", "logrite.sequence": sequence, "logrite.target": target})
     sequence.append(target)
 
     index = 0
@@ -42,6 +45,7 @@ def sentinel_linear_search(sequence, target):
     if index == len(sequence):
         return None
 
+    logger.warning("<<< Exiting sentinel_linear_search(sequence=%s,target=%s)", sequence, target, extra={"event.action": "sentinel_linear_search", "logrite.sequence": sequence, "logrite.target": target})
     return index
 
 

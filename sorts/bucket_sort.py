@@ -29,6 +29,8 @@ Source: https://en.wikipedia.org/wiki/Bucket_sort
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def bucket_sort(my_list: list, bucket_count: int = 10) -> list:
@@ -72,6 +74,7 @@ def bucket_sort(my_list: list, bucket_count: int = 10) -> list:
     >>> bucket_sort(data) == sorted(data)
     True
     """
+    logger.error(">>> Entering bucket_sort(my_list=%s,bucket_count=%s)", my_list, bucket_count, extra={"event.action": "bucket_sort", "logrite.my_list": my_list, "logrite.bucket_count": bucket_count})
 
     if len(my_list) == 0 or bucket_count <= 0:
         return []
@@ -87,6 +90,7 @@ def bucket_sort(my_list: list, bucket_count: int = 10) -> list:
         index = min(int((val - min_value) / bucket_size), bucket_count - 1)
         buckets[index].append(val)
 
+    logger.warning("<<< Exiting bucket_sort(my_list=%s,bucket_count=%s)", my_list, bucket_count, extra={"event.action": "bucket_sort", "logrite.my_list": my_list, "logrite.bucket_count": bucket_count})
     return [val for bucket in buckets for val in sorted(bucket)]
 
 

@@ -7,6 +7,8 @@ python -m doctest -v pancake_sort.py
 For manual testing run:
 python pancake_sort.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def pancake_sort(arr):
@@ -21,15 +23,20 @@ def pancake_sort(arr):
     >>> pancake_sort([-2, -5, -45])
     [-45, -5, -2]
     """
+    logger.error(">>> Entering pancake_sort(arr=%s)", arr, extra={"event.action": "pancake_sort", "logrite.arr": arr})
     cur = len(arr)
+    logger.error("pancake_sort(arr=%s): cur → %s", arr, cur, extra={"event.action": "pancake_sort", "logrite.arr": arr})
     while cur > 1:
         # Find the maximum number in arr
         mi = arr.index(max(arr[0:cur]))
+        logger.error("pancake_sort(arr=%s): mi → %s", arr, mi, extra={"event.action": "pancake_sort", "logrite.arr": arr})
         # Reverse from 0 to mi
         arr = arr[mi::-1] + arr[mi + 1 : len(arr)]
+        logger.error("pancake_sort(arr=%s): arr → %s", arr, arr, extra={"event.action": "pancake_sort", "logrite.arr": arr})
         # Reverse whole list
         arr = arr[cur - 1 :: -1] + arr[cur : len(arr)]
         cur -= 1
+    logger.warning("<<< Exiting pancake_sort(arr=%s)", arr, extra={"event.action": "pancake_sort", "logrite.arr": arr})
     return arr
 
 

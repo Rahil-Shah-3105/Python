@@ -7,6 +7,8 @@ https://en.wikipedia.org/wiki/Trifid_cipher
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 # fmt: off
 TEST_CHARACTER_TO_NUMBER = {
@@ -28,18 +30,21 @@ def __encrypt_part(message_part: str, character_to_number: dict[str, str]) -> st
     >>> __encrypt_part('ASK', TEST_CHARACTER_TO_NUMBER)
     '132111112'
     """
+    logger.error(">>> Entering __encrypt_part(message_part=%s,character_to_number=%s)", message_part, character_to_number, extra={"event.action": "__encrypt_part", "logrite.message_part": message_part, "logrite.character_to_number": character_to_number})
     one, two, three = "", "", ""
     for each in (character_to_number[character] for character in message_part):
         one += each[0]
         two += each[1]
         three += each[2]
 
+    logger.warning("<<< Exiting __encrypt_part(message_part=%s,character_to_number=%s)", message_part, character_to_number, extra={"event.action": "__encrypt_part", "logrite.message_part": message_part, "logrite.character_to_number": character_to_number})
     return one + two + three
 
 
 def __decrypt_part(
     message_part: str, character_to_number: dict[str, str]
 ) -> tuple[str, str, str]:
+    logger.error(">>> Entering __decrypt_part(message_part=%s,character_to_number=%s)", message_part, character_to_number, extra={"event.action": "__decrypt_part", "logrite.message_part": message_part, "logrite.character_to_number": character_to_number})
     """
     Convert each letter of the input string into their respective trigram values, join
     them and split them into three equal groups of strings which are returned.
@@ -48,7 +53,9 @@ def __decrypt_part(
     ('11111', '21131', '21122')
     """
     this_part = "".join(character_to_number[character] for character in message_part)
+    logger.error("__decrypt_part(message_part=%s,character_to_number=%s): this_part → %s", message_part, character_to_number, this_part, extra={"event.action": "__decrypt_part", "logrite.message_part": message_part, "logrite.character_to_number": character_to_number})
     result = []
+    logger.error("__decrypt_part(message_part=%s,character_to_number=%s): result → %s", message_part, character_to_number, result, extra={"event.action": "__decrypt_part", "logrite.message_part": message_part, "logrite.character_to_number": character_to_number})
     tmp = ""
     for digit in this_part:
         tmp += digit
@@ -56,12 +63,14 @@ def __decrypt_part(
             result.append(tmp)
             tmp = ""
 
+    logger.warning("<<< Exiting __decrypt_part(message_part=%s,character_to_number=%s)", message_part, character_to_number, extra={"event.action": "__decrypt_part", "logrite.message_part": message_part, "logrite.character_to_number": character_to_number})
     return result[0], result[1], result[2]
 
 
 def __prepare(
     message: str, alphabet: str
 ) -> tuple[str, str, dict[str, str], dict[str, str]]:
+    logger.error(">>> Entering __prepare(message=%s,alphabet=%s)", message, alphabet, extra={"event.action": "__prepare", "logrite.message": message, "logrite.alphabet": alphabet})
     """
     A helper function that generates the triagrams and assigns each letter of the
     alphabet to its corresponding triagram and stores this in a dictionary
@@ -104,7 +113,9 @@ def __prepare(
     """
     # Validate message and alphabet, set to upper and remove spaces
     alphabet = alphabet.replace(" ", "").upper()
+    logger.error("__prepare(message=%s,alphabet=%s): alphabet → %s", message, alphabet, alphabet, extra={"event.action": "__prepare", "logrite.message": message, "logrite.alphabet": alphabet})
     message = message.replace(" ", "").upper()
+    logger.error("__prepare(message=%s,alphabet=%s): message → %s", message, alphabet, message, extra={"event.action": "__prepare", "logrite.message": message, "logrite.alphabet": alphabet})
 
     # Check length and characters
     if len(alphabet) != 27:
@@ -114,16 +125,19 @@ def __prepare(
 
     # Generate dictionares
     character_to_number = dict(zip(alphabet, TEST_CHARACTER_TO_NUMBER.values()))
+    logger.error("__prepare(message=%s,alphabet=%s): character_to_number → %s", message, alphabet, character_to_number, extra={"event.action": "__prepare", "logrite.message": message, "logrite.alphabet": alphabet})
     number_to_character = {
         number: letter for letter, number in character_to_number.items()
     }
 
+    logger.warning("<<< Exiting __prepare(message=%s,alphabet=%s)", message, alphabet, extra={"event.action": "__prepare", "logrite.message": message, "logrite.alphabet": alphabet})
     return message, alphabet, character_to_number, number_to_character
 
 
 def encrypt_message(
     message: str, alphabet: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.", period: int = 5
 ) -> str:
+    logger.error(">>> Entering encrypt_message(message=%s,alphabet=%s,period=%s)", message, alphabet, period, extra={"event.action": "encrypt_message", "logrite.message": message, "logrite.alphabet": alphabet, "logrite.period": period})
     """
     encrypt_message
     ===============
@@ -155,20 +169,24 @@ def encrypt_message(
     )
 
     encrypted_numeric = ""
+    logger.error("encrypt_message(message=%s,alphabet=%s,period=%s): encrypted_numeric → %s", message, alphabet, period, encrypted_numeric, extra={"event.action": "encrypt_message", "logrite.message": message, "logrite.alphabet": alphabet, "logrite.period": period})
     for i in range(0, len(message) + 1, period):
         encrypted_numeric += __encrypt_part(
             message[i : i + period], character_to_number
         )
 
     encrypted = ""
+    logger.error("encrypt_message(message=%s,alphabet=%s,period=%s): encrypted → %s", message, alphabet, period, encrypted, extra={"event.action": "encrypt_message", "logrite.message": message, "logrite.alphabet": alphabet, "logrite.period": period})
     for i in range(0, len(encrypted_numeric), 3):
         encrypted += number_to_character[encrypted_numeric[i : i + 3]]
+    logger.warning("<<< Exiting encrypt_message(message=%s,alphabet=%s,period=%s)", message, alphabet, period, extra={"event.action": "encrypt_message", "logrite.message": message, "logrite.alphabet": alphabet, "logrite.period": period})
     return encrypted
 
 
 def decrypt_message(
     message: str, alphabet: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.", period: int = 5
 ) -> str:
+    logger.error(">>> Entering decrypt_message(message=%s,alphabet=%s,period=%s)", message, alphabet, period, extra={"event.action": "decrypt_message", "logrite.message": message, "logrite.alphabet": alphabet, "logrite.period": period})
     """
     decrypt_message
     ===============
@@ -202,6 +220,7 @@ def decrypt_message(
         for j in range(len(a)):
             decrypted_numeric.append(a[j] + b[j] + c[j])
 
+    logger.warning("<<< Exiting decrypt_message(message=%s,alphabet=%s,period=%s)", message, alphabet, period, extra={"event.action": "decrypt_message", "logrite.message": message, "logrite.alphabet": alphabet, "logrite.period": period})
     return "".join(number_to_character[each] for each in decrypted_numeric)
 
 

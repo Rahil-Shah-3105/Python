@@ -5,6 +5,8 @@ render 3d points for 2d surfaces.
 from __future__ import annotations
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 __version__ = "2020.9.26"
 __author__ = "xcodz-dot, cclaus, dhruvmanila"
@@ -13,6 +15,7 @@ __author__ = "xcodz-dot, cclaus, dhruvmanila"
 def convert_to_2d(
     x: float, y: float, z: float, scale: float, distance: float
 ) -> tuple[float, float]:
+    logger.error(">>> Entering convert_to_2d(x=%s,y=%s,z=%s,scale=%s,distance=%s)", x, y, z, scale, distance, extra={"event.action": "convert_to_2d", "logrite.x": x, "logrite.y": y, "logrite.z": z, "logrite.scale": scale, "logrite.distance": distance})
     """
     Converts 3d point to a 2d drawable point
 
@@ -29,15 +32,20 @@ def convert_to_2d(
     """
     if not all(isinstance(val, (float, int)) for val in locals().values()):
         msg = f"Input values must either be float or int: {list(locals().values())}"
+        logger.error("convert_to_2d(x=%s,y=%s,z=%s,scale=%s,distance=%s): msg → %s", x, y, z, scale, distance, msg, extra={"event.action": "convert_to_2d", "logrite.x": x, "logrite.y": y, "logrite.z": z, "logrite.scale": scale, "logrite.distance": distance})
         raise TypeError(msg)
     projected_x = ((x * distance) / (z + distance)) * scale
+    logger.error("convert_to_2d(x=%s,y=%s,z=%s,scale=%s,distance=%s): projected_x → %s", x, y, z, scale, distance, projected_x, extra={"event.action": "convert_to_2d", "logrite.x": x, "logrite.y": y, "logrite.z": z, "logrite.scale": scale, "logrite.distance": distance})
     projected_y = ((y * distance) / (z + distance)) * scale
+    logger.error("convert_to_2d(x=%s,y=%s,z=%s,scale=%s,distance=%s): projected_y → %s", x, y, z, scale, distance, projected_y, extra={"event.action": "convert_to_2d", "logrite.x": x, "logrite.y": y, "logrite.z": z, "logrite.scale": scale, "logrite.distance": distance})
+    logger.warning("<<< Exiting convert_to_2d(x=%s,y=%s,z=%s,scale=%s,distance=%s)", x, y, z, scale, distance, extra={"event.action": "convert_to_2d", "logrite.x": x, "logrite.y": y, "logrite.z": z, "logrite.scale": scale, "logrite.distance": distance})
     return projected_x, projected_y
 
 
 def rotate(
     x: float, y: float, z: float, axis: str, angle: float
 ) -> tuple[float, float, float]:
+    logger.error(">>> Entering rotate(x=%s,y=%s,z=%s,axis=%s,angle=%s)", x, y, z, axis, angle, extra={"event.action": "rotate", "logrite.x": x, "logrite.y": y, "logrite.z": z, "logrite.axis": axis, "logrite.angle": angle})
     """
     rotate a point around a certain axis with a certain angle
     angle can be any integer between 1, 360 and axis can be any one of
@@ -68,6 +76,7 @@ def rotate(
     if not isinstance(axis, str):
         raise TypeError("Axis must be a str")
     input_variables = locals()
+    logger.error("rotate(x=%s,y=%s,z=%s,axis=%s,angle=%s): input_variables → %s", x, y, z, axis, angle, input_variables, extra={"event.action": "rotate", "logrite.x": x, "logrite.y": y, "logrite.z": z, "logrite.axis": axis, "logrite.angle": angle})
     del input_variables["axis"]
     if not all(isinstance(val, (float, int)) for val in input_variables.values()):
         msg = (
@@ -76,13 +85,16 @@ def rotate(
         )
         raise TypeError(msg)
     angle = (angle % 360) / 450 * 180 / math.pi
+    logger.error("rotate(x=%s,y=%s,z=%s,axis=%s,angle=%s): angle → %s", x, y, z, axis, angle, angle, extra={"event.action": "rotate", "logrite.x": x, "logrite.y": y, "logrite.z": z, "logrite.axis": axis, "logrite.angle": angle})
     if axis == "z":
         new_x = x * math.cos(angle) - y * math.sin(angle)
+        logger.error("rotate(x=%s,y=%s,z=%s,axis=%s,angle=%s): new_x → %s", x, y, z, axis, angle, new_x, extra={"event.action": "rotate", "logrite.x": x, "logrite.y": y, "logrite.z": z, "logrite.axis": axis, "logrite.angle": angle})
         new_y = y * math.cos(angle) + x * math.sin(angle)
         new_z = z
     elif axis == "x":
         new_y = y * math.cos(angle) - z * math.sin(angle)
         new_z = z * math.cos(angle) + y * math.sin(angle)
+        logger.error("rotate(x=%s,y=%s,z=%s,axis=%s,angle=%s): new_z → %s", x, y, z, axis, angle, new_z, extra={"event.action": "rotate", "logrite.x": x, "logrite.y": y, "logrite.z": z, "logrite.axis": axis, "logrite.angle": angle})
         new_x = x
     elif axis == "y":
         new_x = x * math.cos(angle) - z * math.sin(angle)
@@ -91,6 +103,7 @@ def rotate(
     else:
         raise ValueError("not a valid axis, choose one of 'x', 'y', 'z'")
 
+    logger.warning("<<< Exiting rotate(x=%s,y=%s,z=%s,axis=%s,angle=%s)", x, y, z, axis, angle, extra={"event.action": "rotate", "logrite.x": x, "logrite.y": y, "logrite.z": z, "logrite.axis": axis, "logrite.angle": angle})
     return new_x, new_y, new_z
 
 

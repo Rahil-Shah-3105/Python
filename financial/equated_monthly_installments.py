@@ -6,11 +6,14 @@ Program to calculate the amortization amount per month, given
 
 Wikipedia Reference: https://en.wikipedia.org/wiki/Equated_monthly_installment
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def equated_monthly_installments(
     principal: float, rate_per_annum: float, years_to_repay: int
 ) -> float:
+    logger.error(">>> Entering equated_monthly_installments(principal=%s,rate_per_annum=%s,years_to_repay=%s)", principal, rate_per_annum, years_to_repay, extra={"event.action": "equated_monthly_installments", "user.name": str(principal), "logrite.rate_per_annum": rate_per_annum, "logrite.years_to_repay": years_to_repay})
     """
     Formula for amortization amount per month:
     A = p * r * (1 + r)^n / ((1 + r)^n - 1)
@@ -34,6 +37,7 @@ def equated_monthly_installments(
         ...
     Exception: Years to repay must be an integer > 0
     """
+    logger.error("equated_monthly_installments(principal=%s,rate_per_annum=%s,years_to_repay=%s): A → %s", principal, rate_per_annum, years_to_repay, A, extra={"event.action": "equated_monthly_installments", "user.name": str(principal), "logrite.rate_per_annum": rate_per_annum, "logrite.years_to_repay": years_to_repay})
     if principal <= 0:
         raise Exception("Principal borrowed must be > 0")
     if rate_per_annum < 0:
@@ -47,6 +51,7 @@ def equated_monthly_installments(
     # Years to repay is multiplied by 12 to get number of payments as payment is monthly
     number_of_payments = years_to_repay * 12
 
+    logger.warning("<<< Exiting equated_monthly_installments(principal=%s,rate_per_annum=%s,years_to_repay=%s)", principal, rate_per_annum, years_to_repay, extra={"event.action": "equated_monthly_installments", "user.name": str(principal), "logrite.rate_per_annum": rate_per_annum, "logrite.years_to_repay": years_to_repay})
     return (
         principal
         * rate_per_month

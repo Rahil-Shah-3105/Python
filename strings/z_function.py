@@ -8,6 +8,8 @@ Efficient algorithm for pattern occurrence in a string
 Time Complexity: O(n) - where n is the length of the string
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def z_function(input_str: str) -> list[int]:
@@ -27,7 +29,9 @@ def z_function(input_str: str) -> list[int]:
     >>> z_function("zxxzxxz")
     [0, 0, 0, 4, 0, 0, 1]
     """
+    logger.error(">>> Entering z_function(input_str=%s)", input_str, extra={"event.action": "z_function", "logrite.input_str": input_str})
     z_result = [0 for i in range(len(input_str))]
+    logger.error("z_function(input_str=%s): z_result → %s", input_str, z_result, extra={"event.action": "z_function", "logrite.input_str": input_str})
 
     # initialize interval's left pointer and right pointer
     left_pointer, right_pointer = 0, 0
@@ -36,6 +40,7 @@ def z_function(input_str: str) -> list[int]:
         # case when current index is inside the interval
         if i <= right_pointer:
             min_edge = min(right_pointer - i + 1, z_result[i - left_pointer])
+            logger.error("z_function(input_str=%s): min_edge → %s", input_str, min_edge, extra={"event.action": "z_function", "logrite.input_str": input_str})
             z_result[i] = min_edge
 
         while go_next(i, z_result, input_str):
@@ -46,6 +51,7 @@ def z_function(input_str: str) -> list[int]:
         if i + z_result[i] - 1 > right_pointer:
             left_pointer, right_pointer = i, i + z_result[i] - 1
 
+    logger.warning("<<< Exiting z_function(input_str=%s)", input_str, extra={"event.action": "z_function", "logrite.input_str": input_str})
     return z_result
 
 
@@ -53,6 +59,8 @@ def go_next(i: int, z_result: list[int], s: str) -> bool:
     """
     Check if we have to move forward to the next characters or not
     """
+    logger.error(">>> Entering go_next(i=%s,z_result=%s,s=%s)", i, z_result, s, extra={"event.action": "go_next", "logrite.i": i, "logrite.z_result": z_result, "logrite.s": s})
+    logger.warning("<<< Exiting go_next(i=%s,z_result=%s,s=%s)", i, z_result, s, extra={"event.action": "go_next", "logrite.i": i, "logrite.z_result": z_result, "logrite.s": s})
     return i + z_result[i] < len(s) and s[z_result[i]] == s[i + z_result[i]]
 
 
@@ -69,10 +77,12 @@ def find_pattern(pattern: str, input_str: str) -> int:
     >>> find_pattern("xz", "zxxzxxz")
     2
     """
+    logger.error(">>> Entering find_pattern(pattern=%s,input_str=%s)", pattern, input_str, extra={"event.action": "find_pattern", "logrite.pattern": pattern, "logrite.input_str": input_str})
     answer = 0
     # concatenate 'pattern' and 'input_str' and call z_function
     # with concatenated string
     z_result = z_function(pattern + input_str)
+    logger.error("find_pattern(pattern=%s,input_str=%s): z_result → %s", pattern, input_str, z_result, extra={"event.action": "find_pattern", "logrite.pattern": pattern, "logrite.input_str": input_str})
 
     for val in z_result:
         # if value is greater then length of the pattern string
@@ -81,6 +91,7 @@ def find_pattern(pattern: str, input_str: str) -> int:
         if val >= len(pattern):
             answer += 1
 
+    logger.warning("<<< Exiting find_pattern(pattern=%s,input_str=%s)", pattern, input_str, extra={"event.action": "find_pattern", "logrite.pattern": pattern, "logrite.input_str": input_str})
     return answer
 
 

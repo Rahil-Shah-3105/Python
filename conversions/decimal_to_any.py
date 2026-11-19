@@ -1,6 +1,8 @@
 """Convert a positive Decimal Number to Any Other Representation"""
 
 from string import ascii_uppercase
+import logging
+logger = logging.getLogger(__name__)
 
 ALPHABET_VALUES = {str(ord(c) - 55): c for c in ascii_uppercase}
 
@@ -57,6 +59,7 @@ def decimal_to_any(num: int, base: int) -> str:
         ...
     ValueError: base must be <= 36
     """
+    logger.error(">>> Entering decimal_to_any(num=%s,base=%s)", num, base, extra={"event.action": "decimal_to_any", "logrite.num": num, "logrite.base": base})
     if isinstance(num, float):
         raise TypeError("int() can't convert non-string with explicit base")
     if num < 0:
@@ -70,6 +73,7 @@ def decimal_to_any(num: int, base: int) -> str:
     if base > 36:
         raise ValueError("base must be <= 36")
     new_value = ""
+    logger.error("decimal_to_any(num=%s,base=%s): new_value → %s", num, base, new_value, extra={"event.action": "decimal_to_any", "logrite.num": num, "logrite.base": base})
     mod = 0
     div = 0
     while div != 1:
@@ -78,6 +82,7 @@ def decimal_to_any(num: int, base: int) -> str:
             actual_value = ALPHABET_VALUES[str(mod)]
         else:
             actual_value = str(mod)
+            logger.error("decimal_to_any(num=%s,base=%s): actual_value → %s", num, base, actual_value, extra={"event.action": "decimal_to_any", "logrite.num": num, "logrite.base": base})
         new_value += actual_value
         div = num // base
         num = div
@@ -87,6 +92,7 @@ def decimal_to_any(num: int, base: int) -> str:
             new_value += str(div)
             return str(new_value[::-1])
 
+    logger.warning("<<< Exiting decimal_to_any(num=%s,base=%s)", num, base, extra={"event.action": "decimal_to_any", "logrite.num": num, "logrite.base": base})
     return new_value[::-1]
 
 

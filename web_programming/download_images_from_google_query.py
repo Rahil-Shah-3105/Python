@@ -14,6 +14,9 @@ import urllib.request
 
 import httpx
 from bs4 import BeautifulSoup
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
@@ -39,29 +42,40 @@ def download_images_from_google_query(query: str = "dhaka", max_images: int = 5)
     # >>> download_images_from_google_query("potato")
     5
     """
+    logger.error(">>> Entering download_images_from_google_query(query=%s,max_images=%s)", max_images, extra={"event.action": "download_images_from_google_query", "logrite.query": query, "logrite.max_images": max_images})
     max_images = min(max_images, 50)  # Prevent abuse!
+    logger.error("download_images_from_google_query(query=%s,max_images=%s): max_images → %s", max_images, max_images, extra={"event.action": "download_images_from_google_query", "logrite.query": query, "logrite.max_images": max_images})
     params = {
         "q": query,
         "tbm": "isch",
         "hl": "en",
         "ijn": "0",
     }
+    __log_start = time.time()
 
     html = httpx.get(
         "https://www.google.com/search", params=params, headers=headers, timeout=10
     )
+    __log_start_db = time.time()
     soup = BeautifulSoup(html.text, "html.parser")
+    logger.error("download_images_from_google_query(query=%s,max_images=%s): soup → %s", max_images, soup, extra={"event.action": "download_images_from_google_query", "logrite.query": query, "logrite.max_images": max_images})
     matched_images_data = "".join(
         re.findall(r"AF_initDataCallback\(([^<]+)\);", str(soup.select("script")))
     )
+    logger.error("download_images_from_google_query(query=%s,max_images=%s): matched_images_data → %s", max_images, matched_images_data, extra={"event.action": "download_images_from_google_query", "logrite.query": query, "logrite.max_images": max_images})
+    logger.error("download_images_from_google_query(max_images)=%s: query %s took %s ms", max_images, int((time.time() - __log_start_db) * 1000), extra={"event.action": "download_images_from_google_query", "event.category": "database", "logrite.query": query, "logrite.max_images": max_images})
 
     matched_images_data_fix = json.dumps(matched_images_data)
+    logger.error("download_images_from_google_query(query=%s,max_images=%s): matched_images_data_fix → %s", max_images, matched_images_data_fix, extra={"event.action": "download_images_from_google_query", "logrite.query": query, "logrite.max_images": max_images})
     matched_images_data_json = json.loads(matched_images_data_fix)
+    logger.error("download_images_from_google_query(query=%s,max_images=%s): matched_images_data_json → %s", max_images, matched_images_data_json, extra={"event.action": "download_images_from_google_query", "logrite.query": query, "logrite.max_images": max_images})
+    logger.error("download_images_from_google_query(query,max_images)=%s,%s: external service call took %s ms", max_images, int((time.time() - __log_start) * 1000), extra={"event.action": "download_images_from_google_query", "event.category": "network", "logrite.query": query, "logrite.max_images": max_images})
 
     matched_google_image_data = re.findall(
         r"\[\"GRID_STATE0\",null,\[\[1,\[0,\".*?\",(.*),\"All\",",
         matched_images_data_json,
     )
+    logger.error("download_images_from_google_query(query=%s,max_images=%s): matched_google_image_data → %s", max_images, matched_google_image_data, extra={"event.action": "download_images_from_google_query", "logrite.query": query, "logrite.max_images": max_images})
     if not matched_google_image_data:
         return 0
 
@@ -95,6 +109,7 @@ def download_images_from_google_query(query: str = "dhaka", max_images: int = 5)
                 ),
             )
         ]
+        logger.debug("download_images_from_google_query(query=%s,max_images=%s): opener.addheaders → %s", max_images, opener.addheaders, extra={"event.action": "download_images_from_google_query", "logrite.query": query, "logrite.max_images": max_images})
         urllib.request.install_opener(opener)
         path_name = f"query_{query.replace(' ', '_')}"
         if not os.path.exists(path_name):
@@ -102,6 +117,7 @@ def download_images_from_google_query(query: str = "dhaka", max_images: int = 5)
         urllib.request.urlretrieve(  # noqa: S310
             original_size_img, f"{path_name}/original_size_img_{index}.jpg"
         )
+    logger.warning("<<< Exiting download_images_from_google_query(query=%s,max_images=%s)", max_images, extra={"event.action": "download_images_from_google_query", "logrite.query": query, "logrite.max_images": max_images})
     return index
 
 

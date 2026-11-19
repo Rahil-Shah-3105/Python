@@ -32,6 +32,8 @@ vertex.
 """
 
 import heapq
+import logging
+logger = logging.getLogger(__name__)
 
 
 def dijkstra(graph, start, end):
@@ -44,9 +46,12 @@ def dijkstra(graph, start, end):
     >>> dijkstra(G3, "E", "F")
     3
     """
+    logger.error(">>> Entering dijkstra(graph=%s,start=%s,end=%s)", graph, start, end, extra={"event.action": "dijkstra", "logrite.graph": graph, "logrite.start": start, "logrite.end": end})
 
     heap = [(0, start)]  # cost from start node,end node
+    logger.error("dijkstra(graph=%s,start=%s,end=%s): heap → %s", graph, start, end, heap, extra={"event.action": "dijkstra", "logrite.graph": graph, "logrite.start": start, "logrite.end": end})
     visited = set()
+    logger.error("dijkstra(graph=%s,start=%s,end=%s): visited → %s", graph, start, end, visited, extra={"event.action": "dijkstra", "logrite.graph": graph, "logrite.start": start, "logrite.end": end})
     while heap:
         (cost, u) = heapq.heappop(heap)
         if u in visited:
@@ -59,6 +64,7 @@ def dijkstra(graph, start, end):
                 continue
             next_item = cost + c
             heapq.heappush(heap, (next_item, v))
+    logger.warning("<<< Exiting dijkstra(graph=%s,start=%s,end=%s)", graph, start, end, extra={"event.action": "dijkstra", "logrite.graph": graph, "logrite.start": start, "logrite.end": end})
     return -1
 
 

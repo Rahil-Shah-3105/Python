@@ -1,4 +1,6 @@
 """Convert a Decimal Number to a Binary Number."""
+import logging
+logger = logging.getLogger(__name__)
 
 
 def decimal_to_binary_iterative(num: int) -> str:
@@ -26,6 +28,7 @@ def decimal_to_binary_iterative(num: int) -> str:
         ...
     TypeError: 'str' object cannot be interpreted as an integer
     """
+    logger.error(">>> Entering decimal_to_binary_iterative(num=%s)", num, extra={"event.action": "decimal_to_binary_iterative", "logrite.num": num})
 
     if isinstance(num, float):
         raise TypeError("'float' object cannot be interpreted as an integer")
@@ -49,6 +52,7 @@ def decimal_to_binary_iterative(num: int) -> str:
     if negative:
         return "-0b" + "".join(str(e) for e in binary)
 
+    logger.warning("<<< Exiting decimal_to_binary_iterative(num=%s)", num, extra={"event.action": "decimal_to_binary_iterative", "logrite.num": num})
     return "0b" + "".join(str(e) for e in binary)
 
 
@@ -64,10 +68,13 @@ def decimal_to_binary_recursive_helper(decimal: int) -> str:
         ...
     ValueError: invalid literal for int() with base 10: 'number'
     """
+    logger.error(">>> Entering decimal_to_binary_recursive_helper(decimal=%s)", decimal, extra={"event.action": "decimal_to_binary_recursive_helper", "logrite.decimal": decimal})
     decimal = int(decimal)
+    logger.error("decimal_to_binary_recursive_helper(decimal=%s): decimal → %s", decimal, decimal, extra={"event.action": "decimal_to_binary_recursive_helper", "logrite.decimal": decimal})
     if decimal in (0, 1):  # Exit cases for the recursion
         return str(decimal)
     div, mod = divmod(decimal, 2)
+    logger.warning("<<< Exiting decimal_to_binary_recursive_helper(decimal=%s)", decimal, extra={"event.action": "decimal_to_binary_recursive_helper", "logrite.decimal": decimal})
     return decimal_to_binary_recursive_helper(div) + str(mod)
 
 
@@ -91,13 +98,17 @@ def decimal_to_binary_recursive(number: str) -> str:
         ...
     ValueError: Input value is not an integer
     """
+    logger.error(">>> Entering decimal_to_binary_recursive(number=%s)", number, extra={"event.action": "decimal_to_binary_recursive", "logrite.number": number})
     number = str(number).strip()
+    logger.error("decimal_to_binary_recursive(number=%s): number → %s", number, number, extra={"event.action": "decimal_to_binary_recursive", "logrite.number": number})
     if not number:
         raise ValueError("No input value was provided")
     negative = "-" if number.startswith("-") else ""
+    logger.error("decimal_to_binary_recursive(number=%s): negative → %s", number, negative, extra={"event.action": "decimal_to_binary_recursive", "logrite.number": number})
     number = number.lstrip("-")
     if not number.isnumeric():
         raise ValueError("Input value is not an integer")
+    logger.warning("<<< Exiting decimal_to_binary_recursive(number=%s)", number, extra={"event.action": "decimal_to_binary_recursive", "logrite.number": number})
     return f"{negative}0b{decimal_to_binary_recursive_helper(int(number))}"
 
 

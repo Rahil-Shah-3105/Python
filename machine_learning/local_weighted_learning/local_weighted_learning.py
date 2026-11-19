@@ -33,6 +33,8 @@ References:
 
 import matplotlib.pyplot as plt
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def weight_matrix(point: np.ndarray, x_train: np.ndarray, tau: float) -> np.ndarray:
@@ -58,18 +60,23 @@ def weight_matrix(point: np.ndarray, x_train: np.ndarray, tau: float) -> np.ndar
            [0.00000000e+000, 0.00000000e+000, 0.00000000e+000],
            [0.00000000e+000, 0.00000000e+000, 0.00000000e+000]])
     """
+    logger.error(">>> Entering weight_matrix(point=%s,x_train=%s,tau=%s)", point, x_train, tau, extra={"event.action": "weight_matrix", "logrite.point": point, "logrite.x_train": x_train, "logrite.tau": tau})
     m = len(x_train)  # Number of training samples
+    logger.error("weight_matrix(point=%s,x_train=%s,tau=%s): m → %s", point, x_train, tau, m, extra={"event.action": "weight_matrix", "logrite.point": point, "logrite.x_train": x_train, "logrite.tau": tau})
     weights = np.eye(m)  # Initialize weights as identity matrix
+    logger.error("weight_matrix(point=%s,x_train=%s,tau=%s): weights → %s", point, x_train, tau, weights, extra={"event.action": "weight_matrix", "logrite.point": point, "logrite.x_train": x_train, "logrite.tau": tau})
     for j in range(m):
         diff = point - x_train[j]
         weights[j, j] = np.exp(diff @ diff.T / (-2.0 * tau**2))
 
+    logger.warning("<<< Exiting weight_matrix(point=%s,x_train=%s,tau=%s)", point, x_train, tau, extra={"event.action": "weight_matrix", "logrite.point": point, "logrite.x_train": x_train, "logrite.tau": tau})
     return weights
 
 
 def local_weight(
     point: np.ndarray, x_train: np.ndarray, y_train: np.ndarray, tau: float
 ) -> np.ndarray:
+    logger.error(">>> Entering local_weight(point=%s,x_train=%s,y_train=%s,tau=%s)", point, x_train, y_train, tau, extra={"event.action": "local_weight", "logrite.point": point, "logrite.x_train": x_train, "logrite.y_train": y_train, "logrite.tau": tau})
     """
     Calculate the local weights at a given prediction point using the weight
     matrix for that point
@@ -92,16 +99,20 @@ def local_weight(
            [0.08272556]])
     """
     weight_mat = weight_matrix(point, x_train, tau)
+    logger.error("local_weight(point=%s,x_train=%s,y_train=%s,tau=%s): weight_mat → %s", point, x_train, y_train, tau, weight_mat, extra={"event.action": "local_weight", "logrite.point": point, "logrite.x_train": x_train, "logrite.y_train": y_train, "logrite.tau": tau})
     weight = np.linalg.inv(x_train.T @ weight_mat @ x_train) @ (
         x_train.T @ weight_mat @ y_train.T
     )
+    logger.error("local_weight(point=%s,x_train=%s,y_train=%s,tau=%s): weight → %s", point, x_train, y_train, tau, weight, extra={"event.action": "local_weight", "logrite.point": point, "logrite.x_train": x_train, "logrite.y_train": y_train, "logrite.tau": tau})
 
+    logger.warning("<<< Exiting local_weight(point=%s,x_train=%s,y_train=%s,tau=%s)", point, x_train, y_train, tau, extra={"event.action": "local_weight", "logrite.point": point, "logrite.x_train": x_train, "logrite.y_train": y_train, "logrite.tau": tau})
     return weight
 
 
 def local_weight_regression(
     x_train: np.ndarray, y_train: np.ndarray, tau: float
 ) -> np.ndarray:
+    logger.error(">>> Entering local_weight_regression(x_train=%s,y_train=%s,tau=%s)", x_train, y_train, tau, extra={"event.action": "local_weight_regression", "logrite.x_train": x_train, "logrite.y_train": y_train, "logrite.tau": tau})
     """
     Calculate predictions for each point in the training data
 
@@ -121,15 +132,18 @@ def local_weight_regression(
     array([1.07173261, 1.65970737, 3.50160179])
     """
     y_pred = np.zeros(len(x_train))  # Initialize array of predictions
+    logger.error("local_weight_regression(x_train=%s,y_train=%s,tau=%s): y_pred → %s", x_train, y_train, tau, y_pred, extra={"event.action": "local_weight_regression", "logrite.x_train": x_train, "logrite.y_train": y_train, "logrite.tau": tau})
     for i, item in enumerate(x_train):
         y_pred[i] = np.dot(item, local_weight(item, x_train, y_train, tau)).item()
 
+    logger.warning("<<< Exiting local_weight_regression(x_train=%s,y_train=%s,tau=%s)", x_train, y_train, tau, extra={"event.action": "local_weight_regression", "logrite.x_train": x_train, "logrite.y_train": y_train, "logrite.tau": tau})
     return y_pred
 
 
 def load_data(
     dataset_name: str, x_name: str, y_name: str
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    logger.error(">>> Entering load_data(dataset_name=%s,x_name=%s,y_name=%s)", dataset_name, x_name, y_name, extra={"event.action": "load_data", "logrite.dataset_name": dataset_name, "logrite.x_name": x_name, "logrite.y_name": y_name})
     """
     Load data from seaborn and split it into x and y points
     >>> pass    # No doctests, function is for demo purposes only
@@ -137,14 +151,20 @@ def load_data(
     import seaborn as sns
 
     data = sns.load_dataset(dataset_name)
+    logger.error("load_data(dataset_name=%s,x_name=%s,y_name=%s): data → %s", dataset_name, x_name, y_name, data, extra={"event.action": "load_data", "logrite.dataset_name": dataset_name, "logrite.x_name": x_name, "logrite.y_name": y_name})
     x_data = np.array(data[x_name])
+    logger.error("load_data(dataset_name=%s,x_name=%s,y_name=%s): x_data → %s", dataset_name, x_name, y_name, x_data, extra={"event.action": "load_data", "logrite.dataset_name": dataset_name, "logrite.x_name": x_name, "logrite.y_name": y_name})
     y_data = np.array(data[y_name])
+    logger.error("load_data(dataset_name=%s,x_name=%s,y_name=%s): y_data → %s", dataset_name, x_name, y_name, y_data, extra={"event.action": "load_data", "logrite.dataset_name": dataset_name, "logrite.x_name": x_name, "logrite.y_name": y_name})
 
     one = np.ones(len(y_data))
+    logger.error("load_data(dataset_name=%s,x_name=%s,y_name=%s): one → %s", dataset_name, x_name, y_name, one, extra={"event.action": "load_data", "logrite.dataset_name": dataset_name, "logrite.x_name": x_name, "logrite.y_name": y_name})
 
     # pairing elements of one and x_data
     x_train = np.column_stack((one, x_data))
+    logger.error("load_data(dataset_name=%s,x_name=%s,y_name=%s): x_train → %s", dataset_name, x_name, y_name, x_train, extra={"event.action": "load_data", "logrite.dataset_name": dataset_name, "logrite.x_name": x_name, "logrite.y_name": y_name})
 
+    logger.warning("<<< Exiting load_data(dataset_name=%s,x_name=%s,y_name=%s)", dataset_name, x_name, y_name, extra={"event.action": "load_data", "logrite.dataset_name": dataset_name, "logrite.x_name": x_name, "logrite.y_name": y_name})
     return x_train, x_data, y_data
 
 
@@ -156,11 +176,13 @@ def plot_preds(
     x_name: str,
     y_name: str,
 ) -> None:
+    logger.error(">>> Entering plot_preds(x_train=%s,preds=%s,x_data=%s,y_data=%s,x_name=%s,y_name=%s)", x_train, preds, x_data, y_data, x_name, y_name, extra={"event.action": "plot_preds", "logrite.x_train": x_train, "logrite.preds": preds, "logrite.x_data": x_data, "logrite.y_data": y_data, "logrite.x_name": x_name, "logrite.y_name": y_name})
     """
     Plot predictions and display the graph
     >>> pass    # No doctests, function is for demo purposes only
     """
     x_train_sorted = np.sort(x_train, axis=0)
+    logger.error("plot_preds(x_train=%s,preds=%s,x_data=%s,y_data=%s,x_name=%s,y_name=%s): x_train_sorted → %s", x_train, preds, x_data, y_data, x_name, y_name, x_train_sorted, extra={"event.action": "plot_preds", "logrite.x_train": x_train, "logrite.preds": preds, "logrite.x_data": x_data, "logrite.y_data": y_data, "logrite.x_name": x_name, "logrite.y_name": y_name})
     plt.scatter(x_data, y_data, color="blue")
     plt.plot(
         x_train_sorted[:, 1],
@@ -172,6 +194,7 @@ def plot_preds(
     plt.xlabel(x_name)
     plt.ylabel(y_name)
     plt.show()
+    logger.warning("<<< Exiting plot_preds(x_train=%s,preds=%s,x_data=%s,y_data=%s,x_name=%s,y_name=%s)", x_train, preds, x_data, y_data, x_name, y_name, extra={"event.action": "plot_preds", "logrite.x_train": x_train, "logrite.preds": preds, "logrite.x_data": x_data, "logrite.y_data": y_data, "logrite.x_name": x_name, "logrite.y_name": y_name})
 
 
 if __name__ == "__main__":

@@ -8,6 +8,8 @@ the same digits, but in a different order.
 Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x, and 6x,
 contain the same digits.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution():
@@ -17,6 +19,7 @@ def solution():
     >>> solution()
     142857
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
     i = 1
 
     while True:
@@ -28,6 +31,7 @@ def solution():
             == sorted(str(5 * i))
             == sorted(str(6 * i))
         ):
+            logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
             return i
 
         i += 1

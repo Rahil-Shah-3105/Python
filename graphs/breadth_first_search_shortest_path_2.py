@@ -6,6 +6,8 @@ python breadth_first_search_shortest_path_2.py
 """
 
 from collections import deque
+import logging
+logger = logging.getLogger(__name__)
 
 demo_graph = {
     "A": ["B", "C", "E"],
@@ -35,10 +37,13 @@ def bfs_shortest_path(graph: dict, start, goal) -> list[str]:
         >>> bfs_shortest_path(demo_graph, "G", "Unknown")
         []
     """
+    logger.error(">>> Entering bfs_shortest_path(graph=%s,start=%s,goal=%s)", graph, start, goal, extra={"event.action": "bfs_shortest_path", "logrite.graph": graph, "logrite.start": start, "logrite.goal": goal})
     # keep track of explored nodes
     explored = set()
+    logger.error("bfs_shortest_path(graph=%s,start=%s,goal=%s): explored → %s", graph, start, goal, explored, extra={"event.action": "bfs_shortest_path", "logrite.graph": graph, "logrite.start": start, "logrite.goal": goal})
     # keep track of all the paths to be checked
     queue = deque([[start]])
+    logger.error("bfs_shortest_path(graph=%s,start=%s,goal=%s): queue → %s", graph, start, goal, queue, extra={"event.action": "bfs_shortest_path", "logrite.graph": graph, "logrite.start": start, "logrite.goal": goal})
 
     # return path if start is goal
     if start == goal:
@@ -66,6 +71,7 @@ def bfs_shortest_path(graph: dict, start, goal) -> list[str]:
             explored.add(node)
 
     # in case there's no path between the 2 nodes
+    logger.warning("<<< Exiting bfs_shortest_path(graph=%s,start=%s,goal=%s)", graph, start, goal, extra={"event.action": "bfs_shortest_path", "logrite.graph": graph, "logrite.start": start, "logrite.goal": goal})
     return []
 
 
@@ -86,6 +92,7 @@ def bfs_shortest_path_distance(graph: dict, start, target) -> int:
         >>> bfs_shortest_path_distance(demo_graph, "A", "Unknown")
         -1
     """
+    logger.error(">>> Entering bfs_shortest_path_distance(graph=%s,start=%s,target=%s)", graph, start, target, extra={"event.action": "bfs_shortest_path_distance", "logrite.graph": graph, "logrite.start": start, "logrite.target": target})
     if not graph or start not in graph or target not in graph:
         return -1
     if start == target:
@@ -105,6 +112,7 @@ def bfs_shortest_path_distance(graph: dict, start, target) -> int:
                 visited.add(adjacent)
                 queue.append(adjacent)
                 dist[adjacent] = dist[node] + 1
+    logger.warning("<<< Exiting bfs_shortest_path_distance(graph=%s,start=%s,target=%s)", graph, start, target, extra={"event.action": "bfs_shortest_path_distance", "logrite.graph": graph, "logrite.start": start, "logrite.target": target})
     return dist[target]
 
 

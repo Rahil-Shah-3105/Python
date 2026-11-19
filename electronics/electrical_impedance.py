@@ -7,11 +7,14 @@ Source: https://en.wikipedia.org/wiki/Electrical_impedance
 from __future__ import annotations
 
 from math import pow, sqrt  # noqa: A004
+import logging
+logger = logging.getLogger(__name__)
 
 
 def electrical_impedance(
     resistance: float, reactance: float, impedance: float
 ) -> dict[str, float]:
+    logger.error(">>> Entering electrical_impedance(resistance=%s,reactance=%s,impedance=%s)", resistance, reactance, impedance, extra={"event.action": "electrical_impedance", "logrite.resistance": resistance, "logrite.reactance": reactance, "logrite.impedance": impedance})
     """
     Apply Electrical Impedance formula, on any two given electrical values,
     which can be resistance, reactance, and impedance, and then in a Python dict
@@ -37,6 +40,7 @@ def electrical_impedance(
     elif impedance == 0:
         return {"impedance": sqrt(pow(resistance, 2) + pow(reactance, 2))}
     else:
+        logger.warning("<<< Exiting electrical_impedance(resistance=%s,reactance=%s,impedance=%s)", resistance, reactance, impedance, extra={"event.action": "electrical_impedance", "logrite.resistance": resistance, "logrite.reactance": reactance, "logrite.impedance": impedance})
         raise ValueError("Exactly one argument must be 0")
 
 

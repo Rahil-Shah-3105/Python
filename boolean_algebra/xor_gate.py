@@ -13,6 +13,8 @@ Following is the truth table of a XOR Gate:
 
 Refer - https://www.geeksforgeeks.org/logic-gates-in-python/
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def xor_gate(input_1: int, input_2: int) -> int:
@@ -28,6 +30,8 @@ def xor_gate(input_1: int, input_2: int) -> int:
     >>> xor_gate(1, 1)
     0
     """
+    logger.error(">>> Entering xor_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "xor_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
+    logger.warning("<<< Exiting xor_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "xor_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
     return (input_1, input_2).count(0) % 2
 
 

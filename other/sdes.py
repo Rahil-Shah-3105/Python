@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def apply_table(inp, table):
     """
     >>> apply_table("0123456789", list(range(10)))
@@ -5,9 +7,12 @@ def apply_table(inp, table):
     >>> apply_table("0123456789", list(range(9, -1, -1)))
     '8765432109'
     """
+    logger.error(">>> Entering apply_table(inp=%s,table=%s)", inp, table, extra={"event.action": "apply_table", "logrite.inp": inp, "logrite.table": table})
     res = ""
+    logger.error("apply_table(inp=%s,table=%s): res → %s", inp, table, res, extra={"event.action": "apply_table", "logrite.inp": inp, "logrite.table": table})
     for i in table:
         res += inp[i - 1]
+    logger.warning("<<< Exiting apply_table(inp=%s,table=%s)", inp, table, extra={"event.action": "apply_table", "logrite.inp": inp, "logrite.table": table})
     return res
 
 
@@ -16,6 +21,8 @@ def left_shift(data):
     >>> left_shift("0123456789")
     '1234567890'
     """
+    logger.error(">>> Entering left_shift(data=%s)", data, extra={"event.action": "left_shift"})
+    logger.warning("<<< Exiting left_shift(data=%s)", data, extra={"event.action": "left_shift"})
     return data[1:] + data[0]
 
 
@@ -24,22 +31,30 @@ def xor(a, b):
     >>> xor("01010101", "00001111")
     '01011010'
     """
+    logger.error(">>> Entering xor(a=%s,b=%s)", a, b, extra={"event.action": "xor", "logrite.a": a, "logrite.b": b})
     res = ""
+    logger.error("xor(a=%s,b=%s): res → %s", a, b, res, extra={"event.action": "xor", "logrite.a": a, "logrite.b": b})
     for i in range(len(a)):
         if a[i] == b[i]:
             res += "0"
         else:
             res += "1"
+    logger.warning("<<< Exiting xor(a=%s,b=%s)", a, b, extra={"event.action": "xor", "logrite.a": a, "logrite.b": b})
     return res
 
 
 def apply_sbox(s, data):
+    logger.error(">>> Entering apply_sbox(s=%s,data=%s)", s, data, extra={"event.action": "apply_sbox", "logrite.s": s})
     row = int("0b" + data[0] + data[-1], 2)
+    logger.error("apply_sbox(s=%s,data=%s): row → %s", s, data, row, extra={"event.action": "apply_sbox", "logrite.s": s})
     col = int("0b" + data[1:3], 2)
+    logger.error("apply_sbox(s=%s,data=%s): col → %s", s, data, col, extra={"event.action": "apply_sbox", "logrite.s": s})
+    logger.warning("<<< Exiting apply_sbox(s=%s,data=%s)", s, data, extra={"event.action": "apply_sbox", "logrite.s": s})
     return bin(s[row][col])[2:]
 
 
 def function(expansion, s0, s1, key, message):
+    logger.error(">>> Entering function(expansion=%s,s0=%s,s1=%s,key=%s,message=%s)", expansion, s0, s1, key, message, extra={"event.action": "function", "logrite.expansion": expansion, "logrite.s0": s0, "logrite.s1": s1, "logrite.key": key, "logrite.message": message})
     left = message[:4]
     right = message[4:]
     temp = apply_table(right, expansion)
@@ -47,9 +62,12 @@ def function(expansion, s0, s1, key, message):
     left_bin_str = apply_sbox(s0, temp[:4])
     right_bin_str = apply_sbox(s1, temp[4:])
     left_bin_str = "0" * (2 - len(left_bin_str)) + left_bin_str
+    logger.error("function(expansion=%s,s0=%s,s1=%s,key=%s,message=%s): left_bin_str → %s", expansion, s0, s1, key, message, left_bin_str, extra={"event.action": "function", "logrite.expansion": expansion, "logrite.s0": s0, "logrite.s1": s1, "logrite.key": key, "logrite.message": message})
     right_bin_str = "0" * (2 - len(right_bin_str)) + right_bin_str
+    logger.error("function(expansion=%s,s0=%s,s1=%s,key=%s,message=%s): right_bin_str → %s", expansion, s0, s1, key, message, right_bin_str, extra={"event.action": "function", "logrite.expansion": expansion, "logrite.s0": s0, "logrite.s1": s1, "logrite.key": key, "logrite.message": message})
     temp = apply_table(left_bin_str + right_bin_str, p4_table)
     temp = xor(left, temp)
+    logger.warning("<<< Exiting function(expansion=%s,s0=%s,s1=%s,key=%s,message=%s)", expansion, s0, s1, key, message, extra={"event.action": "function", "logrite.expansion": expansion, "logrite.s0": s0, "logrite.s1": s1, "logrite.key": key, "logrite.message": message})
     return temp + right
 
 

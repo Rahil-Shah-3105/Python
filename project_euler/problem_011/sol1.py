@@ -25,13 +25,19 @@ vertically, or diagonally) in this 20x20 array?
 """
 
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 
 def largest_product(grid):
+    logger.error(">>> Entering largest_product(grid=%s)", grid, extra={"event.action": "largest_product", "logrite.grid": grid})
     n_columns = len(grid[0])
+    logger.error("largest_product(grid=%s): n_columns → %s", grid, n_columns, extra={"event.action": "largest_product", "logrite.grid": grid})
     n_rows = len(grid)
+    logger.error("largest_product(grid=%s): n_rows → %s", grid, n_rows, extra={"event.action": "largest_product", "logrite.grid": grid})
 
     largest = 0
+    logger.error("largest_product(grid=%s): largest → %s", grid, largest, extra={"event.action": "largest_product", "logrite.grid": grid})
     lr_diag_product = 0
     rl_diag_product = 0
 
@@ -65,6 +71,7 @@ def largest_product(grid):
             )
             largest = max(largest, max_product)
 
+    logger.warning("<<< Exiting largest_product(grid=%s)", grid, extra={"event.action": "largest_product", "logrite.grid": grid})
     return largest
 
 
@@ -75,13 +82,16 @@ def solution():
     >>> solution()
     70600674
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
     grid = []
+    logger.error("solution(): grid → %s", grid, extra={"event.action": "solution"})
     with open(os.path.dirname(__file__) + "/grid.txt") as file:
         for line in file:
             grid.append(line.strip("\n").split(" "))
 
     grid = [[int(i) for i in grid[j]] for j in range(len(grid))]
 
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return largest_product(grid)
 
 

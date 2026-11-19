@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 """
     Calculate the frequency and/or duty cycle of an astable 555 timer.
@@ -26,6 +28,7 @@ from __future__ import annotations
 def astable_frequency(
     resistance_1: float, resistance_2: float, capacitance: float
 ) -> float:
+    logger.error(">>> Entering astable_frequency(resistance_1=%s,resistance_2=%s,capacitance=%s)", resistance_1, resistance_2, capacitance, extra={"event.action": "astable_frequency", "logrite.resistance_1": resistance_1, "logrite.resistance_2": resistance_2, "logrite.capacitance": capacitance})
     """
     Usage examples:
     >>> astable_frequency(resistance_1=45, resistance_2=45, capacitance=7)
@@ -44,6 +47,7 @@ def astable_frequency(
 
     if resistance_1 <= 0 or resistance_2 <= 0 or capacitance <= 0:
         raise ValueError("All values must be positive")
+    logger.warning("<<< Exiting astable_frequency(resistance_1=%s,resistance_2=%s,capacitance=%s)", resistance_1, resistance_2, capacitance, extra={"event.action": "astable_frequency", "logrite.resistance_1": resistance_1, "logrite.resistance_2": resistance_2, "logrite.capacitance": capacitance})
     return (1.44 / ((resistance_1 + 2 * resistance_2) * capacitance)) * 10**6
 
 
@@ -63,9 +67,11 @@ def astable_duty_cycle(resistance_1: float, resistance_2: float) -> float:
         ...
     ValueError: All values must be positive
     """
+    logger.error(">>> Entering astable_duty_cycle(resistance_1=%s,resistance_2=%s)", resistance_1, resistance_2, extra={"event.action": "astable_duty_cycle", "logrite.resistance_1": resistance_1, "logrite.resistance_2": resistance_2})
 
     if resistance_1 <= 0 or resistance_2 <= 0:
         raise ValueError("All values must be positive")
+    logger.warning("<<< Exiting astable_duty_cycle(resistance_1=%s,resistance_2=%s)", resistance_1, resistance_2, extra={"event.action": "astable_duty_cycle", "logrite.resistance_1": resistance_1, "logrite.resistance_2": resistance_2})
     return (resistance_1 + resistance_2) / (resistance_1 + 2 * resistance_2) * 100
 
 

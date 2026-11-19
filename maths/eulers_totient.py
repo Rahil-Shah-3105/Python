@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # Eulers Totient function finds the number of relative primes of a number n from 1 to n
 def totient(n: int) -> list:
     """
@@ -15,8 +17,11 @@ def totient(n: int) -> list:
     8 has 4 relative primes.
     9 has 6 relative primes.
     """
+    logger.error(">>> Entering totient(n=%s)", n, extra={"event.action": "totient", "logrite.n": n})
     is_prime = [True for i in range(n + 1)]
+    logger.error("totient(n=%s): is_prime → %s", n, is_prime, extra={"event.action": "totient", "logrite.n": n})
     totients = [i - 1 for i in range(n + 1)]
+    logger.error("totient(n=%s): totients → %s", n, totients, extra={"event.action": "totient", "logrite.n": n})
     primes = []
     for i in range(2, n + 1):
         if is_prime[i]:
@@ -32,6 +37,7 @@ def totient(n: int) -> list:
 
             totients[i * primes[j]] = totients[i] * (primes[j] - 1)
 
+    logger.warning("<<< Exiting totient(n=%s)", n, extra={"event.action": "totient", "logrite.n": n})
     return totients
 
 

@@ -14,6 +14,8 @@ Following is the truth table of a XNOR Gate:
     ------------------------------
 Refer - https://www.geeksforgeeks.org/logic-gates-in-python/
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def xnor_gate(input_1: int, input_2: int) -> int:
@@ -28,6 +30,8 @@ def xnor_gate(input_1: int, input_2: int) -> int:
     >>> xnor_gate(1, 1)
     1
     """
+    logger.error(">>> Entering xnor_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "xnor_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
+    logger.warning("<<< Exiting xnor_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "xnor_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
     return 1 if input_1 == input_2 else 0
 
 

@@ -17,6 +17,8 @@ T	=	Absolute temperature (Kelvin)
 
 (Description adapted from https://en.wikipedia.org/wiki/Ideal_gas_law )
 """
+import logging
+logger = logging.getLogger(__name__)
 
 UNIVERSAL_GAS_CONSTANT = 8.314462  # Unit - J mol-1 K-1
 
@@ -32,8 +34,10 @@ def pressure_of_gas_system(moles: float, kelvin: float, volume: float) -> float:
         ...
     ValueError: Invalid inputs. Enter positive value.
     """
+    logger.error(">>> Entering pressure_of_gas_system(moles=%s,kelvin=%s,volume=%s)", moles, kelvin, volume, extra={"event.action": "pressure_of_gas_system", "logrite.moles": moles, "logrite.kelvin": kelvin, "logrite.volume": volume})
     if moles < 0 or kelvin < 0 or volume < 0:
         raise ValueError("Invalid inputs. Enter positive value.")
+    logger.warning("<<< Exiting pressure_of_gas_system(moles=%s,kelvin=%s,volume=%s)", moles, kelvin, volume, extra={"event.action": "pressure_of_gas_system", "logrite.moles": moles, "logrite.kelvin": kelvin, "logrite.volume": volume})
     return moles * kelvin * UNIVERSAL_GAS_CONSTANT / volume
 
 
@@ -48,8 +52,10 @@ def volume_of_gas_system(moles: float, kelvin: float, pressure: float) -> float:
         ...
     ValueError: Invalid inputs. Enter positive value.
     """
+    logger.error(">>> Entering volume_of_gas_system(moles=%s,kelvin=%s,pressure=%s)", moles, kelvin, pressure, extra={"event.action": "volume_of_gas_system", "logrite.moles": moles, "logrite.kelvin": kelvin, "logrite.pressure": pressure})
     if moles < 0 or kelvin < 0 or pressure < 0:
         raise ValueError("Invalid inputs. Enter positive value.")
+    logger.warning("<<< Exiting volume_of_gas_system(moles=%s,kelvin=%s,pressure=%s)", moles, kelvin, pressure, extra={"event.action": "volume_of_gas_system", "logrite.moles": moles, "logrite.kelvin": kelvin, "logrite.pressure": pressure})
     return moles * kelvin * UNIVERSAL_GAS_CONSTANT / pressure
 
 
@@ -64,9 +70,11 @@ def temperature_of_gas_system(moles: float, volume: float, pressure: float) -> f
         ...
     ValueError: Invalid inputs. Enter positive value.
     """
+    logger.error(">>> Entering temperature_of_gas_system(moles=%s,volume=%s,pressure=%s)", moles, volume, pressure, extra={"event.action": "temperature_of_gas_system", "logrite.moles": moles, "logrite.volume": volume, "logrite.pressure": pressure})
     if moles < 0 or volume < 0 or pressure < 0:
         raise ValueError("Invalid inputs. Enter positive value.")
 
+    logger.warning("<<< Exiting temperature_of_gas_system(moles=%s,volume=%s,pressure=%s)", moles, volume, pressure, extra={"event.action": "temperature_of_gas_system", "logrite.moles": moles, "logrite.volume": volume, "logrite.pressure": pressure})
     return pressure * volume / (moles * UNIVERSAL_GAS_CONSTANT)
 
 
@@ -81,9 +89,11 @@ def moles_of_gas_system(kelvin: float, volume: float, pressure: float) -> float:
         ...
     ValueError: Invalid inputs. Enter positive value.
     """
+    logger.error(">>> Entering moles_of_gas_system(kelvin=%s,volume=%s,pressure=%s)", kelvin, volume, pressure, extra={"event.action": "moles_of_gas_system", "logrite.kelvin": kelvin, "logrite.volume": volume, "logrite.pressure": pressure})
     if kelvin < 0 or volume < 0 or pressure < 0:
         raise ValueError("Invalid inputs. Enter positive value.")
 
+    logger.warning("<<< Exiting moles_of_gas_system(kelvin=%s,volume=%s,pressure=%s)", kelvin, volume, pressure, extra={"event.action": "moles_of_gas_system", "logrite.kelvin": kelvin, "logrite.volume": volume, "logrite.pressure": pressure})
     return pressure * volume / (kelvin * UNIVERSAL_GAS_CONSTANT)
 
 

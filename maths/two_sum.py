@@ -13,6 +13,8 @@ return [0, 1].
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def two_sum(nums: list[int], target: int) -> list[int]:
@@ -32,12 +34,14 @@ def two_sum(nums: list[int], target: int) -> list[int]:
     >>> two_sum([3 * i for i in range(10)], 19)
     []
     """
+    logger.error(">>> Entering two_sum(nums=%s,target=%s)", nums, target, extra={"event.action": "two_sum", "logrite.nums": nums, "logrite.target": target})
     chk_map: dict[int, int] = {}
     for index, val in enumerate(nums):
         compl = target - val
         if compl in chk_map:
             return [chk_map[compl], index]
         chk_map[val] = index
+    logger.warning("<<< Exiting two_sum(nums=%s,target=%s)", nums, target, extra={"event.action": "two_sum", "logrite.nums": nums, "logrite.target": target})
     return []
 
 

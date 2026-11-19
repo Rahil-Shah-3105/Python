@@ -6,6 +6,8 @@ from __future__ import annotations
 
 import time
 from math import sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 # 1 for manhattan, 0 for euclidean
 HEURISTIC = 0
@@ -50,28 +52,43 @@ class Node:
         g_cost: int,
         parent: Node | None,
     ) -> None:
+        logger.error(">>> Entering __init__(pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s)", pos_x, pos_y, goal_x, goal_y, g_cost, parent, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.pos_x = pos_x
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.pos_x → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.pos_x, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.pos_y = pos_y
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.pos_y → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.pos_y, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.pos = (pos_y, pos_x)
+        logger.error("__init__(pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.pos → %s", pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.pos, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.goal_x = goal_x
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.goal_x → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.goal_x, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.goal_y = goal_y
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.goal_y → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.goal_y, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.g_cost = g_cost
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.g_cost → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.g_cost, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.parent = parent
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.parent → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.parent, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.h_cost = self.calculate_heuristic()
+        logger.error("__init__(pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.h_cost → %s", pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.h_cost, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.f_cost = self.g_cost + self.h_cost
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.f_cost → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.f_cost, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
+        logger.warning("<<< Exiting __init__(pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s)", pos_x, pos_y, goal_x, goal_y, g_cost, parent, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
 
     def calculate_heuristic(self) -> float:
         """
         Heuristic for the A*
         """
+        logger.error(">>> Entering calculate_heuristic()", extra={"event.action": "calculate_heuristic"})
         dy = self.pos_x - self.goal_x
         dx = self.pos_y - self.goal_y
         if HEURISTIC == 1:
             return abs(dx) + abs(dy)
         else:
+            logger.warning("<<< Exiting calculate_heuristic()", extra={"event.action": "calculate_heuristic"})
             return sqrt(dy**2 + dx**2)
 
     def __lt__(self, other: Node) -> bool:
+        logger.error(">>> Entering __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
+        logger.warning("<<< Exiting __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
         return self.f_cost < other.f_cost
 
 
@@ -92,19 +109,26 @@ class AStar:
     """
 
     def __init__(self, start: TPosition, goal: TPosition):
+        logger.error(">>> Entering __init__(start=%s,goal=%s)", start, goal, extra={"event.action": "__init__", "logrite.start": start, "logrite.goal": goal})
         self.start = Node(start[1], start[0], goal[1], goal[0], 0, None)
         self.target = Node(goal[1], goal[0], goal[1], goal[0], 99999, None)
+        logger.error("__init__(start=%s,goal=%s): self.target → %s", start, goal, self.target, extra={"event.action": "__init__", "logrite.start": start, "logrite.goal": goal})
 
         self.open_nodes = [self.start]
+        logger.debug("__init__(self=%s,start=%s,goal=%s): self.open_nodes → %s", self, start, goal, self.open_nodes, extra={"event.action": "__init__", "logrite.start": start, "logrite.goal": goal})
         self.closed_nodes: list[Node] = []
 
+        logger.warning("<<< Exiting __init__(start=%s,goal=%s)", start, goal, extra={"event.action": "__init__", "logrite.start": start, "logrite.goal": goal})
         self.reached = False
+        logger.debug("__init__(self=%s,start=%s,goal=%s): self.reached → %s", self, start, goal, self.reached, extra={"event.action": "__init__", "logrite.start": start, "logrite.goal": goal})
 
     def search(self) -> list[TPosition]:
+        logger.error(">>> Entering search()", extra={"event.action": "search"})
         while self.open_nodes:
             # Open Nodes are sorted using __lt__
             self.open_nodes.sort()
             current_node = self.open_nodes.pop(0)
+            logger.error("search(): current_node → %s", current_node, extra={"event.action": "search"})
 
             if current_node.pos == self.target.pos:
                 return self.retrace_path(current_node)
@@ -127,12 +151,14 @@ class AStar:
                     else:
                         self.open_nodes.append(better_node)
 
+        logger.warning("<<< Exiting search()", extra={"event.action": "search"})
         return [self.start.pos]
 
     def get_successors(self, parent: Node) -> list[Node]:
         """
         Returns a list of successors (both in the grid and free spaces)
         """
+        logger.error(">>> Entering get_successors(parent=%s)", parent, extra={"event.action": "get_successors"})
         successors = []
         for action in delta:
             pos_x = parent.pos_x + action[1]
@@ -153,18 +179,21 @@ class AStar:
                     parent,
                 )
             )
+        logger.warning("<<< Exiting get_successors(parent=%s)", parent, extra={"event.action": "get_successors"})
         return successors
 
     def retrace_path(self, node: Node | None) -> list[TPosition]:
         """
         Retrace the path from parents to parents until start node
         """
+        logger.error(">>> Entering retrace_path(node=%s)", node, extra={"event.action": "retrace_path", "logrite.node": node})
         current_node = node
         path = []
         while current_node is not None:
             path.append((current_node.pos_y, current_node.pos_x))
             current_node = current_node.parent
         path.reverse()
+        logger.warning("<<< Exiting retrace_path(node=%s)", node, extra={"event.action": "retrace_path", "logrite.node": node})
         return path
 
 
@@ -183,7 +212,9 @@ class BidirectionalAStar:
 
     def __init__(self, start: TPosition, goal: TPosition) -> None:
         self.fwd_astar = AStar(start, goal)
+        logger.error("__init__(start=%s,goal=%s): self.fwd_astar → %s", start, goal, self.fwd_astar, extra={"event.action": "__init__", "logrite.start": start, "logrite.goal": goal})
         self.bwd_astar = AStar(goal, start)
+        logger.error("__init__(start=%s,goal=%s): self.bwd_astar → %s", start, goal, self.bwd_astar, extra={"event.action": "__init__", "logrite.start": start, "logrite.goal": goal})
         self.reached = False
 
     def search(self) -> list[TPosition]:
@@ -191,7 +222,9 @@ class BidirectionalAStar:
             self.fwd_astar.open_nodes.sort()
             self.bwd_astar.open_nodes.sort()
             current_fwd_node = self.fwd_astar.open_nodes.pop(0)
+            logger.error("search(): current_fwd_node → %s", current_fwd_node, extra={"event.action": "search"})
             current_bwd_node = self.bwd_astar.open_nodes.pop(0)
+            logger.error("search(): current_bwd_node → %s", current_bwd_node, extra={"event.action": "search"})
 
             if current_bwd_node.pos == current_fwd_node.pos:
                 return self.retrace_bidirectional_path(
@@ -232,11 +265,15 @@ class BidirectionalAStar:
     def retrace_bidirectional_path(
         self, fwd_node: Node, bwd_node: Node
     ) -> list[TPosition]:
+        logger.error(">>> Entering retrace_bidirectional_path(fwd_node=%s,bwd_node=%s)", fwd_node, bwd_node, extra={"event.action": "retrace_bidirectional_path", "logrite.fwd_node": fwd_node, "logrite.bwd_node": bwd_node})
         fwd_path = self.fwd_astar.retrace_path(fwd_node)
+        logger.error("retrace_bidirectional_path(fwd_node=%s,bwd_node=%s): fwd_path → %s", fwd_node, bwd_node, fwd_path, extra={"event.action": "retrace_bidirectional_path", "logrite.fwd_node": fwd_node, "logrite.bwd_node": bwd_node})
         bwd_path = self.bwd_astar.retrace_path(bwd_node)
+        logger.error("retrace_bidirectional_path(fwd_node=%s,bwd_node=%s): bwd_path → %s", fwd_node, bwd_node, bwd_path, extra={"event.action": "retrace_bidirectional_path", "logrite.fwd_node": fwd_node, "logrite.bwd_node": bwd_node})
         bwd_path.pop()
         bwd_path.reverse()
         path = fwd_path + bwd_path
+        logger.warning("<<< Exiting retrace_bidirectional_path(fwd_node=%s,bwd_node=%s)", fwd_node, bwd_node, extra={"event.action": "retrace_bidirectional_path", "logrite.fwd_node": fwd_node, "logrite.bwd_node": bwd_node})
         return path
 
 

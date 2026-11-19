@@ -1,5 +1,7 @@
 # https://en.wikipedia.org/wiki/Ohm%27s_law
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def ohms_law(voltage: float, current: float, resistance: float) -> dict[str, float]:
@@ -22,6 +24,7 @@ def ohms_law(voltage: float, current: float, resistance: float) -> dict[str, flo
     >>> ohms_law(voltage=0, current=-1.5, resistance=2)
     {'voltage': -3.0}
     """
+    logger.error(">>> Entering ohms_law(voltage=%s,current=%s,resistance=%s)", voltage, current, resistance, extra={"event.action": "ohms_law", "logrite.voltage": voltage, "logrite.current": current, "logrite.resistance": resistance})
     if (voltage, current, resistance).count(0) != 1:
         raise ValueError("One and only one argument must be 0")
     if resistance < 0:
@@ -33,6 +36,7 @@ def ohms_law(voltage: float, current: float, resistance: float) -> dict[str, flo
     elif resistance == 0:
         return {"resistance": voltage / current}
     else:
+        logger.warning("<<< Exiting ohms_law(voltage=%s,current=%s,resistance=%s)", voltage, current, resistance, extra={"event.action": "ohms_law", "logrite.voltage": voltage, "logrite.current": current, "logrite.resistance": resistance})
         raise ValueError("Exactly one argument must be 0")
 
 

@@ -3,20 +3,28 @@ from __future__ import annotations
 from abc import abstractmethod
 from collections.abc import Iterable
 from typing import Protocol, TypeVar
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Comparable(Protocol):
     @abstractmethod
     def __lt__(self: T, other: T) -> bool:
+        logger.error(">>> Entering __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
         pass
+        logger.warning("<<< Exiting __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
 
     @abstractmethod
     def __gt__(self: T, other: T) -> bool:
+        logger.error(">>> Entering __gt__(other=%s)", other, extra={"event.action": "__gt__", "logrite.other": other})
         pass
+        logger.warning("<<< Exiting __gt__(other=%s)", other, extra={"event.action": "__gt__", "logrite.other": other})
 
     @abstractmethod
     def __eq__(self: T, other: object) -> bool:
+        logger.error(">>> Entering __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
         pass
+        logger.warning("<<< Exiting __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
 
 
 T = TypeVar("T", bound=Comparable)
@@ -46,10 +54,14 @@ class Heap[T: Comparable]:
     """
 
     def __init__(self) -> None:
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
         self.h: list[T] = []
         self.heap_size: int = 0
+        logger.warning("<<< Exiting __init__()", extra={"event.action": "__init__"})
 
     def __repr__(self) -> str:
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return str(self.h)
 
     def parent_index(self, child_idx: int) -> int | None:
@@ -84,8 +96,10 @@ class Heap[T: Comparable]:
         ...
         TypeError: '>' not supported between instances of 'str' and 'int'
         """
+        logger.error(">>> Entering parent_index(child_idx=%s)", child_idx, extra={"event.action": "parent_index", "logrite.child_idx": child_idx})
         if child_idx > 0:
             return (child_idx - 1) // 2
+        logger.warning("<<< Exiting parent_index(child_idx=%s)", child_idx, extra={"event.action": "parent_index", "logrite.child_idx": child_idx})
         return None
 
     def left_child_idx(self, parent_idx: int) -> int | None:
@@ -93,9 +107,11 @@ class Heap[T: Comparable]:
         return the left child index if the left child exists.
         if not, return None.
         """
+        logger.error(">>> Entering left_child_idx(parent_idx=%s)", parent_idx, extra={"event.action": "left_child_idx", "logrite.parent_idx": parent_idx})
         left_child_index = 2 * parent_idx + 1
         if left_child_index < self.heap_size:
             return left_child_index
+        logger.warning("<<< Exiting left_child_idx(parent_idx=%s)", parent_idx, extra={"event.action": "left_child_idx", "logrite.parent_idx": parent_idx})
         return None
 
     def right_child_idx(self, parent_idx: int) -> int | None:
@@ -103,9 +119,11 @@ class Heap[T: Comparable]:
         return the right child index if the right child exists.
         if not, return None.
         """
+        logger.error(">>> Entering right_child_idx(parent_idx=%s)", parent_idx, extra={"event.action": "right_child_idx", "logrite.parent_idx": parent_idx})
         right_child_index = 2 * parent_idx + 2
         if right_child_index < self.heap_size:
             return right_child_index
+        logger.warning("<<< Exiting right_child_idx(parent_idx=%s)", parent_idx, extra={"event.action": "right_child_idx", "logrite.parent_idx": parent_idx})
         return None
 
     def max_heapify(self, index: int) -> None:
@@ -115,10 +133,13 @@ class Heap[T: Comparable]:
         It is the function that is responsible for restoring the property
         of Max heap i.e the maximum element is always at top.
         """
+        logger.error(">>> Entering max_heapify(index=%s)", index, extra={"event.action": "max_heapify", "logrite.index": index})
         if index < self.heap_size:
             violation: int = index
             left_child = self.left_child_idx(index)
+            logger.error("max_heapify(index=%s): left_child → %s", index, left_child, extra={"event.action": "max_heapify", "logrite.index": index})
             right_child = self.right_child_idx(index)
+            logger.error("max_heapify(index=%s): right_child → %s", index, right_child, extra={"event.action": "max_heapify", "logrite.index": index})
             # check which child is larger than its parent
             if left_child is not None and self.h[left_child] > self.h[violation]:
                 violation = left_child
@@ -130,6 +151,7 @@ class Heap[T: Comparable]:
                 self.h[violation], self.h[index] = self.h[index], self.h[violation]
                 # fix the subsequent violation recursively if any
                 self.max_heapify(violation)
+                logger.warning("<<< Exiting max_heapify(index=%s)", index, extra={"event.action": "max_heapify", "logrite.index": index})
 
     def build_max_heap(self, collection: Iterable[T]) -> None:
         """
@@ -155,8 +177,11 @@ class Heap[T: Comparable]:
         >>> h
         [514, 57, 105, 5, 8, 9.9, 61.6]
         """
+        logger.error(">>> Entering build_max_heap(collection=%s)", collection, extra={"event.action": "build_max_heap", "logrite.collection": collection})
+        logger.error("build_max_heap(collection=%s): h → %s", collection, h, extra={"event.action": "build_max_heap", "logrite.collection": collection})
         self.h = list(collection)
         self.heap_size = len(self.h)
+        logger.error("build_max_heap(collection=%s): self.heap_size → %s", collection, self.heap_size, extra={"event.action": "build_max_heap", "logrite.collection": collection})
         if self.heap_size > 1:
             # max_heapify from right to left but exclude leaves (last level)
             for i in range(self.heap_size // 2 - 1, -1, -1):

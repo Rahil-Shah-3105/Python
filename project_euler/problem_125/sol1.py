@@ -12,6 +12,8 @@ squares of positive integers.
 Find the sum of all the numbers less than 10^8 that are both palindromic and can
 be written as the sum of consecutive squares.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 LIMIT = 10**8
 
@@ -26,9 +28,11 @@ def is_palindrome(n: int) -> bool:
     >>> is_palindrome(12210)
     False
     """
+    logger.error(">>> Entering is_palindrome(n=%s)", n, extra={"event.action": "is_palindrome", "logrite.n": n})
     if n % 10 == 0:
         return False
     s = str(n)
+    logger.warning("<<< Exiting is_palindrome(n=%s)", n, extra={"event.action": "is_palindrome", "logrite.n": n})
     return s == s[::-1]
 
 
@@ -37,9 +41,12 @@ def solution() -> int:
     Returns the sum of all numbers less than 1e8 that are both palindromic and
     can be written as the sum of consecutive squares.
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
     answer = set()
+    logger.error("solution(): answer → %s", answer, extra={"event.action": "solution"})
     first_square = 1
     sum_squares = 5
+    logger.error("solution(): sum_squares → %s", sum_squares, extra={"event.action": "solution"})
     while sum_squares < LIMIT:
         last_square = first_square + 1
         while sum_squares < LIMIT:
@@ -50,6 +57,7 @@ def solution() -> int:
         first_square += 1
         sum_squares = first_square**2 + (first_square + 1) ** 2
 
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return sum(answer)
 
 

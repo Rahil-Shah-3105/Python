@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -24,10 +26,12 @@ class LinkedList:
         >>> tuple(linked_list)
         (0,)
         """
+        logger.error(">>> Entering __iter__()", extra={"event.action": "__iter__"})
         node = self.head
         while node:
             yield node.data
             node = node.next_node
+            logger.warning("<<< Exiting __iter__()", extra={"event.action": "__iter__"})
 
     def __len__(self) -> int:
         """
@@ -38,6 +42,8 @@ class LinkedList:
         >>> len(linked_list)
         1
         """
+        logger.error(">>> Entering __len__()", extra={"event.action": "__len__"})
+        logger.warning("<<< Exiting __len__()", extra={"event.action": "__len__"})
         return sum(1 for _ in self)
 
     def push(self, new_data: Any) -> None:
@@ -60,9 +66,14 @@ class LinkedList:
             >>> list(linked_list)
             [1, 2, 3, 4, 5]
         """
+        logger.error(">>> Entering push(new_data=%s)", new_data, extra={"event.action": "push", "logrite.new_data": new_data})
         new_node = Node(new_data)
+        logger.warning("<<< Exiting push(new_data=%s)", new_data, extra={"event.action": "push", "logrite.new_data": new_data})
+        logger.error("push(new_data=%s): new_node → %s", new_data, new_node, extra={"event.action": "push", "logrite.new_data": new_data})
         new_node.next_node = self.head
         self.head = new_node
+        logger.debug("push(self=%s,new_data=%s): new_node.next_node → %s", self, new_data, new_node.next_node, extra={"event.action": "push", "logrite.new_data": new_data})
+        logger.debug("push(self=%s,new_data=%s): self.head → %s", self, new_data, self.head, extra={"event.action": "push", "logrite.new_data": new_data})
 
     def swap_nodes(self, node_data_1: Any, node_data_2: Any) -> None:
         """
@@ -116,6 +127,7 @@ class LinkedList:
         Returns:
             None
         """
+        logger.error(">>> Entering swap_nodes(node_data_1=%s,node_data_2=%s)", node_data_1, node_data_2, extra={"event.action": "swap_nodes", "logrite.node_data_1": node_data_1, "logrite.node_data_2": node_data_2})
         if node_data_1 == node_data_2:
             return
 
@@ -126,6 +138,7 @@ class LinkedList:
         while node_2 and node_2.data != node_data_2:
             node_2 = node_2.next_node
         if node_1 is None or node_2 is None:
+            logger.warning("<<< Exiting swap_nodes(node_data_1=%s,node_data_2=%s)", node_data_1, node_data_2, extra={"event.action": "swap_nodes", "logrite.node_data_1": node_data_1, "logrite.node_data_2": node_data_2})
             return
         # Swap the data values of the two nodes
         node_1.data, node_2.data = node_2.data, node_1.data

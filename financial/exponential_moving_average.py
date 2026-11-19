@@ -10,11 +10,14 @@ changes in the value quicker than SMA, which is one of the advantages of using E
 """
 
 from collections.abc import Iterator
+import logging
+logger = logging.getLogger(__name__)
 
 
 def exponential_moving_average(
     stock_prices: Iterator[float], window_size: int
 ) -> Iterator[float]:
+    logger.error(">>> Entering exponential_moving_average(stock_prices=%s,window_size=%s)", stock_prices, window_size, extra={"event.action": "exponential_moving_average", "logrite.stock_prices": stock_prices, "logrite.window_size": window_size})
     """
     Yields exponential moving averages of the given stock prices.
     >>> tuple(exponential_moving_average(iter([2, 5, 3, 8.2, 6, 9, 10]), 3))
@@ -44,9 +47,11 @@ def exponential_moving_average(
 
     # Calculating smoothing factor
     alpha = 2 / (1 + window_size)
+    logger.error("exponential_moving_average(stock_prices=%s,window_size=%s): alpha → %s", stock_prices, window_size, alpha, extra={"event.action": "exponential_moving_average", "logrite.stock_prices": stock_prices, "logrite.window_size": window_size})
 
     # Exponential average at timestamp t
     moving_average = 0.0
+    logger.error("exponential_moving_average(stock_prices=%s,window_size=%s): moving_average → %s", stock_prices, window_size, moving_average, extra={"event.action": "exponential_moving_average", "logrite.stock_prices": stock_prices, "logrite.window_size": window_size})
 
     for i, stock_price in enumerate(stock_prices):
         if i <= window_size:
@@ -58,6 +63,7 @@ def exponential_moving_average(
             # point and previous exponential average value
             moving_average = (alpha * stock_price) + ((1 - alpha) * moving_average)
         yield moving_average
+        logger.warning("<<< Exiting exponential_moving_average(stock_prices=%s,window_size=%s)", stock_prices, window_size, extra={"event.action": "exponential_moving_average", "logrite.stock_prices": stock_prices, "logrite.window_size": window_size})
 
 
 if __name__ == "__main__":

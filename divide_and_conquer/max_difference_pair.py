@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def max_difference(a: list[int]) -> tuple[int, int]:
     """
     We are given an array A[1..n] of integers, n >= 1. We want to
@@ -10,6 +12,7 @@ def max_difference(a: list[int]) -> tuple[int, int]:
     >>> max_difference([5, 11, 2, 1, 7, 9, 0, 7])
     (1, 9)
     """
+    logger.error(">>> Entering max_difference(a=%s)", a, extra={"event.action": "max_difference", "logrite.a": a})
     # base case
     if len(a) == 1:
         return a[0], a[0]

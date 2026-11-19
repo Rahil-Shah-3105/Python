@@ -15,6 +15,8 @@ It can be seen that there are 21 elements in this set.
 How many elements would be contained in the set of reduced proper fractions
 for d ≤ 1,000,000?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(limit: int = 1000000) -> int:
@@ -25,7 +27,9 @@ def solution(limit: int = 1000000) -> int:
     >>> solution(1000)
     304191
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     primes = set(range(3, limit, 2))
+    logger.error("solution(limit=%s): primes → %s", limit, primes, extra={"event.action": "solution", "logrite.limit": limit})
     primes.add(2)
     for p in range(3, limit, 2):
         if p not in primes:
@@ -33,11 +37,13 @@ def solution(limit: int = 1000000) -> int:
         primes.difference_update(set(range(p * p, limit, p)))
 
     phi = [float(n) for n in range(limit + 1)]
+    logger.error("solution(limit=%s): phi → %s", limit, phi, extra={"event.action": "solution", "logrite.limit": limit})
 
     for p in primes:
         for n in range(p, limit + 1, p):
             phi[n] *= 1 - 1 / p
 
+    logger.warning("<<< Exiting solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     return int(sum(phi[2:]))
 
 

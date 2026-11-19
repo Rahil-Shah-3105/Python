@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import math
 from itertools import permutations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -41,6 +43,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(67483)
     False
     """
+    logger.error(">>> Entering is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -53,6 +56,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.warning("<<< Exiting is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
     return True
 
 
@@ -67,9 +71,14 @@ def solution(n: int = 7) -> int:
     >>> solution(7)
     7652413
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     pandigital_str = "".join(str(i) for i in range(1, n + 1))
+    logger.error("solution(n=%s): pandigital_str → %s", n, pandigital_str, extra={"event.action": "solution", "logrite.n": n})
     perm_list = [int("".join(i)) for i in permutations(pandigital_str, n)]
+    logger.error("solution(n=%s): perm_list → %s", n, perm_list, extra={"event.action": "solution", "logrite.n": n})
     pandigitals = [num for num in perm_list if is_prime(num)]
+    logger.error("solution(n=%s): pandigitals → %s", n, pandigitals, extra={"event.action": "solution", "logrite.n": n})
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return max(pandigitals) if pandigitals else 0
 
 

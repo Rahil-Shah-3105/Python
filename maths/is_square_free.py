@@ -5,6 +5,8 @@ ruff : True
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_square_free(factors: list[int]) -> bool:
@@ -31,6 +33,8 @@ def is_square_free(factors: list[int]) -> bool:
         ...
     TypeError: 'int' object is not iterable
     """
+    logger.error(">>> Entering is_square_free(factors=%s)", factors, extra={"event.action": "is_square_free", "logrite.factors": factors})
+    logger.warning("<<< Exiting is_square_free(factors=%s)", factors, extra={"event.action": "is_square_free", "logrite.factors": factors})
     return len(set(factors)) == len(factors)
 
 

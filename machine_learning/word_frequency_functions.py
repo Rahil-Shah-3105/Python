@@ -1,5 +1,7 @@
 import string
 from math import log10
+import logging
+logger = logging.getLogger(__name__)
 
 """
     tf-idf Wikipedia: https://en.wikipedia.org/wiki/Tf%E2%80%93idf
@@ -53,11 +55,14 @@ def term_frequency(term: str, document: str) -> int:
     >>> term_frequency("to", "To be, or not to be")
     2
     """
+    logger.error(">>> Entering term_frequency(term=%s,document=%s)", term, document, extra={"event.action": "term_frequency", "logrite.term": term, "logrite.document": document})
     # strip all punctuation and newlines and replace it with ''
     document_without_punctuation = document.translate(
         str.maketrans("", "", string.punctuation)
     ).replace("\n", "")
     tokenize_document = document_without_punctuation.split(" ")  # word tokenization
+    logger.error("term_frequency(term=%s,document=%s): tokenize_document → <redacted>", term, document, extra={"event.action": "term_frequency", "logrite.term": term, "logrite.document": document})
+    logger.warning("<<< Exiting term_frequency(term=%s,document=%s)", term, document, extra={"event.action": "term_frequency", "logrite.term": term, "logrite.document": document})
     return len([word for word in tokenize_document if word.lower() == term.lower()])
 
 
@@ -108,6 +113,7 @@ def inverse_document_frequency(df: int, n: int, smoothing=False) -> float:
     >>> inverse_document_frequency(0, 3,True)
     1.477
     """
+    logger.error(">>> Entering inverse_document_frequency(df=%s,n=%s,smoothing=%s)", df, n, smoothing, extra={"event.action": "inverse_document_frequency", "logrite.df": df, "logrite.n": n, "logrite.smoothing": smoothing})
     if smoothing:
         if n == 0:
             raise ValueError("log10(0) is undefined.")
@@ -117,6 +123,7 @@ def inverse_document_frequency(df: int, n: int, smoothing=False) -> float:
         raise ZeroDivisionError("df must be > 0")
     elif n == 0:
         raise ValueError("log10(0) is undefined.")
+    logger.warning("<<< Exiting inverse_document_frequency(df=%s,n=%s,smoothing=%s)", df, n, smoothing, extra={"event.action": "inverse_document_frequency", "logrite.df": df, "logrite.n": n, "logrite.smoothing": smoothing})
     return round(log10(n / df), 3)
 
 
@@ -134,4 +141,6 @@ def tf_idf(tf: int, idf: int) -> float:
     >>> tf_idf(2, 0.477)
     0.954
     """
+    logger.error(">>> Entering tf_idf(tf=%s,idf=%s)", tf, idf, extra={"event.action": "tf_idf", "logrite.tf": tf, "logrite.idf": idf})
+    logger.warning("<<< Exiting tf_idf(tf=%s,idf=%s)", tf, idf, extra={"event.action": "tf_idf", "logrite.tf": tf, "logrite.idf": idf})
     return round(tf * idf, 3)

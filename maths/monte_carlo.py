@@ -6,6 +6,8 @@ from collections.abc import Callable
 from math import pi, sqrt
 from random import uniform
 from statistics import mean
+import logging
+logger = logging.getLogger(__name__)
 
 
 def pi_estimator(iterations: int) -> None:
@@ -19,12 +21,17 @@ def pi_estimator(iterations: int) -> None:
     5. Multiply this value by 4 to get your estimate of pi.
     6. Print the estimated and numpy value of pi
     """
+    logger.error(">>> Entering pi_estimator(iterations=%s)", iterations, extra={"event.action": "pi_estimator", "logrite.iterations": iterations})
 
+    logger.warning("<<< Exiting pi_estimator(iterations=%s)", iterations, extra={"event.action": "pi_estimator", "logrite.iterations": iterations})
     # A local function to see if a dot lands in the circle.
     def is_in_circle(x: float, y: float) -> bool:
+        logger.error(">>> Entering is_in_circle(x=%s,y=%s)", x, y, extra={"event.action": "is_in_circle", "logrite.x": x, "logrite.y": y})
         distance_from_centre = sqrt((x**2) + (y**2))
+        logger.error("is_in_circle(x=%s,y=%s): distance_from_centre → %s", x, y, distance_from_centre, extra={"event.action": "is_in_circle", "logrite.x": x, "logrite.y": y})
         # Our circle has a radius of 1, so a distance
         # greater than 1 would land outside the circle.
+        logger.warning("<<< Exiting is_in_circle(x=%s,y=%s)", x, y, extra={"event.action": "is_in_circle", "logrite.x": x, "logrite.y": y})
         return distance_from_centre <= 1
 
     # The proportion of guesses that landed in the circle
@@ -45,6 +52,7 @@ def area_under_curve_estimator(
     min_value: float = 0.0,
     max_value: float = 1.0,
 ) -> float:
+    logger.error(">>> Entering area_under_curve_estimator(iterations=%s,function_to_integrate=%s,min_value=%s,max_value=%s)", iterations, function_to_integrate, min_value, max_value, extra={"event.action": "area_under_curve_estimator", "logrite.iterations": iterations, "logrite.function_to_integrate": function_to_integrate, "logrite.min_value": min_value, "logrite.max_value": max_value})
     """
     An implementation of the Monte Carlo method to find area under
        a single variable non-negative real-valued continuous function,
@@ -63,6 +71,7 @@ def area_under_curve_estimator(
     5. Returns estimated value
     """
 
+    logger.warning("<<< Exiting area_under_curve_estimator(iterations=%s,function_to_integrate=%s,min_value=%s,max_value=%s)", iterations, function_to_integrate, min_value, max_value, extra={"event.action": "area_under_curve_estimator", "logrite.iterations": iterations, "logrite.function_to_integrate": function_to_integrate, "logrite.min_value": min_value, "logrite.max_value": max_value})
     return mean(
         function_to_integrate(uniform(min_value, max_value)) for _ in range(iterations)
     ) * (max_value - min_value)
@@ -71,6 +80,7 @@ def area_under_curve_estimator(
 def area_under_line_estimator_check(
     iterations: int, min_value: float = 0.0, max_value: float = 1.0
 ) -> None:
+    logger.error(">>> Entering area_under_line_estimator_check(iterations=%s,min_value=%s,max_value=%s)", iterations, min_value, max_value, extra={"event.action": "area_under_line_estimator_check", "logrite.iterations": iterations, "logrite.min_value": min_value, "logrite.max_value": max_value})
     """
     Checks estimation error for area_under_curve_estimator function
     for f(x) = x where x lies within min_value to max_value
@@ -78,6 +88,7 @@ def area_under_line_estimator_check(
     2. Compares with the expected value
     3. Prints estimated, expected and error value
     """
+    logger.warning("<<< Exiting area_under_line_estimator_check(iterations=%s,min_value=%s,max_value=%s)", iterations, min_value, max_value, extra={"event.action": "area_under_line_estimator_check", "logrite.iterations": iterations, "logrite.min_value": min_value, "logrite.max_value": max_value})
 
     def identity_function(x: float) -> float:
         """
@@ -85,6 +96,8 @@ def area_under_line_estimator_check(
         >>> [function_to_integrate(x) for x in [-2.0, -1.0, 0.0, 1.0, 2.0]]
         [-2.0, -1.0, 0.0, 1.0, 2.0]
         """
+        logger.error(">>> Entering identity_function(x=%s)", x, extra={"event.action": "identity_function", "logrite.x": x})
+        logger.warning("<<< Exiting identity_function(x=%s)", x, extra={"event.action": "identity_function", "logrite.x": x})
         return x
 
     estimated_value = area_under_curve_estimator(
@@ -104,13 +117,17 @@ def pi_estimator_using_area_under_curve(iterations: int) -> None:
     """
     Area under curve y = sqrt(4 - x^2) where x lies in 0 to 2 is equal to pi
     """
+    logger.error(">>> Entering pi_estimator_using_area_under_curve(iterations=%s)", iterations, extra={"event.action": "pi_estimator_using_area_under_curve", "logrite.iterations": iterations})
 
+    logger.warning("<<< Exiting pi_estimator_using_area_under_curve(iterations=%s)", iterations, extra={"event.action": "pi_estimator_using_area_under_curve", "logrite.iterations": iterations})
     def function_to_integrate(x: float) -> float:
         """
         Represents semi-circle with radius 2
         >>> [function_to_integrate(x) for x in [-2.0, 0.0, 2.0]]
         [0.0, 2.0, 0.0]
         """
+        logger.error(">>> Entering function_to_integrate(x=%s)", x, extra={"event.action": "function_to_integrate", "logrite.x": x})
+        logger.warning("<<< Exiting function_to_integrate(x=%s)", x, extra={"event.action": "function_to_integrate", "logrite.x": x})
         return sqrt(4.0 - x * x)
 
     estimated_value = area_under_curve_estimator(

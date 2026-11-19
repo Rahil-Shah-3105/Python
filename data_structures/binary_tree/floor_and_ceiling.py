@@ -14,6 +14,8 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -23,13 +25,17 @@ class Node:
     right: Node | None = None
 
     def __iter__(self) -> Iterator[int]:
+        logger.error(">>> Entering __iter__()", extra={"event.action": "__iter__"})
         if self.left:
             yield from self.left
         yield self.key
         if self.right:
             yield from self.right
+            logger.warning("<<< Exiting __iter__()", extra={"event.action": "__iter__"})
 
     def __len__(self) -> int:
+        logger.error(">>> Entering __len__()", extra={"event.action": "__len__"})
+        logger.warning("<<< Exiting __len__()", extra={"event.action": "__len__"})
         return sum(1 for _ in self)
 
 
@@ -63,6 +69,7 @@ def floor_ceiling(root: Node | None, key: int) -> tuple[int | None, int | None]:
         >>> floor_ceiling(root, 30)
         (25, None)
     """
+    logger.error(">>> Entering floor_ceiling(root=%s,key=%s)", root, key, extra={"event.action": "floor_ceiling", "logrite.root": root, "logrite.key": key})
     floor_val = None
     ceiling_val = None
 
@@ -79,6 +86,7 @@ def floor_ceiling(root: Node | None, key: int) -> tuple[int | None, int | None]:
             floor_val = root.key
             root = root.right
 
+    logger.warning("<<< Exiting floor_ceiling(root=%s,key=%s)", root, key, extra={"event.action": "floor_ceiling", "logrite.root": root, "logrite.key": key})
     return floor_val, ceiling_val
 
 

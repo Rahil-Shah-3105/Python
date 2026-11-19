@@ -12,6 +12,8 @@ All triangle numbers are hexagonal numbers.
 T(2n-1) = n * (2 * n - 1) = H(n)
 So we shall check only for hexagonal numbers which are also pentagonal.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def hexagonal_num(n: int) -> int:
@@ -24,6 +26,8 @@ def hexagonal_num(n: int) -> int:
     >>> hexagonal_num(10)
     190
     """
+    logger.error(">>> Entering hexagonal_num(n=%s)", n, extra={"event.action": "hexagonal_num", "logrite.n": n})
+    logger.warning("<<< Exiting hexagonal_num(n=%s)", n, extra={"event.action": "hexagonal_num", "logrite.n": n})
     return n * (2 * n - 1)
 
 
@@ -37,7 +41,10 @@ def is_pentagonal(n: int) -> bool:
     >>> is_pentagonal(2380)
     True
     """
+    logger.error(">>> Entering is_pentagonal(n=%s)", n, extra={"event.action": "is_pentagonal", "logrite.n": n})
     root = (1 + 24 * n) ** 0.5
+    logger.error("is_pentagonal(n=%s): root → %s", n, root, extra={"event.action": "is_pentagonal", "logrite.n": n})
+    logger.warning("<<< Exiting is_pentagonal(n=%s)", n, extra={"event.action": "is_pentagonal", "logrite.n": n})
     return ((1 + root) / 6) % 1 == 0
 
 
@@ -47,11 +54,14 @@ def solution(start: int = 144) -> int:
     >>> solution(144)
     1533776805
     """
+    logger.error(">>> Entering solution(start=%s)", start, extra={"event.action": "solution", "logrite.start": start})
     n = start
     num = hexagonal_num(n)
+    logger.error("solution(start=%s): num → %s", start, num, extra={"event.action": "solution", "logrite.start": start})
     while not is_pentagonal(num):
         n += 1
         num = hexagonal_num(n)
+    logger.warning("<<< Exiting solution(start=%s)", start, extra={"event.action": "solution", "logrite.start": start})
     return num
 
 

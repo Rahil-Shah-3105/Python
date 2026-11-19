@@ -1,4 +1,6 @@
 from collections import defaultdict, deque
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_bipartite_dfs(graph: dict[int, list[int]]) -> bool:
@@ -52,7 +54,9 @@ def is_bipartite_dfs(graph: dict[int, list[int]]) -> bool:
     >>> is_bipartite_dfs({0: ["b", "d"], 1: ["a", "c"], 2: ["b", "d"], 3: ["a", "c"]})
     True
     """
+    logger.error(">>> Entering is_bipartite_dfs(graph=%s)", graph, extra={"event.action": "is_bipartite_dfs", "logrite.graph": graph})
 
+    logger.warning("<<< Exiting is_bipartite_dfs(graph=%s)", graph, extra={"event.action": "is_bipartite_dfs", "logrite.graph": graph})
     def depth_first_search(node: int, color: int) -> bool:
         """
         Perform Depth-First Search (DFS) on the graph starting from a node.
@@ -65,6 +69,7 @@ def is_bipartite_dfs(graph: dict[int, list[int]]) -> bool:
             True if the graph is bipartite starting from the current node,
             False otherwise.
         """
+        logger.error(">>> Entering depth_first_search(node=%s,color=%s)", node, color, extra={"event.action": "depth_first_search", "logrite.node": node, "logrite.color": color})
         if visited[node] == -1:
             visited[node] = color
             if node not in graph:
@@ -72,6 +77,7 @@ def is_bipartite_dfs(graph: dict[int, list[int]]) -> bool:
             for neighbor in graph[node]:
                 if not depth_first_search(neighbor, 1 - color):
                     return False
+        logger.warning("<<< Exiting depth_first_search(node=%s,color=%s)", node, color, extra={"event.action": "depth_first_search", "logrite.node": node, "logrite.color": color})
         return visited[node] == color
 
     visited: defaultdict[int, int] = defaultdict(lambda: -1)
@@ -132,6 +138,7 @@ def is_bipartite_bfs(graph: dict[int, list[int]]) -> bool:
     >>> is_bipartite_bfs({0: ["b", "d"], 1: ["a", "c"], 2: ["b", "d"], 3: ["a", "c"]})
     True
     """
+    logger.error(">>> Entering is_bipartite_bfs(graph=%s)", graph, extra={"event.action": "is_bipartite_bfs", "logrite.graph": graph})
     visited: defaultdict[int, int] = defaultdict(lambda: -1)
     for node in graph:
         if visited[node] == -1:
@@ -140,6 +147,7 @@ def is_bipartite_bfs(graph: dict[int, list[int]]) -> bool:
             visited[node] = 0
             while queue:
                 curr_node = queue.popleft()
+                logger.error("is_bipartite_bfs(graph=%s): curr_node → %s", graph, curr_node, extra={"event.action": "is_bipartite_bfs", "logrite.graph": graph})
                 if curr_node not in graph:
                     continue
                 for neighbor in graph[curr_node]:
@@ -148,6 +156,7 @@ def is_bipartite_bfs(graph: dict[int, list[int]]) -> bool:
                         queue.append(neighbor)
                     elif visited[neighbor] == visited[curr_node]:
                         return False
+    logger.warning("<<< Exiting is_bipartite_bfs(graph=%s)", graph, extra={"event.action": "is_bipartite_bfs", "logrite.graph": graph})
     return True
 
 

@@ -7,6 +7,8 @@ An algorithm that calculates the present value of a stream of yearly cash flows 
 
 Note: This algorithm assumes that cash flows are paid at the end of the specified year
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def present_value(discount_rate: float, cash_flows: list[float]) -> float:
@@ -26,6 +28,7 @@ def present_value(discount_rate: float, cash_flows: list[float]) -> float:
         ...
     ValueError: Cash flows list cannot be empty
     """
+    logger.error(">>> Entering present_value(discount_rate=%s,cash_flows=%s)", discount_rate, cash_flows, extra={"event.action": "present_value", "logrite.discount_rate": discount_rate, "logrite.cash_flows": cash_flows})
     if discount_rate < 0:
         raise ValueError("Discount rate cannot be negative")
     if not cash_flows:
@@ -33,6 +36,7 @@ def present_value(discount_rate: float, cash_flows: list[float]) -> float:
     present_value = sum(
         cash_flow / ((1 + discount_rate) ** i) for i, cash_flow in enumerate(cash_flows)
     )
+    logger.warning("<<< Exiting present_value(discount_rate=%s,cash_flows=%s)", discount_rate, cash_flows, extra={"event.action": "present_value", "logrite.discount_rate": discount_rate, "logrite.cash_flows": cash_flows})
     return round(present_value, ndigits=2)
 
 

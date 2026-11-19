@@ -46,6 +46,8 @@ and minimum distance of three.
 
 # Imports
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 # Functions of binary conversion--------------------------------------
@@ -54,7 +56,9 @@ def text_to_bits(text, encoding="utf-8", errors="surrogatepass"):
     >>> text_to_bits("msg")
     '011011010111001101100111'
     """
+    logger.error(">>> Entering text_to_bits(text=%s,encoding=%s,errors=%s)", text, encoding, errors, extra={"event.action": "text_to_bits", "logrite.text": text, "logrite.encoding": encoding, "logrite.errors": errors})
     bits = bin(int.from_bytes(text.encode(encoding, errors), "big"))[2:]
+    logger.error("text_to_bits(text=%s,encoding=%s,errors=%s): bits → %s", text, encoding, errors, bits, extra={"event.action": "text_to_bits", "logrite.text": text, "logrite.encoding": encoding, "logrite.errors": errors})
     return bits.zfill(8 * ((len(bits) + 7) // 8))
 
 

@@ -15,15 +15,20 @@ Evaluate the sum of all the amicable numbers under 10000.
 """
 
 from math import sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sum_of_divisors(n: int) -> int:
+    logger.error(">>> Entering sum_of_divisors(n=%s)", n, extra={"event.action": "sum_of_divisors", "logrite.n": n})
     total = 0
+    logger.error("sum_of_divisors(n=%s): total → %s", n, total, extra={"event.action": "sum_of_divisors", "logrite.n": n})
     for i in range(1, int(sqrt(n) + 1)):
         if n % i == 0 and i != sqrt(n):
             total += i + n // i
         elif i == sqrt(n):
             total += i
+    logger.warning("<<< Exiting sum_of_divisors(n=%s)", n, extra={"event.action": "sum_of_divisors", "logrite.n": n})
     return total - n
 
 
@@ -41,11 +46,14 @@ def solution(n: int = 10000) -> int:
     >>> solution(50)
     0
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     total = sum(
         i
         for i in range(1, n)
         if sum_of_divisors(sum_of_divisors(i)) == i and sum_of_divisors(i) != i
     )
+    logger.error("solution(n=%s): total → %s", n, total, extra={"event.action": "solution", "logrite.n": n})
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return total
 
 

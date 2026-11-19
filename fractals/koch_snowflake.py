@@ -24,6 +24,8 @@ from __future__ import annotations
 
 import matplotlib.pyplot as plt
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 # initial triangle of Koch snowflake
 VECTOR_1 = np.array([0, 0])
@@ -83,9 +85,13 @@ def rotate(vector: np.ndarray, angle_in_degrees: float) -> np.ndarray:
     >>> rotate(np.array([1, 0]), 90)
     array([6.123234e-17, 1.000000e+00])
     """
+    logger.error(">>> Entering rotate(vector=%s,angle_in_degrees=%s)", vector, angle_in_degrees, extra={"event.action": "rotate", "logrite.vector": vector, "logrite.angle_in_degrees": angle_in_degrees})
     theta = np.radians(angle_in_degrees)
+    logger.error("rotate(vector=%s,angle_in_degrees=%s): theta → %s", vector, angle_in_degrees, theta, extra={"event.action": "rotate", "logrite.vector": vector, "logrite.angle_in_degrees": angle_in_degrees})
     c, s = np.cos(theta), np.sin(theta)
     rotation_matrix = np.array(((c, -s), (s, c)))
+    logger.error("rotate(vector=%s,angle_in_degrees=%s): rotation_matrix → %s", vector, angle_in_degrees, rotation_matrix, extra={"event.action": "rotate", "logrite.vector": vector, "logrite.angle_in_degrees": angle_in_degrees})
+    logger.warning("<<< Exiting rotate(vector=%s,angle_in_degrees=%s)", vector, angle_in_degrees, extra={"event.action": "rotate", "logrite.vector": vector, "logrite.angle_in_degrees": angle_in_degrees})
     return np.dot(rotation_matrix, vector)
 
 
@@ -94,8 +100,11 @@ def plot(vectors: list[np.ndarray]) -> None:
     Utility function to plot the vectors using matplotlib.pyplot
     No doctest was implemented since this function does not have a return value
     """
+    logger.error(">>> Entering plot(vectors=%s)", vectors, extra={"event.action": "plot", "logrite.vectors": vectors})
     # avoid stretched display of graph
     axes = plt.gca()
+    logger.error("plot(vectors=%s): axes → %s", vectors, axes, extra={"event.action": "plot", "logrite.vectors": vectors})
+    logger.debug("plot(vectors=%s): axes → %s", vectors, axes, extra={"event.action": "plot", "logrite.vectors": vectors})
     axes.set_aspect("equal")
 
     # matplotlib.pyplot.plot takes a list of all x-coordinates and a list of all
@@ -104,6 +113,7 @@ def plot(vectors: list[np.ndarray]) -> None:
     x_coordinates, y_coordinates = zip(*vectors)
     plt.plot(x_coordinates, y_coordinates)
     plt.show()
+    logger.warning("<<< Exiting plot(vectors=%s)", vectors, extra={"event.action": "plot", "logrite.vectors": vectors})
 
 
 if __name__ == "__main__":

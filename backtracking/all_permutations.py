@@ -7,10 +7,14 @@ where n denotes the length of the given sequence.
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def generate_all_permutations(sequence: list[int | str]) -> None:
+    logger.error(">>> Entering generate_all_permutations(sequence=%s)", sequence, extra={"event.action": "generate_all_permutations", "logrite.sequence": sequence})
     create_state_space_tree(sequence, [], 0, [0 for i in range(len(sequence))])
+    logger.warning("<<< Exiting generate_all_permutations(sequence=%s)", sequence, extra={"event.action": "generate_all_permutations", "logrite.sequence": sequence})
 
 
 def create_state_space_tree(
@@ -19,6 +23,7 @@ def create_state_space_tree(
     index: int,
     index_used: list[int],
 ) -> None:
+    logger.error(">>> Entering create_state_space_tree(sequence=%s,current_sequence=%s,index=%s,index_used=%s)", sequence, current_sequence, index, index_used, extra={"event.action": "create_state_space_tree", "logrite.sequence": sequence, "logrite.current_sequence": current_sequence, "logrite.index": index, "logrite.index_used": index_used})
     """
     Creates a state space tree to iterate through each branch using DFS.
     We know that each state has exactly len(sequence) - index children.
@@ -63,6 +68,7 @@ def create_state_space_tree(
 
     if index == len(sequence):
         print(current_sequence)
+        logger.warning("<<< Exiting create_state_space_tree(sequence=%s,current_sequence=%s,index=%s,index_used=%s)", sequence, current_sequence, index, index_used, extra={"event.action": "create_state_space_tree", "logrite.sequence": sequence, "logrite.current_sequence": current_sequence, "logrite.index": index, "logrite.index_used": index_used})
         return
 
     for i in range(len(sequence)):

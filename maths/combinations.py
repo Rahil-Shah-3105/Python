@@ -1,6 +1,8 @@
 """
 https://en.wikipedia.org/wiki/Combination
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def combinations(n: int, k: int) -> int:
@@ -29,6 +31,7 @@ def combinations(n: int, k: int) -> int:
     Traceback (most recent call last):
     ValueError: Please enter positive integers for n and k where n >= k
     """
+    logger.error(">>> Entering combinations(n=%s,k=%s)", n, k, extra={"event.action": "combinations", "logrite.n": n, "logrite.k": k})
 
     # If either of the conditions are true, the function is being asked
     # to calculate a factorial of a negative number, which is not possible
@@ -38,6 +41,7 @@ def combinations(n: int, k: int) -> int:
     for i in range(k):
         res *= n - i
         res //= i + 1
+    logger.warning("<<< Exiting combinations(n=%s,k=%s)", n, k, extra={"event.action": "combinations", "logrite.n": n, "logrite.k": k})
     return res
 
 

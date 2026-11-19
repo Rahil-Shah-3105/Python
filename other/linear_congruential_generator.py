@@ -1,6 +1,8 @@
 __author__ = "Tobias Carryer"
 
 from time import time
+import logging
+logger = logging.getLogger(__name__)
 
 
 class LinearCongruentialGenerator:
@@ -21,10 +23,16 @@ class LinearCongruentialGenerator:
         modulo is the largest number that can be generated (exclusive). The most
         efficient values are powers of 2. 2^32 is a common value.
         """
+        logger.error(">>> Entering __init__(multiplier=%s,increment=%s,modulo=%s,seed=%s)", multiplier, increment, modulo, seed, extra={"event.action": "__init__", "logrite.multiplier": multiplier, "logrite.increment": increment, "logrite.modulo": modulo, "logrite.seed": seed})
         self.multiplier = multiplier
+        logger.warning("<<< Exiting __init__(multiplier=%s,increment=%s,modulo=%s,seed=%s)", multiplier, increment, modulo, seed, extra={"event.action": "__init__", "logrite.multiplier": multiplier, "logrite.increment": increment, "logrite.modulo": modulo, "logrite.seed": seed})
+        logger.debug("__init__(self=%s,multiplier=%s,increment=%s,modulo=%s,seed=%s): self.multiplier → %s", self, multiplier, increment, modulo, seed, self.multiplier, extra={"event.action": "__init__", "logrite.multiplier": multiplier, "logrite.increment": increment, "logrite.modulo": modulo, "logrite.seed": seed})
         self.increment = increment
         self.modulo = modulo
+        logger.debug("__init__(self=%s,multiplier=%s,increment=%s,modulo=%s,seed=%s): self.increment → %s", self, multiplier, increment, modulo, seed, self.increment, extra={"event.action": "__init__", "logrite.multiplier": multiplier, "logrite.increment": increment, "logrite.modulo": modulo, "logrite.seed": seed})
+        logger.debug("__init__(self=%s,multiplier=%s,increment=%s,modulo=%s,seed=%s): self.modulo → %s", self, multiplier, increment, modulo, seed, self.modulo, extra={"event.action": "__init__", "logrite.multiplier": multiplier, "logrite.increment": increment, "logrite.modulo": modulo, "logrite.seed": seed})
         self.seed = seed
+        logger.debug("__init__(self=%s,multiplier=%s,increment=%s,modulo=%s,seed=%s): self.seed → %s", self, multiplier, increment, modulo, seed, self.seed, extra={"event.action": "__init__", "logrite.multiplier": multiplier, "logrite.increment": increment, "logrite.modulo": modulo, "logrite.seed": seed})
 
     def next_number(self):
         """
@@ -32,7 +40,10 @@ class LinearCongruentialGenerator:
         The largest number that can be generated is modulo-1. modulo is set in the
         constructor.
         """
+        logger.error(">>> Entering next_number()", extra={"event.action": "next_number"})
         self.seed = (self.multiplier * self.seed + self.increment) % self.modulo
+        logger.error("next_number(): self.seed → %s", self.seed, extra={"event.action": "next_number"})
+        logger.warning("<<< Exiting next_number()", extra={"event.action": "next_number"})
         return self.seed
 
 

@@ -3,9 +3,12 @@
 The problem is to find the shortest distance between all pairs of vertices in a
 weighted directed graph that can have negative edge weights.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def _print_dist(dist, v):
+    logger.error(">>> Entering _print_dist(dist=%s,v=%s)", dist, v, extra={"event.action": "_print_dist", "logrite.dist": dist, "logrite.v": v})
     print("\nThe shortest path matrix using Floyd Warshall algorithm\n")
     for i in range(v):
         for j in range(v):
@@ -14,6 +17,7 @@ def _print_dist(dist, v):
             else:
                 print("INF", end="\t")
         print()
+        logger.warning("<<< Exiting _print_dist(dist=%s,v=%s)", dist, v, extra={"event.action": "_print_dist", "logrite.dist": dist, "logrite.v": v})
 
 
 def floyd_warshall(graph, v):
@@ -32,8 +36,10 @@ def floyd_warshall(graph, v):
     5. Whenever distance[i][j] is given a new minimum value, next vertex[i][j] is
         updated to the next vertex[i][k].
     """
+    logger.error(">>> Entering floyd_warshall(graph=%s,v=%s)", graph, v, extra={"event.action": "floyd_warshall", "logrite.graph": graph, "logrite.v": v})
 
     dist = [[float("inf") for _ in range(v)] for _ in range(v)]
+    logger.error("floyd_warshall(graph=%s,v=%s): dist → %s", graph, v, dist, extra={"event.action": "floyd_warshall", "logrite.graph": graph, "logrite.v": v})
 
     for i in range(v):
         for j in range(v):
@@ -53,6 +59,7 @@ def floyd_warshall(graph, v):
                     dist[i][j] = dist[i][k] + dist[k][j]
 
     _print_dist(dist, v)
+    logger.warning("<<< Exiting floyd_warshall(graph=%s,v=%s)", graph, v, extra={"event.action": "floyd_warshall", "logrite.graph": graph, "logrite.v": v})
     return dist, v
 
 

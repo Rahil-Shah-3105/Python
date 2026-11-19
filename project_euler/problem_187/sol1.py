@@ -12,6 +12,8 @@ not necessarily distinct, prime factors?
 """
 
 from math import isqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def slow_calculate_prime_numbers(max_number: int) -> list[int]:
@@ -25,6 +27,7 @@ def slow_calculate_prime_numbers(max_number: int) -> list[int]:
     >>> slow_calculate_prime_numbers(2)
     []
     """
+    logger.error(">>> Entering slow_calculate_prime_numbers(max_number=%s)", max_number, extra={"event.action": "slow_calculate_prime_numbers", "logrite.max_number": max_number})
 
     # List containing a bool value for every number below max_number/2
     is_prime = [True] * max_number
@@ -35,6 +38,7 @@ def slow_calculate_prime_numbers(max_number: int) -> list[int]:
             for j in range(i**2, max_number, i):
                 is_prime[j] = False
 
+    logger.warning("<<< Exiting slow_calculate_prime_numbers(max_number=%s)", max_number, extra={"event.action": "slow_calculate_prime_numbers", "logrite.max_number": max_number})
     return [i for i in range(2, max_number) if is_prime[i]]
 
 
@@ -49,6 +53,7 @@ def calculate_prime_numbers(max_number: int) -> list[int]:
     >>> calculate_prime_numbers(2)
     []
     """
+    logger.error(">>> Entering calculate_prime_numbers(max_number=%s)", max_number, extra={"event.action": "calculate_prime_numbers", "logrite.max_number": max_number})
 
     if max_number <= 2:
         return []

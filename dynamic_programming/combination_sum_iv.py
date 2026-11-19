@@ -21,6 +21,8 @@ Approach:
         1. Include the element in our set of chosen elements.
         2. Don't include the element in our set of chosen elements.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def combination_sum_iv(array: list[int], target: int) -> int:
@@ -31,12 +33,16 @@ def combination_sum_iv(array: list[int], target: int) -> int:
     >>> combination_sum_iv([1,2,5], 5)
     9
     """
+    logger.error(">>> Entering combination_sum_iv(array=%s,target=%s)", array, target, extra={"event.action": "combination_sum_iv", "logrite.array": array, "logrite.target": target})
 
+    logger.warning("<<< Exiting combination_sum_iv(array=%s,target=%s)", array, target, extra={"event.action": "combination_sum_iv", "logrite.array": array, "logrite.target": target})
     def count_of_possible_combinations(target: int) -> int:
+        logger.error(">>> Entering count_of_possible_combinations(target=%s)", target, extra={"event.action": "count_of_possible_combinations", "logrite.target": target})
         if target < 0:
             return 0
         if target == 0:
             return 1
+        logger.warning("<<< Exiting count_of_possible_combinations(target=%s)", target, extra={"event.action": "count_of_possible_combinations", "logrite.target": target})
         return sum(count_of_possible_combinations(target - item) for item in array)
 
     return count_of_possible_combinations(target)
@@ -51,10 +57,13 @@ def combination_sum_iv_dp_array(array: list[int], target: int) -> int:
     >>> combination_sum_iv_dp_array([1,2,5], 5)
     9
     """
+    logger.error(">>> Entering combination_sum_iv_dp_array(array=%s,target=%s)", array, target, extra={"event.action": "combination_sum_iv_dp_array", "logrite.array": array, "logrite.target": target})
 
+    logger.warning("<<< Exiting combination_sum_iv_dp_array(array=%s,target=%s)", array, target, extra={"event.action": "combination_sum_iv_dp_array", "logrite.array": array, "logrite.target": target})
     def count_of_possible_combinations_with_dp_array(
         target: int, dp_array: list[int]
     ) -> int:
+        logger.error(">>> Entering count_of_possible_combinations_with_dp_array(target=%s,dp_array=%s)", target, dp_array, extra={"event.action": "count_of_possible_combinations_with_dp_array", "logrite.target": target, "logrite.dp_array": dp_array})
         if target < 0:
             return 0
         if target == 0:
@@ -66,6 +75,7 @@ def combination_sum_iv_dp_array(array: list[int], target: int) -> int:
             for item in array
         )
         dp_array[target] = answer
+        logger.warning("<<< Exiting count_of_possible_combinations_with_dp_array(target=%s,dp_array=%s)", target, dp_array, extra={"event.action": "count_of_possible_combinations_with_dp_array", "logrite.target": target, "logrite.dp_array": dp_array})
         return answer
 
     dp_array = [-1] * (target + 1)
@@ -81,8 +91,10 @@ def combination_sum_iv_bottom_up(n: int, array: list[int], target: int) -> int:
     >>> combination_sum_iv_bottom_up(3, [1,2,5], 5)
     9
     """
+    logger.error(">>> Entering combination_sum_iv_bottom_up(n=%s,array=%s,target=%s)", n, array, target, extra={"event.action": "combination_sum_iv_bottom_up", "logrite.n": n, "logrite.array": array, "logrite.target": target})
 
     dp_array = [0] * (target + 1)
+    logger.error("combination_sum_iv_bottom_up(n=%s,array=%s,target=%s): dp_array → %s", n, array, target, dp_array, extra={"event.action": "combination_sum_iv_bottom_up", "logrite.n": n, "logrite.array": array, "logrite.target": target})
     dp_array[0] = 1
 
     for i in range(1, target + 1):
@@ -90,6 +102,7 @@ def combination_sum_iv_bottom_up(n: int, array: list[int], target: int) -> int:
             if i - array[j] >= 0:
                 dp_array[i] += dp_array[i - array[j]]
 
+    logger.warning("<<< Exiting combination_sum_iv_bottom_up(n=%s,array=%s,target=%s)", n, array, target, extra={"event.action": "combination_sum_iv_bottom_up", "logrite.n": n, "logrite.array": array, "logrite.target": target})
     return dp_array[target]
 
 

@@ -12,6 +12,8 @@ Date: 04/09/2023
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 class TreeNode:
@@ -21,9 +23,13 @@ class TreeNode:
     """
 
     def __init__(self, data: int) -> None:
+        logger.error(">>> Entering __init__(data=%s)", data, extra={"event.action": "__init__"})
         self.data = data
+        logger.debug("__init__(self=%s,data=%s): self.data → %s", self, data, self.data, extra={"event.action": "__init__"})
+        logger.error("__init__(data=%s): self.data → %s", data, self.data, extra={"event.action": "__init__"})
         self.left: TreeNode | None = None
         self.right: TreeNode | None = None
+        logger.warning("<<< Exiting __init__(data=%s)", data, extra={"event.action": "__init__"})
 
 
 def build_tree() -> TreeNode:
@@ -48,12 +54,15 @@ def build_tree() -> TreeNode:
         >>> root.right.right.data
         6
     """
+    logger.error(">>> Entering build_tree()", extra={"event.action": "build_tree"})
     root = TreeNode(1)
+    logger.error("build_tree(): root → %s", root, extra={"event.action": "build_tree"})
     root.left = TreeNode(2)
     root.right = TreeNode(5)
     root.left.left = TreeNode(3)
     root.left.right = TreeNode(4)
     root.right.right = TreeNode(6)
+    logger.warning("<<< Exiting build_tree()", extra={"event.action": "build_tree"})
     return root
 
 
@@ -81,7 +90,9 @@ def flatten(root: TreeNode | None) -> None:
         >>> root.right.right.right is None
         True
     """
+    logger.error(">>> Entering flatten(root=%s)", root, extra={"event.action": "flatten", "logrite.root": root})
     if not root:
+        logger.warning("<<< Exiting flatten(root=%s)", root, extra={"event.action": "flatten", "logrite.root": root})
         return
 
     # Flatten the left subtree
@@ -92,7 +103,9 @@ def flatten(root: TreeNode | None) -> None:
 
     # Make the left subtree the new right subtree
     root.right = root.left
+    logger.debug("flatten(root=%s): root.right → %s", root, root.right, extra={"event.action": "flatten", "logrite.root": root})
     root.left = None
+    logger.debug("flatten(root=%s): root.left → %s", root, root.left, extra={"event.action": "flatten", "logrite.root": root})
 
     # Find the end of the new right subtree
     current = root
@@ -101,6 +114,7 @@ def flatten(root: TreeNode | None) -> None:
 
     # Append the original right subtree to the end
     current.right = right_subtree
+    logger.debug("flatten(root=%s): current.right → %s", root, current.right, extra={"event.action": "flatten", "logrite.root": root})
 
     # Flatten the updated right subtree
     flatten(right_subtree)
@@ -123,6 +137,7 @@ def display_linked_list(root: TreeNode | None) -> None:
         >>> display_linked_list(root)
 
     """
+    logger.error(">>> Entering display_linked_list(root=%s)", root, extra={"event.action": "display_linked_list", "logrite.root": root})
     current = root
     while current:
         if current.right is None:
@@ -130,6 +145,7 @@ def display_linked_list(root: TreeNode | None) -> None:
             break
         print(current.data, end=" ")
         current = current.right
+        logger.warning("<<< Exiting display_linked_list(root=%s)", root, extra={"event.action": "display_linked_list", "logrite.root": root})
 
 
 if __name__ == "__main__":

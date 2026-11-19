@@ -1,4 +1,6 @@
 from collections.abc import Sequence
+import logging
+logger = logging.getLogger(__name__)
 
 
 def max_subsequence_sum(nums: Sequence[int] | None = None) -> int:
@@ -20,14 +22,17 @@ def max_subsequence_sum(nums: Sequence[int] | None = None) -> int:
         . . .
     ValueError: Input sequence should not be empty
     """
+    logger.error(">>> Entering max_subsequence_sum(nums=%s)", nums, extra={"event.action": "max_subsequence_sum", "logrite.nums": nums})
     if nums is None or not nums:
         raise ValueError("Input sequence should not be empty")
 
     ans = nums[0]
+    logger.error("max_subsequence_sum(nums=%s): ans → %s", nums, ans, extra={"event.action": "max_subsequence_sum", "logrite.nums": nums})
     for i in range(1, len(nums)):
         num = nums[i]
         ans = max(ans, ans + num, num)
 
+    logger.warning("<<< Exiting max_subsequence_sum(nums=%s)", nums, extra={"event.action": "max_subsequence_sum", "logrite.nums": nums})
     return ans
 
 

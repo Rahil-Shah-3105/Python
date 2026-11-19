@@ -19,6 +19,8 @@ a 31K text file containing an 80 by 80 matrix.
 """
 
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(filename: str = "input.txt") -> int:
@@ -30,6 +32,7 @@ def solution(filename: str = "input.txt") -> int:
     >>> solution("test_matrix.txt")
     994
     """
+    logger.error(">>> Entering solution(filename=%s)", filename, extra={"event.action": "solution", "logrite.filename": filename})
 
     with open(os.path.join(os.path.dirname(__file__), filename)) as input_file:
         matrix = [
@@ -38,9 +41,12 @@ def solution(filename: str = "input.txt") -> int:
         ]
 
     rows = len(matrix)
+    logger.error("solution(filename=%s): rows → %s", filename, rows, extra={"event.action": "solution", "logrite.filename": filename})
     cols = len(matrix[0])
+    logger.error("solution(filename=%s): cols → %s", filename, cols, extra={"event.action": "solution", "logrite.filename": filename})
 
     minimal_path_sums = [[-1 for _ in range(cols)] for _ in range(rows)]
+    logger.error("solution(filename=%s): minimal_path_sums → %s", filename, minimal_path_sums, extra={"event.action": "solution", "logrite.filename": filename})
     for i in range(rows):
         minimal_path_sums[i][0] = matrix[i][0]
 
@@ -58,6 +64,7 @@ def solution(filename: str = "input.txt") -> int:
                 minimal_path_sums[i][j], minimal_path_sums[i + 1][j] + matrix[i][j]
             )
 
+    logger.warning("<<< Exiting solution(filename=%s)", filename, extra={"event.action": "solution", "logrite.filename": filename})
     return min(minimal_path_sums_row[-1] for minimal_path_sums_row in minimal_path_sums)
 
 

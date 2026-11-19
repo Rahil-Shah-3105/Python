@@ -10,6 +10,8 @@ python3 geometric_series.py
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def geometric_series(
@@ -17,6 +19,7 @@ def geometric_series(
     start_term_a: float,
     common_ratio_r: float,
 ) -> list[float]:
+    logger.error(">>> Entering geometric_series(nth_term=%s,start_term_a=%s,common_ratio_r=%s)", nth_term, start_term_a, common_ratio_r, extra={"event.action": "geometric_series", "logrite.nth_term": nth_term, "logrite.start_term_a": start_term_a, "logrite.common_ratio_r": common_ratio_r})
     """
     Pure Python implementation of Geometric Series algorithm
 
@@ -57,6 +60,7 @@ def geometric_series(
             power += 1
             series.append(float(start_term_a * multiple))
             multiple = pow(float(common_ratio_r), power)
+    logger.warning("<<< Exiting geometric_series(nth_term=%s,start_term_a=%s,common_ratio_r=%s)", nth_term, start_term_a, common_ratio_r, extra={"event.action": "geometric_series", "logrite.nth_term": nth_term, "logrite.start_term_a": start_term_a, "logrite.common_ratio_r": common_ratio_r})
     return series
 
 

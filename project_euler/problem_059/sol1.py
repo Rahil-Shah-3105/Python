@@ -31,6 +31,8 @@ from __future__ import annotations
 import string
 from itertools import cycle, product
 from pathlib import Path
+import logging
+logger = logging.getLogger(__name__)
 
 VALID_CHARS: str = (
     string.ascii_letters + string.digits + string.punctuation + string.whitespace
@@ -52,7 +54,9 @@ def try_key(ciphertext: list[int], key: tuple[int, ...]) -> str | None:
     >>> try_key([68, 10, 300, 4, 27], (104, 116, 120)) is None
     True
     """
+    logger.error(">>> Entering try_key(ciphertext=%s,key=%s)", ciphertext, key, extra={"event.action": "try_key", "logrite.ciphertext": ciphertext, "logrite.key": key})
     decoded: str = ""
+    logger.error("try_key(ciphertext=%s,key=%s): decoded → %s", ciphertext, key, decoded, extra={"event.action": "try_key", "logrite.ciphertext": ciphertext, "logrite.key": key})
     keychar: int
     cipherchar: int
     decodedchar: int
@@ -63,6 +67,7 @@ def try_key(ciphertext: list[int], key: tuple[int, ...]) -> str | None:
             return None
         decoded += chr(decodedchar)
 
+    logger.warning("<<< Exiting try_key(ciphertext=%s,key=%s)", ciphertext, key, extra={"event.action": "try_key", "logrite.ciphertext": ciphertext, "logrite.key": key})
     return decoded
 
 
@@ -77,11 +82,14 @@ def filter_valid_chars(ciphertext: list[int]) -> list[str]:
     >>> text in filter_valid_chars(encoded)
     True
     """
+    logger.error(">>> Entering filter_valid_chars(ciphertext=%s)", ciphertext, extra={"event.action": "filter_valid_chars", "logrite.ciphertext": ciphertext})
     possibles: list[str] = []
     for key in product(LOWERCASE_INTS, repeat=3):
         encoded = try_key(ciphertext, key)
+        logger.error("filter_valid_chars(ciphertext=%s): encoded → %s", ciphertext, encoded, extra={"event.action": "filter_valid_chars", "logrite.ciphertext": ciphertext})
         if encoded is not None:
             possibles.append(encoded)
+    logger.warning("<<< Exiting filter_valid_chars(ciphertext=%s)", ciphertext, extra={"event.action": "filter_valid_chars", "logrite.ciphertext": ciphertext})
     return possibles
 
 
@@ -95,6 +103,8 @@ def filter_common_word(possibles: list[str], common_word: str) -> list[str]:
     >>> filter_common_word(['athla amf', 'I am here', '   !?! #a'], 'am')
     ['athla amf', 'I am here']
     """
+    logger.error(">>> Entering filter_common_word(possibles=%s,common_word=%s)", possibles, common_word, extra={"event.action": "filter_common_word", "logrite.possibles": possibles, "logrite.common_word": common_word})
+    logger.warning("<<< Exiting filter_common_word(possibles=%s,common_word=%s)", possibles, common_word, extra={"event.action": "filter_common_word", "logrite.possibles": possibles, "logrite.common_word": common_word})
     return [possible for possible in possibles if common_word in possible.lower()]
 
 
@@ -106,21 +116,26 @@ def solution(filename: str = "p059_cipher.txt") -> int:
     >>> solution("test_cipher.txt")
     3000
     """
+    logger.error(">>> Entering solution(filename=%s)", filename, extra={"event.action": "solution", "logrite.filename": filename})
     ciphertext: list[int]
     possibles: list[str]
     common_word: str
     decoded_text: str
     data: str = Path(__file__).parent.joinpath(filename).read_text(encoding="utf-8")
+    logger.error("solution(filename=%s): data → %s", filename, data, extra={"event.action": "solution", "logrite.filename": filename})
 
     ciphertext = [int(number) for number in data.strip().split(",")]
+    logger.error("solution(filename=%s): ciphertext → %s", filename, ciphertext, extra={"event.action": "solution", "logrite.filename": filename})
 
     possibles = filter_valid_chars(ciphertext)
+    logger.error("solution(filename=%s): possibles → %s", filename, possibles, extra={"event.action": "solution", "logrite.filename": filename})
     for common_word in COMMON_WORDS:
         possibles = filter_common_word(possibles, common_word)
         if len(possibles) == 1:
             break
 
     decoded_text = possibles[0]
+    logger.warning("<<< Exiting solution(filename=%s)", filename, extra={"event.action": "solution", "logrite.filename": filename})
     return sum(ord(char) for char in decoded_text)
 
 

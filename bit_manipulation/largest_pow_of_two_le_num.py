@@ -17,6 +17,8 @@ res:    1   0b1
         8   0b1000
         16  0b10000 (Exit)
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def largest_pow_of_two_le_num(number: int) -> int:
@@ -44,6 +46,7 @@ def largest_pow_of_two_le_num(number: int) -> int:
         ...
     TypeError: Input value must be a 'int' type
     """
+    logger.error(">>> Entering largest_pow_of_two_le_num(number=%s)", number, extra={"event.action": "largest_pow_of_two_le_num", "logrite.number": number})
     if isinstance(number, float):
         raise TypeError("Input value must be a 'int' type")
     if number <= 0:
@@ -51,6 +54,7 @@ def largest_pow_of_two_le_num(number: int) -> int:
     res = 1
     while (res << 1) <= number:
         res <<= 1
+    logger.warning("<<< Exiting largest_pow_of_two_le_num(number=%s)", number, extra={"event.action": "largest_pow_of_two_le_num", "logrite.number": number})
     return res
 
 

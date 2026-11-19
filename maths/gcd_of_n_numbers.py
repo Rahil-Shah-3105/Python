@@ -4,6 +4,8 @@ Reference: https://en.wikipedia.org/wiki/Greatest_common_divisor
 """
 
 from collections import Counter
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_factors(
@@ -44,6 +46,7 @@ def get_factors(
             raise TypeError("number must be integer and greater than zero")
 
     factors = factors or Counter()
+    logger.error("get_factors(number=%s,factors=%s,factor=%s): factors → %s", number, factors, factor, factors, extra={"event.action": "get_factors", "logrite.number": number, "logrite.factors": factors, "logrite.factor": factor})
 
     if number == factor:  # break condition
         # all numbers are factors of itself

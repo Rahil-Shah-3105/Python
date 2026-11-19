@@ -12,6 +12,8 @@ Wikipedia link: https://en.wikipedia.org/wiki/Range_minimum_query
 """
 
 from math import log2
+import logging
+logger = logging.getLogger(__name__)
 
 
 def build_sparse_table(number_list: list[int]) -> list[list[int]]:
@@ -28,16 +30,20 @@ def build_sparse_table(number_list: list[int]) -> list[list[int]]:
     ...
     ValueError: empty number list not allowed
     """
+    logger.error(">>> Entering build_sparse_table(number_list=%s)", number_list, extra={"event.action": "build_sparse_table", "logrite.number_list": number_list})
     if not number_list:
         raise ValueError("empty number list not allowed")
 
     length = len(number_list)
+    logger.error("build_sparse_table(number_list=%s): length → %s", number_list, length, extra={"event.action": "build_sparse_table", "logrite.number_list": number_list})
     # Initialise sparse_table -- sparse_table[j][i] represents the minimum value of the
     # subset of length (2 ** j) of number_list, starting from index i.
 
     # smallest power of 2 subset length that fully covers number_list
     row = int(log2(length)) + 1
+    logger.error("build_sparse_table(number_list=%s): row → %s", number_list, row, extra={"event.action": "build_sparse_table", "logrite.number_list": number_list})
     sparse_table = [[0 for i in range(length)] for j in range(row)]
+    logger.error("build_sparse_table(number_list=%s): sparse_table → %s", number_list, sparse_table, extra={"event.action": "build_sparse_table", "logrite.number_list": number_list})
 
     # minimum of subset of length 1 is that value itself
     for i, value in enumerate(number_list):
@@ -55,6 +61,7 @@ def build_sparse_table(number_list: list[int]) -> list[list[int]]:
             )
             i += 1
         j += 1
+    logger.warning("<<< Exiting build_sparse_table(number_list=%s)", number_list, extra={"event.action": "build_sparse_table", "logrite.number_list": number_list})
     return sparse_table
 
 
@@ -77,6 +84,7 @@ def query(sparse_table: list[list[int]], left_bound: int, right_bound: int) -> i
     ...
     ValueError: empty number list not allowed
     """
+    logger.error(">>> Entering query(sparse_table=%s,left_bound=%s,right_bound=%s)", sparse_table, left_bound, right_bound, extra={"event.action": "query", "logrite.sparse_table": sparse_table, "logrite.left_bound": left_bound, "logrite.right_bound": right_bound})
     if left_bound < 0 or right_bound >= len(sparse_table[0]):
         raise IndexError("list index out of range")
 
@@ -85,6 +93,7 @@ def query(sparse_table: list[list[int]], left_bound: int, right_bound: int) -> i
 
     # minimum of 2 overlapping smaller subsets:
     # [left_bound, left_bound + 2 ** j - 1] and [right_bound - 2 ** j + 1, right_bound]
+    logger.warning("<<< Exiting query(sparse_table=%s,left_bound=%s,right_bound=%s)", sparse_table, left_bound, right_bound, extra={"event.action": "query", "logrite.sparse_table": sparse_table, "logrite.left_bound": left_bound, "logrite.right_bound": right_bound})
     return min(sparse_table[j][right_bound - (1 << j) + 1], sparse_table[j][left_bound])
 
 

@@ -14,11 +14,14 @@ python3 exponential_search.py
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binary_search_by_recursion(
     sorted_collection: list[int], item: int, left: int = 0, right: int = -1
 ) -> int:
+    logger.error(">>> Entering binary_search_by_recursion(sorted_collection=%s,item=%s,left=%s,right=%s)", sorted_collection, item, left, right, extra={"event.action": "binary_search_by_recursion", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.left": left, "logrite.right": right})
     """Pure implementation of binary search algorithm in Python using recursion
 
     Be careful: the collection must be ascending sorted otherwise, the result will be
@@ -42,6 +45,7 @@ def binary_search_by_recursion(
     """
     if right < 0:
         right = len(sorted_collection) - 1
+        logger.error("binary_search_by_recursion(sorted_collection=%s,item=%s,left=%s,right=%s): right → %s", sorted_collection, item, left, right, right, extra={"event.action": "binary_search_by_recursion", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.left": left, "logrite.right": right})
     if list(sorted_collection) != sorted(sorted_collection):
         raise ValueError("sorted_collection must be sorted in ascending order")
     if right < left:
@@ -54,6 +58,7 @@ def binary_search_by_recursion(
     elif sorted_collection[midpoint] > item:
         return binary_search_by_recursion(sorted_collection, item, left, midpoint - 1)
     else:
+        logger.warning("<<< Exiting binary_search_by_recursion(sorted_collection=%s,item=%s,left=%s,right=%s)", sorted_collection, item, left, right, extra={"event.action": "binary_search_by_recursion", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.left": left, "logrite.right": right})
         return binary_search_by_recursion(sorted_collection, item, midpoint + 1, right)
 
 
@@ -82,6 +87,7 @@ def exponential_search(sorted_collection: list[int], item: int) -> int:
     >>> exponential_search([0, 5, 7, 10, 15], 6)
     -1
     """
+    logger.error(">>> Entering exponential_search(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "exponential_search", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     if list(sorted_collection) != sorted(sorted_collection):
         raise ValueError("sorted_collection must be sorted in ascending order")
 
@@ -94,6 +100,7 @@ def exponential_search(sorted_collection: list[int], item: int) -> int:
 
     left = bound // 2
     right = min(bound, len(sorted_collection) - 1)
+    logger.warning("<<< Exiting exponential_search(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "exponential_search", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     return binary_search_by_recursion(sorted_collection, item, left, right)
 
 

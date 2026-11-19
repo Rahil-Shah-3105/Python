@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 NUMBERS_PLUS_LETTER = "Input must be a string of 8 numbers plus letter"
 LOOKUP_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE"
 
@@ -46,24 +48,30 @@ def is_spain_national_id(spanish_id: str) -> bool:
         ...
     TypeError: Expected string as input, found int
     """
+    logger.error(">>> Entering is_spain_national_id(spanish_id=%s)", spanish_id, extra={"event.action": "is_spain_national_id", "logrite.spanish_id": spanish_id})
 
     if not isinstance(spanish_id, str):
         msg = f"Expected string as input, found {type(spanish_id).__name__}"
+        logger.error("is_spain_national_id(spanish_id=%s): msg → %s", spanish_id, msg, extra={"event.action": "is_spain_national_id", "logrite.spanish_id": spanish_id})
         raise TypeError(msg)
 
     spanish_id_clean = spanish_id.replace("-", "").upper()
+    logger.error("is_spain_national_id(spanish_id=%s): spanish_id_clean → %s", spanish_id, spanish_id_clean, extra={"event.action": "is_spain_national_id", "logrite.spanish_id": spanish_id})
     if len(spanish_id_clean) != 9:
         raise ValueError(NUMBERS_PLUS_LETTER)
 
     try:
         number = int(spanish_id_clean[0:8])
+        logger.error("is_spain_national_id(spanish_id=%s): number → %s", spanish_id, number, extra={"event.action": "is_spain_national_id", "logrite.spanish_id": spanish_id})
         letter = spanish_id_clean[8]
     except ValueError as ex:
+        logger.error("Exception in is_spain_national_id(spanish_id=%s): %s", spanish_id, str(ex), exc_info=True, extra={"event.action": "is_spain_national_id", "event.category": "process", "logrite.spanish_id": spanish_id})
         raise ValueError(NUMBERS_PLUS_LETTER) from ex
 
     if letter.isdigit():
         raise ValueError(NUMBERS_PLUS_LETTER)
 
+    logger.warning("<<< Exiting is_spain_national_id(spanish_id=%s)", spanish_id, extra={"event.action": "is_spain_national_id", "logrite.spanish_id": spanish_id})
     return letter == LOOKUP_LETTERS[number % 23]
 
 

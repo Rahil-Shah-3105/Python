@@ -3,6 +3,8 @@ A recursive implementation of the insertion sort algorithm
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def rec_insertion_sort(collection: list, n: int):
@@ -28,8 +30,10 @@ def rec_insertion_sort(collection: list, n: int):
     >>> col
     [1]
     """
+    logger.error(">>> Entering rec_insertion_sort(collection=%s,n=%s)", collection, n, extra={"event.action": "rec_insertion_sort", "logrite.collection": collection, "logrite.n": n})
     # Checks if the entire collection has been sorted
     if len(collection) <= 1 or n <= 1:
+        logger.warning("<<< Exiting rec_insertion_sort(collection=%s,n=%s)", collection, n, extra={"event.action": "rec_insertion_sort", "logrite.collection": collection, "logrite.n": n})
         return
 
     insert_next(collection, n - 1)
@@ -55,8 +59,10 @@ def insert_next(collection: list, index: int):
     >>> col
     []
     """
+    logger.error(">>> Entering insert_next(collection=%s,index=%s)", collection, index, extra={"event.action": "insert_next", "logrite.collection": collection, "logrite.index": index})
     # Checks order between adjacent elements
     if index >= len(collection) or collection[index - 1] <= collection[index]:
+        logger.warning("<<< Exiting insert_next(collection=%s,index=%s)", collection, index, extra={"event.action": "insert_next", "logrite.collection": collection, "logrite.index": index})
         return
 
     # Swaps adjacent elements since they are not in ascending order

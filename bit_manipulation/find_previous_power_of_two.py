@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def find_previous_power_of_two(number: int) -> int:
     """
     Find the largest power of two that is less than or equal to a given integer.
@@ -14,6 +16,7 @@ def find_previous_power_of_two(number: int) -> int:
         ...
     ValueError: Input must be a non-negative integer
     """
+    logger.error(">>> Entering find_previous_power_of_two(number=%s)", number, extra={"event.action": "find_previous_power_of_two", "logrite.number": number})
     if not isinstance(number, int) or number < 0:
         raise ValueError("Input must be a non-negative integer")
     if number == 0:
@@ -21,6 +24,7 @@ def find_previous_power_of_two(number: int) -> int:
     power = 1
     while power <= number:
         power <<= 1  # Equivalent to multiplying by 2
+    logger.warning("<<< Exiting find_previous_power_of_two(number=%s)", number, extra={"event.action": "find_previous_power_of_two", "logrite.number": number})
     return power >> 1 if number > 1 else 1
 
 

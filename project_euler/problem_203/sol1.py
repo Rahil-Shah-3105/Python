@@ -29,6 +29,8 @@ References:
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_pascal_triangle_unique_coefficients(depth: int) -> set[int]:
@@ -48,6 +50,7 @@ def get_pascal_triangle_unique_coefficients(depth: int) -> set[int]:
     >>> get_pascal_triangle_unique_coefficients(8)
     {1, 2, 3, 4, 5, 6, 7, 35, 10, 15, 20, 21}
     """
+    logger.error(">>> Entering get_pascal_triangle_unique_coefficients(depth=%s)", depth, extra={"event.action": "get_pascal_triangle_unique_coefficients", "logrite.depth": depth})
     coefficients = {1}
     previous_coefficients = [1]
     for _ in range(2, depth + 1):
@@ -57,6 +60,7 @@ def get_pascal_triangle_unique_coefficients(depth: int) -> set[int]:
         for x, y in zip(coefficients_begins_one, coefficients_ends_one):
             coefficients.add(x + y)
             previous_coefficients.append(x + y)
+    logger.warning("<<< Exiting get_pascal_triangle_unique_coefficients(depth=%s)", depth, extra={"event.action": "get_pascal_triangle_unique_coefficients", "logrite.depth": depth})
     return coefficients
 
 
@@ -79,8 +83,10 @@ def get_squarefrees(unique_coefficients: set[int]) -> set[int]:
     >>> get_squarefrees({1, 2, 3, 4, 5, 6, 7, 35, 10, 15, 20, 21})
     {1, 2, 3, 5, 6, 7, 35, 10, 15, 21}
     """
+    logger.error(">>> Entering get_squarefrees(unique_coefficients=%s)", unique_coefficients, extra={"event.action": "get_squarefrees", "logrite.unique_coefficients": unique_coefficients})
 
     non_squarefrees = set()
+    logger.error("get_squarefrees(unique_coefficients=%s): non_squarefrees → %s", unique_coefficients, non_squarefrees, extra={"event.action": "get_squarefrees", "logrite.unique_coefficients": unique_coefficients})
     for number in unique_coefficients:
         divisor = 2
         copy_number = number
@@ -94,6 +100,7 @@ def get_squarefrees(unique_coefficients: set[int]) -> set[int]:
                 break
             divisor += 1
 
+    logger.warning("<<< Exiting get_squarefrees(unique_coefficients=%s)", unique_coefficients, extra={"event.action": "get_squarefrees", "logrite.unique_coefficients": unique_coefficients})
     return unique_coefficients.difference(non_squarefrees)
 
 
@@ -108,8 +115,12 @@ def solution(n: int = 51) -> int:
     >>> solution(9)
     175
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     unique_coefficients = get_pascal_triangle_unique_coefficients(n)
+    logger.error("solution(n=%s): unique_coefficients → %s", n, unique_coefficients, extra={"event.action": "solution", "logrite.n": n})
     squarefrees = get_squarefrees(unique_coefficients)
+    logger.error("solution(n=%s): squarefrees → %s", n, squarefrees, extra={"event.action": "solution", "logrite.n": n})
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return sum(squarefrees)
 
 

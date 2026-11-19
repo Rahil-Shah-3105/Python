@@ -6,11 +6,14 @@ Input: n = 2
 Output: ["(())","()()"]
 Leetcode link: https://leetcode.com/problems/generate-parentheses/description/
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def backtrack(
     partial: str, open_count: int, close_count: int, n: int, result: list[str]
 ) -> None:
+    logger.error(">>> Entering backtrack(partial=%s,open_count=%s,close_count=%s,n=%s,result=%s)", partial, open_count, close_count, n, result, extra={"event.action": "backtrack", "logrite.partial": partial, "logrite.open_count": open_count, "logrite.close_count": close_count, "logrite.n": n, "logrite.result": result})
     """
     Generate valid combinations of balanced parentheses using recursion.
 
@@ -33,6 +36,7 @@ def backtrack(
     if len(partial) == 2 * n:
         # When the combination is complete, add it to the result.
         result.append(partial)
+        logger.warning("<<< Exiting backtrack(partial=%s,open_count=%s,close_count=%s,n=%s,result=%s)", partial, open_count, close_count, n, result, extra={"event.action": "backtrack", "logrite.partial": partial, "logrite.open_count": open_count, "logrite.close_count": close_count, "logrite.n": n, "logrite.result": result})
         return
 
     if open_count < n:
@@ -69,9 +73,11 @@ def generate_parenthesis(n: int) -> list[str]:
     >>> generate_parenthesis(0)
     ['']
     """
+    logger.error(">>> Entering generate_parenthesis(n=%s)", n, extra={"event.action": "generate_parenthesis", "logrite.n": n})
 
     result: list[str] = []
     backtrack("", 0, 0, n, result)
+    logger.warning("<<< Exiting generate_parenthesis(n=%s)", n, extra={"event.action": "generate_parenthesis", "logrite.n": n})
     return result
 
 

@@ -8,6 +8,8 @@ However, in 2004 there was found a massive non-Mersenne prime which contains
 
 Find the last ten digits of this prime number.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 10) -> str:
@@ -32,10 +34,13 @@ def solution(n: int = 10) -> str:
         ...
     ValueError: Invalid input
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     if not isinstance(n, int) or n < 0:
         raise ValueError("Invalid input")
     modulus = 10**n
     number = 28433 * (pow(2, 7830457, modulus)) + 1
+    logger.error("solution(n=%s): number → %s", n, number, extra={"event.action": "solution", "logrite.n": n})
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return str(number % modulus)
 
 

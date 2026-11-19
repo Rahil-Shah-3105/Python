@@ -5,6 +5,8 @@ https://en.wikipedia.org/wiki/Co-occurrence_matrix#Application_to_image_analysis
 
 import imageio.v2 as imageio
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def root_mean_square_error(original: np.ndarray, reference: np.ndarray) -> float:
@@ -19,12 +21,15 @@ def root_mean_square_error(original: np.ndarray, reference: np.ndarray) -> float
         >>> root_mean_square_error(np.array([1, 2, 3]), np.array([6, 4, 2]))
         3.1622776601683795
     """
+    logger.error(">>> Entering root_mean_square_error(original=%s,reference=%s)", original, reference, extra={"event.action": "root_mean_square_error", "logrite.original": original, "logrite.reference": reference})
+    logger.warning("<<< Exiting root_mean_square_error(original=%s,reference=%s)", original, reference, extra={"event.action": "root_mean_square_error", "logrite.original": original, "logrite.reference": reference})
     return float(np.sqrt(((original - reference) ** 2).mean()))
 
 
 def normalize_image(
     image: np.ndarray, cap: float = 255.0, data_type: np.dtype = np.uint8
 ) -> np.ndarray:
+    logger.error(">>> Entering normalize_image(image=%s,cap=%s,data_type=%s)", image, cap, data_type, extra={"event.action": "normalize_image", "logrite.image": image, "logrite.cap": cap, "logrite.data_type": data_type})
     """
     Normalizes image in Numpy 2D array format, between ranges 0-cap,
     as to fit uint8 type.
@@ -46,6 +51,7 @@ def normalize_image(
                [  0, 255,  42]], dtype=uint8)
     """
     normalized = (image - np.min(image)) / (np.max(image) - np.min(image)) * cap
+    logger.warning("<<< Exiting normalize_image(image=%s,cap=%s,data_type=%s)", image, cap, data_type, extra={"event.action": "normalize_image", "logrite.image": image, "logrite.cap": cap, "logrite.data_type": data_type})
     return normalized.astype(data_type)
 
 
@@ -67,7 +73,9 @@ def normalize_array(array: np.ndarray, cap: float = 1) -> np.ndarray:
                [0.75],
                [1.  ]])
     """
+    logger.error(">>> Entering normalize_array(array=%s,cap=%s)", array, cap, extra={"event.action": "normalize_array", "logrite.array": array, "logrite.cap": cap})
     diff = np.max(array) - np.min(array)
+    logger.warning("<<< Exiting normalize_array(array=%s,cap=%s)", array, cap, extra={"event.action": "normalize_array", "logrite.array": array, "logrite.cap": cap})
     return (array - np.min(array)) / (1 if diff == 0 else diff) * cap
 
 
@@ -82,6 +90,8 @@ def grayscale(image: np.ndarray) -> np.ndarray:
         array([[158,  97],
                [ 56, 200]], dtype=uint8)
     """
+    logger.error(">>> Entering grayscale(image=%s)", image, extra={"event.action": "grayscale", "logrite.image": image})
+    logger.warning("<<< Exiting grayscale(image=%s)", image, extra={"event.action": "grayscale", "logrite.image": image})
     return np.dot(image[:, :, 0:3], [0.299, 0.587, 0.114]).astype(np.uint8)
 
 
@@ -98,12 +108,15 @@ def binarize(image: np.ndarray, threshold: float = 127.0) -> np.ndarray:
         array([[0, 1],
                [1, 0]])
     """
+    logger.error(">>> Entering binarize(image=%s,threshold=%s)", image, threshold, extra={"event.action": "binarize", "logrite.image": image, "logrite.threshold": threshold})
+    logger.warning("<<< Exiting binarize(image=%s,threshold=%s)", image, threshold, extra={"event.action": "binarize", "logrite.image": image, "logrite.threshold": threshold})
     return np.where(image > threshold, 1, 0)
 
 
 def transform(
     image: np.ndarray, kind: str, kernel: np.ndarray | None = None
 ) -> np.ndarray:
+    logger.error(">>> Entering transform(image=%s,kind=%s,kernel=%s)", image, kind, kernel, extra={"event.action": "transform", "logrite.image": image, "logrite.kind": kind, "logrite.kernel": kernel})
     """
     Simple image transformation using one of two available filter functions:
     Erosion and Dilation.
@@ -131,6 +144,7 @@ def transform(
     """
     if kernel is None:
         kernel = np.ones((3, 3))
+        logger.error("transform(image=%s,kind=%s,kernel=%s): kernel → %s", image, kind, kernel, kernel, extra={"event.action": "transform", "logrite.image": image, "logrite.kind": kind, "logrite.kernel": kernel})
 
     if kind == "erosion":
         constant = 1

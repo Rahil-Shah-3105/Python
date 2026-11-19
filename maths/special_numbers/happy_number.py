@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def is_happy_number(number: int) -> bool:
     """
     A happy number is a number which eventually reaches 1 when replaced by the sum of
@@ -31,14 +33,20 @@ def is_happy_number(number: int) -> bool:
         ...
     ValueError: number='happy' must be a positive integer
     """
+    logger.error(">>> Entering is_happy_number(number=%s)", number, extra={"event.action": "is_happy_number", "logrite.number": number})
+    logger.error("is_happy_number(number=%s): ValueError → %s", number, ValueError, extra={"event.action": "is_happy_number", "logrite.number": number})
     if not isinstance(number, int) or number <= 0:
         msg = f"{number=} must be a positive integer"
+        logger.error("is_happy_number(number=%s): msg → %s", number, msg, extra={"event.action": "is_happy_number", "logrite.number": number})
         raise ValueError(msg)
 
     seen = set()
+    logger.error("is_happy_number(number=%s): seen → %s", number, seen, extra={"event.action": "is_happy_number", "logrite.number": number})
     while number != 1 and number not in seen:
         seen.add(number)
         number = sum(int(digit) ** 2 for digit in str(number))
+    logger.error("is_happy_number(number=%s): number → %s", number, number, extra={"event.action": "is_happy_number", "logrite.number": number})
+    logger.warning("<<< Exiting is_happy_number(number=%s)", number, extra={"event.action": "is_happy_number", "logrite.number": number})
     return number == 1
 
 

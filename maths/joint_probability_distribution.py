@@ -2,6 +2,8 @@
 Calculate joint probability distribution
 https://en.wikipedia.org/wiki/Joint_probability_distribution
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def joint_probability_distribution(
@@ -10,6 +12,7 @@ def joint_probability_distribution(
     x_probabilities: list[float],
     y_probabilities: list[float],
 ) -> dict:
+    logger.error(">>> Entering joint_probability_distribution(x_values=%s,y_values=%s,x_probabilities=%s,y_probabilities=%s)", x_values, y_values, x_probabilities, y_probabilities, extra={"event.action": "joint_probability_distribution", "logrite.x_values": x_values, "logrite.y_values": y_values, "logrite.x_probabilities": x_probabilities, "logrite.y_probabilities": y_probabilities})
     """
     >>> joint_distribution =  joint_probability_distribution(
     ...     [1, 2], [-2, 5, 8], [0.7, 0.3], [0.3, 0.5, 0.2]
@@ -20,6 +23,7 @@ def joint_probability_distribution(
     >>> joint_distribution
     {(1, -2): 0.21, (1, 5): 0.35, (2, -2): 0.09, (2, 5): 0.15, (2, 8): 0.06}
     """
+    logger.warning("<<< Exiting joint_probability_distribution(x_values=%s,y_values=%s,x_probabilities=%s,y_probabilities=%s)", x_values, y_values, x_probabilities, y_probabilities, extra={"event.action": "joint_probability_distribution", "logrite.x_values": x_values, "logrite.y_values": y_values, "logrite.x_probabilities": x_probabilities, "logrite.y_probabilities": y_probabilities})
     return {
         (x, y): x_prob * y_prob
         for x, x_prob in zip(x_values, x_probabilities)
@@ -34,6 +38,8 @@ def expectation(values: list, probabilities: list) -> float:
     >>> isclose(expectation([1, 2], [0.7, 0.3]), 1.3)
     True
     """
+    logger.error(">>> Entering expectation(values=%s,probabilities=%s)", values, probabilities, extra={"event.action": "expectation", "logrite.values": values, "logrite.probabilities": probabilities})
+    logger.warning("<<< Exiting expectation(values=%s,probabilities=%s)", values, probabilities, extra={"event.action": "expectation", "logrite.values": values, "logrite.probabilities": probabilities})
     return sum(x * p for x, p in zip(values, probabilities))
 
 
@@ -44,7 +50,10 @@ def variance(values: list[int], probabilities: list[float]) -> float:
     >>> isclose(variance([1,2],[0.7,0.3]), 0.21)
     True
     """
+    logger.error(">>> Entering variance(values=%s,probabilities=%s)", values, probabilities, extra={"event.action": "variance", "logrite.values": values, "logrite.probabilities": probabilities})
     mean = expectation(values, probabilities)
+    logger.error("variance(values=%s,probabilities=%s): mean → %s", values, probabilities, mean, extra={"event.action": "variance", "logrite.values": values, "logrite.probabilities": probabilities})
+    logger.warning("<<< Exiting variance(values=%s,probabilities=%s)", values, probabilities, extra={"event.action": "variance", "logrite.values": values, "logrite.probabilities": probabilities})
     return sum((x - mean) ** 2 * p for x, p in zip(values, probabilities))
 
 
@@ -55,12 +64,16 @@ def covariance(
     x_probabilities: list[float],
     y_probabilities: list[float],
 ) -> float:
+    logger.error(">>> Entering covariance(x_values=%s,y_values=%s,x_probabilities=%s,y_probabilities=%s)", x_values, y_values, x_probabilities, y_probabilities, extra={"event.action": "covariance", "logrite.x_values": x_values, "logrite.y_values": y_values, "logrite.x_probabilities": x_probabilities, "logrite.y_probabilities": y_probabilities})
     """
     >>> covariance([1, 2], [-2, 5, 8], [0.7, 0.3], [0.3, 0.5, 0.2])
     -2.7755575615628914e-17
     """
+    logger.warning("<<< Exiting covariance(x_values=%s,y_values=%s,x_probabilities=%s,y_probabilities=%s)", x_values, y_values, x_probabilities, y_probabilities, extra={"event.action": "covariance", "logrite.x_values": x_values, "logrite.y_values": y_values, "logrite.x_probabilities": x_probabilities, "logrite.y_probabilities": y_probabilities})
     mean_x = expectation(x_values, x_probabilities)
+    logger.error("covariance(x_values=%s,y_values=%s,x_probabilities=%s,y_probabilities=%s): mean_x → %s", x_values, y_values, x_probabilities, y_probabilities, mean_x, extra={"event.action": "covariance", "logrite.x_values": x_values, "logrite.y_values": y_values, "logrite.x_probabilities": x_probabilities, "logrite.y_probabilities": y_probabilities})
     mean_y = expectation(y_values, y_probabilities)
+    logger.error("covariance(x_values=%s,y_values=%s,x_probabilities=%s,y_probabilities=%s): mean_y → %s", x_values, y_values, x_probabilities, y_probabilities, mean_y, extra={"event.action": "covariance", "logrite.x_values": x_values, "logrite.y_values": y_values, "logrite.x_probabilities": x_probabilities, "logrite.y_probabilities": y_probabilities})
     return sum(
         (x - mean_x) * (y - mean_y) * px * py
         for x, px in zip(x_values, x_probabilities)
@@ -74,6 +87,8 @@ def standard_deviation(variance: float) -> float:
     >>> standard_deviation(0.21)
     0.458257569495584
     """
+    logger.error(">>> Entering standard_deviation(variance=%s)", variance, extra={"event.action": "standard_deviation", "logrite.variance": variance})
+    logger.warning("<<< Exiting standard_deviation(variance=%s)", variance, extra={"event.action": "standard_deviation", "logrite.variance": variance})
     return variance**0.5
 
 

@@ -8,6 +8,8 @@ number itself.
 For example: 145 = 1! + 4! + 5!
     So, 145 is a Krishnamurthy Number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def factorial(digit: int) -> int:
@@ -19,7 +21,9 @@ def factorial(digit: int) -> int:
     >>> factorial(5)
     120
     """
+    logger.error(">>> Entering factorial(digit=%s)", digit, extra={"event.action": "factorial", "logrite.digit": digit})
 
+    logger.warning("<<< Exiting factorial(digit=%s)", digit, extra={"event.action": "factorial", "logrite.digit": digit})
     return 1 if digit in (0, 1) else (digit * factorial(digit - 1))
 
 
@@ -32,12 +36,14 @@ def krishnamurthy(number: int) -> bool:
     >>> krishnamurthy(1)
     True
     """
+    logger.error(">>> Entering krishnamurthy(number=%s)", number, extra={"event.action": "krishnamurthy", "logrite.number": number})
 
     fact_sum = 0
     duplicate = number
     while duplicate > 0:
         duplicate, digit = divmod(duplicate, 10)
         fact_sum += factorial(digit)
+    logger.warning("<<< Exiting krishnamurthy(number=%s)", number, extra={"event.action": "krishnamurthy", "logrite.number": number})
     return fact_sum == number
 
 

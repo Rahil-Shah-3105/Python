@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def subset_combinations(elements: list[int], n: int) -> list:
     """
     Compute n-element combinations from a given list using dynamic programming.
@@ -37,7 +39,9 @@ def subset_combinations(elements: list[int], n: int) -> list:
     ...         ([1, 'apple', 3.14], 2), (['single'], 0), ([], 9)))
     True
     """
+    logger.error(">>> Entering subset_combinations(elements=%s,n=%s)", elements, n, extra={"event.action": "subset_combinations", "logrite.elements": elements, "logrite.n": n})
     r = len(elements)
+    logger.error("subset_combinations(elements=%s,n=%s): r → %s", elements, n, r, extra={"event.action": "subset_combinations", "logrite.elements": elements, "logrite.n": n})
     if n > r:
         return []
 
@@ -53,6 +57,8 @@ def subset_combinations(elements: list[int], n: int) -> list:
     try:
         return sorted(dp[n])
     except TypeError:
+        logger.error("Exception in subset_combinations(elements=%s,n=%s)", elements, n, exc_info=True, extra={"event.action": "subset_combinations", "event.category": "process", "logrite.elements": elements, "logrite.n": n})
+        logger.warning("<<< Exiting subset_combinations(elements=%s,n=%s)", elements, n, extra={"event.action": "subset_combinations", "logrite.elements": elements, "logrite.n": n})
         return dp[n]
 
 

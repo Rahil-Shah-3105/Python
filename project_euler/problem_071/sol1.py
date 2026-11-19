@@ -17,6 +17,8 @@ By listing the set of reduced proper fractions for d ≤ 1,000,000
 in ascending order of size, find the numerator of the fraction
 immediately to the left of 3/7.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(numerator: int = 3, denominator: int = 7, limit: int = 1000000) -> int:
@@ -31,6 +33,7 @@ def solution(numerator: int = 3, denominator: int = 7, limit: int = 1000000) -> 
     >>> solution(6, 7, 60)
     47
     """
+    logger.error(">>> Entering solution(numerator=%s,denominator=%s,limit=%s)", numerator, denominator, limit, extra={"event.action": "solution", "logrite.numerator": numerator, "logrite.denominator": denominator, "logrite.limit": limit})
     max_numerator = 0
     max_denominator = 1
 
@@ -41,6 +44,7 @@ def solution(numerator: int = 3, denominator: int = 7, limit: int = 1000000) -> 
         if current_numerator * max_denominator > current_denominator * max_numerator:
             max_numerator = current_numerator
             max_denominator = current_denominator
+    logger.warning("<<< Exiting solution(numerator=%s,denominator=%s,limit=%s)", numerator, denominator, limit, extra={"event.action": "solution", "logrite.numerator": numerator, "logrite.denominator": denominator, "logrite.limit": limit})
     return max_numerator
 
 

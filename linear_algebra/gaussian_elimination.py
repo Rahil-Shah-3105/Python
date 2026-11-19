@@ -6,11 +6,14 @@
 import numpy as np
 from numpy import float64
 from numpy.typing import NDArray
+import logging
+logger = logging.getLogger(__name__)
 
 
 def retroactive_resolution(
     coefficients: NDArray[float64], vector: NDArray[float64]
 ) -> NDArray[float64]:
+    logger.error(">>> Entering retroactive_resolution(coefficients=%s,vector=%s)", coefficients, vector, extra={"event.action": "retroactive_resolution", "logrite.coefficients": coefficients, "logrite.vector": vector})
     """
     This function performs a retroactive linear system resolution
     for triangular matrix
@@ -38,14 +41,17 @@ def retroactive_resolution(
     x: NDArray[float64] = np.zeros((rows, 1), dtype=float)
     for row in reversed(range(rows)):
         total = np.dot(coefficients[row, row + 1 :], x[row + 1 :])
+        logger.error("retroactive_resolution(coefficients=%s,vector=%s): total → %s", coefficients, vector, total, extra={"event.action": "retroactive_resolution", "logrite.coefficients": coefficients, "logrite.vector": vector})
         x[row, 0] = (vector[row][0] - total[0]) / coefficients[row, row]
 
+    logger.warning("<<< Exiting retroactive_resolution(coefficients=%s,vector=%s)", coefficients, vector, extra={"event.action": "retroactive_resolution", "logrite.coefficients": coefficients, "logrite.vector": vector})
     return x
 
 
 def gaussian_elimination(
     coefficients: NDArray[float64], vector: NDArray[float64]
 ) -> NDArray[float64]:
+    logger.error(">>> Entering gaussian_elimination(coefficients=%s,vector=%s)", coefficients, vector, extra={"event.action": "gaussian_elimination", "logrite.coefficients": coefficients, "logrite.vector": vector})
     """
     This function performs Gaussian elimination method
 
@@ -86,6 +92,7 @@ def gaussian_elimination(
         augmented_mat[:, 0:columns], augmented_mat[:, columns : columns + 1]
     )
 
+    logger.warning("<<< Exiting gaussian_elimination(coefficients=%s,vector=%s)", coefficients, vector, extra={"event.action": "gaussian_elimination", "logrite.coefficients": coefficients, "logrite.vector": vector})
     return x
 
 

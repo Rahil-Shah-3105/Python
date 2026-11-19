@@ -5,6 +5,8 @@ https://en.wikipedia.org/wiki/Introsort
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def insertion_sort(array: list, start: int = 0, end: int = 0) -> list:
@@ -25,7 +27,9 @@ def insertion_sort(array: list, start: int = 0, end: int = 0) -> list:
     >>> insertion_sort(array, 0, len(array))
     [-45.03, 0, 1.7, 73.56, 73.568, 89.45]
     """
+    logger.error(">>> Entering insertion_sort(array=%s,start=%s,end=%s)", array, start, end, extra={"event.action": "insertion_sort", "logrite.array": array, "logrite.start": start, "logrite.end": end})
     end = end or len(array)
+    logger.error("insertion_sort(array=%s,start=%s,end=%s): end → %s", array, start, end, end, extra={"event.action": "insertion_sort", "logrite.array": array, "logrite.start": start, "logrite.end": end})
     for i in range(start, end):
         temp_index = i
         temp_index_value = array[i]
@@ -33,6 +37,7 @@ def insertion_sort(array: list, start: int = 0, end: int = 0) -> list:
             array[temp_index] = array[temp_index - 1]
             temp_index -= 1
         array[temp_index] = temp_index_value
+    logger.warning("<<< Exiting insertion_sort(array=%s,start=%s,end=%s)", array, start, end, extra={"event.action": "insertion_sort", "logrite.array": array, "logrite.start": start, "logrite.end": end})
     return array
 
 
@@ -41,6 +46,7 @@ def heapify(array: list, index: int, heap_size: int) -> None:  # Max Heap
     >>> array = [4, 2, 6, 8, 1, 7, 8, 22, 14, 56, 27, 79, 23, 45, 14, 12]
     >>> heapify(array, len(array) // 2, len(array))
     """
+    logger.error(">>> Entering heapify(array=%s,index=%s,heap_size=%s)", array, index, heap_size, extra={"event.action": "heapify", "logrite.array": array, "logrite.index": index, "logrite.heap_size": heap_size})
     largest = index
     left_index = 2 * index + 1  # Left Node
     right_index = 2 * index + 2  # Right Node
@@ -53,6 +59,7 @@ def heapify(array: list, index: int, heap_size: int) -> None:  # Max Heap
 
     if largest != index:
         array[index], array[largest] = array[largest], array[index]
+        logger.warning("<<< Exiting heapify(array=%s,index=%s,heap_size=%s)", array, index, heap_size, extra={"event.action": "heapify", "logrite.array": array, "logrite.index": index, "logrite.heap_size": heap_size})
         heapify(array, largest, heap_size)
 
 
@@ -67,7 +74,9 @@ def heap_sort(array: list) -> list:
     >>> heap_sort([6.2, -45.54, 8465.20, 758.56, -457.0, 0, 1, 2.879, 1.7, 11.7])
     [-457.0, -45.54, 0, 1, 1.7, 2.879, 6.2, 11.7, 758.56, 8465.2]
     """
+    logger.error(">>> Entering heap_sort(array=%s)", array, extra={"event.action": "heap_sort", "logrite.array": array})
     n = len(array)
+    logger.error("heap_sort(array=%s): n → %s", array, n, extra={"event.action": "heap_sort", "logrite.array": array})
 
     for i in range(n // 2, -1, -1):
         heapify(array, i, n)

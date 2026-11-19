@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def exchange_sort(numbers: list[int]) -> list[int]:
     """
     Uses exchange sort to sort a list of numbers.
@@ -13,11 +15,14 @@ def exchange_sort(numbers: list[int]) -> list[int]:
     >>> exchange_sort([])
     []
     """
+    logger.error(">>> Entering exchange_sort(numbers=%s)", numbers, extra={"event.action": "exchange_sort", "logrite.numbers": numbers})
     numbers_length = len(numbers)
+    logger.error("exchange_sort(numbers=%s): numbers_length → %s", numbers, numbers_length, extra={"event.action": "exchange_sort", "logrite.numbers": numbers})
     for i in range(numbers_length):
         for j in range(i + 1, numbers_length):
             if numbers[j] < numbers[i]:
                 numbers[i], numbers[j] = numbers[j], numbers[i]
+    logger.warning("<<< Exiting exchange_sort(numbers=%s)", numbers, extra={"event.action": "exchange_sort", "logrite.numbers": numbers})
     return numbers
 
 

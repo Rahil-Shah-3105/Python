@@ -48,6 +48,8 @@ Usage:
 Run the script and provide the required inputs as prompted.
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def validate_matrix_size(size: int) -> None:
@@ -57,8 +59,10 @@ def validate_matrix_size(size: int) -> None:
         ...
     ValueError: Matrix size must be a positive integer.
     """
+    logger.error(">>> Entering validate_matrix_size(size=%s)", size, extra={"event.action": "validate_matrix_size", "logrite.size": size})
     if not isinstance(size, int) or size <= 0:
         raise ValueError("Matrix size must be a positive integer.")
+        logger.warning("<<< Exiting validate_matrix_size(size=%s)", size, extra={"event.action": "validate_matrix_size", "logrite.size": size})
 
 
 def validate_matrix_content(matrix: list[str], size: int) -> None:
@@ -78,15 +82,18 @@ def validate_matrix_content(matrix: list[str], size: int) -> None:
         ...
     ValueError: Each row in the matrix must have exactly 3 characters.
     """
+    logger.error(">>> Entering validate_matrix_content(matrix=%s,size=%s)", matrix, size, extra={"event.action": "validate_matrix_content", "logrite.matrix": matrix, "logrite.size": size})
     print(matrix)
     if len(matrix) != size:
         raise ValueError("The matrix dont match with size.")
     for row in matrix:
         if len(row) != size:
             msg = f"Each row in the matrix must have exactly {size} characters."
+            logger.error("validate_matrix_content(matrix=%s,size=%s): msg → %s", matrix, size, msg, extra={"event.action": "validate_matrix_content", "logrite.matrix": matrix, "logrite.size": size})
             raise ValueError(msg)
         if not all(char.isalnum() for char in row):
             raise ValueError("Matrix rows can only contain letters and numbers.")
+            logger.warning("<<< Exiting validate_matrix_content(matrix=%s,size=%s)", matrix, size, extra={"event.action": "validate_matrix_content", "logrite.matrix": matrix, "logrite.size": size})
 
 
 def validate_moves(moves: list[tuple[int, int]], size: int) -> None:
@@ -96,10 +103,12 @@ def validate_moves(moves: list[tuple[int, int]], size: int) -> None:
         ...
     ValueError: Move is out of bounds for a matrix.
     """
+    logger.error(">>> Entering validate_moves(moves=%s,size=%s)", moves, size, extra={"event.action": "validate_moves", "logrite.moves": moves, "logrite.size": size})
     for move in moves:
         x, y = move
         if not (0 <= x < size and 0 <= y < size):
             raise ValueError("Move is out of bounds for a matrix.")
+            logger.warning("<<< Exiting validate_moves(moves=%s,size=%s)", moves, size, extra={"event.action": "validate_moves", "logrite.moves": moves, "logrite.size": size})
 
 
 def parse_moves(input_str: str) -> list[tuple[int, int]]:
@@ -115,19 +124,23 @@ def parse_moves(input_str: str) -> list[tuple[int, int]]:
         ...
     ValueError: Each move must have exactly two numbers.
     """
+    logger.error(">>> Entering parse_moves(input_str=%s)", input_str, extra={"event.action": "parse_moves", "logrite.input_str": input_str})
     moves = []
     for pair in input_str.split(","):
         parts = pair.strip().split()
+        logger.error("parse_moves(input_str=%s): parts → %s", input_str, parts, extra={"event.action": "parse_moves", "logrite.input_str": input_str})
         if len(parts) != 2:
             raise ValueError("Each move must have exactly two numbers.")
         x, y = map(int, parts)
         moves.append((x, y))
+    logger.warning("<<< Exiting parse_moves(input_str=%s)", input_str, extra={"event.action": "parse_moves", "logrite.input_str": input_str})
     return moves
 
 
 def find_repeat(
     matrix_g: list[list[str]], row: int, column: int, size: int
 ) -> set[tuple[int, int]]:
+    logger.error(">>> Entering find_repeat(matrix_g=%s,row=%s,column=%s,size=%s)", matrix_g, row, column, size, extra={"event.action": "find_repeat", "logrite.matrix_g": matrix_g, "logrite.row": row, "logrite.column": column, "logrite.size": size})
     """
     Finds all connected elements of the same type from a given position.
 
@@ -139,14 +152,19 @@ def find_repeat(
 
     column = size - 1 - column
     visited = set()
+    logger.error("find_repeat(matrix_g=%s,row=%s,column=%s,size=%s): visited → %s", matrix_g, row, column, size, visited, extra={"event.action": "find_repeat", "logrite.matrix_g": matrix_g, "logrite.row": row, "logrite.column": column, "logrite.size": size})
     repeated = set()
+    logger.error("find_repeat(matrix_g=%s,row=%s,column=%s,size=%s): repeated → %s", matrix_g, row, column, size, repeated, extra={"event.action": "find_repeat", "logrite.matrix_g": matrix_g, "logrite.row": row, "logrite.column": column, "logrite.size": size})
 
     if (color := matrix_g[column][row]) != "-":
+        logger.warning("<<< Exiting find_repeat(matrix_g=%s,row=%s,column=%s,size=%s)", matrix_g, row, column, size, extra={"event.action": "find_repeat", "logrite.matrix_g": matrix_g, "logrite.row": row, "logrite.column": column, "logrite.size": size})
 
         def dfs(row_n: int, column_n: int) -> None:
+            logger.error(">>> Entering dfs(row_n=%s,column_n=%s)", row_n, column_n, extra={"event.action": "dfs", "logrite.row_n": row_n, "logrite.column_n": column_n})
             if row_n < 0 or row_n >= size or column_n < 0 or column_n >= size:
                 return
             if (row_n, column_n) in visited:
+                logger.warning("<<< Exiting dfs(row_n=%s,column_n=%s)", row_n, column_n, extra={"event.action": "dfs", "logrite.row_n": row_n, "logrite.column_n": column_n})
                 return
             visited.add((row_n, column_n))
             if matrix_g[row_n][column_n] == color:
@@ -170,6 +188,8 @@ def increment_score(count: int) -> int:
     >>> increment_score(0)
     0
     """
+    logger.error(">>> Entering increment_score(count=%s)", count, extra={"event.action": "increment_score", "logrite.count": count})
+    logger.warning("<<< Exiting increment_score(count=%s)", count, extra={"event.action": "increment_score", "logrite.count": count})
     return int(count * (count + 1) / 2)
 
 
@@ -180,6 +200,7 @@ def move_x(matrix_g: list[list[str]], column: int, size: int) -> list[list[str]]
     >>> move_x([['-', 'A'], ['-', '-'], ['-', 'C']], 1, 2)
     [['-', '-'], ['-', 'A'], ['-', 'C']]
     """
+    logger.error(">>> Entering move_x(matrix_g=%s,column=%s,size=%s)", matrix_g, column, size, extra={"event.action": "move_x", "logrite.matrix_g": matrix_g, "logrite.column": column, "logrite.size": size})
 
     new_list = []
 
@@ -190,6 +211,7 @@ def move_x(matrix_g: list[list[str]], column: int, size: int) -> list[list[str]]
             new_list.insert(0, matrix_g[row][column])
     for row in range(size):
         matrix_g[row][column] = new_list[row]
+    logger.warning("<<< Exiting move_x(matrix_g=%s,column=%s,size=%s)", matrix_g, column, size, extra={"event.action": "move_x", "logrite.matrix_g": matrix_g, "logrite.column": column, "logrite.size": size})
     return matrix_g
 
 
@@ -200,6 +222,7 @@ def move_y(matrix_g: list[list[str]], size: int) -> list[list[str]]:
     >>> move_y([['-', 'A'], ['-', '-'], ['-', 'C']], 2)
     [['A', '-'], ['-', '-'], ['-', 'C']]
     """
+    logger.error(">>> Entering move_y(matrix_g=%s,size=%s)", matrix_g, size, extra={"event.action": "move_y", "logrite.matrix_g": matrix_g, "logrite.size": size})
 
     empty_columns = []
 
@@ -214,12 +237,14 @@ def move_y(matrix_g: list[list[str]], size: int) -> list[list[str]]:
         for row in range(size):
             matrix_g[row][-1] = "-"
 
+    logger.warning("<<< Exiting move_y(matrix_g=%s,size=%s)", matrix_g, size, extra={"event.action": "move_y", "logrite.matrix_g": matrix_g, "logrite.size": size})
     return matrix_g
 
 
 def play(
     matrix_g: list[list[str]], pos_x: int, pos_y: int, size: int
 ) -> tuple[list[list[str]], int]:
+    logger.error(">>> Entering play(matrix_g=%s,pos_x=%s,pos_y=%s,size=%s)", matrix_g, pos_x, pos_y, size, extra={"event.action": "play", "logrite.matrix_g": matrix_g, "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.size": size})
     """
     Processes a single move, updating the matrix and calculating the score.
 
@@ -228,6 +253,7 @@ def play(
     """
 
     same_colors = find_repeat(matrix_g, pos_x, pos_y, size)
+    logger.error("play(matrix_g=%s,pos_x=%s,pos_y=%s,size=%s): same_colors → %s", matrix_g, pos_x, pos_y, size, same_colors, extra={"event.action": "play", "logrite.matrix_g": matrix_g, "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.size": size})
 
     if len(same_colors) != 0:
         for pos in same_colors:
@@ -236,7 +262,9 @@ def play(
             matrix_g = move_x(matrix_g, column, size)
 
         matrix_g = move_y(matrix_g, size)
+    logger.error("play(matrix_g=%s,pos_x=%s,pos_y=%s,size=%s): matrix_g → %s", matrix_g, pos_x, pos_y, size, matrix_g, extra={"event.action": "play", "logrite.matrix_g": matrix_g, "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.size": size})
 
+    logger.warning("<<< Exiting play(matrix_g=%s,pos_x=%s,pos_y=%s,size=%s)", matrix_g, pos_x, pos_y, size, extra={"event.action": "play", "logrite.matrix_g": matrix_g, "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.size": size})
     return (matrix_g, increment_score(len(same_colors)))
 
 
@@ -253,8 +281,10 @@ def process_game(size: int, matrix: list[str], moves: list[tuple[int, int]]) -> 
     >>> process_game(3, ['aaa', 'bbb', 'ccc'], [(0, 0)])
     6
     """
+    logger.error(">>> Entering process_game(size=%s,matrix=%s,moves=%s)", size, matrix, moves, extra={"event.action": "process_game", "logrite.size": size, "logrite.matrix": matrix, "logrite.moves": moves})
 
     game_matrix = [list(row) for row in matrix]
+    logger.error("process_game(size=%s,matrix=%s,moves=%s): game_matrix → %s", size, matrix, moves, game_matrix, extra={"event.action": "process_game", "logrite.size": size, "logrite.matrix": matrix, "logrite.moves": moves})
     total_score = 0
 
     for move in moves:
@@ -262,6 +292,7 @@ def process_game(size: int, matrix: list[str], moves: list[tuple[int, int]]) -> 
         game_matrix, score = play(game_matrix, pos_x, pos_y, size)
         total_score += score
 
+    logger.warning("<<< Exiting process_game(size=%s,matrix=%s,moves=%s)", size, matrix, moves, extra={"event.action": "process_game", "logrite.size": size, "logrite.matrix": matrix, "logrite.moves": moves})
     return total_score
 
 

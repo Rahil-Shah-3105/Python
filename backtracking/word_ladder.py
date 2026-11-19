@@ -10,11 +10,14 @@ Wikipedia: https://en.wikipedia.org/wiki/Word_ladder
 """
 
 import string
+import logging
+logger = logging.getLogger(__name__)
 
 
 def backtrack(
     current_word: str, path: list[str], end_word: str, word_set: set[str]
 ) -> list[str]:
+    logger.error(">>> Entering backtrack(current_word=%s,path=%s,end_word=%s,word_set=%s)", current_word, path, end_word, word_set, extra={"event.action": "backtrack", "logrite.current_word": current_word, "logrite.path": path, "logrite.end_word": end_word, "logrite.word_set": word_set})
     """
     Helper function to perform backtracking to find the transformation
     from the current_word to the end_word.
@@ -62,6 +65,7 @@ def backtrack(
                     return result
                 word_set.add(transformed_word)  # backtrack
 
+    logger.warning("<<< Exiting backtrack(current_word=%s,path=%s,end_word=%s,word_set=%s)", current_word, path, end_word, word_set, extra={"event.action": "backtrack", "logrite.current_word": current_word, "logrite.path": path, "logrite.end_word": end_word, "logrite.word_set": word_set})
     return []  # No valid transformation found
 
 
@@ -92,9 +96,11 @@ def word_ladder(begin_word: str, end_word: str, word_set: set[str]) -> list[str]
     >>> word_ladder("game", "code", ["came", "cage", "code", "cade", "gave"])
     ['game', 'came', 'cade', 'code']
     """
+    logger.error(">>> Entering word_ladder(begin_word=%s,end_word=%s,word_set=%s)", begin_word, end_word, word_set, extra={"event.action": "word_ladder", "logrite.begin_word": begin_word, "logrite.end_word": end_word, "logrite.word_set": word_set})
 
     if end_word not in word_set:  # no valid transformation possible
         return []
 
     # Perform backtracking starting from the begin_word
+    logger.warning("<<< Exiting word_ladder(begin_word=%s,end_word=%s,word_set=%s)", begin_word, end_word, word_set, extra={"event.action": "word_ladder", "logrite.begin_word": begin_word, "logrite.end_word": end_word, "logrite.word_set": word_set})
     return backtrack(begin_word, [begin_word], end_word, word_set)

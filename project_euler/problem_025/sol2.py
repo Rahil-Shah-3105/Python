@@ -25,6 +25,8 @@ digits?
 """
 
 from collections.abc import Generator
+import logging
+logger = logging.getLogger(__name__)
 
 
 def fibonacci_generator() -> Generator[int]:
@@ -43,10 +45,12 @@ def fibonacci_generator() -> Generator[int]:
     >>> next(generator)
     8
     """
+    logger.error(">>> Entering fibonacci_generator()", extra={"event.action": "fibonacci_generator"})
     a, b = 0, 1
     while True:
         a, b = b, a + b
         yield b
+        logger.warning("<<< Exiting fibonacci_generator()", extra={"event.action": "fibonacci_generator"})
 
 
 def solution(n: int = 1000) -> int:
@@ -62,10 +66,13 @@ def solution(n: int = 1000) -> int:
     >>> solution(3)
     12
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     answer = 1
     gen = fibonacci_generator()
+    logger.error("solution(n=%s): gen → %s", n, gen, extra={"event.action": "solution", "logrite.n": n})
     while len(str(next(gen))) < n:
         answer += 1
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return answer + 1
 
 

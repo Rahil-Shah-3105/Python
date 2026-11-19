@@ -14,6 +14,8 @@ include it once in your sum.
 """
 
 import itertools
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_combination_valid(combination):
@@ -28,6 +30,8 @@ def is_combination_valid(combination):
     False
 
     """
+    logger.error(">>> Entering is_combination_valid(combination=%s)", combination, extra={"event.action": "is_combination_valid", "logrite.combination": combination})
+    logger.warning("<<< Exiting is_combination_valid(combination=%s)", combination, extra={"event.action": "is_combination_valid", "logrite.combination": combination})
     return (
         int("".join(combination[0:2])) * int("".join(combination[2:5]))
         == int("".join(combination[5:9]))
@@ -45,7 +49,9 @@ def solution():
     >>> solution()
     45228
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
 
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return sum(
         {
             int("".join(pandigital[5:9]))

@@ -9,17 +9,21 @@ such as the with segment trees or fenwick trees. You can read more about them he
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 test_array = [2, 1, 4, 5, 6, 0, 8, 9, 1, 2, 0, 6, 4, 2, 0, 6, 5, 3, 2, 7]
 
 
 class Node:
     def __init__(self, length: int) -> None:
+        logger.error(">>> Entering __init__(length=%s)", length, extra={"event.action": "__init__", "logrite.length": length})
         self.minn: int = -1
         self.maxx: int = -1
         self.map_left: list[int] = [-1] * length
         self.left: Node | None = None
         self.right: Node | None = None
+        logger.warning("<<< Exiting __init__(length=%s)", length, extra={"event.action": "__init__", "logrite.length": length})
 
     def __repr__(self) -> str:
         """
@@ -29,6 +33,8 @@ class Node:
         >>> repr(node) == str(node)
         True
         """
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"Node(min_value={self.minn} max_value={self.maxx})"
 
 
@@ -40,7 +46,9 @@ def build_tree(arr: list[int]) -> Node | None:
     >>> build_tree(test_array)
     Node(min_value=0 max_value=9)
     """
+    logger.error(">>> Entering build_tree(arr=%s)", arr, extra={"event.action": "build_tree", "logrite.arr": arr})
     root = Node(len(arr))
+    logger.error("build_tree(arr=%s): root → %s", arr, root, extra={"event.action": "build_tree", "logrite.arr": arr})
     root.minn, root.maxx = min(arr), max(arr)
     # Leaf node case where the node contains only one unique value
     if root.minn == root.maxx:
@@ -64,6 +72,7 @@ def build_tree(arr: list[int]) -> Node | None:
         root.map_left[index] = len(left_arr)
     root.left = build_tree(left_arr)
     root.right = build_tree(right_arr)
+    logger.warning("<<< Exiting build_tree(arr=%s)", arr, extra={"event.action": "build_tree", "logrite.arr": arr})
     return root
 
 
@@ -83,6 +92,7 @@ def rank_till_index(node: Node | None, num: int, index: int) -> int:
     >>> rank_till_index(root, 0, 9)
     1
     """
+    logger.error(">>> Entering rank_till_index(node=%s,num=%s,index=%s)", node, num, index, extra={"event.action": "rank_till_index", "logrite.node": node, "logrite.num": num, "logrite.index": index})
     if index < 0 or node is None:
         return 0
     # Leaf node cases
@@ -94,6 +104,7 @@ def rank_till_index(node: Node | None, num: int, index: int) -> int:
         return rank_till_index(node.left, num, node.map_left[index] - 1)
     else:
         # go to the right subtree and map index to the right subtree
+        logger.warning("<<< Exiting rank_till_index(node=%s,num=%s,index=%s)", node, num, index, extra={"event.action": "rank_till_index", "logrite.node": node, "logrite.num": num, "logrite.index": index})
         return rank_till_index(node.right, num, index - node.map_left[index])
 
 
@@ -111,10 +122,12 @@ def rank(node: Node | None, num: int, start: int, end: int) -> int:
     >>> rank(root, 0, 5, 10)
     2
     """
+    logger.error(">>> Entering rank(node=%s,num=%s,start=%s,end=%s)", node, num, start, end, extra={"event.action": "rank", "logrite.node": node, "logrite.num": num, "logrite.start": start, "logrite.end": end})
     if start > end:
         return 0
     rank_till_end = rank_till_index(node, num, end)
     rank_before_start = rank_till_index(node, num, start - 1)
+    logger.warning("<<< Exiting rank(node=%s,num=%s,start=%s,end=%s)", node, num, start, end, extra={"event.action": "rank", "logrite.node": node, "logrite.num": num, "logrite.start": start, "logrite.end": end})
     return rank_till_end - rank_before_start
 
 
@@ -133,6 +146,7 @@ def quantile(node: Node | None, index: int, start: int, end: int) -> int:
     >>> quantile(root, 4, 2, 5)
     -1
     """
+    logger.error(">>> Entering quantile(node=%s,index=%s,start=%s,end=%s)", node, index, start, end, extra={"event.action": "quantile", "logrite.node": node, "logrite.index": index, "logrite.start": start, "logrite.end": end})
     if index > (end - start) or start > end or node is None:
         return -1
     # Leaf node case
@@ -150,6 +164,7 @@ def quantile(node: Node | None, index: int, start: int, end: int) -> int:
             node.map_left[end] - 1,
         )
     else:
+        logger.warning("<<< Exiting quantile(node=%s,index=%s,start=%s,end=%s)", node, index, start, end, extra={"event.action": "quantile", "logrite.node": node, "logrite.index": index, "logrite.start": start, "logrite.end": end})
         return quantile(
             node.right,
             index - num_elements_in_left_tree,
@@ -161,6 +176,7 @@ def quantile(node: Node | None, index: int, start: int, end: int) -> int:
 def range_counting(
     node: Node | None, start: int, end: int, start_num: int, end_num: int
 ) -> int:
+    logger.error(">>> Entering range_counting(node=%s,start=%s,end=%s,start_num=%s,end_num=%s)", node, start, end, start_num, end_num, extra={"event.action": "range_counting", "logrite.node": node, "logrite.start": start, "logrite.end": end, "logrite.start_num": start_num, "logrite.end_num": end_num})
     """
     Returns the number of elements in range [start_num, end_num]
     in interval [start, end] in the list
@@ -201,6 +217,7 @@ def range_counting(
         start_num,
         end_num,
     )
+    logger.warning("<<< Exiting range_counting(node=%s,start=%s,end=%s,start_num=%s,end_num=%s)", node, start, end, start_num, end_num, extra={"event.action": "range_counting", "logrite.node": node, "logrite.start": start, "logrite.end": end, "logrite.start_num": start_num, "logrite.end_num": end_num})
     return left + right
 
 

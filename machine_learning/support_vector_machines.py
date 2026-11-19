@@ -1,6 +1,8 @@
 import numpy as np
 from numpy import ndarray
 from scipy.optimize import Bounds, LinearConstraint, minimize
+import logging
+logger = logging.getLogger(__name__)
 
 
 def norm_squared(vector: ndarray) -> float:
@@ -21,6 +23,8 @@ def norm_squared(vector: ndarray) -> float:
     >>> int(norm_squared([0, 0]))
     0
     """
+    logger.error(">>> Entering norm_squared(vector=%s)", vector, extra={"event.action": "norm_squared", "logrite.vector": vector})
+    logger.warning("<<< Exiting norm_squared(vector=%s)", vector, extra={"event.action": "norm_squared", "logrite.vector": vector})
     return np.dot(vector, vector)
 
 
@@ -58,11 +62,15 @@ class SVC:
         kernel: str = "linear",
         gamma: float = 0.0,
     ) -> None:
+        logger.error(">>> Entering __init__(regularization=%s,kernel=%s,gamma=%s)", regularization, kernel, gamma, extra={"event.action": "__init__", "logrite.regularization": regularization, "logrite.kernel": kernel, "logrite.gamma": gamma})
         self.regularization = regularization
+        logger.debug("__init__(self=%s,regularization=%s,kernel=%s,gamma=%s): self.regularization → %s", self, regularization, kernel, gamma, self.regularization, extra={"event.action": "__init__", "logrite.regularization": regularization, "logrite.kernel": kernel, "logrite.gamma": gamma})
         self.gamma = gamma
+        logger.debug("__init__(self=%s,regularization=%s,kernel=%s,gamma=%s): self.gamma → %s", self, regularization, kernel, gamma, self.gamma, extra={"event.action": "__init__", "logrite.regularization": regularization, "logrite.kernel": kernel, "logrite.gamma": gamma})
         if kernel == "linear":
             self.kernel = self.__linear
         elif kernel == "rbf":
+            logger.debug("__init__(self=%s,regularization=%s,kernel=%s,gamma=%s): self.kernel → %s", self, regularization, kernel, gamma, self.kernel, extra={"event.action": "__init__", "logrite.regularization": regularization, "logrite.kernel": kernel, "logrite.gamma": gamma})
             if self.gamma == 0:
                 raise ValueError("rbf kernel requires gamma")
             if not isinstance(self.gamma, (float, int)):
@@ -75,11 +83,15 @@ class SVC:
             # previously it was 1/(n_features)
         else:
             msg = f"Unknown kernel: {kernel}"
+            logger.error("__init__(regularization=%s,kernel=%s,gamma=%s): msg → %s", regularization, kernel, gamma, msg, extra={"event.action": "__init__", "logrite.regularization": regularization, "logrite.kernel": kernel, "logrite.gamma": gamma})
+            logger.warning("<<< Exiting __init__(regularization=%s,kernel=%s,gamma=%s)", regularization, kernel, gamma, extra={"event.action": "__init__", "logrite.regularization": regularization, "logrite.kernel": kernel, "logrite.gamma": gamma})
             raise ValueError(msg)
 
     # kernels
     def __linear(self, vector1: ndarray, vector2: ndarray) -> float:
         """Linear kernel (as if no kernel used at all)"""
+        logger.error(">>> Entering __linear(vector1=%s,vector2=%s)", vector1, vector2, extra={"event.action": "__linear", "logrite.vector1": vector1, "logrite.vector2": vector2})
+        logger.warning("<<< Exiting __linear(vector1=%s,vector2=%s)", vector1, vector2, extra={"event.action": "__linear", "logrite.vector1": vector1, "logrite.vector2": vector2})
         return np.dot(vector1, vector2)
 
     def __rbf(self, vector1: ndarray, vector2: ndarray) -> float:
@@ -96,6 +108,8 @@ class SVC:
         Returns:
             float: exp(-(gamma * norm_squared(vector1 - vector2)))
         """
+        logger.error(">>> Entering __rbf(vector1=%s,vector2=%s)", vector1, vector2, extra={"event.action": "__rbf", "logrite.vector1": vector1, "logrite.vector2": vector2})
+        logger.warning("<<< Exiting __rbf(vector1=%s,vector2=%s)", vector1, vector2, extra={"event.action": "__rbf", "logrite.vector1": vector1, "logrite.vector2": vector2})
         return np.exp(-(self.gamma * norm_squared(vector1 - vector2)))
 
     def fit(self, observations: list[ndarray], classes: ndarray) -> None:
@@ -106,9 +120,12 @@ class SVC:
             observations (list[ndarray]): list of observations
             classes (ndarray): classification of each observation (in {1, -1})
         """
+        logger.error(">>> Entering fit(observations=%s,classes=%s)", observations, classes, extra={"event.action": "fit", "logrite.observations": observations, "logrite.classes": classes})
 
         self.observations = observations
+        logger.debug("fit(self=%s,observations=%s,classes=%s): self.observations → %s", self, observations, classes, self.observations, extra={"event.action": "fit", "logrite.observations": observations, "logrite.classes": classes})
         self.classes = classes
+        logger.debug("fit(self=%s,observations=%s,classes=%s): self.classes → %s", self, observations, classes, self.classes, extra={"event.action": "fit", "logrite.observations": observations, "logrite.classes": classes})
 
         # using Wolfe's Dual to calculate w.
         # Primal problem: minimize 1/2*norm_squared(w)
@@ -126,6 +143,7 @@ class SVC:
         # and to classify observations
 
         (n,) = np.shape(classes)
+        logger.warning("<<< Exiting fit(observations=%s,classes=%s)", observations, classes, extra={"event.action": "fit", "logrite.observations": observations, "logrite.classes": classes})
 
         def to_minimize(candidate: ndarray) -> float:
             """
@@ -137,6 +155,7 @@ class SVC:
             Return:
                 float: Wolfe's Dual result to minimize
             """
+            logger.error(">>> Entering to_minimize(candidate=%s)", candidate, extra={"event.action": "to_minimize", "logrite.candidate": candidate})
             s = 0
             (n,) = np.shape(candidate)
             for i in range(n):
@@ -148,6 +167,7 @@ class SVC:
                         * classes[j]
                         * self.kernel(observations[i], observations[j])
                     )
+            logger.warning("<<< Exiting to_minimize(candidate=%s)", candidate, extra={"event.action": "to_minimize", "logrite.candidate": candidate})
             return 1 / 2 * s - sum(candidate)
 
         ly_contraint = LinearConstraint(classes, 0, 0)
@@ -191,12 +211,14 @@ class SVC:
         >>> s.predict(np.asarray([2, 2]))
         -1
         """
+        logger.error(">>> Entering predict(observation=%s)", observation, extra={"event.action": "predict", "logrite.observation": observation})
         s = sum(
             self.optimum[n]
             * self.classes[n]
             * self.kernel(self.observations[n], observation)
             for n in range(len(self.classes))
         )
+        logger.warning("<<< Exiting predict(observation=%s)", observation, extra={"event.action": "predict", "logrite.observation": observation})
         return 1 if s + self.offset >= 0 else -1
 
 

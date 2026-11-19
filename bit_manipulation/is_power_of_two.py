@@ -13,6 +13,8 @@ n - 1 = 0..011..11
 
 n & (n - 1) - no intersections = 0
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_power_of_two(number: int) -> bool:
@@ -46,8 +48,10 @@ def is_power_of_two(number: int) -> bool:
     >>> all(is_power_of_two(int(2 ** i)) for i in range(10000))
     True
     """
+    logger.error(">>> Entering is_power_of_two(number=%s)", number, extra={"event.action": "is_power_of_two", "logrite.number": number})
     if number < 0:
         raise ValueError("number must not be negative")
+    logger.warning("<<< Exiting is_power_of_two(number=%s)", number, extra={"event.action": "is_power_of_two", "logrite.number": number})
     return number & (number - 1) == 0
 
 

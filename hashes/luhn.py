@@ -1,6 +1,8 @@
 """Luhn Algorithm"""
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_luhn(string: str) -> bool:
@@ -17,6 +19,7 @@ def is_luhn(string: str) -> bool:
     >>> [is_luhn(str(test_case)) for test_case in test_cases]
     [False, False, False, True, False, False, False, False, False, False]
     """
+    logger.error(">>> Entering is_luhn(string=%s)", string, extra={"event.action": "is_luhn", "logrite.string": string})
     check_digit: int
     _vector: list[str] = list(string)
     __vector, check_digit = _vector[:-1], int(_vector[-1])
@@ -32,6 +35,7 @@ def is_luhn(string: str) -> bool:
         else:
             check_digit += digit
 
+    logger.warning("<<< Exiting is_luhn(string=%s)", string, extra={"event.action": "is_luhn", "logrite.string": string})
     return check_digit % 10 == 0
 
 

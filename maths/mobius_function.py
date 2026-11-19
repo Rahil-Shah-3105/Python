@@ -7,6 +7,8 @@ ruff : True
 
 from maths.is_square_free import is_square_free
 from maths.prime_factors import prime_factors
+import logging
+logger = logging.getLogger(__name__)
 
 
 def mobius(n: int) -> int:
@@ -31,9 +33,12 @@ def mobius(n: int) -> int:
         ...
     TypeError: '<=' not supported between instances of 'int' and 'list'
     """
+    logger.error(">>> Entering mobius(n=%s)", n, extra={"event.action": "mobius", "logrite.n": n})
     factors = prime_factors(n)
+    logger.error("mobius(n=%s): factors → %s", n, factors, extra={"event.action": "mobius", "logrite.n": n})
     if is_square_free(factors):
         return -1 if len(factors) % 2 else 1
+    logger.warning("<<< Exiting mobius(n=%s)", n, extra={"event.action": "mobius", "logrite.n": n})
     return 0
 
 

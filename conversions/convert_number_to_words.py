@@ -1,5 +1,7 @@
 from enum import Enum
 from typing import Literal
+import logging
+logger = logging.getLogger(__name__)
 
 
 class NumberingSystem(Enum):
@@ -41,6 +43,7 @@ class NumberingSystem(Enum):
         >>> NumberingSystem.max_value("indian") == 10**19 - 1
         True
         """
+        logger.error(">>> Entering max_value(system=%s)", system, extra={"event.action": "max_value", "logrite.system": system})
         match system_enum := cls[system.upper()]:
             case cls.SHORT:
                 max_exp = system_enum.value[0][0] + 3
@@ -50,6 +53,7 @@ class NumberingSystem(Enum):
                 max_exp = 19
             case _:
                 raise ValueError("Invalid numbering system")
+        logger.warning("<<< Exiting max_value(system=%s)", system, extra={"event.action": "max_value", "logrite.system": system})
         return 10**max_exp - 1
 
 
@@ -118,6 +122,7 @@ def convert_small_number(num: int) -> str:
     ...
     ValueError: This function only converts numbers less than 100
     """
+    logger.error(">>> Entering convert_small_number(num=%s)", num, extra={"event.action": "convert_small_number", "logrite.num": num})
     if num < 0:
         raise ValueError("This function only accepts non-negative integers")
     if num >= 100:
@@ -126,6 +131,7 @@ def convert_small_number(num: int) -> str:
     if tens == 0:
         return NumberWords.ONES.value[ones] or "zero"
     if tens == 1:
+        logger.warning("<<< Exiting convert_small_number(num=%s)", num, extra={"event.action": "convert_small_number", "logrite.num": num})
         return NumberWords.TEENS.value[ones]
     return (
         NumberWords.TENS.value[tens]
@@ -137,6 +143,7 @@ def convert_small_number(num: int) -> str:
 def convert_number(
     num: int, system: Literal["short", "long", "indian"] = "short"
 ) -> str:
+    logger.error(">>> Entering convert_number(num=%s,system=%s)", num, system, extra={"event.action": "convert_number", "logrite.num": num, "logrite.system": system})
     """
     Converts an integer to English words.
 
@@ -194,6 +201,7 @@ def convert_number(
             word_groups.append(f"{word_group} {unit}")
     if num > 0 or not word_groups:  # word_groups is only empty if input num was 0
         word_groups.append(convert_small_number(num))
+    logger.warning("<<< Exiting convert_number(num=%s,system=%s)", num, system, extra={"event.action": "convert_number", "logrite.num": num, "logrite.system": system})
     return " ".join(word_groups)
 
 

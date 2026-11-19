@@ -7,6 +7,8 @@ Note: As 1! = 1 and 2! = 2 are not sums they are not included.
 """
 
 from math import factorial
+import logging
+logger = logging.getLogger(__name__)
 
 DIGIT_FACTORIAL = {str(d): factorial(d) for d in range(10)}
 
@@ -19,6 +21,8 @@ def sum_of_digit_factorial(n: int) -> int:
     >>> sum_of_digit_factorial(0)
     1
     """
+    logger.error(">>> Entering sum_of_digit_factorial(n=%s)", n, extra={"event.action": "sum_of_digit_factorial", "logrite.n": n})
+    logger.warning("<<< Exiting sum_of_digit_factorial(n=%s)", n, extra={"event.action": "sum_of_digit_factorial", "logrite.n": n})
     return sum(DIGIT_FACTORIAL[d] for d in str(n))
 
 
@@ -30,7 +34,10 @@ def solution() -> int:
     >>> solution()
     40730
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
     limit = 7 * factorial(9) + 1
+    logger.error("solution(): limit → %s", limit, extra={"event.action": "solution"})
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return sum(i for i in range(3, limit) if sum_of_digit_factorial(i) == i)
 
 

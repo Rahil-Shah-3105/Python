@@ -1,6 +1,8 @@
 """
 Program to check if a cycle is present in a given graph
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def check_cycle(graph: dict) -> bool:
@@ -11,10 +13,12 @@ def check_cycle(graph: dict) -> bool:
     >>> check_cycle(graph={0:[1, 2], 1:[2], 2:[0, 3], 3:[3]})
     True
     """
+    logger.error(">>> Entering check_cycle(graph=%s)", graph, extra={"event.action": "check_cycle", "logrite.graph": graph})
     # Keep track of visited nodes
     visited: set[int] = set()
     # To detect a back edge, keep track of vertices currently in the recursion stack
     rec_stk: set[int] = set()
+    logger.warning("<<< Exiting check_cycle(graph=%s)", graph, extra={"event.action": "check_cycle", "logrite.graph": graph})
     return any(
         node not in visited and depth_first_search(graph, node, visited, rec_stk)
         for node in graph
@@ -30,6 +34,7 @@ def depth_first_search(graph: dict, vertex: int, visited: set, rec_stk: set) -> 
     >>> depth_first_search(graph, vertex, visited, rec_stk)
     False
     """
+    logger.error(">>> Entering depth_first_search(graph=%s,vertex=%s,visited=%s,rec_stk=%s)", graph, vertex, visited, rec_stk, extra={"event.action": "depth_first_search", "logrite.graph": graph, "logrite.vertex": vertex, "logrite.visited": visited, "logrite.rec_stk": rec_stk})
     # Mark current node as visited and add to recursion stack
     visited.add(vertex)
     rec_stk.add(vertex)
@@ -43,6 +48,7 @@ def depth_first_search(graph: dict, vertex: int, visited: set, rec_stk: set) -> 
 
     # The node needs to be removed from recursion stack before function ends
     rec_stk.remove(vertex)
+    logger.warning("<<< Exiting depth_first_search(graph=%s,vertex=%s,visited=%s,rec_stk=%s)", graph, vertex, visited, rec_stk, extra={"event.action": "depth_first_search", "logrite.graph": graph, "logrite.vertex": vertex, "logrite.visited": visited, "logrite.rec_stk": rec_stk})
     return False
 
 

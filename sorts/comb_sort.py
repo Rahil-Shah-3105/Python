@@ -17,6 +17,8 @@ python3 -m doctest -v comb_sort.py
 For manual testing run:
 python comb_sort.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def comb_sort(data: list) -> list:
@@ -31,8 +33,10 @@ def comb_sort(data: list) -> list:
     >>> comb_sort([99, 45, -7, 8, 2, 0, -15, 3])
     [-15, -7, 0, 2, 3, 8, 45, 99]
     """
+    logger.error(">>> Entering comb_sort(data=%s)", data, extra={"event.action": "comb_sort"})
     shrink_factor = 1.3
     gap = len(data)
+    logger.error("comb_sort(data=%s): gap → %s", data, gap, extra={"event.action": "comb_sort"})
     completed = False
 
     while not completed:
@@ -49,6 +53,7 @@ def comb_sort(data: list) -> list:
                 completed = False
             index += 1
 
+    logger.warning("<<< Exiting comb_sort(data=%s)", data, extra={"event.action": "comb_sort"})
     return data
 
 

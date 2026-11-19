@@ -15,6 +15,8 @@ https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm
 from __future__ import annotations
 
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 
 def extended_euclidean_algorithm(a: int, b: int) -> tuple[int, int]:
@@ -46,6 +48,7 @@ def extended_euclidean_algorithm(a: int, b: int) -> tuple[int, int]:
     (1, 0)
 
     """
+    logger.error(">>> Entering extended_euclidean_algorithm(a=%s,b=%s)", a, b, extra={"event.action": "extended_euclidean_algorithm", "logrite.a": a, "logrite.b": b})
     # base cases
     if abs(a) == 1:
         return a, 0
@@ -68,17 +71,20 @@ def extended_euclidean_algorithm(a: int, b: int) -> tuple[int, int]:
     if b < 0:
         old_coeff_b = -old_coeff_b
 
+    logger.warning("<<< Exiting extended_euclidean_algorithm(a=%s,b=%s)", a, b, extra={"event.action": "extended_euclidean_algorithm", "logrite.a": a, "logrite.b": b})
     return old_coeff_a, old_coeff_b
 
 
 def main():
     """Call Extended Euclidean Algorithm."""
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     if len(sys.argv) < 3:
         print("2 integer arguments required")
         return 1
     a = int(sys.argv[1])
     b = int(sys.argv[2])
     print(extended_euclidean_algorithm(a, b))
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
     return 0
 
 

@@ -7,6 +7,8 @@ For example:
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def allocation_num(number_of_bytes: int, partitions: int) -> list[str]:
@@ -29,6 +31,7 @@ def allocation_num(number_of_bytes: int, partitions: int) -> list[str]:
         ...
     ValueError: partitions must be a positive number!
     """
+    logger.error(">>> Entering allocation_num(number_of_bytes=%s,partitions=%s)", number_of_bytes, partitions, extra={"event.action": "allocation_num", "logrite.number_of_bytes": number_of_bytes, "logrite.partitions": partitions})
     if partitions <= 0:
         raise ValueError("partitions must be a positive number!")
     if partitions > number_of_bytes:
@@ -41,6 +44,7 @@ def allocation_num(number_of_bytes: int, partitions: int) -> list[str]:
             number_of_bytes if i == partitions - 1 else (i + 1) * bytes_per_partition
         )
         allocation_list.append(f"{start_bytes}-{end_bytes}")
+    logger.warning("<<< Exiting allocation_num(number_of_bytes=%s,partitions=%s)", number_of_bytes, partitions, extra={"event.action": "allocation_num", "logrite.number_of_bytes": number_of_bytes, "logrite.partitions": partitions})
     return allocation_list
 
 

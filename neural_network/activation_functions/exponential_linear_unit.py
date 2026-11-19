@@ -9,6 +9,8 @@ https://en.wikipedia.org/wiki/Rectifier_(neural_networks)
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def exponential_linear_unit(vector: np.ndarray, alpha: float) -> np.ndarray:
@@ -31,6 +33,8 @@ def exponential_linear_unit(vector: np.ndarray, alpha: float) -> np.ndarray:
 
 
     """
+    logger.error(">>> Entering exponential_linear_unit(vector=%s,alpha=%s)", vector, alpha, extra={"event.action": "exponential_linear_unit", "logrite.vector": vector, "logrite.alpha": alpha})
+    logger.warning("<<< Exiting exponential_linear_unit(vector=%s,alpha=%s)", vector, alpha, extra={"event.action": "exponential_linear_unit", "logrite.vector": vector, "logrite.alpha": alpha})
     return np.where(vector > 0, vector, (alpha * (np.exp(vector) - 1)))
 
 

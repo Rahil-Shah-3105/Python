@@ -1,5 +1,7 @@
 import math
 from collections.abc import Callable
+import logging
+logger = logging.getLogger(__name__)
 
 
 def intersection(function: Callable[[float], float], x0: float, x1: float) -> float:
@@ -27,6 +29,7 @@ def intersection(function: Callable[[float], float], x0: float, x1: float) -> fl
         ...
     ZeroDivisionError: float division by zero, could not find root
     """
+    logger.error(">>> Entering intersection(function=%s,x0=%s,x1=%s)", function, x0, x1, extra={"event.action": "intersection", "logrite.function": function, "logrite.x0": x0, "logrite.x1": x1})
     x_n: float = x0
     x_n1: float = x1
     while True:
@@ -36,6 +39,7 @@ def intersection(function: Callable[[float], float], x0: float, x1: float) -> fl
             function(x_n1) / ((function(x_n1) - function(x_n)) / (x_n1 - x_n))
         )
         if abs(x_n2 - x_n1) < 10**-5:
+            logger.warning("<<< Exiting intersection(function=%s,x0=%s,x1=%s)", function, x0, x1, extra={"event.action": "intersection", "logrite.function": function, "logrite.x0": x0, "logrite.x1": x1})
             return x_n2
         x_n = x_n1
         x_n1 = x_n2
@@ -47,6 +51,8 @@ def f(x: float) -> float:
     >>> f(2)
     -1.0
     """
+    logger.error(">>> Entering f(x=%s)", x, extra={"event.action": "f", "logrite.x": x})
+    logger.warning("<<< Exiting f(x=%s)", x, extra={"event.action": "f", "logrite.x": x})
     return math.pow(x, 3) - (2 * x) - 5
 
 

@@ -27,6 +27,8 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 c_cauliflower = 0.25 + 0.0j
 c_polynomial_1 = -0.4 + 0.6j
@@ -47,6 +49,8 @@ def eval_exponential(c_parameter: complex, z_values: np.ndarray) -> np.ndarray:
     >>> bool(abs(eval_exponential(1.j, 0)-1-1.j) < 1e-15)
     True
     """
+    logger.error(">>> Entering eval_exponential(c_parameter=%s,z_values=%s)", c_parameter, z_values, extra={"event.action": "eval_exponential", "logrite.c_parameter": c_parameter, "logrite.z_values": z_values})
+    logger.warning("<<< Exiting eval_exponential(c_parameter=%s,z_values=%s)", c_parameter, z_values, extra={"event.action": "eval_exponential", "logrite.c_parameter": c_parameter, "logrite.z_values": z_values})
     return np.exp(z_values) + c_parameter
 
 
@@ -61,6 +65,8 @@ def eval_quadratic_polynomial(c_parameter: complex, z_values: np.ndarray) -> np.
     >>> round(eval_quadratic_polynomial(1.j, 0).real)
     0
     """
+    logger.error(">>> Entering eval_quadratic_polynomial(c_parameter=%s,z_values=%s)", c_parameter, z_values, extra={"event.action": "eval_quadratic_polynomial", "logrite.c_parameter": c_parameter, "logrite.z_values": z_values})
+    logger.warning("<<< Exiting eval_quadratic_polynomial(c_parameter=%s,z_values=%s)", c_parameter, z_values, extra={"event.action": "eval_quadratic_polynomial", "logrite.c_parameter": c_parameter, "logrite.z_values": z_values})
     return z_values * z_values + c_parameter
 
 
@@ -75,10 +81,14 @@ def prepare_grid(window_size: float, nb_pixels: int) -> np.ndarray:
            [ 0.-1.j,  0.+0.j,  0.+1.j],
            [ 1.-1.j,  1.+0.j,  1.+1.j]])
     """
+    logger.error(">>> Entering prepare_grid(window_size=%s,nb_pixels=%s)", window_size, nb_pixels, extra={"event.action": "prepare_grid", "logrite.window_size": window_size, "logrite.nb_pixels": nb_pixels})
     x = np.linspace(-window_size, window_size, nb_pixels)
     x = x.reshape((nb_pixels, 1))
+    logger.error("prepare_grid(window_size=%s,nb_pixels=%s): x → %s", window_size, nb_pixels, x, extra={"event.action": "prepare_grid", "logrite.window_size": window_size, "logrite.nb_pixels": nb_pixels})
     y = np.linspace(-window_size, window_size, nb_pixels)
     y = y.reshape((1, nb_pixels))
+    logger.error("prepare_grid(window_size=%s,nb_pixels=%s): y → %s", window_size, nb_pixels, y, extra={"event.action": "prepare_grid", "logrite.window_size": window_size, "logrite.nb_pixels": nb_pixels})
+    logger.warning("<<< Exiting prepare_grid(window_size=%s,nb_pixels=%s)", window_size, nb_pixels, extra={"event.action": "prepare_grid", "logrite.window_size": window_size, "logrite.nb_pixels": nb_pixels})
     return x + 1.0j * y
 
 
@@ -89,6 +99,7 @@ def iterate_function(
     z_0: np.ndarray,
     infinity: float | None = None,
 ) -> np.ndarray:
+    logger.error(">>> Entering iterate_function(eval_function=%s,function_params=%s,nb_iterations=%s,z_0=%s,infinity=%s)", eval_function, function_params, nb_iterations, z_0, infinity, extra={"event.action": "iterate_function", "logrite.eval_function": eval_function, "logrite.function_params": function_params, "logrite.nb_iterations": nb_iterations, "logrite.z_0": z_0, "logrite.infinity": infinity})
     """
     Iterate the function "eval_function" exactly nb_iterations times.
     The first argument of the function is a parameter which is contained in
@@ -116,11 +127,13 @@ def iterate_function(
     """
 
     z_n = z_0.astype("complex64")
+    logger.error("iterate_function(eval_function=%s,function_params=%s,nb_iterations=%s,z_0=%s,infinity=%s): z_n → %s", eval_function, function_params, nb_iterations, z_0, infinity, z_n, extra={"event.action": "iterate_function", "logrite.eval_function": eval_function, "logrite.function_params": function_params, "logrite.nb_iterations": nb_iterations, "logrite.z_0": z_0, "logrite.infinity": infinity})
     for _ in range(nb_iterations):
         z_n = eval_function(function_params, z_n)
         if infinity is not None:
             np.nan_to_num(z_n, copy=False, nan=infinity)
             z_n[abs(z_n) == np.inf] = infinity
+    logger.warning("<<< Exiting iterate_function(eval_function=%s,function_params=%s,nb_iterations=%s,z_0=%s,infinity=%s)", eval_function, function_params, nb_iterations, z_0, infinity, extra={"event.action": "iterate_function", "logrite.eval_function": eval_function, "logrite.function_params": function_params, "logrite.nb_iterations": nb_iterations, "logrite.z_0": z_0, "logrite.infinity": infinity})
     return z_n
 
 
@@ -130,6 +143,7 @@ def show_results(
     escape_radius: float,
     z_final: np.ndarray,
 ) -> None:
+    logger.error(">>> Entering show_results(function_label=%s,function_params=%s,escape_radius=%s,z_final=%s)", function_label, function_params, escape_radius, z_final, extra={"event.action": "show_results", "logrite.function_label": function_label, "logrite.function_params": function_params, "logrite.escape_radius": escape_radius, "logrite.z_final": z_final})
     """
     Plots of whether the absolute value of z_final is greater than
     the value of escape_radius. Adds the function_label and function_params to
@@ -139,10 +153,12 @@ def show_results(
     """
 
     abs_z_final = (abs(z_final)).transpose()
+    logger.error("show_results(function_label=%s,function_params=%s,escape_radius=%s,z_final=%s): abs_z_final → %s", function_label, function_params, escape_radius, z_final, abs_z_final, extra={"event.action": "show_results", "logrite.function_label": function_label, "logrite.function_params": function_params, "logrite.escape_radius": escape_radius, "logrite.z_final": z_final})
     abs_z_final[:, :] = abs_z_final[::-1, :]
     plt.matshow(abs_z_final < escape_radius)
     plt.title(f"Julia set of ${function_label}$, $c={function_params}$")
     plt.show()
+    logger.warning("<<< Exiting show_results(function_label=%s,function_params=%s,escape_radius=%s,z_final=%s)", function_label, function_params, escape_radius, z_final, extra={"event.action": "show_results", "logrite.function_label": function_label, "logrite.function_params": function_params, "logrite.escape_radius": escape_radius, "logrite.z_final": z_final})
 
 
 def ignore_overflow_warnings() -> None:
@@ -151,6 +167,7 @@ def ignore_overflow_warnings() -> None:
 
     >>> ignore_overflow_warnings()
     """
+    logger.error(">>> Entering ignore_overflow_warnings()", extra={"event.action": "ignore_overflow_warnings"})
     warnings.filterwarnings(
         "ignore", category=RuntimeWarning, message="overflow encountered in multiply"
     )
@@ -165,6 +182,7 @@ def ignore_overflow_warnings() -> None:
     warnings.filterwarnings(
         "ignore", category=RuntimeWarning, message="overflow encountered in exp"
     )
+    logger.warning("<<< Exiting ignore_overflow_warnings()", extra={"event.action": "ignore_overflow_warnings"})
 
 
 if __name__ == "__main__":

@@ -18,6 +18,8 @@ from heapq import nsmallest
 import numpy as np
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
+import logging
+logger = logging.getLogger(__name__)
 
 
 class KNN:
@@ -27,11 +29,15 @@ class KNN:
         train_target: np.ndarray[int],
         class_labels: list[str],
     ) -> None:
+        logger.error(">>> Entering __init__(train_data=%s,train_target=%s,class_labels=%s)", train_data, train_target, class_labels, extra={"event.action": "__init__", "logrite.train_data": train_data, "logrite.train_target": train_target, "logrite.class_labels": class_labels})
         """
         Create a kNN classifier using the given training data and class labels
         """
+        logger.warning("<<< Exiting __init__(train_data=%s,train_target=%s,class_labels=%s)", train_data, train_target, class_labels, extra={"event.action": "__init__", "logrite.train_data": train_data, "logrite.train_target": train_target, "logrite.class_labels": class_labels})
         self.data = zip(train_data, train_target)
+        logger.error("__init__(train_data=%s,train_target=%s,class_labels=%s): self.data → %s", train_data, train_target, class_labels, self.data, extra={"event.action": "__init__", "logrite.train_data": train_data, "logrite.train_target": train_target, "logrite.class_labels": class_labels})
         self.labels = class_labels
+        logger.debug("__init__(self=%s,train_data=%s,train_target=%s,class_labels=%s): self.labels → %s", self, train_data, train_target, class_labels, self.labels, extra={"event.action": "__init__", "logrite.train_data": train_data, "logrite.train_target": train_target, "logrite.class_labels": class_labels})
 
     @staticmethod
     def _euclidean_distance(a: np.ndarray[float], b: np.ndarray[float]) -> float:
@@ -42,6 +48,8 @@ class KNN:
         >>> KNN._euclidean_distance(np.array([1, 2, 3]), np.array([1, 8, 11]))
         10.0
         """
+        logger.error(">>> Entering _euclidean_distance(a=%s,b=%s)", a, b, extra={"event.action": "_euclidean_distance", "logrite.a": a, "logrite.b": b})
+        logger.warning("<<< Exiting _euclidean_distance(a=%s,b=%s)", a, b, extra={"event.action": "_euclidean_distance", "logrite.a": a, "logrite.b": b})
         return float(np.linalg.norm(a - b))
 
     def classify(self, pred_point: np.ndarray[float], k: int = 5) -> str:
@@ -57,6 +65,7 @@ class KNN:
         >>> knn.classify(point)
         'A'
         """
+        logger.error(">>> Entering classify(pred_point=%s,k=%s)", pred_point, k, extra={"event.action": "classify", "logrite.pred_point": pred_point, "logrite.k": k})
         # Distances of all points from the point to be classified
         distances = (
             (self._euclidean_distance(data_point[0], pred_point), data_point[1])
@@ -65,9 +74,12 @@ class KNN:
 
         # Choosing k points with the shortest distances
         votes = (i[1] for i in nsmallest(k, distances))
+        logger.error("classify(pred_point=%s,k=%s): votes → %s", pred_point, k, votes, extra={"event.action": "classify", "logrite.pred_point": pred_point, "logrite.k": k})
 
         # Most commonly occurring class is the one into which the point is classified
         result = Counter(votes).most_common(1)[0][0]
+        logger.error("classify(pred_point=%s,k=%s): result → %s", pred_point, k, result, extra={"event.action": "classify", "logrite.pred_point": pred_point, "logrite.k": k})
+        logger.warning("<<< Exiting classify(pred_point=%s,k=%s)", pred_point, k, extra={"event.action": "classify", "logrite.pred_point": pred_point, "logrite.k": k})
         return self.labels[result]
 
 

@@ -2,11 +2,16 @@
 This is a pure Python implementation of Dynamic Programming solution to the fibonacci
 sequence problem.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Fibonacci:
     def __init__(self) -> None:
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
         self.sequence = [0, 1]
+        logger.warning("<<< Exiting __init__()", extra={"event.action": "__init__"})
+        logger.debug("__init__(self=%s): self.sequence → %s", self, self.sequence, extra={"event.action": "__init__"})
 
     def get(self, index: int) -> list:
         """
@@ -18,13 +23,16 @@ class Fibonacci:
         >>> Fibonacci().get(5)
         [0, 1, 1, 2, 3]
         """
+        logger.error(">>> Entering get(index=%s)", index, extra={"event.action": "get", "logrite.index": index})
         if (difference := index - (len(self.sequence) - 2)) >= 1:
             for _ in range(difference):
                 self.sequence.append(self.sequence[-1] + self.sequence[-2])
+        logger.warning("<<< Exiting get(index=%s)", index, extra={"event.action": "get", "logrite.index": index})
         return self.sequence[:index]
 
 
 def main() -> None:
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     print(
         "Fibonacci Series Using Dynamic Programming\n",
         "Enter the index of the Fibonacci number you want to calculate ",
@@ -32,9 +40,11 @@ def main() -> None:
         sep="",
     )
     fibonacci = Fibonacci()
+    logger.error("main(): fibonacci → %s", fibonacci, extra={"event.action": "main"})
 
     while True:
         prompt: str = input(">> ")
+        logger.error("main(): prompt → <redacted>", extra={"event.action": "main"})
         if prompt in {"exit", "quit"}:
             break
 
@@ -45,6 +55,7 @@ def main() -> None:
             continue
 
         print(fibonacci.get(index))
+        logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

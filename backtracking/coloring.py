@@ -5,11 +5,14 @@ such that no adjacent vertices are assigned the same color
 
 Wikipedia: https://en.wikipedia.org/wiki/Graph_coloring
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def valid_coloring(
     neighbours: list[int], colored_vertices: list[int], color: int
 ) -> bool:
+    logger.error(">>> Entering valid_coloring(neighbours=%s,colored_vertices=%s,color=%s)", neighbours, colored_vertices, color, extra={"event.action": "valid_coloring", "logrite.neighbours": neighbours, "logrite.colored_vertices": colored_vertices, "logrite.color": color})
     """
     For each neighbour check if the coloring constraint is satisfied
     If any of the neighbours fail the constraint return False
@@ -27,6 +30,7 @@ def valid_coloring(
     False
     """
     # Does any neighbour not satisfy the constraints
+    logger.warning("<<< Exiting valid_coloring(neighbours=%s,colored_vertices=%s,color=%s)", neighbours, colored_vertices, color, extra={"event.action": "valid_coloring", "logrite.neighbours": neighbours, "logrite.colored_vertices": colored_vertices, "logrite.color": color})
     return not any(
         neighbour == 1 and colored_vertices[i] == color
         for i, neighbour in enumerate(neighbours)
@@ -36,6 +40,7 @@ def valid_coloring(
 def util_color(
     graph: list[list[int]], max_colors: int, colored_vertices: list[int], index: int
 ) -> bool:
+    logger.error(">>> Entering util_color(graph=%s,max_colors=%s,colored_vertices=%s,index=%s)", graph, max_colors, colored_vertices, index, extra={"event.action": "util_color", "logrite.graph": graph, "logrite.max_colors": max_colors, "logrite.colored_vertices": colored_vertices, "logrite.index": index})
     """
     Pseudo-Code
 
@@ -82,6 +87,7 @@ def util_color(
                 return True
             # Backtrack
             colored_vertices[index] = -1
+    logger.warning("<<< Exiting util_color(graph=%s,max_colors=%s,colored_vertices=%s,index=%s)", graph, max_colors, colored_vertices, index, extra={"event.action": "util_color", "logrite.graph": graph, "logrite.max_colors": max_colors, "logrite.colored_vertices": colored_vertices, "logrite.index": index})
     return False
 
 
@@ -113,9 +119,12 @@ def color(graph: list[list[int]], max_colors: int) -> list[int]:
     >>> color([[0, 1], [1, 0]], 2)  # 2 nodes, 2 colors (possible)
     [0, 1]
     """
+    logger.error(">>> Entering color(graph=%s,max_colors=%s)", graph, max_colors, extra={"event.action": "color", "logrite.graph": graph, "logrite.max_colors": max_colors})
     colored_vertices = [-1] * len(graph)
+    logger.error("color(graph=%s,max_colors=%s): colored_vertices → %s", graph, max_colors, colored_vertices, extra={"event.action": "color", "logrite.graph": graph, "logrite.max_colors": max_colors})
 
     if util_color(graph, max_colors, colored_vertices, 0):
         return colored_vertices
 
+    logger.warning("<<< Exiting color(graph=%s,max_colors=%s)", graph, max_colors, extra={"event.action": "color", "logrite.graph": graph, "logrite.max_colors": max_colors})
     return []

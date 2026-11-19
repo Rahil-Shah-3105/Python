@@ -19,6 +19,8 @@ speed or velocity of the object and r is the radius.
 
 Reference: https://byjus.com/physics/centripetal-and-centrifugal-force/
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def centripetal(mass: float, velocity: float, radius: float) -> float:
@@ -36,10 +38,12 @@ def centripetal(mass: float, velocity: float, radius: float) -> float:
     >>> round(centripetal(50,100,50),2)
     10000.0
     """
+    logger.error(">>> Entering centripetal(mass=%s,velocity=%s,radius=%s)", mass, velocity, radius, extra={"event.action": "centripetal", "logrite.mass": mass, "logrite.velocity": velocity, "logrite.radius": radius})
     if mass < 0:
         raise ValueError("The mass of the body cannot be negative")
     if radius <= 0:
         raise ValueError("The radius is always a positive non zero integer")
+    logger.warning("<<< Exiting centripetal(mass=%s,velocity=%s,radius=%s)", mass, velocity, radius, extra={"event.action": "centripetal", "logrite.mass": mass, "logrite.velocity": velocity, "logrite.radius": radius})
     return (mass * (velocity) ** 2) / radius
 
 

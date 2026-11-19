@@ -10,6 +10,8 @@ from __future__ import annotations
 import math
 from collections import Counter
 from string import ascii_lowercase
+import logging
+logger = logging.getLogger(__name__)
 
 
 def calculate_prob(text: str) -> None:
@@ -54,10 +56,13 @@ def calculate_prob(text: str) -> None:
     7.0
     3.0
     """
+    logger.error(">>> Entering calculate_prob(text=%s)", text, extra={"event.action": "calculate_prob", "logrite.text": text})
     single_char_strings, two_char_strings = analyze_text(text)
     my_alphas = list(" " + ascii_lowercase)
+    logger.error("calculate_prob(text=%s): my_alphas → %s", text, my_alphas, extra={"event.action": "calculate_prob", "logrite.text": text})
     # what is our total sum of probabilities.
     all_sum = sum(single_char_strings.values())
+    logger.error("calculate_prob(text=%s): all_sum → %s", text, all_sum, extra={"event.action": "calculate_prob", "logrite.text": text})
 
     # one length string
     my_fir_sum = 0
@@ -66,6 +71,7 @@ def calculate_prob(text: str) -> None:
         if ch in single_char_strings:
             my_str = single_char_strings[ch]
             prob = my_str / all_sum
+            logger.error("calculate_prob(text=%s): prob → %s", text, prob, extra={"event.action": "calculate_prob", "logrite.text": text})
             my_fir_sum += prob * math.log2(prob)  # entropy formula.
 
     # print entropy
@@ -88,6 +94,7 @@ def calculate_prob(text: str) -> None:
 
     # print the difference between them
     print(f"{round((-1 * my_sec_sum) - (-1 * my_fir_sum)):.1f}")
+    logger.warning("<<< Exiting calculate_prob(text=%s)", text, extra={"event.action": "calculate_prob", "logrite.text": text})
 
 
 def analyze_text(text: str) -> tuple[dict, dict]:
@@ -96,8 +103,11 @@ def analyze_text(text: str) -> tuple[dict, dict]:
     The first dictionary stores the frequency of single character strings.
     The second dictionary stores the frequency of two character strings.
     """
+    logger.error(">>> Entering analyze_text(text=%s)", text, extra={"event.action": "analyze_text", "logrite.text": text})
     single_char_strings = Counter()  # type: ignore[var-annotated]
+    logger.error("analyze_text(text=%s): single_char_strings → %s", text, single_char_strings, extra={"event.action": "analyze_text", "logrite.text": text})
     two_char_strings = Counter()  # type: ignore[var-annotated]
+    logger.error("analyze_text(text=%s): two_char_strings → %s", text, two_char_strings, extra={"event.action": "analyze_text", "logrite.text": text})
     single_char_strings[text[-1]] += 1
 
     # first case when we have space at start.
@@ -105,13 +115,16 @@ def analyze_text(text: str) -> tuple[dict, dict]:
     for i in range(len(text) - 1):
         single_char_strings[text[i]] += 1
         two_char_strings[text[i : i + 2]] += 1
+    logger.warning("<<< Exiting analyze_text(text=%s)", text, extra={"event.action": "analyze_text", "logrite.text": text})
     return single_char_strings, two_char_strings
 
 
 def main():
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     import doctest
 
     doctest.testmod()
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
     # text = (
     #     "Had repulsive dashwoods suspicion sincerity but advantage now him. Remark "
     #     "easily garret nor nay. Civil those mrs enjoy shy fat merry. You greatest "

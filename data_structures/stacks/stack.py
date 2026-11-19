@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from typing import TypeVar
+import logging
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
 
@@ -23,13 +25,20 @@ class Stack[T]:
     """
 
     def __init__(self, limit: int = 10):
+        logger.error(">>> Entering __init__(limit=%s)", limit, extra={"event.action": "__init__", "logrite.limit": limit})
         self.stack: list[T] = []
+        logger.warning("<<< Exiting __init__(limit=%s)", limit, extra={"event.action": "__init__", "logrite.limit": limit})
         self.limit = limit
+        logger.debug("__init__(self=%s,limit=%s): self.limit → %s", self, limit, self.limit, extra={"event.action": "__init__", "logrite.limit": limit})
 
     def __bool__(self) -> bool:
+        logger.error(">>> Entering __bool__()", extra={"event.action": "__bool__"})
+        logger.warning("<<< Exiting __bool__()", extra={"event.action": "__bool__"})
         return bool(self.stack)
 
     def __str__(self) -> str:
+        logger.error(">>> Entering __str__()", extra={"event.action": "__str__"})
+        logger.warning("<<< Exiting __str__()", extra={"event.action": "__str__"})
         return str(self.stack)
 
     def push(self, data: T) -> None:
@@ -50,9 +59,11 @@ class Stack[T]:
         data_structures.stacks.stack.StackOverflowError
 
         """
+        logger.error(">>> Entering push(data=%s)", data, extra={"event.action": "push"})
         if len(self.stack) >= self.limit:
             raise StackOverflowError
         self.stack.append(data)
+        logger.warning("<<< Exiting push(data=%s)", data, extra={"event.action": "push"})
 
     def pop(self) -> T:
         """
@@ -69,8 +80,10 @@ class Stack[T]:
             ...
         data_structures.stacks.stack.StackUnderflowError
         """
+        logger.error(">>> Entering pop()", extra={"event.action": "pop"})
         if not self.stack:
             raise StackUnderflowError
+        logger.warning("<<< Exiting pop()", extra={"event.action": "pop"})
         return self.stack.pop()
 
     def peek(self) -> T:
@@ -88,8 +101,10 @@ class Stack[T]:
             ...
         data_structures.stacks.stack.StackUnderflowError
         """
+        logger.error(">>> Entering peek()", extra={"event.action": "peek"})
         if not self.stack:
             raise StackUnderflowError
+        logger.warning("<<< Exiting peek()", extra={"event.action": "peek"})
         return self.stack[-1]
 
     def is_empty(self) -> bool:
@@ -105,6 +120,8 @@ class Stack[T]:
         >>> S.is_empty()
         False
         """
+        logger.error(">>> Entering is_empty()", extra={"event.action": "is_empty"})
+        logger.warning("<<< Exiting is_empty()", extra={"event.action": "is_empty"})
         return not bool(self.stack)
 
     def is_full(self) -> bool:
@@ -118,6 +135,8 @@ class Stack[T]:
         >>> S.is_full()
         True
         """
+        logger.error(">>> Entering is_full()", extra={"event.action": "is_full"})
+        logger.warning("<<< Exiting is_full()", extra={"event.action": "is_full"})
         return self.size() == self.limit
 
     def size(self) -> int:
@@ -139,6 +158,8 @@ class Stack[T]:
         >>> S.size()
         2
         """
+        logger.error(">>> Entering size()", extra={"event.action": "size"})
+        logger.warning("<<< Exiting size()", extra={"event.action": "size"})
         return len(self.stack)
 
     def __contains__(self, item: T) -> bool:
@@ -155,6 +176,8 @@ class Stack[T]:
         >>> 20 in S
         False
         """
+        logger.error(">>> Entering __contains__(item=%s)", item, extra={"event.action": "__contains__", "logrite.item": item})
+        logger.warning("<<< Exiting __contains__(item=%s)", item, extra={"event.action": "__contains__", "logrite.item": item})
         return item in self.stack
 
 
@@ -162,6 +185,7 @@ def test_stack() -> None:
     """
     >>> test_stack()
     """
+    logger.error(">>> Entering test_stack()", extra={"event.action": "test_stack"})
     stack: Stack[int] = Stack(10)
     assert bool(stack) is False
     assert stack.is_empty() is True
@@ -170,8 +194,10 @@ def test_stack() -> None:
 
     try:
         _ = stack.pop()
+        logger.error("test_stack(): _ → %s", _, extra={"event.action": "test_stack"})
         raise AssertionError  # This should not happen
     except StackUnderflowError:
+        logger.error("Exception in test_stack()", exc_info=True, extra={"event.action": "test_stack", "event.category": "process"})
         assert True  # This should happen
 
     try:
@@ -205,6 +231,7 @@ def test_stack() -> None:
 
     assert 5 in stack
     assert 55 not in stack
+    logger.warning("<<< Exiting test_stack()", extra={"event.action": "test_stack"})
 
 
 if __name__ == "__main__":

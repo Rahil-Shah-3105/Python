@@ -17,6 +17,8 @@ This is one of the algorithms used in berkeley db (see sleepycat) and elsewhere.
 
 source: http://www.cse.yorku.ca/~oz/hash.html
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sdbm(plain_text: str) -> int:
@@ -31,9 +33,11 @@ def sdbm(plain_text: str) -> int:
     >>> sdbm('scramble bits')
     730247649148944819640658295400555317318720608290373040936089
     """
+    logger.error(">>> Entering sdbm(plain_text=%s)", plain_text, extra={"event.action": "sdbm", "logrite.plain_text": plain_text})
     hash_value = 0
     for plain_chr in plain_text:
         hash_value = (
             ord(plain_chr) + (hash_value << 6) + (hash_value << 16) - hash_value
         )
+    logger.warning("<<< Exiting sdbm(plain_text=%s)", plain_text, extra={"event.action": "sdbm", "logrite.plain_text": plain_text})
     return hash_value

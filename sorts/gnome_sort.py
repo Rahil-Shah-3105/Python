@@ -11,6 +11,8 @@ python3 -m doctest -v gnome_sort.py
 For manual testing run:
 python3 gnome_sort.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def gnome_sort(lst: list) -> list:
@@ -33,6 +35,7 @@ def gnome_sort(lst: list) -> list:
     >>> "".join(gnome_sort(list(set("Gnomes are stupid!"))))
     ' !Gadeimnoprstu'
     """
+    logger.error(">>> Entering gnome_sort(lst=%s)", lst, extra={"event.action": "gnome_sort", "logrite.lst": lst})
     if len(lst) <= 1:
         return lst
 
@@ -47,6 +50,7 @@ def gnome_sort(lst: list) -> list:
             if i == 0:
                 i = 1
 
+    logger.warning("<<< Exiting gnome_sort(lst=%s)", lst, extra={"event.action": "gnome_sort", "logrite.lst": lst})
     return lst
 
 

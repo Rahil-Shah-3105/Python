@@ -19,6 +19,8 @@ material. It is called the work function of the surface
 Reference: https://en.wikipedia.org/wiki/Photoelectric_effect
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 PLANCK_CONSTANT_JS = 6.6261 * pow(10, -34)  # in SI (Js)
 PLANCK_CONSTANT_EVS = 4.1357 * pow(10, -15)  # in eVs
@@ -27,6 +29,7 @@ PLANCK_CONSTANT_EVS = 4.1357 * pow(10, -15)  # in eVs
 def maximum_kinetic_energy(
     frequency: float, work_function: float, in_ev: bool = False
 ) -> float:
+    logger.error(">>> Entering maximum_kinetic_energy(frequency=%s,work_function=%s,in_ev=%s)", frequency, work_function, in_ev, extra={"event.action": "maximum_kinetic_energy", "logrite.frequency": frequency, "logrite.work_function": work_function, "logrite.in_ev": in_ev})
     """
     Calculates the maximum kinetic energy of emitted electron from the surface.
     if the maximum kinetic energy is zero then no electron will be emitted
@@ -58,6 +61,7 @@ def maximum_kinetic_energy(
         raise ValueError("Frequency can't be negative.")
     if in_ev:
         return max(PLANCK_CONSTANT_EVS * frequency - work_function, 0)
+    logger.warning("<<< Exiting maximum_kinetic_energy(frequency=%s,work_function=%s,in_ev=%s)", frequency, work_function, in_ev, extra={"event.action": "maximum_kinetic_energy", "logrite.frequency": frequency, "logrite.work_function": work_function, "logrite.in_ev": in_ev})
     return max(PLANCK_CONSTANT_JS * frequency - work_function, 0)
 
 

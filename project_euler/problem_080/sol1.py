@@ -8,6 +8,8 @@ Time: 5 October 2020, 18:30
 """
 
 import decimal
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution() -> int:
@@ -20,15 +22,21 @@ def solution() -> int:
     >>> solution()
     40886
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
     answer = 0
     decimal_context = decimal.Context(prec=105)
+    logger.error("solution(): decimal_context → %s", decimal_context, extra={"event.action": "solution"})
     for i in range(2, 100):
         number = decimal.Decimal(i)
+        logger.error("solution(): number → %s", number, extra={"event.action": "solution"})
         sqrt_number = number.sqrt(decimal_context)
+        logger.error("solution(): sqrt_number → %s", sqrt_number, extra={"event.action": "solution"})
         if len(str(sqrt_number)) > 1:
             answer += int(str(sqrt_number)[0])
             sqrt_number_str = str(sqrt_number)[2:101]
+            logger.error("solution(): sqrt_number_str → %s", sqrt_number_str, extra={"event.action": "solution"})
             answer += sum(int(x) for x in sqrt_number_str)
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return answer
 
 

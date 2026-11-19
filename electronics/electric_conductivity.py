@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 ELECTRON_CHARGE = 1.6021e-19  # units = C
 
@@ -8,6 +10,7 @@ def electric_conductivity(
     electron_conc: float,
     mobility: float,
 ) -> tuple[str, float]:
+    logger.error(">>> Entering electric_conductivity(conductivity=%s,electron_conc=%s,mobility=%s)", conductivity, electron_conc, mobility, extra={"event.action": "electric_conductivity", "logrite.conductivity": conductivity, "logrite.electron_conc": electron_conc, "logrite.mobility": mobility})
     """
     This function can calculate any one of the three -
     1. Conductivity
@@ -61,6 +64,7 @@ def electric_conductivity(
             conductivity / (mobility * ELECTRON_CHARGE),
         )
     else:
+        logger.warning("<<< Exiting electric_conductivity(conductivity=%s,electron_conc=%s,mobility=%s)", conductivity, electron_conc, mobility, extra={"event.action": "electric_conductivity", "logrite.conductivity": conductivity, "logrite.electron_conc": electron_conc, "logrite.mobility": mobility})
         return (
             "mobility",
             conductivity / (electron_conc * ELECTRON_CHARGE),

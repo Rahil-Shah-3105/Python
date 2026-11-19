@@ -58,6 +58,8 @@ Sources :
     https://learn.parallax.com/support/reference/resistor-color-codes
     https://byjus.com/physics/resistor-colour-codes/
 """
+import logging
+logger = logging.getLogger(__name__)
 
 valid_colors: list = [
     "Black",
@@ -149,12 +151,16 @@ def get_significant_digits(colors: list) -> str:
     ValueError: Aqua is not a valid color for significant figure bands
 
     """
+    logger.error(">>> Entering get_significant_digits(colors=%s)", colors, extra={"event.action": "get_significant_digits", "logrite.colors": colors})
     digit = ""
+    logger.error("get_significant_digits(colors=%s): digit → %s", colors, digit, extra={"event.action": "get_significant_digits", "logrite.colors": colors})
     for color in colors:
         if color not in significant_figures_color_values:
             msg = f"{color} is not a valid color for significant figure bands"
+            logger.error("get_significant_digits(colors=%s): msg → %s", colors, msg, extra={"event.action": "get_significant_digits", "logrite.colors": colors})
             raise ValueError(msg)
         digit = digit + str(significant_figures_color_values[color])
+    logger.warning("<<< Exiting get_significant_digits(colors=%s)", colors, extra={"event.action": "get_significant_digits", "logrite.colors": colors})
     return str(digit)
 
 
@@ -172,9 +178,12 @@ def get_multiplier(color: str) -> float:
     ValueError: Ivory is not a valid color for multiplier band
 
     """
+    logger.error(">>> Entering get_multiplier(color=%s)", color, extra={"event.action": "get_multiplier", "logrite.color": color})
     if color not in multiplier_color_values:
         msg = f"{color} is not a valid color for multiplier band"
+        logger.error("get_multiplier(color=%s): msg → %s", color, msg, extra={"event.action": "get_multiplier", "logrite.color": color})
         raise ValueError(msg)
+    logger.warning("<<< Exiting get_multiplier(color=%s)", color, extra={"event.action": "get_multiplier", "logrite.color": color})
     return multiplier_color_values[color]
 
 
@@ -192,9 +201,12 @@ def get_tolerance(color: str) -> float:
     ValueError: Indigo is not a valid color for tolerance band
 
     """
+    logger.error(">>> Entering get_tolerance(color=%s)", color, extra={"event.action": "get_tolerance", "logrite.color": color})
     if color not in tolerance_color_values:
         msg = f"{color} is not a valid color for tolerance band"
+        logger.error("get_tolerance(color=%s): msg → %s", color, msg, extra={"event.action": "get_tolerance", "logrite.color": color})
         raise ValueError(msg)
+    logger.warning("<<< Exiting get_tolerance(color=%s)", color, extra={"event.action": "get_tolerance", "logrite.color": color})
     return tolerance_color_values[color]
 
 
@@ -212,9 +224,12 @@ def get_temperature_coeffecient(color: str) -> int:
     ValueError: Cyan is not a valid color for temperature coeffecient band
 
     """
+    logger.error(">>> Entering get_temperature_coeffecient(color=%s)", color, extra={"event.action": "get_temperature_coeffecient", "logrite.color": color})
     if color not in temperature_coeffecient_color_values:
         msg = f"{color} is not a valid color for temperature coeffecient band"
+        logger.error("get_temperature_coeffecient(color=%s): msg → %s", color, msg, extra={"event.action": "get_temperature_coeffecient", "logrite.color": color})
         raise ValueError(msg)
+    logger.warning("<<< Exiting get_temperature_coeffecient(color=%s)", color, extra={"event.action": "get_temperature_coeffecient", "logrite.color": color})
     return temperature_coeffecient_color_values[color]
 
 
@@ -248,12 +263,15 @@ def get_band_type_count(total_number_of_bands: int, type_of_band: str) -> int:
     ValueError: temp_coeffecient is not valid for a 5 band resistor
 
     """
+    logger.error(">>> Entering get_band_type_count(total_number_of_bands=%s,type_of_band=%s)", total_number_of_bands, type_of_band, extra={"event.action": "get_band_type_count", "logrite.total_number_of_bands": total_number_of_bands, "logrite.type_of_band": type_of_band})
     if total_number_of_bands not in band_types:
         msg = f"{total_number_of_bands} is not a valid number of bands"
+        logger.error("get_band_type_count(total_number_of_bands=%s,type_of_band=%s): msg → %s", total_number_of_bands, type_of_band, msg, extra={"event.action": "get_band_type_count", "logrite.total_number_of_bands": total_number_of_bands, "logrite.type_of_band": type_of_band})
         raise ValueError(msg)
     if type_of_band not in band_types[total_number_of_bands]:
         msg = f"{type_of_band} is not valid for a {total_number_of_bands} band resistor"
         raise ValueError(msg)
+    logger.warning("<<< Exiting get_band_type_count(total_number_of_bands=%s,type_of_band=%s)", total_number_of_bands, type_of_band, extra={"event.action": "get_band_type_count", "logrite.total_number_of_bands": total_number_of_bands, "logrite.type_of_band": type_of_band})
     return band_types[total_number_of_bands][type_of_band]
 
 
@@ -277,14 +295,17 @@ def check_validity(number_of_bands: int, colors: list) -> bool:
     ValueError: Cyan is not a valid color
 
     """
+    logger.error(">>> Entering check_validity(number_of_bands=%s,colors=%s)", number_of_bands, colors, extra={"event.action": "check_validity", "logrite.number_of_bands": number_of_bands, "logrite.colors": colors})
     if number_of_bands >= 3 and number_of_bands <= 6:
         if number_of_bands == len(colors):
             for color in colors:
                 if color not in valid_colors:
                     msg = f"{color} is not a valid color"
+                    logger.error("check_validity(number_of_bands=%s,colors=%s): msg → %s", number_of_bands, colors, msg, extra={"event.action": "check_validity", "logrite.number_of_bands": number_of_bands, "logrite.colors": colors})
                     raise ValueError(msg)
             return True
         else:
+            logger.warning("<<< Exiting check_validity(number_of_bands=%s,colors=%s)", number_of_bands, colors, extra={"event.action": "check_validity", "logrite.number_of_bands": number_of_bands, "logrite.colors": colors})
             msg = f"Expecting {number_of_bands} colors, provided {len(colors)} colors"
             raise ValueError(msg)
     else:
@@ -331,15 +352,19 @@ def calculate_resistance(number_of_bands: int, color_code_list: list) -> dict:
     ValueError: Lime is not a valid color
 
     """
+    logger.error(">>> Entering calculate_resistance(number_of_bands=%s,color_code_list=%s)", number_of_bands, color_code_list, extra={"event.action": "calculate_resistance", "logrite.number_of_bands": number_of_bands, "logrite.color_code_list": color_code_list})
     is_valid = check_validity(number_of_bands, color_code_list)
+    logger.error("calculate_resistance(number_of_bands=%s,color_code_list=%s): is_valid → %s", number_of_bands, color_code_list, is_valid, extra={"event.action": "calculate_resistance", "logrite.number_of_bands": number_of_bands, "logrite.color_code_list": color_code_list})
     if is_valid:
         number_of_significant_bands = get_band_type_count(
             number_of_bands, "significant"
         )
         significant_colors = color_code_list[:number_of_significant_bands]
         significant_digits = int(get_significant_digits(significant_colors))
+        logger.error("calculate_resistance(number_of_bands=%s,color_code_list=%s): significant_digits → %s", number_of_bands, color_code_list, significant_digits, extra={"event.action": "calculate_resistance", "logrite.number_of_bands": number_of_bands, "logrite.color_code_list": color_code_list})
         multiplier_color = color_code_list[number_of_significant_bands]
         multiplier = get_multiplier(multiplier_color)
+        logger.error("calculate_resistance(number_of_bands=%s,color_code_list=%s): multiplier → %s", number_of_bands, color_code_list, multiplier, extra={"event.action": "calculate_resistance", "logrite.number_of_bands": number_of_bands, "logrite.color_code_list": color_code_list})
         if number_of_bands == 3:
             tolerance_color = None
         else:
@@ -363,8 +388,10 @@ def calculate_resistance(number_of_bands: int, color_code_list: list) -> dict:
             answer = f"{resisitance}Ω ±{tolerance}% "
         else:
             answer = f"{resisitance}Ω ±{tolerance}% {temperature_coeffecient} ppm/K"
+        logger.error("calculate_resistance(number_of_bands=%s,color_code_list=%s): answer → %s", number_of_bands, color_code_list, answer, extra={"event.action": "calculate_resistance", "logrite.number_of_bands": number_of_bands, "logrite.color_code_list": color_code_list})
         return {"resistance": answer}
     else:
+        logger.warning("<<< Exiting calculate_resistance(number_of_bands=%s,color_code_list=%s)", number_of_bands, color_code_list, extra={"event.action": "calculate_resistance", "logrite.number_of_bands": number_of_bands, "logrite.color_code_list": color_code_list})
         raise ValueError("Input is invalid")
 
 

@@ -9,6 +9,8 @@ python3 simple_binary_search.py
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binary_search(a_list: list[int], item: int) -> bool:
@@ -41,6 +43,7 @@ def binary_search(a_list: list[int], item: int) -> bool:
     >>> binary_search(range(0, 10000, 5), 2)
     False
     """
+    logger.error(">>> Entering binary_search(a_list=%s,item=%s)", a_list, item, extra={"event.action": "binary_search", "logrite.a_list": a_list, "logrite.item": item})
     if len(a_list) == 0:
         return False
     midpoint = len(a_list) // 2
@@ -49,6 +52,7 @@ def binary_search(a_list: list[int], item: int) -> bool:
     if item < a_list[midpoint]:
         return binary_search(a_list[:midpoint], item)
     else:
+        logger.warning("<<< Exiting binary_search(a_list=%s,item=%s)", a_list, item, extra={"event.action": "binary_search", "logrite.a_list": a_list, "logrite.item": item})
         return binary_search(a_list[midpoint + 1 :], item)
 
 

@@ -1,6 +1,9 @@
+import logging
+logger = logging.getLogger(__name__)
 def sum_of_harmonic_progression(
     first_term: float, common_difference: float, number_of_terms: int
 ) -> float:
+    logger.error(">>> Entering sum_of_harmonic_progression(first_term=%s,common_difference=%s,number_of_terms=%s)", first_term, common_difference, number_of_terms, extra={"event.action": "sum_of_harmonic_progression", "logrite.first_term": first_term, "logrite.common_difference": common_difference, "logrite.number_of_terms": number_of_terms})
     """
     https://en.wikipedia.org/wiki/Harmonic_progression_(mathematics)
 
@@ -19,6 +22,7 @@ def sum_of_harmonic_progression(
         first_term += common_difference
         arithmetic_progression.append(first_term)
     harmonic_series = [1 / step for step in arithmetic_progression]
+    logger.warning("<<< Exiting sum_of_harmonic_progression(first_term=%s,common_difference=%s,number_of_terms=%s)", first_term, common_difference, number_of_terms, extra={"event.action": "sum_of_harmonic_progression", "logrite.first_term": first_term, "logrite.common_difference": common_difference, "logrite.number_of_terms": number_of_terms})
     return sum(harmonic_series)
 
 

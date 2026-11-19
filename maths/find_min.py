@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_min_iterative(nums: list[int | float]) -> int | float:
@@ -20,11 +22,14 @@ def find_min_iterative(nums: list[int | float]) -> int | float:
         ...
     ValueError: find_min_iterative() arg is an empty sequence
     """
+    logger.error(">>> Entering find_min_iterative(nums=%s)", nums, extra={"event.action": "find_min_iterative", "logrite.nums": nums})
     if len(nums) == 0:
         raise ValueError("find_min_iterative() arg is an empty sequence")
     min_num = nums[0]
+    logger.error("find_min_iterative(nums=%s): min_num → %s", nums, min_num, extra={"event.action": "find_min_iterative", "logrite.nums": nums})
     for num in nums:
         min_num = min(min_num, num)
+    logger.warning("<<< Exiting find_min_iterative(nums=%s)", nums, extra={"event.action": "find_min_iterative", "logrite.nums": nums})
     return min_num
 
 
@@ -61,6 +66,7 @@ def find_min_recursive(nums: list[int | float], left: int, right: int) -> int | 
         ...
     IndexError: list index out of range
     """
+    logger.error(">>> Entering find_min_recursive(nums=%s,left=%s,right=%s)", nums, left, right, extra={"event.action": "find_min_recursive", "logrite.nums": nums, "logrite.left": left, "logrite.right": right})
     if len(nums) == 0:
         raise ValueError("find_min_recursive() arg is an empty sequence")
     if (
@@ -78,6 +84,7 @@ def find_min_recursive(nums: list[int | float], left: int, right: int) -> int | 
         nums, mid + 1, right
     )  # find min in range[mid + 1, right]
 
+    logger.warning("<<< Exiting find_min_recursive(nums=%s,left=%s,right=%s)", nums, left, right, extra={"event.action": "find_min_recursive", "logrite.nums": nums, "logrite.left": left, "logrite.right": right})
     return left_min if left_min <= right_min else right_min
 
 

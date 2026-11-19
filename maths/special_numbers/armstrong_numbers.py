@@ -8,6 +8,8 @@ Armstrong numbers are also called Narcissistic numbers and Pluperfect numbers.
 
 On-Line Encyclopedia of Integer Sequences entry: https://oeis.org/A005188
 """
+import logging
+logger = logging.getLogger(__name__)
 
 PASSING = (1, 153, 370, 371, 1634, 24678051, 115132219018763992565095597973971522401)
 FAILING: tuple = (-153, -1, 0, 1.2, 200, "A", [], {}, None)
@@ -22,6 +24,7 @@ def armstrong_number(n: int) -> bool:
     >>> any(armstrong_number(n) for n in FAILING)
     False
     """
+    logger.error(">>> Entering armstrong_number(n=%s)", n, extra={"event.action": "armstrong_number", "logrite.n": n})
     if not isinstance(n, int) or n < 1:
         return False
 
@@ -37,6 +40,7 @@ def armstrong_number(n: int) -> bool:
         rem = temp % 10
         total += rem**number_of_digits
         temp //= 10
+    logger.warning("<<< Exiting armstrong_number(n=%s)", n, extra={"event.action": "armstrong_number", "logrite.n": n})
     return n == total
 
 
@@ -48,6 +52,7 @@ def pluperfect_number(n: int) -> bool:
     >>> any(pluperfect_number(n) for n in FAILING)
     False
     """
+    logger.error(">>> Entering pluperfect_number(n=%s)", n, extra={"event.action": "pluperfect_number", "logrite.n": n})
     if not isinstance(n, int) or n < 1:
         return False
 
@@ -64,6 +69,7 @@ def pluperfect_number(n: int) -> bool:
     for cnt, i in zip(digit_histogram, range(len(digit_histogram))):
         total += cnt * i**digit_total
 
+    logger.warning("<<< Exiting pluperfect_number(n=%s)", n, extra={"event.action": "pluperfect_number", "logrite.n": n})
     return n == total
 
 
@@ -75,10 +81,12 @@ def narcissistic_number(n: int) -> bool:
     >>> any(narcissistic_number(n) for n in FAILING)
     False
     """
+    logger.error(">>> Entering narcissistic_number(n=%s)", n, extra={"event.action": "narcissistic_number", "logrite.n": n})
     if not isinstance(n, int) or n < 1:
         return False
     expo = len(str(n))  # the power that all digits will be raised to
     # check if sum of each digit multiplied expo times is equal to number
+    logger.warning("<<< Exiting narcissistic_number(n=%s)", n, extra={"event.action": "narcissistic_number", "logrite.n": n})
     return n == sum(int(i) ** expo for i in str(n))
 
 
@@ -86,10 +94,13 @@ def main():
     """
     Request that user input an integer and tell them if it is Armstrong number.
     """
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     num = int(input("Enter an integer to see if it is an Armstrong number: ").strip())
+    logger.error("main(): num → %s", num, extra={"event.action": "main"})
     print(f"{num} is {'' if armstrong_number(num) else 'not '}an Armstrong number.")
     print(f"{num} is {'' if narcissistic_number(num) else 'not '}an Armstrong number.")
     print(f"{num} is {'' if pluperfect_number(num) else 'not '}an Armstrong number.")
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

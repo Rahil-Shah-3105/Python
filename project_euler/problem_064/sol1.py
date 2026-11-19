@@ -14,6 +14,8 @@ References:
 """
 
 from math import floor, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def continuous_fraction_period(n: int) -> int:
@@ -31,16 +33,21 @@ def continuous_fraction_period(n: int) -> int:
     >>> continuous_fraction_period(13)
     5
     """
+    logger.error(">>> Entering continuous_fraction_period(n=%s)", n, extra={"event.action": "continuous_fraction_period", "logrite.n": n})
     numerator = 0.0
     denominator = 1.0
+    logger.error("continuous_fraction_period(n=%s): denominator → %s", n, denominator, extra={"event.action": "continuous_fraction_period", "logrite.n": n})
     root = int(sqrt(n))
+    logger.error("continuous_fraction_period(n=%s): root → %s", n, root, extra={"event.action": "continuous_fraction_period", "logrite.n": n})
     integer_part = root
+    logger.error("continuous_fraction_period(n=%s): integer_part → %s", n, integer_part, extra={"event.action": "continuous_fraction_period", "logrite.n": n})
     period = 0
     while integer_part != 2 * root:
         numerator = denominator * integer_part - numerator
         denominator = (n - numerator**2) / denominator
         integer_part = int((root + numerator) / denominator)
         period += 1
+    logger.warning("<<< Exiting continuous_fraction_period(n=%s)", n, extra={"event.action": "continuous_fraction_period", "logrite.n": n})
     return period
 
 
@@ -64,11 +71,14 @@ def solution(n: int = 10000) -> int:
     >>> solution(13)
     4
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     count_odd_periods = 0
     for i in range(2, n + 1):
         sr = sqrt(i)
+        logger.error("solution(n=%s): sr → %s", n, sr, extra={"event.action": "solution", "logrite.n": n})
         if sr - floor(sr) != 0 and continuous_fraction_period(i) % 2 == 1:
             count_odd_periods += 1
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return count_odd_periods
 
 

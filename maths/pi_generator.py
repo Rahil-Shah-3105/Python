@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def calculate_pi(limit: int) -> str:
     """
     https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80
@@ -35,8 +37,10 @@ def calculate_pi(limit: int) -> str:
     >>> calculate_pi(80)
     '3.14159265358979323846264338327950288419716939937510582097494459230781640628620899'
     """
+    logger.error(">>> Entering calculate_pi(limit=%s)", limit, extra={"event.action": "calculate_pi", "logrite.limit": limit})
     # Variables used for the iteration process
     q = 1
+    logger.warning("<<< Exiting calculate_pi(limit=%s)", limit, extra={"event.action": "calculate_pi", "logrite.limit": limit})
     r = 0
     t = 1
     k = 1
@@ -47,6 +51,7 @@ def calculate_pi(limit: int) -> str:
     counter = 0
 
     result = ""
+    logger.error("calculate_pi(limit=%s): result → %s", limit, result, extra={"event.action": "calculate_pi", "logrite.limit": limit})
 
     # We can't compare against anything if we make a generator,
     # so we'll stick with plain return logic
@@ -61,6 +66,7 @@ def calculate_pi(limit: int) -> str:
 
             counter += 1
             nr = 10 * (r - n * t)
+            logger.error("calculate_pi(limit=%s): nr → %s", limit, nr, extra={"event.action": "calculate_pi", "logrite.limit": limit})
             n = ((10 * (3 * q + r)) // t) - 10 * n
             q *= 10
             r = nr

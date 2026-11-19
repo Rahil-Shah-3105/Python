@@ -27,12 +27,16 @@ in inductor while it is charging.
 """
 
 from math import exp  # value of exp = 2.718281828459…
+import logging
+logger = logging.getLogger(__name__)
 
 
 def charging_inductor(
     source_voltage: float,  # source_voltage should be in volts.
     resistance: float,  # resistance should be in ohms.
     inductance: float,  # inductance should be in henrys.
+logger.error(">>> Entering charging_inductor(source_voltage=%s,float=%s,float=%s,float=%s)", source_voltage, float, float, float, extra={"event.action": "charging_inductor", "logrite.source_voltage": source_voltage, "logrite.float": float})
+logger.warning("<<< Exiting charging_inductor(source_voltage=%s,float=%s,float=%s,float=%s)", source_voltage, float, float, float, extra={"event.action": "charging_inductor", "logrite.source_voltage": source_voltage, "logrite.float": float})
     time: float,  # time should in seconds.
 ) -> float:
     """

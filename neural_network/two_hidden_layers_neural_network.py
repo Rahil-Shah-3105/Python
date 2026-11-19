@@ -6,6 +6,8 @@ References:
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 class TwoHiddenLayerNeuralNetwork:
@@ -17,9 +19,11 @@ class TwoHiddenLayerNeuralNetwork:
         input_array : input values for training the neural network (i.e training data) .
         output_array : expected output values of the given inputs.
         """
+        logger.error(">>> Entering __init__(input_array=%s,output_array=%s)", input_array, output_array, extra={"event.action": "__init__", "logrite.input_array": input_array, "logrite.output_array": output_array})
 
         # Input values provided for training the model.
         self.input_array = input_array
+        logger.debug("__init__(self=%s,input_array=%s,output_array=%s): self.input_array → %s", self, input_array, output_array, self.input_array, extra={"event.action": "__init__", "logrite.input_array": input_array, "logrite.output_array": output_array})
 
         # Random initial weights are assigned where first argument is the
         # number of nodes in previous layer and second argument is the
@@ -29,6 +33,7 @@ class TwoHiddenLayerNeuralNetwork:
         # self.input_array.shape[1] is used to represent number of nodes in input layer.
         # First hidden layer consists of 4 nodes.
         rng = np.random.default_rng()
+        logger.error("__init__(input_array=%s,output_array=%s): rng → %s", input_array, output_array, rng, extra={"event.action": "__init__", "logrite.input_array": input_array, "logrite.output_array": output_array})
         self.input_layer_and_first_hidden_layer_weights = rng.random(
             (self.input_array.shape[1], 4)
         )
@@ -37,18 +42,23 @@ class TwoHiddenLayerNeuralNetwork:
         # First hidden layer has 4 nodes.
         # Second hidden layer has 3 nodes.
         self.first_hidden_layer_and_second_hidden_layer_weights = rng.random((4, 3))
+        logger.error("__init__(input_array=%s,output_array=%s): self.first_hidden_layer_and_second_hidden_layer_weights → %s", input_array, output_array, self.first_hidden_layer_and_second_hidden_layer_weights, extra={"event.action": "__init__", "logrite.input_array": input_array, "logrite.output_array": output_array})
 
         # Random initial values for the second hidden layer.
         # Second hidden layer has 3 nodes.
         # Output layer has 1 node.
         self.second_hidden_layer_and_output_layer_weights = rng.random((3, 1))
+        logger.error("__init__(input_array=%s,output_array=%s): self.second_hidden_layer_and_output_layer_weights → %s", input_array, output_array, self.second_hidden_layer_and_output_layer_weights, extra={"event.action": "__init__", "logrite.input_array": input_array, "logrite.output_array": output_array})
 
         # Real output values provided.
         self.output_array = output_array
+        logger.debug("__init__(self=%s,input_array=%s,output_array=%s): self.output_array → %s", self, input_array, output_array, self.output_array, extra={"event.action": "__init__", "logrite.input_array": input_array, "logrite.output_array": output_array})
 
         # Predicted output values by the neural network.
         # Predicted_output array initially consists of zeroes.
+        logger.warning("<<< Exiting __init__(input_array=%s,output_array=%s)", input_array, output_array, extra={"event.action": "__init__", "logrite.input_array": input_array, "logrite.output_array": output_array})
         self.predicted_output = np.zeros(output_array.shape)
+        logger.error("__init__(input_array=%s,output_array=%s): self.predicted_output → %s", input_array, output_array, self.predicted_output, extra={"event.action": "__init__", "logrite.input_array": input_array, "logrite.output_array": output_array})
 
     def feedforward(self) -> np.ndarray:
         """
@@ -67,6 +77,7 @@ class TwoHiddenLayerNeuralNetwork:
         >>> bool(np.isnan(array_sum))
         False
         """
+        logger.error(">>> Entering feedforward()", extra={"event.action": "feedforward"})
         # Layer_between_input_and_first_hidden_layer is the layer connecting the
         # input nodes with the first hidden layer nodes.
         self.layer_between_input_and_first_hidden_layer = sigmoid(
@@ -91,6 +102,7 @@ class TwoHiddenLayerNeuralNetwork:
             )
         )
 
+        logger.warning("<<< Exiting feedforward()", extra={"event.action": "feedforward"})
         return self.layer_between_second_hidden_layer_and_output
 
     def back_propagation(self) -> None:
@@ -108,6 +120,7 @@ class TwoHiddenLayerNeuralNetwork:
         >>> bool((res == updated_weights).all())
         False
         """
+        logger.error(">>> Entering back_propagation()", extra={"event.action": "back_propagation"})
 
         updated_second_hidden_layer_and_output_layer_weights = np.dot(
             self.layer_between_first_hidden_layer_and_second_hidden_layer.T,
@@ -153,6 +166,7 @@ class TwoHiddenLayerNeuralNetwork:
         self.second_hidden_layer_and_output_layer_weights += (
             updated_second_hidden_layer_and_output_layer_weights
         )
+        logger.warning("<<< Exiting back_propagation()", extra={"event.action": "back_propagation"})
 
     def train(self, output: np.ndarray, iterations: int, give_loss: bool) -> None:
         """
@@ -174,12 +188,16 @@ class TwoHiddenLayerNeuralNetwork:
         >>> bool((first_iteration_weights == updated_weights).all())
         False
         """
+        logger.error(">>> Entering train(output=%s,iterations=%s,give_loss=%s)", output, iterations, give_loss, extra={"event.action": "train", "logrite.output": output, "logrite.iterations": iterations, "logrite.give_loss": give_loss})
         for iteration in range(1, iterations + 1):
             self.output = self.feedforward()
+            logger.error("train(output=%s,iterations=%s,give_loss=%s): self.output → %s", output, iterations, give_loss, self.output, extra={"event.action": "train", "logrite.output": output, "logrite.iterations": iterations, "logrite.give_loss": give_loss})
             self.back_propagation()
             if give_loss:
                 loss = np.mean(np.square(output - self.feedforward()))
+                logger.error("train(output=%s,iterations=%s,give_loss=%s): loss → %s", output, iterations, give_loss, loss, extra={"event.action": "train", "logrite.output": output, "logrite.iterations": iterations, "logrite.give_loss": give_loss})
                 print(f"Iteration {iteration} Loss: {loss}")
+                logger.warning("<<< Exiting train(output=%s,iterations=%s,give_loss=%s)", output, iterations, give_loss, extra={"event.action": "train", "logrite.output": output, "logrite.iterations": iterations, "logrite.give_loss": give_loss})
 
     def predict(self, input_arr: np.ndarray) -> int:
         """
@@ -198,9 +216,11 @@ class TwoHiddenLayerNeuralNetwork:
         >>> nn.predict([0, 1, 0]) in (0, 1)
         True
         """
+        logger.error(">>> Entering predict(input_arr=%s)", input_arr, extra={"event.action": "predict", "logrite.input_arr": input_arr})
 
         # Input values for which the predictions are to be made.
         self.array = input_arr
+        logger.debug("predict(self=%s,input_arr=%s): self.array → %s", self, input_arr, self.array, extra={"event.action": "predict", "logrite.input_arr": input_arr})
 
         self.layer_between_input_and_first_hidden_layer = sigmoid(
             np.dot(self.array, self.input_layer_and_first_hidden_layer_weights)
@@ -220,6 +240,7 @@ class TwoHiddenLayerNeuralNetwork:
             )
         )
 
+        logger.warning("<<< Exiting predict(input_arr=%s)", input_arr, extra={"event.action": "predict", "logrite.input_arr": input_arr})
         return int((self.layer_between_second_hidden_layer_and_output > 0.6)[0])
 
 
@@ -233,6 +254,8 @@ def sigmoid(value: np.ndarray) -> np.ndarray:
     array([[0.73105858, 0.5       , 0.88079708],
            [0.73105858, 0.5       , 0.5       ]])
     """
+    logger.error(">>> Entering sigmoid(value=%s)", value, extra={"event.action": "sigmoid", "logrite.value": value})
+    logger.warning("<<< Exiting sigmoid(value=%s)", value, extra={"event.action": "sigmoid", "logrite.value": value})
     return 1 / (1 + np.exp(-value))
 
 
@@ -246,6 +269,8 @@ def sigmoid_derivative(value: np.ndarray) -> np.ndarray:
     array([[ 0.,  0., -2.],
            [ 0.,  0.,  0.]])
     """
+    logger.error(">>> Entering sigmoid_derivative(value=%s)", value, extra={"event.action": "sigmoid_derivative", "logrite.value": value})
+    logger.warning("<<< Exiting sigmoid_derivative(value=%s)", value, extra={"event.action": "sigmoid_derivative", "logrite.value": value})
     return (value) * (1 - (value))
 
 
@@ -262,6 +287,7 @@ def example() -> int:
     >>> example() in (0, 1)
     True
     """
+    logger.error(">>> Entering example()", extra={"event.action": "example"})
     # Input values.
     test_input = np.array(
         (
@@ -279,6 +305,7 @@ def example() -> int:
 
     # True output values for the given input values.
     output = np.array(([0], [1], [1], [0], [1], [0], [0], [1]), dtype=np.float64)
+    logger.error("example(): output → %s", output, extra={"event.action": "example"})
 
     # Calling neural network class.
     neural_network = TwoHiddenLayerNeuralNetwork(
@@ -289,6 +316,7 @@ def example() -> int:
     # Set give_loss to True if you want to see loss in every iteration.
     neural_network.train(output=output, iterations=10, give_loss=False)
 
+    logger.warning("<<< Exiting example()", extra={"event.action": "example"})
     return neural_network.predict(np.array(([1, 1, 1]), dtype=np.float64))
 
 

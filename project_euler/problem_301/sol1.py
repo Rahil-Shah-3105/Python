@@ -31,6 +31,8 @@ opponent until no stones remain; so the current player loses. To illustrate:
 
 For how many positive integers n <= 2^30 does X(n,2n,3n) = 0?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(exponent: int = 30) -> int:
@@ -45,12 +47,16 @@ def solution(exponent: int = 30) -> int:
     >>> solution(10)
     144
     """
+    logger.error(">>> Entering solution(exponent=%s)", exponent, extra={"event.action": "solution", "logrite.exponent": exponent})
     # To find how many total games were lost for a given exponent x,
     # we need to find the Fibonacci number F(x+2).
     fibonacci_index = exponent + 2
     phi = (1 + 5**0.5) / 2
+    logger.error("solution(exponent=%s): phi → %s", exponent, phi, extra={"event.action": "solution", "logrite.exponent": exponent})
     fibonacci = (phi**fibonacci_index - (phi - 1) ** fibonacci_index) / 5**0.5
+    logger.error("solution(exponent=%s): fibonacci → %s", exponent, fibonacci, extra={"event.action": "solution", "logrite.exponent": exponent})
 
+    logger.warning("<<< Exiting solution(exponent=%s)", exponent, extra={"event.action": "solution", "logrite.exponent": exponent})
     return int(fibonacci)
 
 

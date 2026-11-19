@@ -1,4 +1,6 @@
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binary_cross_entropy(
@@ -35,7 +37,10 @@ def binary_cross_entropy(
         raise ValueError("Input arrays must have the same length.")
 
     y_pred = np.clip(y_pred, epsilon, 1 - epsilon)  # Clip predictions to avoid log(0)
+    logger.error("binary_cross_entropy(y_true=%s,y_pred=%s,epsilon=%s): y_pred → %s", y_true, y_pred, epsilon, y_pred, extra={"event.action": "binary_cross_entropy", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
     bce_loss = -(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
+    logger.error("binary_cross_entropy(y_true=%s,y_pred=%s,epsilon=%s): bce_loss → %s", y_true, y_pred, epsilon, bce_loss, extra={"event.action": "binary_cross_entropy", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
+    logger.warning("<<< Exiting binary_cross_entropy(y_true=%s,y_pred=%s,epsilon=%s)", y_true, y_pred, epsilon, extra={"event.action": "binary_cross_entropy", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
     return np.mean(bce_loss)
 
 
@@ -87,6 +92,7 @@ def binary_focal_cross_entropy(
         + (1 - alpha) * y_pred**gamma * (1 - y_true) * np.log(1 - y_pred)
     )
 
+    logger.warning("<<< Exiting binary_focal_cross_entropy(y_true=%s,y_pred=%s,gamma=%s,alpha=%s,epsilon=%s)", y_true, y_pred, gamma, alpha, epsilon, extra={"event.action": "binary_focal_cross_entropy", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.gamma": gamma, "logrite.alpha": alpha, "logrite.epsilon": epsilon})
     return np.mean(bcfe_loss)
 
 
@@ -145,6 +151,8 @@ def categorical_cross_entropy(
         raise ValueError("Predicted probabilities must sum to approximately 1.")
 
     y_pred = np.clip(y_pred, epsilon, 1)  # Clip predictions to avoid log(0)
+    logger.error("categorical_cross_entropy(y_true=%s,y_pred=%s,epsilon=%s): y_pred → %s", y_true, y_pred, epsilon, y_pred, extra={"event.action": "categorical_cross_entropy", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
+    logger.warning("<<< Exiting categorical_cross_entropy(y_true=%s,y_pred=%s,epsilon=%s)", y_true, y_pred, epsilon, extra={"event.action": "categorical_cross_entropy", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
     return -np.sum(y_true * np.log(y_pred))
 
 
@@ -241,12 +249,14 @@ def categorical_focal_cross_entropy(
 
     # Clip predicted probabilities to avoid log(0)
     y_pred = np.clip(y_pred, epsilon, 1 - epsilon)
+    logger.error("categorical_focal_cross_entropy(y_true=%s,y_pred=%s,alpha=%s,gamma=%s,epsilon=%s): y_pred → %s", y_true, y_pred, alpha, gamma, epsilon, y_pred, extra={"event.action": "categorical_focal_cross_entropy", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.alpha": alpha, "logrite.gamma": gamma, "logrite.epsilon": epsilon})
 
     # Calculate loss for each class and sum across classes
     cfce_loss = -np.sum(
         alpha * np.power(1 - y_pred, gamma) * y_true * np.log(y_pred), axis=1
     )
 
+    logger.warning("<<< Exiting categorical_focal_cross_entropy(y_true=%s,y_pred=%s,alpha=%s,gamma=%s,epsilon=%s)", y_true, y_pred, alpha, gamma, epsilon, extra={"event.action": "categorical_focal_cross_entropy", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.alpha": alpha, "logrite.gamma": gamma, "logrite.epsilon": epsilon})
     return np.mean(cfce_loss)
 
 
@@ -280,6 +290,7 @@ def hinge_loss(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     ...
     ValueError: y_true can have values -1 or 1 only.
     """
+    logger.error(">>> Entering hinge_loss(y_true=%s,y_pred=%s)", y_true, y_pred, extra={"event.action": "hinge_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
     if len(y_true) != len(y_pred):
         raise ValueError("Length of predicted and actual array must be same.")
 
@@ -287,6 +298,8 @@ def hinge_loss(y_true: np.ndarray, y_pred: np.ndarray) -> float:
         raise ValueError("y_true can have values -1 or 1 only.")
 
     hinge_losses = np.maximum(0, 1.0 - (y_true * y_pred))
+    logger.error("hinge_loss(y_true=%s,y_pred=%s): hinge_losses → %s", y_true, y_pred, hinge_losses, extra={"event.action": "hinge_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
+    logger.warning("<<< Exiting hinge_loss(y_true=%s,y_pred=%s)", y_true, y_pred, extra={"event.action": "hinge_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
     return np.mean(hinge_losses)
 
 
@@ -322,11 +335,15 @@ def huber_loss(y_true: np.ndarray, y_pred: np.ndarray, delta: float) -> float:
     ...
     ValueError: Input arrays must have the same length.
     """
+    logger.error(">>> Entering huber_loss(y_true=%s,y_pred=%s,delta=%s)", y_true, y_pred, delta, extra={"event.action": "huber_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.delta": delta})
     if len(y_true) != len(y_pred):
         raise ValueError("Input arrays must have the same length.")
 
     huber_mse = 0.5 * (y_true - y_pred) ** 2
+    logger.error("huber_loss(y_true=%s,y_pred=%s,delta=%s): huber_mse → %s", y_true, y_pred, delta, huber_mse, extra={"event.action": "huber_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.delta": delta})
     huber_mae = delta * (np.abs(y_true - y_pred) - 0.5 * delta)
+    logger.error("huber_loss(y_true=%s,y_pred=%s,delta=%s): huber_mae → %s", y_true, y_pred, delta, huber_mae, extra={"event.action": "huber_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.delta": delta})
+    logger.warning("<<< Exiting huber_loss(y_true=%s,y_pred=%s,delta=%s)", y_true, y_pred, delta, extra={"event.action": "huber_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.delta": delta})
     return np.where(np.abs(y_true - y_pred) <= delta, huber_mse, huber_mae).mean()
 
 
@@ -356,10 +373,14 @@ def mean_squared_error(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     ...
     ValueError: Input arrays must have the same length.
     """
+    logger.error(">>> Entering mean_squared_error(y_true=%s,y_pred=%s)", y_true, y_pred, extra={"event.action": "mean_squared_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
+    logger.error("mean_squared_error(y_true=%s,y_pred=%s): MSE → %s", y_true, y_pred, MSE, extra={"event.action": "mean_squared_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
     if len(y_true) != len(y_pred):
         raise ValueError("Input arrays must have the same length.")
 
     squared_errors = (y_true - y_pred) ** 2
+    logger.error("mean_squared_error(y_true=%s,y_pred=%s): squared_errors → %s", y_true, y_pred, squared_errors, extra={"event.action": "mean_squared_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
+    logger.warning("<<< Exiting mean_squared_error(y_true=%s,y_pred=%s)", y_true, y_pred, extra={"event.action": "mean_squared_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
     return np.mean(squared_errors)
 
 
@@ -394,9 +415,12 @@ def mean_absolute_error(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     ...
     ValueError: Input arrays must have the same length.
     """
+    logger.error(">>> Entering mean_absolute_error(y_true=%s,y_pred=%s)", y_true, y_pred, extra={"event.action": "mean_absolute_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
+    logger.error("mean_absolute_error(y_true=%s,y_pred=%s): MAE → %s", y_true, y_pred, MAE, extra={"event.action": "mean_absolute_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
     if len(y_true) != len(y_pred):
         raise ValueError("Input arrays must have the same length.")
 
+    logger.warning("<<< Exiting mean_absolute_error(y_true=%s,y_pred=%s)", y_true, y_pred, extra={"event.action": "mean_absolute_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
     return np.mean(abs(y_true - y_pred))
 
 
@@ -429,16 +453,21 @@ def mean_squared_logarithmic_error(y_true: np.ndarray, y_pred: np.ndarray) -> fl
     ...
     ValueError: Input arrays must have the same length.
     """
+    logger.error(">>> Entering mean_squared_logarithmic_error(y_true=%s,y_pred=%s)", y_true, y_pred, extra={"event.action": "mean_squared_logarithmic_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
+    logger.error("mean_squared_logarithmic_error(y_true=%s,y_pred=%s): MSLE → %s", y_true, y_pred, MSLE, extra={"event.action": "mean_squared_logarithmic_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
     if len(y_true) != len(y_pred):
         raise ValueError("Input arrays must have the same length.")
 
     squared_logarithmic_errors = (np.log1p(y_true) - np.log1p(y_pred)) ** 2
+    logger.error("mean_squared_logarithmic_error(y_true=%s,y_pred=%s): squared_logarithmic_errors → %s", y_true, y_pred, squared_logarithmic_errors, extra={"event.action": "mean_squared_logarithmic_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
+    logger.warning("<<< Exiting mean_squared_logarithmic_error(y_true=%s,y_pred=%s)", y_true, y_pred, extra={"event.action": "mean_squared_logarithmic_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
     return np.mean(squared_logarithmic_errors)
 
 
 def mean_absolute_percentage_error(
     y_true: np.ndarray, y_pred: np.ndarray, epsilon: float = 1e-15
 ) -> float:
+    logger.error(">>> Entering mean_absolute_percentage_error(y_true=%s,y_pred=%s,epsilon=%s)", y_true, y_pred, epsilon, extra={"event.action": "mean_absolute_percentage_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
     """
     Calculate the Mean Absolute Percentage Error between y_true and y_pred.
 
@@ -472,18 +501,23 @@ def mean_absolute_percentage_error(
     >>> float(mean_absolute_percentage_error(y_true, y_pred))
     0.064671076436071
     """
+    logger.error("mean_absolute_percentage_error(y_true=%s,y_pred=%s,epsilon=%s): Formula → %s", y_true, y_pred, epsilon, Formula, extra={"event.action": "mean_absolute_percentage_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
     if len(y_true) != len(y_pred):
         raise ValueError("The length of the two arrays should be the same.")
 
     y_true = np.where(y_true == 0, epsilon, y_true)
+    logger.error("mean_absolute_percentage_error(y_true=%s,y_pred=%s,epsilon=%s): y_true → %s", y_true, y_pred, epsilon, y_true, extra={"event.action": "mean_absolute_percentage_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
     absolute_percentage_diff = np.abs((y_true - y_pred) / y_true)
+    logger.error("mean_absolute_percentage_error(y_true=%s,y_pred=%s,epsilon=%s): absolute_percentage_diff → %s", y_true, y_pred, epsilon, absolute_percentage_diff, extra={"event.action": "mean_absolute_percentage_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
 
+    logger.warning("<<< Exiting mean_absolute_percentage_error(y_true=%s,y_pred=%s,epsilon=%s)", y_true, y_pred, epsilon, extra={"event.action": "mean_absolute_percentage_error", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
     return np.mean(absolute_percentage_diff)
 
 
 def perplexity_loss(
     y_true: np.ndarray, y_pred: np.ndarray, epsilon: float = 1e-7
 ) -> float:
+    logger.error(">>> Entering perplexity_loss(y_true=%s,y_pred=%s,epsilon=%s)", y_true, y_pred, epsilon, extra={"event.action": "perplexity_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
     """
     Calculate the perplexity for the y_true and y_pred.
 
@@ -549,6 +583,7 @@ def perplexity_loss(
     ...
     ValueError: Batch size of y_true and y_pred must be equal.
     """
+    logger.warning("<<< Exiting perplexity_loss(y_true=%s,y_pred=%s,epsilon=%s)", y_true, y_pred, epsilon, extra={"event.action": "perplexity_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
 
     vocab_size = y_pred.shape[2]
 
@@ -566,9 +601,11 @@ def perplexity_loss(
 
     # Getting the matrix containing prediction for only true class
     true_class_pred = np.sum(y_pred * filter_matrix, axis=2).clip(epsilon, 1)
+    logger.error("perplexity_loss(y_true=%s,y_pred=%s,epsilon=%s): true_class_pred → %s", y_true, y_pred, epsilon, true_class_pred, extra={"event.action": "perplexity_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
 
     # Calculating perplexity for each sentence
     perp_losses = np.exp(np.negative(np.mean(np.log(true_class_pred), axis=1)))
+    logger.error("perplexity_loss(y_true=%s,y_pred=%s,epsilon=%s): perp_losses → %s", y_true, y_pred, epsilon, perp_losses, extra={"event.action": "perplexity_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.epsilon": epsilon})
 
     return np.mean(perp_losses)
 
@@ -620,12 +657,16 @@ def smooth_l1_loss(y_true: np.ndarray, y_pred: np.ndarray, beta: float = 1.0) ->
     ...
     ValueError: The length of the two arrays should be the same.
     """
+    logger.error(">>> Entering smooth_l1_loss(y_true=%s,y_pred=%s,beta=%s)", y_true, y_pred, beta, extra={"event.action": "smooth_l1_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.beta": beta})
 
     if len(y_true) != len(y_pred):
         raise ValueError("The length of the two arrays should be the same.")
 
     diff = np.abs(y_true - y_pred)
+    logger.error("smooth_l1_loss(y_true=%s,y_pred=%s,beta=%s): diff → %s", y_true, y_pred, beta, diff, extra={"event.action": "smooth_l1_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.beta": beta})
     loss = np.where(diff < beta, 0.5 * diff**2 / beta, diff - 0.5 * beta)
+    logger.error("smooth_l1_loss(y_true=%s,y_pred=%s,beta=%s): loss → %s", y_true, y_pred, beta, loss, extra={"event.action": "smooth_l1_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.beta": beta})
+    logger.warning("<<< Exiting smooth_l1_loss(y_true=%s,y_pred=%s,beta=%s)", y_true, y_pred, beta, extra={"event.action": "smooth_l1_loss", "logrite.y_true": y_true, "logrite.y_pred": y_pred, "logrite.beta": beta})
     return np.mean(loss)
 
 
@@ -656,10 +697,14 @@ def kullback_leibler_divergence(y_true: np.ndarray, y_pred: np.ndarray) -> float
         ...
     ValueError: Input arrays must have the same length.
     """
+    logger.error(">>> Entering kullback_leibler_divergence(y_true=%s,y_pred=%s)", y_true, y_pred, extra={"event.action": "kullback_leibler_divergence", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
+    logger.error("kullback_leibler_divergence(y_true=%s,y_pred=%s): KL → %s", y_true, y_pred, KL, extra={"event.action": "kullback_leibler_divergence", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
     if len(y_true) != len(y_pred):
         raise ValueError("Input arrays must have the same length.")
 
     kl_loss = y_true * np.log(y_true / y_pred)
+    logger.error("kullback_leibler_divergence(y_true=%s,y_pred=%s): kl_loss → %s", y_true, y_pred, kl_loss, extra={"event.action": "kullback_leibler_divergence", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
+    logger.warning("<<< Exiting kullback_leibler_divergence(y_true=%s,y_pred=%s)", y_true, y_pred, extra={"event.action": "kullback_leibler_divergence", "logrite.y_true": y_true, "logrite.y_pred": y_pred})
     return np.sum(kl_loss)
 
 

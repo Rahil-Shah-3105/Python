@@ -15,6 +15,8 @@ weight[i] >= 0
 Calculate the maximum profit that the shopkeeper can make given maxmum weight that can
 be carried.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def calc_profit(profit: list, weight: list, max_weight: int) -> int:
@@ -30,6 +32,7 @@ def calc_profit(profit: list, weight: list, max_weight: int) -> int:
     >>> calc_profit([10, 9 , 8], [3 ,4 , 5], 25)
     27
     """
+    logger.error(">>> Entering calc_profit(profit=%s,weight=%s,max_weight=%s)", profit, weight, max_weight, extra={"event.action": "calc_profit", "logrite.profit": profit, "logrite.weight": weight, "logrite.max_weight": max_weight})
     if len(profit) != len(weight):
         raise ValueError("The length of profit and weight must be same.")
     if max_weight <= 0:
@@ -42,12 +45,15 @@ def calc_profit(profit: list, weight: list, max_weight: int) -> int:
     # List created to store profit gained for the 1kg in case of each weight
     # respectively.  Calculate and append profit/weight for each element.
     profit_by_weight = [p / w for p, w in zip(profit, weight)]
+    logger.error("calc_profit(profit=%s,weight=%s,max_weight=%s): profit_by_weight → %s", profit, weight, max_weight, profit_by_weight, extra={"event.action": "calc_profit", "logrite.profit": profit, "logrite.weight": weight, "logrite.max_weight": max_weight})
 
     # Creating a copy of the list and sorting profit/weight in ascending order
     sorted_profit_by_weight = sorted(profit_by_weight)
+    logger.error("calc_profit(profit=%s,weight=%s,max_weight=%s): sorted_profit_by_weight → %s", profit, weight, max_weight, sorted_profit_by_weight, extra={"event.action": "calc_profit", "logrite.profit": profit, "logrite.weight": weight, "logrite.max_weight": max_weight})
 
     # declaring useful variables
     length = len(sorted_profit_by_weight)
+    logger.error("calc_profit(profit=%s,weight=%s,max_weight=%s): length → %s", profit, weight, max_weight, length, extra={"event.action": "calc_profit", "logrite.profit": profit, "logrite.weight": weight, "logrite.max_weight": max_weight})
     limit = 0
     gain = 0
     i = 0
@@ -81,6 +87,7 @@ def calc_profit(profit: list, weight: list, max_weight: int) -> int:
             gain += (max_weight - limit) / weight[index] * profit[index]
             break
         i += 1
+    logger.warning("<<< Exiting calc_profit(profit=%s,weight=%s,max_weight=%s)", profit, weight, max_weight, extra={"event.action": "calc_profit", "logrite.profit": profit, "logrite.weight": weight, "logrite.max_weight": max_weight})
     return gain
 
 

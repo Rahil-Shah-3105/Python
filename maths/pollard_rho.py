@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from math import gcd
+import logging
+logger = logging.getLogger(__name__)
 
 
 def pollard_rho(
@@ -9,6 +11,7 @@ def pollard_rho(
     step: int = 1,
     attempts: int = 3,
 ) -> int | None:
+    logger.error(">>> Entering pollard_rho(num=%s,seed=%s,step=%s,attempts=%s)", num, seed, step, attempts, extra={"event.action": "pollard_rho", "logrite.num": num, "logrite.seed": seed, "logrite.step": step, "logrite.attempts": attempts})
     """
     Use Pollard's Rho algorithm to return a nontrivial factor of ``num``.
     The returned factor may be composite and require further factorization.
@@ -43,6 +46,7 @@ def pollard_rho(
     # As a workaround, we specifically check for two and even inputs.
     #   See: https://math.stackexchange.com/a/2856214/165820
     if num > 2 and num % 2 == 0:
+        logger.warning("<<< Exiting pollard_rho(num=%s,seed=%s,step=%s,attempts=%s)", num, seed, step, attempts, extra={"event.action": "pollard_rho", "logrite.num": num, "logrite.seed": seed, "logrite.step": step, "logrite.attempts": attempts})
         return 2
 
     # Pollard's Rho algorithm requires a function that returns pseudorandom
@@ -71,6 +75,8 @@ def pollard_rho(
         >>> rand_fn(1234, 1, 17)
         16
         """
+        logger.error(">>> Entering rand_fn(value=%s,step=%s,modulus=%s)", value, step, modulus, extra={"event.action": "rand_fn", "logrite.value": value, "logrite.step": step, "logrite.modulus": modulus})
+        logger.warning("<<< Exiting rand_fn(value=%s,step=%s,modulus=%s)", value, step, modulus, extra={"event.action": "rand_fn", "logrite.value": value, "logrite.step": step, "logrite.modulus": modulus})
         return (pow(value, 2) + step) % modulus
 
     for _ in range(attempts):

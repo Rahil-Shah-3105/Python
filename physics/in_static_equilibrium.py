@@ -6,11 +6,14 @@ from __future__ import annotations
 
 from numpy import array, cos, cross, float64, radians, sin
 from numpy.typing import NDArray
+import logging
+logger = logging.getLogger(__name__)
 
 
 def polar_force(
     magnitude: float, angle: float, radian_mode: bool = False
 ) -> list[float]:
+    logger.error(">>> Entering polar_force(magnitude=%s,angle=%s,radian_mode=%s)", magnitude, angle, radian_mode, extra={"event.action": "polar_force", "logrite.magnitude": magnitude, "logrite.angle": angle, "logrite.radian_mode": radian_mode})
     """
     Resolves force along rectangular components.
     (force, angle) => (force_x, force_y)
@@ -28,12 +31,14 @@ def polar_force(
     """
     if radian_mode:
         return [magnitude * cos(angle), magnitude * sin(angle)]
+    logger.warning("<<< Exiting polar_force(magnitude=%s,angle=%s,radian_mode=%s)", magnitude, angle, radian_mode, extra={"event.action": "polar_force", "logrite.magnitude": magnitude, "logrite.angle": angle, "logrite.radian_mode": radian_mode})
     return [magnitude * cos(radians(angle)), magnitude * sin(radians(angle))]
 
 
 def in_static_equilibrium(
     forces: NDArray[float64], location: NDArray[float64], eps: float = 10**-1
 ) -> bool:
+    logger.error(">>> Entering in_static_equilibrium(forces=%s,location=%s,eps=%s)", forces, location, eps, extra={"event.action": "in_static_equilibrium", "logrite.forces": forces, "logrite.location": location, "logrite.eps": eps})
     """
     Check if a system is in equilibrium.
     It takes two numpy.array objects.
@@ -53,6 +58,8 @@ def in_static_equilibrium(
     # summation of moments is zero
     moments: NDArray[float64] = cross(location, forces)
     sum_moments: float = sum(moments)
+    logger.error("in_static_equilibrium(forces=%s,location=%s,eps=%s): sum_moments → %s", forces, location, eps, sum_moments, extra={"event.action": "in_static_equilibrium", "logrite.forces": forces, "logrite.location": location, "logrite.eps": eps})
+    logger.warning("<<< Exiting in_static_equilibrium(forces=%s,location=%s,eps=%s)", forces, location, eps, extra={"event.action": "in_static_equilibrium", "logrite.forces": forces, "logrite.location": location, "logrite.eps": eps})
     return bool(abs(sum_moments) < eps)
 
 

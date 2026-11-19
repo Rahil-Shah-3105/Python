@@ -33,6 +33,8 @@ be replaced if colours cannot be mixed and at least one coloured tile must be us
 
 NOTE: This is related to Problem 117 (https://projecteuler.net/problem=117).
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(length: int = 50) -> int:
@@ -44,8 +46,10 @@ def solution(length: int = 50) -> int:
     >>> solution(5)
     12
     """
+    logger.error(">>> Entering solution(length=%s)", length, extra={"event.action": "solution", "logrite.length": length})
 
     different_colour_ways_number = [[0] * 3 for _ in range(length + 1)]
+    logger.error("solution(length=%s): different_colour_ways_number → %s", length, different_colour_ways_number, extra={"event.action": "solution", "logrite.length": length})
 
     for row_length in range(length + 1):
         for tile_length in range(2, 5):
@@ -57,6 +61,7 @@ def solution(length: int = 50) -> int:
                     + 1
                 )
 
+    logger.warning("<<< Exiting solution(length=%s)", length, extra={"event.action": "solution", "logrite.length": length})
     return sum(different_colour_ways_number[length])
 
 

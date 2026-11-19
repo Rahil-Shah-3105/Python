@@ -1,13 +1,18 @@
 from collections import deque
+import logging
+logger = logging.getLogger(__name__)
 
 
 def _input(message):
+    logger.error(">>> Entering _input(message=%s)", message, extra={"event.action": "_input", "logrite.message": message})
+    logger.warning("<<< Exiting _input(message=%s)", message, extra={"event.action": "_input", "logrite.message": message})
     return input(message).strip().split(" ")
 
 
 def initialize_unweighted_directed_graph(
     node_count: int, edge_count: int
 ) -> dict[int, list[int]]:
+    logger.error(">>> Entering initialize_unweighted_directed_graph(node_count=%s,edge_count=%s)", node_count, edge_count, extra={"event.action": "initialize_unweighted_directed_graph", "logrite.node_count": node_count, "logrite.edge_count": edge_count})
     graph: dict[int, list[int]] = {}
     for i in range(node_count):
         graph[i + 1] = []
@@ -15,12 +20,14 @@ def initialize_unweighted_directed_graph(
     for e in range(edge_count):
         x, y = (int(i) for i in _input(f"Edge {e + 1}: <node1> <node2> "))
         graph[x].append(y)
+    logger.warning("<<< Exiting initialize_unweighted_directed_graph(node_count=%s,edge_count=%s)", node_count, edge_count, extra={"event.action": "initialize_unweighted_directed_graph", "logrite.node_count": node_count, "logrite.edge_count": edge_count})
     return graph
 
 
 def initialize_unweighted_undirected_graph(
     node_count: int, edge_count: int
 ) -> dict[int, list[int]]:
+    logger.error(">>> Entering initialize_unweighted_undirected_graph(node_count=%s,edge_count=%s)", node_count, edge_count, extra={"event.action": "initialize_unweighted_undirected_graph", "logrite.node_count": node_count, "logrite.edge_count": edge_count})
     graph: dict[int, list[int]] = {}
     for i in range(node_count):
         graph[i + 1] = []
@@ -29,12 +36,14 @@ def initialize_unweighted_undirected_graph(
         x, y = (int(i) for i in _input(f"Edge {e + 1}: <node1> <node2> "))
         graph[x].append(y)
         graph[y].append(x)
+    logger.warning("<<< Exiting initialize_unweighted_undirected_graph(node_count=%s,edge_count=%s)", node_count, edge_count, extra={"event.action": "initialize_unweighted_undirected_graph", "logrite.node_count": node_count, "logrite.edge_count": edge_count})
     return graph
 
 
 def initialize_weighted_undirected_graph(
     node_count: int, edge_count: int
 ) -> dict[int, list[tuple[int, int]]]:
+    logger.error(">>> Entering initialize_weighted_undirected_graph(node_count=%s,edge_count=%s)", node_count, edge_count, extra={"event.action": "initialize_weighted_undirected_graph", "logrite.node_count": node_count, "logrite.edge_count": edge_count})
     graph: dict[int, list[tuple[int, int]]] = {}
     for i in range(node_count):
         graph[i + 1] = []
@@ -43,6 +52,7 @@ def initialize_weighted_undirected_graph(
         x, y, w = (int(i) for i in _input(f"Edge {e + 1}: <node1> <node2> <weight> "))
         graph[x].append((y, w))
         graph[y].append((x, w))
+    logger.warning("<<< Exiting initialize_weighted_undirected_graph(node_count=%s,edge_count=%s)", node_count, edge_count, extra={"event.action": "initialize_weighted_undirected_graph", "logrite.node_count": node_count, "logrite.edge_count": edge_count})
     return graph
 
 
@@ -85,6 +95,7 @@ def dfs(g, s):
     5
     3
     """
+    logger.error(">>> Entering dfs(g=%s,s=%s)", g, s, extra={"event.action": "dfs", "logrite.g": g, "logrite.s": s})
     vis, _s = {s}, [s]
     print(s)
     while _s:
@@ -98,6 +109,7 @@ def dfs(g, s):
                 break
         if not flag:
             _s.pop()
+            logger.warning("<<< Exiting dfs(g=%s,s=%s)", g, s, extra={"event.action": "dfs", "logrite.g": g, "logrite.s": s})
 
 
 """
@@ -123,15 +135,18 @@ def bfs(g, s):
     7
     8
     """
+    logger.error(">>> Entering bfs(g=%s,s=%s)", g, s, extra={"event.action": "bfs", "logrite.g": g, "logrite.s": s})
     vis, q = {s}, deque([s])
     print(s)
     while q:
         u = q.popleft()
+        logger.error("bfs(g=%s,s=%s): u → %s", g, s, u, extra={"event.action": "bfs", "logrite.g": g, "logrite.s": s})
         for v in g[u]:
             if v not in vis:
                 vis.add(v)
                 q.append(v)
                 print(v)
+                logger.warning("<<< Exiting bfs(g=%s,s=%s)", g, s, extra={"event.action": "bfs", "logrite.g": g, "logrite.s": s})
 
 
 """
@@ -160,6 +175,7 @@ def dijk(g, s):
     20
     20
     """
+    logger.error(">>> Entering dijk(g=%s,s=%s)", g, s, extra={"event.action": "dijk", "logrite.g": g, "logrite.s": s})
     dist, known, path = {s: 0}, set(), {s: 0}
     while True:
         if len(known) == len(g) - 1:
@@ -177,6 +193,7 @@ def dijk(g, s):
     for key, value in dist.items():
         if key != s:
             print(value)
+            logger.warning("<<< Exiting dijk(g=%s,s=%s)", g, s, extra={"event.action": "dijk", "logrite.g": g, "logrite.s": s})
 
 
 """
@@ -187,10 +204,13 @@ def dijk(g, s):
 
 
 def topo(g, ind=None, q=None):
+    logger.error(">>> Entering topo(g=%s,ind=%s,q=%s)", g, ind, q, extra={"event.action": "topo", "logrite.g": g, "logrite.ind": ind, "logrite.q": q})
     if q is None:
         q = [1]
+        logger.error("topo(g=%s,ind=%s,q=%s): q → %s", g, ind, q, q, extra={"event.action": "topo", "logrite.g": g, "logrite.ind": ind, "logrite.q": q})
     if ind is None:
         ind = [0] * (len(g) + 1)  # SInce oth Index is ignored
+        logger.error("topo(g=%s,ind=%s,q=%s): ind → %s", g, ind, q, ind, extra={"event.action": "topo", "logrite.g": g, "logrite.ind": ind, "logrite.q": q})
         for u in g:
             for v in g[u]:
                 ind[v] += 1
@@ -199,6 +219,7 @@ def topo(g, ind=None, q=None):
             if ind[i] == 0:
                 q.append(i)
     if len(q) == 0:
+        logger.warning("<<< Exiting topo(g=%s,ind=%s,q=%s)", g, ind, q, extra={"event.action": "topo", "logrite.g": g, "logrite.ind": ind, "logrite.q": q})
         return
     v = q.popleft()
     print(v)
@@ -236,10 +257,13 @@ def adjm():
     ([(0, 1, 0, 1), (1, 0, 1, 0), (0, 1, 0, 1), (1, 0, 1, 0)], 4)
     >>> sys.stdin = original_input  # Restore original stdin
     """
+    logger.error(">>> Entering adjm()", extra={"event.action": "adjm"})
     n = int(input().strip())
+    logger.error("adjm(): n → %s", n, extra={"event.action": "adjm"})
     a = []
     for _ in range(n):
         a.append(tuple(map(int, input().strip().split())))
+    logger.warning("<<< Exiting adjm()", extra={"event.action": "adjm"})
     return a, n
 
 
@@ -257,9 +281,12 @@ def adjm():
 
 
 def floy(a_and_n):
+    logger.error(">>> Entering floy(a_and_n=%s)", a_and_n, extra={"event.action": "floy", "logrite.a_and_n": a_and_n})
     (a, n) = a_and_n
     dist = list(a)
+    logger.error("floy(a_and_n=%s): dist → %s", a_and_n, dist, extra={"event.action": "floy", "logrite.a_and_n": a_and_n})
     path = [[0] * n for i in range(n)]
+    logger.error("floy(a_and_n=%s): path → %s", a_and_n, path, extra={"event.action": "floy", "logrite.a_and_n": a_and_n})
     for k in range(n):
         for i in range(n):
             for j in range(n):
@@ -267,6 +294,7 @@ def floy(a_and_n):
                     dist[i][j] = dist[i][k] + dist[k][j]
                     path[i][k] = k
     print(dist)
+    logger.warning("<<< Exiting floy(a_and_n=%s)", a_and_n, extra={"event.action": "floy", "logrite.a_and_n": a_and_n})
 
 
 """
@@ -282,6 +310,7 @@ def floy(a_and_n):
 
 
 def prim(g, s):
+    logger.error(">>> Entering prim(g=%s,s=%s)", g, s, extra={"event.action": "prim", "logrite.g": g, "logrite.s": s})
     dist, known, path = {s: 0}, set(), {s: 0}
     while True:
         if len(known) == len(g) - 1:
@@ -296,6 +325,7 @@ def prim(g, s):
             if v[0] not in known and v[1] < dist.get(v[0], 100000):
                 dist[v[0]] = v[1]
                 path[v[0]] = u
+    logger.warning("<<< Exiting prim(g=%s,s=%s)", g, s, extra={"event.action": "prim", "logrite.g": g, "logrite.s": s})
     return dist
 
 
@@ -330,10 +360,12 @@ def edglist():
     ([(1, 2), (2, 3), (3, 4)], 4)
     >>> sys.stdin = original_input  # Restore original stdin
     """
+    logger.error(">>> Entering edglist()", extra={"event.action": "edglist"})
     n, m = tuple(map(int, input().split(" ")))
     edges = []
     for _ in range(m):
         edges.append(tuple(map(int, input().split(" "))))
+    logger.warning("<<< Exiting edglist()", extra={"event.action": "edglist"})
     return edges, n
 
 
@@ -351,14 +383,17 @@ def krusk(e_and_n):
     """
     Sort edges on the basis of distance
     """
+    logger.error(">>> Entering krusk(e_and_n=%s)", e_and_n, extra={"event.action": "krusk", "logrite.e_and_n": e_and_n})
     (e, n) = e_and_n
     e.sort(reverse=True, key=lambda x: x[2])
     s = [{i} for i in range(1, n + 1)]
+    logger.error("krusk(e_and_n=%s): s → %s", e_and_n, s, extra={"event.action": "krusk", "logrite.e_and_n": e_and_n})
     while True:
         if len(s) == 1:
             break
         print(s)
         x = e.pop()
+        logger.error("krusk(e_and_n=%s): x → %s", e_and_n, x, extra={"event.action": "krusk", "logrite.e_and_n": e_and_n})
         for i in range(len(s)):
             if x[0] in s[i]:
                 break
@@ -368,6 +403,7 @@ def krusk(e_and_n):
                     break
                 s[j].update(s[i])
                 s.pop(i)
+                logger.warning("<<< Exiting krusk(e_and_n=%s)", e_and_n, extra={"event.action": "krusk", "logrite.e_and_n": e_and_n})
                 break
 
 
@@ -402,8 +438,10 @@ def find_isolated_nodes(graph):
     >>> find_isolated_nodes(graph5)
     []
     """
+    logger.error(">>> Entering find_isolated_nodes(graph=%s)", graph, extra={"event.action": "find_isolated_nodes", "logrite.graph": graph})
     isolated = []
     for node in graph:
         if not graph[node]:
             isolated.append(node)
+    logger.warning("<<< Exiting find_isolated_nodes(graph=%s)", graph, extra={"event.action": "find_isolated_nodes", "logrite.graph": graph})
     return isolated

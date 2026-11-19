@@ -16,6 +16,8 @@ joule, while the English unit of kinetic energy is the foot-pound.
 
 Reference : https://en.m.wikipedia.org/wiki/Kinetic_energy
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def kinetic_energy(mass: float, velocity: float) -> float:
@@ -39,8 +41,10 @@ def kinetic_energy(mass: float, velocity: float) -> float:
     >>> kinetic_energy(100,100)
     500000.0
     """
+    logger.error(">>> Entering kinetic_energy(mass=%s,velocity=%s)", mass, velocity, extra={"event.action": "kinetic_energy", "logrite.mass": mass, "logrite.velocity": velocity})
     if mass < 0:
         raise ValueError("The mass of a body cannot be negative")
+    logger.warning("<<< Exiting kinetic_energy(mass=%s,velocity=%s)", mass, velocity, extra={"event.action": "kinetic_energy", "logrite.mass": mass, "logrite.velocity": velocity})
     return 0.5 * mass * abs(velocity) * abs(velocity)
 
 

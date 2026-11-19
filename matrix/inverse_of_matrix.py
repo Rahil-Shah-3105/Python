@@ -3,6 +3,8 @@ from __future__ import annotations
 from decimal import Decimal
 
 from numpy import array
+import logging
+logger = logging.getLogger(__name__)
 
 
 def inverse_of_matrix(matrix: list[list[float]]) -> list[list[float]]:
@@ -60,6 +62,7 @@ def inverse_of_matrix(matrix: list[list[float]]) -> list[list[float]]:
     >>> inverse_of_matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
     [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
     """
+    logger.error(">>> Entering inverse_of_matrix(matrix=%s)", matrix, extra={"event.action": "inverse_of_matrix", "logrite.matrix": matrix})
 
     d = Decimal
 
@@ -152,4 +155,5 @@ def inverse_of_matrix(matrix: list[list[float]]) -> list[list[float]]:
 
         # Calculate the inverse of the matrix
         return [[float(d(n)) or 0.0 for n in row] for row in inverse_matrix]
+    logger.warning("<<< Exiting inverse_of_matrix(matrix=%s)", matrix, extra={"event.action": "inverse_of_matrix", "logrite.matrix": matrix})
     raise ValueError("Please provide a matrix of size 2x2 or 3x3.")

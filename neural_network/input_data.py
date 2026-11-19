@@ -26,6 +26,8 @@ import numpy as np
 from tensorflow.python.framework import dtypes, random_seed
 from tensorflow.python.platform import gfile
 from tensorflow.python.util.deprecation import deprecated
+import logging
+logger = logging.getLogger(__name__)
 
 
 class _Datasets(typing.NamedTuple):
@@ -39,7 +41,10 @@ DEFAULT_SOURCE_URL = "https://storage.googleapis.com/cvdf-datasets/mnist/"
 
 
 def _read32(bytestream):
+    logger.error(">>> Entering _read32(bytestream=%s)", bytestream, extra={"event.action": "_read32", "logrite.bytestream": bytestream})
     dt = np.dtype(np.uint32).newbyteorder(">")
+    logger.error("_read32(bytestream=%s): dt → %s", bytestream, dt, extra={"event.action": "_read32", "logrite.bytestream": bytestream})
+    logger.warning("<<< Exiting _read32(bytestream=%s)", bytestream, extra={"event.action": "_read32", "logrite.bytestream": bytestream})
     return np.frombuffer(bytestream.read(4), dtype=dt)[0]
 
 
@@ -57,28 +62,41 @@ def _extract_images(f):
       ValueError: If the bytestream does not start with 2051.
 
     """
+    logger.error(">>> Entering _extract_images(f=%s)", f, extra={"event.action": "_extract_images", "logrite.f": f})
     print("Extracting", f.name)
     with gzip.GzipFile(fileobj=f) as bytestream:
         magic = _read32(bytestream)
+        logger.error("_extract_images(f=%s): magic → %s", f, magic, extra={"event.action": "_extract_images", "logrite.f": f})
         if magic != 2051:
             msg = f"Invalid magic number {magic} in MNIST image file: {f.name}"
+            logger.error("_extract_images(f=%s): msg → %s", f, msg, extra={"event.action": "_extract_images", "logrite.f": f})
             raise ValueError(msg)
         num_images = _read32(bytestream)
+        logger.error("_extract_images(f=%s): num_images → %s", f, num_images, extra={"event.action": "_extract_images", "logrite.f": f})
         rows = _read32(bytestream)
+        logger.error("_extract_images(f=%s): rows → %s", f, rows, extra={"event.action": "_extract_images", "logrite.f": f})
         cols = _read32(bytestream)
+        logger.error("_extract_images(f=%s): cols → %s", f, cols, extra={"event.action": "_extract_images", "logrite.f": f})
         buf = bytestream.read(rows * cols * num_images)
+        logger.error("_extract_images(f=%s): buf → %s", f, buf, extra={"event.action": "_extract_images", "logrite.f": f})
         data = np.frombuffer(buf, dtype=np.uint8)
         data = data.reshape(num_images, rows, cols, 1)
+        logger.error("_extract_images(f=%s): data → %s", f, data, extra={"event.action": "_extract_images", "logrite.f": f})
+        logger.warning("<<< Exiting _extract_images(f=%s)", f, extra={"event.action": "_extract_images", "logrite.f": f})
         return data
 
 
 @deprecated(None, "Please use tf.one_hot on tensors.")
 def _dense_to_one_hot(labels_dense, num_classes):
     """Convert class labels from scalars to one-hot vectors."""
+    logger.error(">>> Entering _dense_to_one_hot(labels_dense=%s,num_classes=%s)", labels_dense, num_classes, extra={"event.action": "_dense_to_one_hot", "logrite.labels_dense": labels_dense, "logrite.num_classes": num_classes})
     num_labels = labels_dense.shape[0]
     index_offset = np.arange(num_labels) * num_classes
+    logger.error("_dense_to_one_hot(labels_dense=%s,num_classes=%s): index_offset → %s", labels_dense, num_classes, index_offset, extra={"event.action": "_dense_to_one_hot", "logrite.labels_dense": labels_dense, "logrite.num_classes": num_classes})
     labels_one_hot = np.zeros((num_labels, num_classes))
+    logger.error("_dense_to_one_hot(labels_dense=%s,num_classes=%s): labels_one_hot → %s", labels_dense, num_classes, labels_one_hot, extra={"event.action": "_dense_to_one_hot", "logrite.labels_dense": labels_dense, "logrite.num_classes": num_classes})
     labels_one_hot.flat[index_offset + labels_dense.ravel()] = 1
+    logger.warning("<<< Exiting _dense_to_one_hot(labels_dense=%s,num_classes=%s)", labels_dense, num_classes, extra={"event.action": "_dense_to_one_hot", "logrite.labels_dense": labels_dense, "logrite.num_classes": num_classes})
     return labels_one_hot
 
 
@@ -97,17 +115,24 @@ def _extract_labels(f, one_hot=False, num_classes=10):
     Raises:
       ValueError: If the bystream doesn't start with 2049.
     """
+    logger.error(">>> Entering _extract_labels(f=%s,one_hot=%s,num_classes=%s)", f, one_hot, num_classes, extra={"event.action": "_extract_labels", "logrite.f": f, "logrite.one_hot": one_hot, "logrite.num_classes": num_classes})
     print("Extracting", f.name)
     with gzip.GzipFile(fileobj=f) as bytestream:
         magic = _read32(bytestream)
+        logger.error("_extract_labels(f=%s,one_hot=%s,num_classes=%s): magic → %s", f, one_hot, num_classes, magic, extra={"event.action": "_extract_labels", "logrite.f": f, "logrite.one_hot": one_hot, "logrite.num_classes": num_classes})
         if magic != 2049:
             msg = f"Invalid magic number {magic} in MNIST label file: {f.name}"
+            logger.error("_extract_labels(f=%s,one_hot=%s,num_classes=%s): msg → %s", f, one_hot, num_classes, msg, extra={"event.action": "_extract_labels", "logrite.f": f, "logrite.one_hot": one_hot, "logrite.num_classes": num_classes})
             raise ValueError(msg)
         num_items = _read32(bytestream)
+        logger.error("_extract_labels(f=%s,one_hot=%s,num_classes=%s): num_items → %s", f, one_hot, num_classes, num_items, extra={"event.action": "_extract_labels", "logrite.f": f, "logrite.one_hot": one_hot, "logrite.num_classes": num_classes})
         buf = bytestream.read(num_items)
+        logger.error("_extract_labels(f=%s,one_hot=%s,num_classes=%s): buf → %s", f, one_hot, num_classes, buf, extra={"event.action": "_extract_labels", "logrite.f": f, "logrite.one_hot": one_hot, "logrite.num_classes": num_classes})
         labels = np.frombuffer(buf, dtype=np.uint8)
+        logger.error("_extract_labels(f=%s,one_hot=%s,num_classes=%s): labels → %s", f, one_hot, num_classes, labels, extra={"event.action": "_extract_labels", "logrite.f": f, "logrite.one_hot": one_hot, "logrite.num_classes": num_classes})
         if one_hot:
             return _dense_to_one_hot(labels, num_classes)
+        logger.warning("<<< Exiting _extract_labels(f=%s,one_hot=%s,num_classes=%s)", f, one_hot, num_classes, extra={"event.action": "_extract_labels", "logrite.f": f, "logrite.one_hot": one_hot, "logrite.num_classes": num_classes})
         return labels
 
 
@@ -158,8 +183,10 @@ class _DataSet:
             raise TypeError(msg)
         if fake_data:
             self._num_examples = 10000
+            logger.debug("__init__(self=%s,images=%s,labels=%s,fake_data=%s,one_hot=%s,dtype=%s,reshape=%s,seed=%s): self._num_examples → %s", self, images, labels, fake_data, one_hot, dtype, reshape, seed, self._num_examples, extra={"event.action": "__init__", "logrite.images": images, "logrite.labels": labels, "logrite.fake_data": fake_data, "logrite.one_hot": one_hot, "logrite.dtype": dtype, "logrite.reshape": reshape, "logrite.seed": seed})
             self.one_hot = one_hot
         else:
+            logger.debug("__init__(self=%s,images=%s,labels=%s,fake_data=%s,one_hot=%s,dtype=%s,reshape=%s,seed=%s): self.one_hot → %s", self, images, labels, fake_data, one_hot, dtype, reshape, seed, self.one_hot, extra={"event.action": "__init__", "logrite.images": images, "logrite.labels": labels, "logrite.fake_data": fake_data, "logrite.one_hot": one_hot, "logrite.dtype": dtype, "logrite.reshape": reshape, "logrite.seed": seed})
             assert images.shape[0] == labels.shape[0], (
                 f"images.shape: {images.shape} labels.shape: {labels.shape}"
             )
@@ -177,28 +204,41 @@ class _DataSet:
                 images = images.astype(np.float32)
                 images = np.multiply(images, 1.0 / 255.0)
         self._images = images
+        logger.debug("__init__(self=%s,images=%s,labels=%s,fake_data=%s,one_hot=%s,dtype=%s,reshape=%s,seed=%s): self._images → %s", self, images, labels, fake_data, one_hot, dtype, reshape, seed, self._images, extra={"event.action": "__init__", "logrite.images": images, "logrite.labels": labels, "logrite.fake_data": fake_data, "logrite.one_hot": one_hot, "logrite.dtype": dtype, "logrite.reshape": reshape, "logrite.seed": seed})
         self._labels = labels
+        logger.debug("__init__(self=%s,images=%s,labels=%s,fake_data=%s,one_hot=%s,dtype=%s,reshape=%s,seed=%s): self._labels → %s", self, images, labels, fake_data, one_hot, dtype, reshape, seed, self._labels, extra={"event.action": "__init__", "logrite.images": images, "logrite.labels": labels, "logrite.fake_data": fake_data, "logrite.one_hot": one_hot, "logrite.dtype": dtype, "logrite.reshape": reshape, "logrite.seed": seed})
         self._epochs_completed = 0
+        logger.debug("__init__(self=%s,images=%s,labels=%s,fake_data=%s,one_hot=%s,dtype=%s,reshape=%s,seed=%s): self._epochs_completed → %s", self, images, labels, fake_data, one_hot, dtype, reshape, seed, self._epochs_completed, extra={"event.action": "__init__", "logrite.images": images, "logrite.labels": labels, "logrite.fake_data": fake_data, "logrite.one_hot": one_hot, "logrite.dtype": dtype, "logrite.reshape": reshape, "logrite.seed": seed})
         self._index_in_epoch = 0
+        logger.debug("__init__(self=%s,images=%s,labels=%s,fake_data=%s,one_hot=%s,dtype=%s,reshape=%s,seed=%s): self._index_in_epoch → %s", self, images, labels, fake_data, one_hot, dtype, reshape, seed, self._index_in_epoch, extra={"event.action": "__init__", "logrite.images": images, "logrite.labels": labels, "logrite.fake_data": fake_data, "logrite.one_hot": one_hot, "logrite.dtype": dtype, "logrite.reshape": reshape, "logrite.seed": seed})
 
     @property
     def images(self):
+        logger.error(">>> Entering images()", extra={"event.action": "images"})
+        logger.warning("<<< Exiting images()", extra={"event.action": "images"})
         return self._images
 
     @property
     def labels(self):
+        logger.error(">>> Entering labels()", extra={"event.action": "labels"})
+        logger.warning("<<< Exiting labels()", extra={"event.action": "labels"})
         return self._labels
 
     @property
     def num_examples(self):
+        logger.error(">>> Entering num_examples()", extra={"event.action": "num_examples"})
+        logger.warning("<<< Exiting num_examples()", extra={"event.action": "num_examples"})
         return self._num_examples
 
     @property
     def epochs_completed(self):
+        logger.error(">>> Entering epochs_completed()", extra={"event.action": "epochs_completed"})
+        logger.warning("<<< Exiting epochs_completed()", extra={"event.action": "epochs_completed"})
         return self._epochs_completed
 
     def next_batch(self, batch_size, fake_data=False, shuffle=True):
         """Return the next `batch_size` examples from this data set."""
+        logger.error(">>> Entering next_batch(batch_size=%s,fake_data=%s,shuffle=%s)", batch_size, fake_data, shuffle, extra={"event.action": "next_batch", "logrite.batch_size": batch_size, "logrite.fake_data": fake_data, "logrite.shuffle": shuffle})
         if fake_data:
             fake_image = [1] * 784
             fake_label = [1] + [0] * 9 if self.one_hot else 0
@@ -212,7 +252,9 @@ class _DataSet:
             perm0 = np.arange(self._num_examples)
             self._rng.shuffle(perm0)
             self._images = self.images[perm0]
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): self._images → %s", self, batch_size, fake_data, shuffle, self._images, extra={"event.action": "next_batch", "logrite.batch_size": batch_size, "logrite.fake_data": fake_data, "logrite.shuffle": shuffle})
             self._labels = self.labels[perm0]
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): self._labels → %s", self, batch_size, fake_data, shuffle, self._labels, extra={"event.action": "next_batch", "logrite.batch_size": batch_size, "logrite.fake_data": fake_data, "logrite.shuffle": shuffle})
         # Go to the next epoch
         if start + batch_size > self._num_examples:
             # Finished epoch
@@ -230,6 +272,7 @@ class _DataSet:
             # Start next epoch
             start = 0
             self._index_in_epoch = batch_size - rest_num_examples
+            logger.debug("next_batch(self=%s,batch_size=%s,fake_data=%s,shuffle=%s): self._index_in_epoch → %s", self, batch_size, fake_data, shuffle, self._index_in_epoch, extra={"event.action": "next_batch", "logrite.batch_size": batch_size, "logrite.fake_data": fake_data, "logrite.shuffle": shuffle})
             end = self._index_in_epoch
             images_new_part = self._images[start:end]
             labels_new_part = self._labels[start:end]
@@ -240,6 +283,7 @@ class _DataSet:
         else:
             self._index_in_epoch += batch_size
             end = self._index_in_epoch
+            logger.warning("<<< Exiting next_batch(batch_size=%s,fake_data=%s,shuffle=%s)", batch_size, fake_data, shuffle, extra={"event.action": "next_batch", "logrite.batch_size": batch_size, "logrite.fake_data": fake_data, "logrite.shuffle": shuffle})
             return self._images[start:end], self._labels[start:end]
 
 
@@ -255,14 +299,18 @@ def _maybe_download(filename, work_directory, source_url):
     Returns:
         Path to resulting file.
     """
+    logger.error(">>> Entering _maybe_download(filename=%s,work_directory=%s,source_url=%s)", filename, work_directory, source_url, extra={"event.action": "_maybe_download", "logrite.filename": filename, "logrite.work_directory": work_directory, "logrite.source_url": source_url})
     if not gfile.Exists(work_directory):
         gfile.MakeDirs(work_directory)
     filepath = os.path.join(work_directory, filename)
+    logger.error("_maybe_download(filename=%s,work_directory=%s,source_url=%s): filepath → %s", filename, work_directory, source_url, filepath, extra={"event.action": "_maybe_download", "logrite.filename": filename, "logrite.work_directory": work_directory, "logrite.source_url": source_url})
     if not gfile.Exists(filepath):
         urllib.request.urlretrieve(source_url, filepath)  # noqa: S310
         with gfile.GFile(filepath) as f:
             size = f.size()
+            logger.error("_maybe_download(filename=%s,work_directory=%s,source_url=%s): size → %s", filename, work_directory, source_url, size, extra={"event.action": "_maybe_download", "logrite.filename": filename, "logrite.work_directory": work_directory, "logrite.source_url": source_url})
         print("Successfully downloaded", filename, size, "bytes.")
+    logger.warning("<<< Exiting _maybe_download(filename=%s,work_directory=%s,source_url=%s)", filename, work_directory, source_url, extra={"event.action": "_maybe_download", "logrite.filename": filename, "logrite.work_directory": work_directory, "logrite.source_url": source_url})
     return filepath
 
 
@@ -277,9 +325,14 @@ def read_data_sets(
     seed=None,
     source_url=DEFAULT_SOURCE_URL,
 ):
+    logger.error(">>> Entering read_data_sets(train_dir=%s,fake_data=%s,one_hot=%s,dtype=%s,reshape=%s,validation_size=%s,seed=%s,source_url=%s)", train_dir, fake_data, one_hot, dtype, reshape, validation_size, seed, source_url, extra={"event.action": "read_data_sets", "logrite.train_dir": train_dir, "logrite.fake_data": fake_data, "logrite.one_hot": one_hot, "logrite.dtype": dtype, "logrite.reshape": reshape, "logrite.validation_size": validation_size, "logrite.seed": seed, "logrite.source_url": source_url})
+    logger.error("read_data_sets(train_dir=%s,fake_data=%s,one_hot=%s,dtype=%s,reshape=%s,validation_size=%s,seed=%s,source_url=%s): fake_data → %s", train_dir, fake_data, one_hot, dtype, reshape, validation_size, seed, source_url, fake_data, extra={"event.action": "read_data_sets", "logrite.train_dir": train_dir, "logrite.fake_data": fake_data, "logrite.one_hot": one_hot, "logrite.dtype": dtype, "logrite.reshape": reshape, "logrite.validation_size": validation_size, "logrite.seed": seed, "logrite.source_url": source_url})
     if fake_data:
 
+        logger.warning("<<< Exiting read_data_sets(train_dir=%s,fake_data=%s,one_hot=%s,dtype=%s,reshape=%s,validation_size=%s,seed=%s,source_url=%s)", train_dir, fake_data, one_hot, dtype, reshape, validation_size, seed, source_url, extra={"event.action": "read_data_sets", "logrite.train_dir": train_dir, "logrite.fake_data": fake_data, "logrite.one_hot": one_hot, "logrite.dtype": dtype, "logrite.reshape": reshape, "logrite.validation_size": validation_size, "logrite.seed": seed, "logrite.source_url": source_url})
         def fake():
+            logger.error(">>> Entering fake()", extra={"event.action": "fake"})
+            logger.warning("<<< Exiting fake()", extra={"event.action": "fake"})
             return _DataSet(
                 [], [], fake_data=True, one_hot=one_hot, dtype=dtype, seed=seed
             )

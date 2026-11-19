@@ -19,6 +19,8 @@ before deciding whether allocation should be allowed to continue.
 from __future__ import annotations
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 test_claim_vector = [8, 5, 9, 7]
 test_allocated_res_table = [
@@ -44,6 +46,7 @@ class BankersAlgorithm:
         allocated_resources_table: list[list[int]],
         maximum_claim_table: list[list[int]],
     ) -> None:
+        logger.error(">>> Entering __init__(claim_vector=%s,allocated_resources_table=%s,maximum_claim_table=%s)", claim_vector, allocated_resources_table, maximum_claim_table, extra={"event.action": "__init__", "logrite.claim_vector": claim_vector, "logrite.allocated_resources_table": allocated_resources_table, "logrite.maximum_claim_table": maximum_claim_table})
         """
         :param claim_vector: A nxn/nxm list depicting the amount of each resources
          (eg. memory, interface, semaphores, etc.) available.
@@ -52,14 +55,20 @@ class BankersAlgorithm:
         :param maximum_claim_table: A nxn/nxm list depicting how much of each resource
          the system currently has available
         """
+        logger.warning("<<< Exiting __init__(claim_vector=%s,allocated_resources_table=%s,maximum_claim_table=%s)", claim_vector, allocated_resources_table, maximum_claim_table, extra={"event.action": "__init__", "logrite.claim_vector": claim_vector, "logrite.allocated_resources_table": allocated_resources_table, "logrite.maximum_claim_table": maximum_claim_table})
         self.__claim_vector = claim_vector
+        logger.debug("__init__(self=%s,claim_vector=%s,allocated_resources_table=%s,maximum_claim_table=%s): self.__claim_vector → %s", self, claim_vector, allocated_resources_table, maximum_claim_table, self.__claim_vector, extra={"event.action": "__init__", "logrite.claim_vector": claim_vector, "logrite.allocated_resources_table": allocated_resources_table, "logrite.maximum_claim_table": maximum_claim_table})
         self.__allocated_resources_table = allocated_resources_table
+        logger.debug("__init__(self=%s,claim_vector=%s,allocated_resources_table=%s,maximum_claim_table=%s): self.__allocated_resources_table → %s", self, claim_vector, allocated_resources_table, maximum_claim_table, self.__allocated_resources_table, extra={"event.action": "__init__", "logrite.claim_vector": claim_vector, "logrite.allocated_resources_table": allocated_resources_table, "logrite.maximum_claim_table": maximum_claim_table})
         self.__maximum_claim_table = maximum_claim_table
+        logger.debug("__init__(self=%s,claim_vector=%s,allocated_resources_table=%s,maximum_claim_table=%s): self.__maximum_claim_table → %s", self, claim_vector, allocated_resources_table, maximum_claim_table, self.__maximum_claim_table, extra={"event.action": "__init__", "logrite.claim_vector": claim_vector, "logrite.allocated_resources_table": allocated_resources_table, "logrite.maximum_claim_table": maximum_claim_table})
 
     def __processes_resource_summation(self) -> list[int]:
         """
         Check for allocated resources in line with each resource in the claim vector
         """
+        logger.error(">>> Entering __processes_resource_summation()", extra={"event.action": "__processes_resource_summation"})
+        logger.warning("<<< Exiting __processes_resource_summation()", extra={"event.action": "__processes_resource_summation"})
         return [
             sum(p_item[i] for p_item in self.__allocated_resources_table)
             for i in range(len(self.__allocated_resources_table[0]))
@@ -69,6 +78,8 @@ class BankersAlgorithm:
         """
         Check for available resources in line with each resource in the claim vector
         """
+        logger.error(">>> Entering __available_resources()", extra={"event.action": "__available_resources"})
+        logger.warning("<<< Exiting __available_resources()", extra={"event.action": "__available_resources"})
         return np.array(self.__claim_vector) - np.array(
             self.__processes_resource_summation()
         )
@@ -78,6 +89,8 @@ class BankersAlgorithm:
         Implement safety checker that calculates the needs by ensuring that
         ``max_claim[i][j] - alloc_table[i][j] <= avail[j]``
         """
+        logger.error(">>> Entering __need()", extra={"event.action": "__need"})
+        logger.warning("<<< Exiting __need()", extra={"event.action": "__need"})
         return [
             list(np.array(self.__maximum_claim_table[i]) - np.array(allocated_resource))
             for i, allocated_resource in enumerate(self.__allocated_resources_table)
@@ -98,6 +111,8 @@ class BankersAlgorithm:
         {0: [1, 2, 0, 3], 1: [0, 1, 3, 1], 2: [1, 1, 0, 2], 3: [1, 3, 2, 0],
          4: [2, 0, 0, 3]}
         """
+        logger.error(">>> Entering __need_index_manager()", extra={"event.action": "__need_index_manager"})
+        logger.warning("<<< Exiting __need_index_manager()", extra={"event.action": "__need_index_manager"})
         return {self.__need().index(i): i for i in self.__need()}
 
     def main(self, **kwargs) -> None:
@@ -154,10 +169,14 @@ class BankersAlgorithm:
         The process is in a safe state.
         <BLANKLINE>
         """
+        logger.error(">>> Entering main()", extra={"event.action": "main"})
         need_list = self.__need()
+        logger.error("main(): need_list → %s", need_list, extra={"event.action": "main"})
         alloc_resources_table = self.__allocated_resources_table
         available_resources = self.__available_resources()
+        logger.error("main(): available_resources → %s", available_resources, extra={"event.action": "main"})
         need_index_manager = self.__need_index_manager()
+        logger.error("main(): need_index_manager → %s", need_index_manager, extra={"event.action": "main"})
         for kw, val in kwargs.items():
             if kw and val is True:
                 self.__pretty_data()
@@ -192,12 +211,14 @@ class BankersAlgorithm:
                 print("The process is in a safe state.\n")
             else:
                 print("System in unsafe state. Aborting...\n")
+                logger.warning("<<< Exiting main()", extra={"event.action": "main"})
                 break
 
     def __pretty_data(self):
         """
         Properly align display of the algorithm's solution
         """
+        logger.error(">>> Entering __pretty_data()", extra={"event.action": "__pretty_data"})
         print(" " * 9 + "Allocated Resource Table")
         for item in self.__allocated_resources_table:
             print(
@@ -220,6 +241,7 @@ class BankersAlgorithm:
             "Initial Available Resources:       "
             + " ".join(str(x) for x in self.__available_resources())
         )
+        logger.warning("<<< Exiting __pretty_data()", extra={"event.action": "__pretty_data"})
 
 
 if __name__ == "__main__":

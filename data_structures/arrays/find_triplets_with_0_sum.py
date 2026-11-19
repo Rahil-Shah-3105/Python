@@ -1,4 +1,6 @@
 from itertools import combinations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_triplets_with_0_sum(nums: list[int]) -> list[list[int]]:
@@ -18,6 +20,8 @@ def find_triplets_with_0_sum(nums: list[int]) -> list[list[int]]:
         >>> find_triplets_with_0_sum([1, 2, 3, 0, -1, -2, -3])
         [[-3, 0, 3], [-3, 1, 2], [-2, -1, 3], [-2, 0, 2], [-1, 0, 1]]
     """
+    logger.error(">>> Entering find_triplets_with_0_sum(nums=%s)", nums, extra={"event.action": "find_triplets_with_0_sum", "logrite.nums": nums})
+    logger.warning("<<< Exiting find_triplets_with_0_sum(nums=%s)", nums, extra={"event.action": "find_triplets_with_0_sum", "logrite.nums": nums})
     return [
         list(x)
         for x in sorted({abc for abc in combinations(sorted(nums), 3) if not sum(abc)})
@@ -48,6 +52,7 @@ def find_triplets_with_0_sum_hashing(arr: list[int]) -> list[list[int]]:
     Auxiliary Space: O(N)
 
     """
+    logger.error(">>> Entering find_triplets_with_0_sum_hashing(arr=%s)", arr, extra={"event.action": "find_triplets_with_0_sum_hashing", "logrite.arr": arr})
     target_sum = 0
 
     # Initialize the final output array with blank.
@@ -57,6 +62,7 @@ def find_triplets_with_0_sum_hashing(arr: list[int]) -> list[list[int]]:
     for index, item in enumerate(arr[:-2]):
         # to store second elements that can complement the final sum.
         set_initialize = set()
+        logger.error("find_triplets_with_0_sum_hashing(arr=%s): set_initialize → %s", arr, set_initialize, extra={"event.action": "find_triplets_with_0_sum_hashing", "logrite.arr": arr})
 
         # current sum needed for reaching the target sum
         current_sum = target_sum - item
@@ -70,6 +76,7 @@ def find_triplets_with_0_sum_hashing(arr: list[int]) -> list[list[int]]:
             if required_value in set_initialize:
                 # finding triplet elements combination.
                 combination_array = sorted([item, other_item, required_value])
+                logger.error("find_triplets_with_0_sum_hashing(arr=%s): combination_array → %s", arr, combination_array, extra={"event.action": "find_triplets_with_0_sum_hashing", "logrite.arr": arr})
                 if combination_array not in output_arr:
                     output_arr.append(combination_array)
 
@@ -78,6 +85,7 @@ def find_triplets_with_0_sum_hashing(arr: list[int]) -> list[list[int]]:
             set_initialize.add(other_item)
 
     # Return all the triplet combinations.
+    logger.warning("<<< Exiting find_triplets_with_0_sum_hashing(arr=%s)", arr, extra={"event.action": "find_triplets_with_0_sum_hashing", "logrite.arr": arr})
     return output_arr
 
 

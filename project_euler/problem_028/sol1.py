@@ -18,6 +18,8 @@ in the same way?
 """
 
 from math import ceil
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 1001) -> int:
@@ -35,13 +37,16 @@ def solution(n: int = 1001) -> int:
     >>> solution(10)
     537
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     total = 1
+    logger.error("solution(n=%s): total → %s", n, total, extra={"event.action": "solution", "logrite.n": n})
 
     for i in range(1, ceil(n / 2.0)):
         odd = 2 * i + 1
         even = 2 * i
         total = total + 4 * odd**2 - 6 * even
 
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return total
 
 

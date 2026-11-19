@@ -11,6 +11,8 @@ Then iterate over the width of structure and at each index.
 The amount of water that will be stored is equal to minimum of maximum height of bars
 on both sides minus height of bar at current position.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def trapped_rainwater(heights: tuple[int, ...]) -> int:
@@ -30,6 +32,7 @@ def trapped_rainwater(heights: tuple[int, ...]) -> int:
         ...
     ValueError: No height can be negative
     """
+    logger.error(">>> Entering trapped_rainwater(heights=%s)", heights, extra={"event.action": "trapped_rainwater", "logrite.heights": heights})
     if not heights:
         return 0
     if any(h < 0 for h in heights):
@@ -46,6 +49,7 @@ def trapped_rainwater(heights: tuple[int, ...]) -> int:
     for i in range(length - 2, -1, -1):
         right_max[i] = max(heights[i], right_max[i + 1])
 
+        logger.warning("<<< Exiting trapped_rainwater(heights=%s)", heights, extra={"event.action": "trapped_rainwater", "logrite.heights": heights})
     return sum(
         min(left, right) - height
         for left, right, height in zip(left_max, right_max, heights)

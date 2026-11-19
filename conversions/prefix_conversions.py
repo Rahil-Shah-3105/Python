@@ -5,6 +5,8 @@ Convert International System of Units (SI) and Binary prefixes
 from __future__ import annotations
 
 from enum import Enum
+import logging
+logger = logging.getLogger(__name__)
 
 
 class SIUnit(Enum):
@@ -46,6 +48,7 @@ def convert_si_prefix(
     known_prefix: str | SIUnit,
     unknown_prefix: str | SIUnit,
 ) -> float:
+    logger.error(">>> Entering convert_si_prefix(known_amount=%s,known_prefix=%s,unknown_prefix=%s)", known_amount, known_prefix, unknown_prefix, extra={"event.action": "convert_si_prefix", "logrite.known_amount": known_amount, "logrite.known_prefix": known_prefix, "logrite.unknown_prefix": unknown_prefix})
     """
     Wikipedia reference: https://en.wikipedia.org/wiki/Binary_prefix
     Wikipedia reference: https://en.wikipedia.org/wiki/International_System_of_Units
@@ -62,11 +65,14 @@ def convert_si_prefix(
     """
     if isinstance(known_prefix, str):
         known_prefix = SIUnit[known_prefix.lower()]
+        logger.error("convert_si_prefix(known_amount=%s,known_prefix=%s,unknown_prefix=%s): known_prefix → %s", known_amount, known_prefix, unknown_prefix, known_prefix, extra={"event.action": "convert_si_prefix", "logrite.known_amount": known_amount, "logrite.known_prefix": known_prefix, "logrite.unknown_prefix": unknown_prefix})
     if isinstance(unknown_prefix, str):
         unknown_prefix = SIUnit[unknown_prefix.lower()]
+        logger.error("convert_si_prefix(known_amount=%s,known_prefix=%s,unknown_prefix=%s): unknown_prefix → %s", known_amount, known_prefix, unknown_prefix, unknown_prefix, extra={"event.action": "convert_si_prefix", "logrite.known_amount": known_amount, "logrite.known_prefix": known_prefix, "logrite.unknown_prefix": unknown_prefix})
     unknown_amount: float = known_amount * (
         10 ** (known_prefix.value - unknown_prefix.value)
     )
+    logger.warning("<<< Exiting convert_si_prefix(known_amount=%s,known_prefix=%s,unknown_prefix=%s)", known_amount, known_prefix, unknown_prefix, extra={"event.action": "convert_si_prefix", "logrite.known_amount": known_amount, "logrite.known_prefix": known_prefix, "logrite.unknown_prefix": unknown_prefix})
     return unknown_amount
 
 
@@ -75,6 +81,7 @@ def convert_binary_prefix(
     known_prefix: str | BinaryUnit,
     unknown_prefix: str | BinaryUnit,
 ) -> float:
+    logger.error(">>> Entering convert_binary_prefix(known_amount=%s,known_prefix=%s,unknown_prefix=%s)", known_amount, known_prefix, unknown_prefix, extra={"event.action": "convert_binary_prefix", "logrite.known_amount": known_amount, "logrite.known_prefix": known_prefix, "logrite.unknown_prefix": unknown_prefix})
     """
     Wikipedia reference: https://en.wikipedia.org/wiki/Metric_prefix
     >>> convert_binary_prefix(1, BinaryUnit.giga, BinaryUnit.mega)
@@ -90,11 +97,14 @@ def convert_binary_prefix(
     """
     if isinstance(known_prefix, str):
         known_prefix = BinaryUnit[known_prefix.lower()]
+        logger.error("convert_binary_prefix(known_amount=%s,known_prefix=%s,unknown_prefix=%s): known_prefix → %s", known_amount, known_prefix, unknown_prefix, known_prefix, extra={"event.action": "convert_binary_prefix", "logrite.known_amount": known_amount, "logrite.known_prefix": known_prefix, "logrite.unknown_prefix": unknown_prefix})
     if isinstance(unknown_prefix, str):
         unknown_prefix = BinaryUnit[unknown_prefix.lower()]
+        logger.error("convert_binary_prefix(known_amount=%s,known_prefix=%s,unknown_prefix=%s): unknown_prefix → %s", known_amount, known_prefix, unknown_prefix, unknown_prefix, extra={"event.action": "convert_binary_prefix", "logrite.known_amount": known_amount, "logrite.known_prefix": known_prefix, "logrite.unknown_prefix": unknown_prefix})
     unknown_amount: float = known_amount * (
         2 ** ((known_prefix.value - unknown_prefix.value) * 10)
     )
+    logger.warning("<<< Exiting convert_binary_prefix(known_amount=%s,known_prefix=%s,unknown_prefix=%s)", known_amount, known_prefix, unknown_prefix, extra={"event.action": "convert_binary_prefix", "logrite.known_amount": known_amount, "logrite.known_prefix": known_prefix, "logrite.unknown_prefix": unknown_prefix})
     return unknown_amount
 
 

@@ -6,6 +6,8 @@ We will use the formula: t(n) = SUMMATION(i = 1 to n)t(i-1)t(n-i)
 
 Further details at Wikipedia: https://en.wikipedia.org/wiki/Catalan_number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 """
 Our Contribution:
@@ -29,13 +31,16 @@ def binomial_coefficient(n: int, k: int) -> int:
     >>> binomial_coefficient(4, 2)
     6
     """
+    logger.error(">>> Entering binomial_coefficient(n=%s,k=%s)", n, k, extra={"event.action": "binomial_coefficient", "logrite.n": n, "logrite.k": k})
     result = 1  # To kept the Calculated Value
+    logger.error("binomial_coefficient(n=%s,k=%s): result → %s", n, k, result, extra={"event.action": "binomial_coefficient", "logrite.n": n, "logrite.k": k})
     # Since C(n, k) = C(n, n-k)
     k = min(k, n - k)
     # Calculate C(n,k)
     for i in range(k):
         result *= n - i
         result //= i + 1
+    logger.warning("<<< Exiting binomial_coefficient(n=%s,k=%s)", n, k, extra={"event.action": "binomial_coefficient", "logrite.n": n, "logrite.k": k})
     return result
 
 
@@ -53,6 +58,8 @@ def catalan_number(node_count: int) -> int:
     >>> catalan_number(6)
     132
     """
+    logger.error(">>> Entering catalan_number(node_count=%s)", node_count, extra={"event.action": "catalan_number", "logrite.node_count": node_count})
+    logger.warning("<<< Exiting catalan_number(node_count=%s)", node_count, extra={"event.action": "catalan_number", "logrite.node_count": node_count})
     return binomial_coefficient(2 * node_count, node_count) // (node_count + 1)
 
 
@@ -70,11 +77,14 @@ def factorial(n: int) -> int:
         ...
     ValueError: factorial() not defined for negative values
     """
+    logger.error(">>> Entering factorial(n=%s)", n, extra={"event.action": "factorial", "logrite.n": n})
     if n < 0:
         raise ValueError("factorial() not defined for negative values")
     result = 1
+    logger.error("factorial(n=%s): result → %s", n, result, extra={"event.action": "factorial", "logrite.n": n})
     for i in range(1, n + 1):
         result *= i
+    logger.warning("<<< Exiting factorial(n=%s)", n, extra={"event.action": "factorial", "logrite.n": n})
     return result
 
 
@@ -89,6 +99,8 @@ def binary_tree_count(node_count: int) -> int:
     >>> binary_tree_count(6)
     95040
     """
+    logger.error(">>> Entering binary_tree_count(node_count=%s)", node_count, extra={"event.action": "binary_tree_count", "logrite.node_count": node_count})
+    logger.warning("<<< Exiting binary_tree_count(node_count=%s)", node_count, extra={"event.action": "binary_tree_count", "logrite.node_count": node_count})
     return catalan_number(node_count) * factorial(node_count)
 
 

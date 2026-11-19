@@ -1,6 +1,8 @@
 """
 wiki: https://en.wikipedia.org/wiki/Heterogram_(literature)#Isograms
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_isogram(string: str) -> bool:
@@ -16,10 +18,13 @@ def is_isogram(string: str) -> bool:
      ...
     ValueError: String must only contain alphabetic characters.
     """
+    logger.error(">>> Entering is_isogram(string=%s)", string, extra={"event.action": "is_isogram", "logrite.string": string})
     if not all(x.isalpha() for x in string):
         raise ValueError("String must only contain alphabetic characters.")
 
     letters = sorted(string.lower())
+    logger.error("is_isogram(string=%s): letters → %s", string, letters, extra={"event.action": "is_isogram", "logrite.string": string})
+    logger.warning("<<< Exiting is_isogram(string=%s)", string, extra={"event.action": "is_isogram", "logrite.string": string})
     return len(letters) == len(set(letters))
 
 

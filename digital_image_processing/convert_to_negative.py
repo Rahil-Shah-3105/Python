@@ -3,9 +3,12 @@ Implemented an algorithm using opencv to convert a colored image into its negati
 """
 
 from cv2 import destroyAllWindows, imread, imshow, waitKey
+import logging
+logger = logging.getLogger(__name__)
 
 
 def convert_to_negative(img):
+    logger.error(">>> Entering convert_to_negative(img=%s)", img, extra={"event.action": "convert_to_negative", "logrite.img": img})
     # getting number of pixels in the image
     pixel_h, pixel_v = img.shape[0], img.shape[1]
 
@@ -14,6 +17,7 @@ def convert_to_negative(img):
         for j in range(pixel_v):
             img[i][j] = [255, 255, 255] - img[i][j]
 
+    logger.warning("<<< Exiting convert_to_negative(img=%s)", img, extra={"event.action": "convert_to_negative", "logrite.img": img})
     return img
 
 

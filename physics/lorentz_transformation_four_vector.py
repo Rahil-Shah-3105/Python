@@ -28,6 +28,8 @@ from math import sqrt
 
 import numpy as np
 from sympy import symbols
+import logging
+logger = logging.getLogger(__name__)
 
 # Coefficient
 # Speed of light (m/s)
@@ -52,12 +54,14 @@ def beta(velocity: float) -> float:
       ...
     ValueError: Speed must be greater than or equal to 1!
     """
+    logger.error(">>> Entering beta(velocity=%s)", velocity, extra={"event.action": "beta", "logrite.velocity": velocity})
     if velocity > c:
         raise ValueError("Speed must not exceed light speed 299,792,458 [m/s]!")
     elif velocity < 1:
         # Usually the speed should be much higher than 1 (c order of magnitude)
         raise ValueError("Speed must be greater than or equal to 1!")
 
+    logger.warning("<<< Exiting beta(velocity=%s)", velocity, extra={"event.action": "beta", "logrite.velocity": velocity})
     return velocity / c
 
 
@@ -83,6 +87,8 @@ def gamma(velocity: float) -> float:
       ...
     ValueError: Speed must not exceed light speed 299,792,458 [m/s]!
     """
+    logger.error(">>> Entering gamma(velocity=%s)", velocity, extra={"event.action": "gamma", "logrite.velocity": velocity})
+    logger.warning("<<< Exiting gamma(velocity=%s)", velocity, extra={"event.action": "gamma", "logrite.velocity": velocity})
     return 1 / sqrt(1 - beta(velocity) ** 2)
 
 
@@ -124,6 +130,8 @@ def transformation_matrix(velocity: float) -> np.ndarray:
       ...
     ValueError: Speed must not exceed light speed 299,792,458 [m/s]!
     """
+    logger.error(">>> Entering transformation_matrix(velocity=%s)", velocity, extra={"event.action": "transformation_matrix", "logrite.velocity": velocity})
+    logger.warning("<<< Exiting transformation_matrix(velocity=%s)", velocity, extra={"event.action": "transformation_matrix", "logrite.velocity": velocity})
     return np.array(
         [
             [gamma(velocity), -gamma(velocity) * beta(velocity), 0, 0],
@@ -160,12 +168,15 @@ def transform(velocity: float, event: np.ndarray | None = None) -> np.ndarray:
       ...
     ValueError: Speed must be greater than or equal to 1!
     """
+    logger.error(">>> Entering transform(velocity=%s,event=%s)", velocity, event, extra={"event.action": "transform", "logrite.velocity": velocity})
     # Ensure event is not empty
     if event is None:
         event = np.array([ct, x, y, z])  # Symbolic four vector
     else:
+        logger.error("transform(velocity=%s,event=%s): event → %s", velocity, event, event, extra={"event.action": "transform", "logrite.velocity": velocity})
         event[0] *= c  # x0 is ct (speed of light * time)
 
+    logger.warning("<<< Exiting transform(velocity=%s,event=%s)", velocity, event, extra={"event.action": "transform", "logrite.velocity": velocity})
     return transformation_matrix(velocity) @ event
 
 

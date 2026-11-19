@@ -15,6 +15,8 @@ m2 = Molar mass of the second gas.
 """
 
 from math import pow, sqrt  # noqa: A004
+import logging
+logger = logging.getLogger(__name__)
 
 
 def validate(*values: float) -> bool:
@@ -35,7 +37,10 @@ def validate(*values: float) -> bool:
     >>> validate()
     False
     """
+    logger.error(">>> Entering validate()", extra={"event.action": "validate"})
     result = len(values) > 0 and all(value > 0.0 for value in values)
+    logger.error("validate(): result → %s", result, extra={"event.action": "validate"})
+    logger.warning("<<< Exiting validate()", extra={"event.action": "validate"})
     return result
 
 
@@ -57,6 +62,8 @@ def effusion_ratio(molar_mass_1: float, molar_mass_2: float) -> float | ValueErr
       ...
     TypeError: effusion_ratio() missing 1 required positional argument: 'molar_mass_2'
     """
+    logger.error(">>> Entering effusion_ratio(molar_mass_1=%s,molar_mass_2=%s)", molar_mass_1, molar_mass_2, extra={"event.action": "effusion_ratio", "logrite.molar_mass_1": molar_mass_1, "logrite.molar_mass_2": molar_mass_2})
+    logger.warning("<<< Exiting effusion_ratio(molar_mass_1=%s,molar_mass_2=%s)", molar_mass_1, molar_mass_2, extra={"event.action": "effusion_ratio", "logrite.molar_mass_1": molar_mass_1, "logrite.molar_mass_2": molar_mass_2})
     return (
         round(sqrt(molar_mass_2 / molar_mass_1), 6)
         if validate(molar_mass_1, molar_mass_2)
@@ -67,6 +74,7 @@ def effusion_ratio(molar_mass_1: float, molar_mass_2: float) -> float | ValueErr
 def first_effusion_rate(
     effusion_rate: float, molar_mass_1: float, molar_mass_2: float
 ) -> float | ValueError:
+    logger.error(">>> Entering first_effusion_rate(effusion_rate=%s,molar_mass_1=%s,molar_mass_2=%s)", effusion_rate, molar_mass_1, molar_mass_2, extra={"event.action": "first_effusion_rate", "logrite.effusion_rate": effusion_rate, "logrite.molar_mass_1": molar_mass_1, "logrite.molar_mass_2": molar_mass_2})
     """
     Input Parameters:
     -----------------
@@ -103,6 +111,7 @@ def first_effusion_rate(
 def second_effusion_rate(
     effusion_rate: float, molar_mass_1: float, molar_mass_2: float
 ) -> float | ValueError:
+    logger.error(">>> Entering second_effusion_rate(effusion_rate=%s,molar_mass_1=%s,molar_mass_2=%s)", effusion_rate, molar_mass_1, molar_mass_2, extra={"event.action": "second_effusion_rate", "logrite.effusion_rate": effusion_rate, "logrite.molar_mass_1": molar_mass_1, "logrite.molar_mass_2": molar_mass_2})
     """
     Input Parameters:
     -----------------
@@ -139,6 +148,7 @@ def second_effusion_rate(
 def first_molar_mass(
     molar_mass: float, effusion_rate_1: float, effusion_rate_2: float
 ) -> float | ValueError:
+    logger.error(">>> Entering first_molar_mass(molar_mass=%s,effusion_rate_1=%s,effusion_rate_2=%s)", molar_mass, effusion_rate_1, effusion_rate_2, extra={"event.action": "first_molar_mass", "logrite.molar_mass": molar_mass, "logrite.effusion_rate_1": effusion_rate_1, "logrite.effusion_rate_2": effusion_rate_2})
     """
     Input Parameters:
     -----------------
@@ -175,6 +185,7 @@ def first_molar_mass(
 def second_molar_mass(
     molar_mass: float, effusion_rate_1: float, effusion_rate_2: float
 ) -> float | ValueError:
+    logger.error(">>> Entering second_molar_mass(molar_mass=%s,effusion_rate_1=%s,effusion_rate_2=%s)", molar_mass, effusion_rate_1, effusion_rate_2, extra={"event.action": "second_molar_mass", "logrite.molar_mass": molar_mass, "logrite.effusion_rate_1": effusion_rate_1, "logrite.effusion_rate_2": effusion_rate_2})
     """
     Input Parameters:
     -----------------

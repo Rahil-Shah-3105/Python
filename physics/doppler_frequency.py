@@ -42,11 +42,14 @@ Now, we will implement a function that calculates the frequency of a wave as a f
 of the frequency of the wave when the source is stationary, the velocity of the wave
 in the medium, the velocity of the observer and the velocity of the source.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def doppler_effect(
     org_freq: float, wave_vel: float, obs_vel: float, src_vel: float
 ) -> float:
+    logger.error(">>> Entering doppler_effect(org_freq=%s,wave_vel=%s,obs_vel=%s,src_vel=%s)", org_freq, wave_vel, obs_vel, src_vel, extra={"event.action": "doppler_effect", "logrite.org_freq": org_freq, "logrite.wave_vel": wave_vel, "logrite.obs_vel": obs_vel, "logrite.src_vel": src_vel})
     """
     Input Parameters:
     -----------------
@@ -91,10 +94,12 @@ def doppler_effect(
             "Division by zero implies vs=v and observer in front of the source"
         )
     doppler_freq = (org_freq * (wave_vel + obs_vel)) / (wave_vel - src_vel)
+    logger.error("doppler_effect(org_freq=%s,wave_vel=%s,obs_vel=%s,src_vel=%s): doppler_freq → %s", org_freq, wave_vel, obs_vel, src_vel, doppler_freq, extra={"event.action": "doppler_effect", "logrite.org_freq": org_freq, "logrite.wave_vel": wave_vel, "logrite.obs_vel": obs_vel, "logrite.src_vel": src_vel})
     if doppler_freq <= 0:
         raise ValueError(
             "Non-positive frequency implies vs>v or v0>v (in the opposite direction)"
         )
+    logger.warning("<<< Exiting doppler_effect(org_freq=%s,wave_vel=%s,obs_vel=%s,src_vel=%s)", org_freq, wave_vel, obs_vel, src_vel, extra={"event.action": "doppler_effect", "logrite.org_freq": org_freq, "logrite.wave_vel": wave_vel, "logrite.obs_vel": obs_vel, "logrite.src_vel": src_vel})
     return doppler_freq
 
 

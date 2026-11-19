@@ -25,6 +25,8 @@ curvature = 1 - (matter_density + radiation_density + dark_energy)
 Source :
 https://www.sciencedirect.com/topics/mathematics/hubble-parameter
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def hubble_parameter(
@@ -77,6 +79,7 @@ def hubble_parameter(
         raise ValueError("Relative densities cannot be greater than one")
     else:
         curvature = 1 - (matter_density + radiation_density + dark_energy)
+        logger.error("hubble_parameter(hubble_constant=%s,radiation_density=%s,matter_density=%s,dark_energy=%s,redshift=%s): curvature → %s", hubble_constant, radiation_density, matter_density, dark_energy, redshift, curvature, extra={"event.action": "hubble_parameter", "logrite.hubble_constant": hubble_constant, "logrite.radiation_density": radiation_density, "logrite.matter_density": matter_density, "logrite.dark_energy": dark_energy, "logrite.redshift": redshift})
 
         e_2 = (
             radiation_density * (redshift + 1) ** 4
@@ -86,6 +89,8 @@ def hubble_parameter(
         )
 
         hubble = hubble_constant * e_2 ** (1 / 2)
+        logger.error("hubble_parameter(hubble_constant=%s,radiation_density=%s,matter_density=%s,dark_energy=%s,redshift=%s): hubble → %s", hubble_constant, radiation_density, matter_density, dark_energy, redshift, hubble, extra={"event.action": "hubble_parameter", "logrite.hubble_constant": hubble_constant, "logrite.radiation_density": radiation_density, "logrite.matter_density": matter_density, "logrite.dark_energy": dark_energy, "logrite.redshift": redshift})
+        logger.warning("<<< Exiting hubble_parameter(hubble_constant=%s,radiation_density=%s,matter_density=%s,dark_energy=%s,redshift=%s)", hubble_constant, radiation_density, matter_density, dark_energy, redshift, extra={"event.action": "hubble_parameter", "logrite.hubble_constant": hubble_constant, "logrite.radiation_density": radiation_density, "logrite.matter_density": matter_density, "logrite.dark_energy": dark_energy, "logrite.redshift": redshift})
         return hubble
 
 

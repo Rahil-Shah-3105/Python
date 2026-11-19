@@ -14,6 +14,8 @@ from queue import PriorityQueue
 from typing import Any
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def pass_and_relaxation(
@@ -27,10 +29,12 @@ def pass_and_relaxation(
     parent: dict,
     shortest_distance: float,
 ) -> float:
+    logger.error(">>> Entering pass_and_relaxation(graph=%s,v=%s,visited_forward=%s,visited_backward=%s,cst_fwd=%s,cst_bwd=%s,queue=%s,parent=%s,shortest_distance=%s)", graph, v, visited_forward, visited_backward, cst_fwd, cst_bwd, queue, parent, shortest_distance, extra={"event.action": "pass_and_relaxation", "logrite.graph": graph, "logrite.v": v, "logrite.visited_forward": visited_forward, "logrite.visited_backward": visited_backward, "logrite.cst_fwd": cst_fwd, "logrite.cst_bwd": cst_bwd, "logrite.queue": queue, "logrite.shortest_distance": shortest_distance})
     for nxt, d in graph[v]:
         if nxt in visited_forward:
             continue
         old_cost_f = cst_fwd.get(nxt, np.inf)
+        logger.error("pass_and_relaxation(graph=%s,v=%s,visited_forward=%s,visited_backward=%s,cst_fwd=%s,cst_bwd=%s,queue=%s,parent=%s,shortest_distance=%s): old_cost_f → %s", graph, v, visited_forward, visited_backward, cst_fwd, cst_bwd, queue, parent, shortest_distance, old_cost_f, extra={"event.action": "pass_and_relaxation", "logrite.graph": graph, "logrite.v": v, "logrite.visited_forward": visited_forward, "logrite.visited_backward": visited_backward, "logrite.cst_fwd": cst_fwd, "logrite.cst_bwd": cst_bwd, "logrite.queue": queue, "logrite.shortest_distance": shortest_distance})
         new_cost_f = cst_fwd[v] + d
         if new_cost_f < old_cost_f:
             queue.put((new_cost_f, nxt))
@@ -41,12 +45,14 @@ def pass_and_relaxation(
             and cst_fwd[v] + d + cst_bwd[nxt] < shortest_distance
         ):
             shortest_distance = cst_fwd[v] + d + cst_bwd[nxt]
+    logger.warning("<<< Exiting pass_and_relaxation(graph=%s,v=%s,visited_forward=%s,visited_backward=%s,cst_fwd=%s,cst_bwd=%s,queue=%s,parent=%s,shortest_distance=%s)", graph, v, visited_forward, visited_backward, cst_fwd, cst_bwd, queue, parent, shortest_distance, extra={"event.action": "pass_and_relaxation", "logrite.graph": graph, "logrite.v": v, "logrite.visited_forward": visited_forward, "logrite.visited_backward": visited_backward, "logrite.cst_fwd": cst_fwd, "logrite.cst_bwd": cst_bwd, "logrite.queue": queue, "logrite.shortest_distance": shortest_distance})
     return shortest_distance
 
 
 def bidirectional_dij(
     source: str, destination: str, graph_forward: dict, graph_backward: dict
 ) -> int:
+    logger.error(">>> Entering bidirectional_dij(source=%s,destination=%s,graph_forward=%s,graph_backward=%s)", source, destination, graph_forward, graph_backward, extra={"event.action": "bidirectional_dij", "logrite.source": source, "logrite.destination": destination, "logrite.graph_forward": graph_forward, "logrite.graph_backward": graph_backward})
     """
     Bi-directional Dijkstra's algorithm.
 
@@ -62,7 +68,9 @@ def bidirectional_dij(
     shortest_path_distance = -1
 
     visited_forward = set()
+    logger.error("bidirectional_dij(source=%s,destination=%s,graph_forward=%s,graph_backward=%s): visited_forward → %s", source, destination, graph_forward, graph_backward, visited_forward, extra={"event.action": "bidirectional_dij", "logrite.source": source, "logrite.destination": destination, "logrite.graph_forward": graph_forward, "logrite.graph_backward": graph_backward})
     visited_backward = set()
+    logger.error("bidirectional_dij(source=%s,destination=%s,graph_forward=%s,graph_backward=%s): visited_backward → %s", source, destination, graph_forward, graph_backward, visited_backward, extra={"event.action": "bidirectional_dij", "logrite.source": source, "logrite.destination": destination, "logrite.graph_forward": graph_forward, "logrite.graph_backward": graph_backward})
     cst_fwd = {source: 0}
     cst_bwd = {destination: 0}
     parent_forward = {source: None}
@@ -114,6 +122,7 @@ def bidirectional_dij(
 
     if shortest_distance != np.inf:
         shortest_path_distance = shortest_distance
+    logger.warning("<<< Exiting bidirectional_dij(source=%s,destination=%s,graph_forward=%s,graph_backward=%s)", source, destination, graph_forward, graph_backward, extra={"event.action": "bidirectional_dij", "logrite.source": source, "logrite.destination": destination, "logrite.graph_forward": graph_forward, "logrite.graph_backward": graph_backward})
     return shortest_path_distance
 
 

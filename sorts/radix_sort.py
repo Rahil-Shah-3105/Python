@@ -5,6 +5,8 @@ Source: https://en.wikipedia.org/wiki/Radix_sort
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 RADIX = 10
 
@@ -22,8 +24,10 @@ def radix_sort(list_of_ints: list[int]) -> list[int]:
     >>> radix_sort([1,100,10,1000]) == sorted([1,100,10,1000])
     True
     """
+    logger.error(">>> Entering radix_sort(list_of_ints=%s)", list_of_ints, extra={"event.action": "radix_sort", "logrite.list_of_ints": list_of_ints})
     placement = 1
     max_digit = max(list_of_ints)
+    logger.error("radix_sort(list_of_ints=%s): max_digit → %s", list_of_ints, max_digit, extra={"event.action": "radix_sort", "logrite.list_of_ints": list_of_ints})
     while placement <= max_digit:
         # declare and initialize empty buckets
         buckets: list[list] = [[] for _ in range(RADIX)]
@@ -39,6 +43,7 @@ def radix_sort(list_of_ints: list[int]) -> list[int]:
                 a += 1
         # move to next
         placement *= RADIX
+    logger.warning("<<< Exiting radix_sort(list_of_ints=%s)", list_of_ints, extra={"event.action": "radix_sort", "logrite.list_of_ints": list_of_ints})
     return list_of_ints
 
 

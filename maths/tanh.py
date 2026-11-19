@@ -11,6 +11,8 @@ https://en.wikipedia.org/wiki/Activation_function
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def tangent_hyperbolic(vector: np.ndarray) -> np.ndarray:
@@ -33,7 +35,9 @@ def tangent_hyperbolic(vector: np.ndarray) -> np.ndarray:
         array([ 0.99999977,  1.        ,  0.96402758, -0.7530659 ,  1.        ])
 
     """
+    logger.error(">>> Entering tangent_hyperbolic(vector=%s)", vector, extra={"event.action": "tangent_hyperbolic", "logrite.vector": vector})
 
+    logger.warning("<<< Exiting tangent_hyperbolic(vector=%s)", vector, extra={"event.action": "tangent_hyperbolic", "logrite.vector": vector})
     return (2 / (1 + np.exp(-2 * vector))) - 1
 
 

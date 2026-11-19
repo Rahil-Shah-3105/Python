@@ -12,6 +12,8 @@ Reference:
 from __future__ import annotations
 
 from typing import NamedTuple
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Point(NamedTuple):
@@ -43,6 +45,8 @@ def direction(pivot: Point, target: Point, query: Point) -> float:
     >>> direction(Point(0, 0), Point(1, 1), Point(2, 2))
     0
     """
+    logger.error(">>> Entering direction(pivot=%s,target=%s,query=%s)", pivot, target, extra={"event.action": "direction", "logrite.pivot": pivot, "logrite.target": target, "logrite.query": query})
+    logger.warning("<<< Exiting direction(pivot=%s,target=%s,query=%s)", pivot, target, extra={"event.action": "direction", "logrite.pivot": pivot, "logrite.target": target, "logrite.query": query})
     return (query.x - pivot.x) * (target.y - pivot.y) - (target.x - pivot.x) * (
         query.y - pivot.y
     )
@@ -58,9 +62,11 @@ def on_segment(seg_start: Point, seg_end: Point, point: Point) -> bool:
     >>> on_segment(Point(0, 0), Point(4, 0), Point(2, 0))
     True
     """
+    logger.error(">>> Entering on_segment(seg_start=%s,seg_end=%s,point=%s)", seg_start, seg_end, point, extra={"event.action": "on_segment", "logrite.seg_start": seg_start, "logrite.seg_end": seg_end, "logrite.point": point})
     return min(seg_start.x, seg_end.x) <= point.x <= max(
         seg_start.x, seg_end.x
     ) and min(seg_start.y, seg_end.y) <= point.y <= max(seg_start.y, seg_end.y)
+    logger.warning("<<< Exiting on_segment(seg_start=%s,seg_end=%s,point=%s)", seg_start, seg_end, point, extra={"event.action": "on_segment", "logrite.seg_start": seg_start, "logrite.seg_end": seg_end, "logrite.point": point})
 
 
 def segments_intersect(p1: Point, p2: Point, p3: Point, p4: Point) -> bool:
@@ -83,10 +89,15 @@ def segments_intersect(p1: Point, p2: Point, p3: Point, p4: Point) -> bool:
     >>> segments_intersect(Point(0, 0), Point(1, 0), Point(1, 0), Point(2, 0))
     True
     """
+    logger.error(">>> Entering segments_intersect(p1=%s,p2=%s,p3=%s,p4=%s)", p1, p2, p3, p4, extra={"event.action": "segments_intersect", "logrite.p1": p1, "logrite.p2": p2, "logrite.p3": p3, "logrite.p4": p4})
     d1 = direction(p3, p4, p1)
+    logger.error("segments_intersect(p1=%s,p2=%s,p3=%s,p4=%s): d1 → %s", p1, p2, p3, p4, d1, extra={"event.action": "segments_intersect", "logrite.p1": p1, "logrite.p2": p2, "logrite.p3": p3, "logrite.p4": p4})
     d2 = direction(p3, p4, p2)
+    logger.error("segments_intersect(p1=%s,p2=%s,p3=%s,p4=%s): d2 → %s", p1, p2, p3, p4, d2, extra={"event.action": "segments_intersect", "logrite.p1": p1, "logrite.p2": p2, "logrite.p3": p3, "logrite.p4": p4})
     d3 = direction(p1, p2, p3)
+    logger.error("segments_intersect(p1=%s,p2=%s,p3=%s,p4=%s): d3 → %s", p1, p2, p3, p4, d3, extra={"event.action": "segments_intersect", "logrite.p1": p1, "logrite.p2": p2, "logrite.p3": p3, "logrite.p4": p4})
     d4 = direction(p1, p2, p4)
+    logger.error("segments_intersect(p1=%s,p2=%s,p3=%s,p4=%s): d4 → %s", p1, p2, p3, p4, d4, extra={"event.action": "segments_intersect", "logrite.p1": p1, "logrite.p2": p2, "logrite.p3": p3, "logrite.p4": p4})
 
     if ((d1 < 0 < d2) or (d2 < 0 < d1)) and ((d3 < 0 < d4) or (d4 < 0 < d3)):
         return True
@@ -97,6 +108,7 @@ def segments_intersect(p1: Point, p2: Point, p3: Point, p4: Point) -> bool:
         return True
     if d3 == 0 and on_segment(p1, p2, p3):
         return True
+    logger.warning("<<< Exiting segments_intersect(p1=%s,p2=%s,p3=%s,p4=%s)", p1, p2, p3, p4, extra={"event.action": "segments_intersect", "logrite.p1": p1, "logrite.p2": p2, "logrite.p3": p3, "logrite.p4": p4})
     return d4 == 0 and on_segment(p1, p2, p4)
 
 

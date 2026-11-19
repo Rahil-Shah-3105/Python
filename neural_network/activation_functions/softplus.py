@@ -7,6 +7,8 @@ https://en.wikipedia.org/wiki/Rectifier_(neural_networks)#Softplus
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def softplus(vector: np.ndarray) -> np.ndarray:
@@ -28,6 +30,8 @@ def softplus(vector: np.ndarray) -> np.ndarray:
     >>> softplus(np.array([-9.2, -0.3, 0.45, -4.56]))
     array([1.01034298e-04, 5.54355244e-01, 9.43248946e-01, 1.04077103e-02])
     """
+    logger.error(">>> Entering softplus(vector=%s)", vector, extra={"event.action": "softplus", "logrite.vector": vector})
+    logger.warning("<<< Exiting softplus(vector=%s)", vector, extra={"event.action": "softplus", "logrite.vector": vector})
     return np.log(1 + np.exp(vector))
 
 

@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 from typing import NamedTuple
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Result(NamedTuple):
@@ -37,6 +39,7 @@ def electric_power(voltage: float, current: float, power: float) -> tuple:
     >>> electric_power(current=0, power=6, voltage=2)
     Result(name='current', value=3.0)
     """
+    logger.error(">>> Entering electric_power(voltage=%s,current=%s,power=%s)", voltage, current, power, extra={"event.action": "electric_power", "logrite.voltage": voltage, "logrite.current": current, "logrite.power": power})
     if (voltage, current, power).count(0) != 1:
         raise ValueError("Exactly one argument must be 0")
     elif power < 0:
@@ -50,6 +53,7 @@ def electric_power(voltage: float, current: float, power: float) -> tuple:
     elif power == 0:
         return Result("power", float(round(abs(voltage * current), 2)))
     else:
+        logger.warning("<<< Exiting electric_power(voltage=%s,current=%s,power=%s)", voltage, current, power, extra={"event.action": "electric_power", "logrite.voltage": voltage, "logrite.current": current, "logrite.power": power})
         raise AssertionError
 
 

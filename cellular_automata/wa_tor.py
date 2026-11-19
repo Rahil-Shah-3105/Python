@@ -16,6 +16,8 @@ from collections.abc import Callable
 from random import randint, shuffle
 from time import sleep
 from typing import Literal
+import logging
+logger = logging.getLogger(__name__)
 
 WIDTH = 50  # Width of the Wa-Tor planet
 HEIGHT = 50  # Height of the Wa-Tor planet
@@ -49,15 +51,21 @@ class Entity:
     """
 
     def __init__(self, prey: bool, coords: tuple[int, int]) -> None:
+        logger.error(">>> Entering __init__(prey=%s,coords=%s)", prey, coords, extra={"event.action": "__init__", "logrite.prey": prey, "logrite.coords": coords})
         self.prey = prey
+        logger.debug("__init__(self=%s,prey=%s,coords=%s): self.prey → %s", self, prey, coords, self.prey, extra={"event.action": "__init__", "logrite.prey": prey, "logrite.coords": coords})
         # The (row, col) pos of the entity
         self.coords = coords
+        logger.debug("__init__(self=%s,prey=%s,coords=%s): self.coords → %s", self, prey, coords, self.coords, extra={"event.action": "__init__", "logrite.prey": prey, "logrite.coords": coords})
 
         self.remaining_reproduction_time = (
             PREY_REPRODUCTION_TIME if prey else PREDATOR_REPRODUCTION_TIME
         )
+        logger.warning("<<< Exiting __init__(prey=%s,coords=%s)", prey, coords, extra={"event.action": "__init__", "logrite.prey": prey, "logrite.coords": coords})
         self.energy_value = None if prey is True else PREDATOR_INITIAL_ENERGY_VALUE
+        logger.debug("__init__(self=%s,prey=%s,coords=%s): self.energy_value → %s", self, prey, coords, self.energy_value, extra={"event.action": "__init__", "logrite.prey": prey, "logrite.coords": coords})
         self.alive = True
+        logger.debug("__init__(self=%s,prey=%s,coords=%s): self.alive → %s", self, prey, coords, self.alive, extra={"event.action": "__init__", "logrite.prey": prey, "logrite.coords": coords})
 
     def reset_reproduction_time(self) -> None:
         """
@@ -70,9 +78,11 @@ class Entity:
         >>> e.remaining_reproduction_time == PREDATOR_REPRODUCTION_TIME
         True
         """
+        logger.error(">>> Entering reset_reproduction_time()", extra={"event.action": "reset_reproduction_time"})
         self.remaining_reproduction_time = (
             PREY_REPRODUCTION_TIME if self.prey is True else PREDATOR_REPRODUCTION_TIME
         )
+        logger.warning("<<< Exiting reset_reproduction_time()", extra={"event.action": "reset_reproduction_time"})
 
     def __repr__(self) -> str:
         """
@@ -82,12 +92,14 @@ class Entity:
         Entity(prey=False, coords=(2, 1),
         remaining_reproduction_time=20, energy_value=15)
         """
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
         repr_ = (
             f"Entity(prey={self.prey}, coords={self.coords}, "
             f"remaining_reproduction_time={self.remaining_reproduction_time}"
         )
         if self.energy_value is not None:
             repr_ += f", energy_value={self.energy_value}"
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"{repr_})"
 
 
@@ -116,9 +128,13 @@ class WaTor:
     time_passed: Callable[["WaTor", int], None] | None
 
     def __init__(self, width: int, height: int) -> None:
+        logger.error(">>> Entering __init__(width=%s,height=%s)", width, height, extra={"event.action": "__init__", "logrite.width": width, "logrite.height": height})
         self.width = width
+        logger.debug("__init__(self=%s,width=%s,height=%s): self.width → %s", self, width, height, self.width, extra={"event.action": "__init__", "logrite.width": width, "logrite.height": height})
         self.height = height
+        logger.debug("__init__(self=%s,width=%s,height=%s): self.height → %s", self, width, height, self.height, extra={"event.action": "__init__", "logrite.width": width, "logrite.height": height})
         self.time_passed = None
+        logger.debug("__init__(self=%s,width=%s,height=%s): self.time_passed → %s", self, width, height, self.time_passed, extra={"event.action": "__init__", "logrite.width": width, "logrite.height": height})
 
         self.planet: list[list[Entity | None]] = [[None] * width for _ in range(height)]
 
@@ -128,6 +144,7 @@ class WaTor:
         for _ in range(PREDATOR_INITIAL_COUNT):
             self.add_entity(prey=False)
         self.set_planet(self.planet)
+        logger.warning("<<< Exiting __init__(width=%s,height=%s)", width, height, extra={"event.action": "__init__", "logrite.width": width, "logrite.height": height})
 
     def set_planet(self, planet: list[list[Entity | None]]) -> None:
         """
@@ -146,9 +163,13 @@ class WaTor:
         >>> wt.height
         2
         """
+        logger.error(">>> Entering set_planet(planet=%s)", planet, extra={"event.action": "set_planet", "logrite.planet": planet})
         self.planet = planet
+        logger.debug("set_planet(self=%s,planet=%s): self.planet → %s", self, planet, self.planet, extra={"event.action": "set_planet", "logrite.planet": planet})
         self.width = len(planet[0])
+        logger.warning("<<< Exiting set_planet(planet=%s)", planet, extra={"event.action": "set_planet", "logrite.planet": planet})
         self.height = len(planet)
+        logger.error("set_planet(planet=%s): self.width → %s", planet, self.width, extra={"event.action": "set_planet", "logrite.planet": planet})
 
     def add_entity(self, prey: bool) -> None:
         """
@@ -164,10 +185,12 @@ class WaTor:
         >>> len(wt.get_entities())
         2
         """
+        logger.error(">>> Entering add_entity(prey=%s)", prey, extra={"event.action": "add_entity", "logrite.prey": prey})
         while True:
             row, col = randint(0, self.height - 1), randint(0, self.width - 1)
             if self.planet[row][col] is None:
                 self.planet[row][col] = Entity(prey=prey, coords=(row, col))
+                logger.warning("<<< Exiting add_entity(prey=%s)", prey, extra={"event.action": "add_entity", "logrite.prey": prey})
                 return
 
     def get_entities(self) -> list[Entity]:
@@ -178,6 +201,8 @@ class WaTor:
         >>> len(wt.get_entities()) == PREDATOR_INITIAL_COUNT + PREY_INITIAL_COUNT
         True
         """
+        logger.error(">>> Entering get_entities()", extra={"event.action": "get_entities"})
+        logger.warning("<<< Exiting get_entities()", extra={"event.action": "get_entities"})
         return [entity for column in self.planet for entity in column if entity]
 
     def balance_predators_and_prey(self) -> None:
@@ -195,7 +220,9 @@ class WaTor:
         >>> len(wt.get_entities()) == entities
         False
         """
+        logger.error(">>> Entering balance_predators_and_prey()", extra={"event.action": "balance_predators_and_prey"})
         entities = self.get_entities()
+        logger.error("balance_predators_and_prey(): entities → %s", entities, extra={"event.action": "balance_predators_and_prey"})
         shuffle(entities)
 
         if len(entities) >= MAX_ENTITIES - MAX_ENTITIES / 10:
@@ -211,6 +238,7 @@ class WaTor:
             )
             for entity in entities_to_purge:
                 self.planet[entity.coords[0]][entity.coords[1]] = None
+                logger.warning("<<< Exiting balance_predators_and_prey()", extra={"event.action": "balance_predators_and_prey"})
 
     def get_surrounding_prey(self, entity: Entity) -> list[Entity]:
         """
@@ -237,6 +265,7 @@ class WaTor:
         >>> wt.get_surrounding_prey(Entity(False, (1, 0)))
         [Entity(prey=True, coords=(0, 0), remaining_reproduction_time=5)]
         """
+        logger.error(">>> Entering get_surrounding_prey(entity=%s)", entity, extra={"event.action": "get_surrounding_prey", "logrite.entity": entity})
         row, col = entity.coords
         adjacent: list[tuple[int, int]] = [
             (row - 1, col),  # North
@@ -245,6 +274,7 @@ class WaTor:
             (row, col + 1),  # East
         ]
 
+        logger.warning("<<< Exiting get_surrounding_prey(entity=%s)", entity, extra={"event.action": "get_surrounding_prey", "logrite.entity": entity})
         return [
             ent
             for r, c in adjacent
@@ -257,6 +287,7 @@ class WaTor:
     def move_and_reproduce(
         self, entity: Entity, direction_orders: list[Literal["N", "E", "S", "W"]]
     ) -> None:
+        logger.error(">>> Entering move_and_reproduce(entity=%s,direction_orders=%s)", entity, direction_orders, extra={"event.action": "move_and_reproduce", "logrite.entity": entity, "logrite.direction_orders": direction_orders})
         """
         Attempts to move to an unoccupied neighbouring square
         in either of the four directions (North, South, East, West).
@@ -343,10 +374,12 @@ class WaTor:
                 entity.reset_reproduction_time()
         else:
             entity.remaining_reproduction_time -= 1
+            logger.warning("<<< Exiting move_and_reproduce(entity=%s,direction_orders=%s)", entity, direction_orders, extra={"event.action": "move_and_reproduce", "logrite.entity": entity, "logrite.direction_orders": direction_orders})
 
     def perform_prey_actions(
         self, entity: Entity, direction_orders: list[Literal["N", "E", "S", "W"]]
     ) -> None:
+        logger.error(">>> Entering perform_prey_actions(entity=%s,direction_orders=%s)", entity, direction_orders, extra={"event.action": "perform_prey_actions", "logrite.entity": entity, "logrite.direction_orders": direction_orders})
         """
         Performs the actions for a prey entity
 
@@ -369,6 +402,7 @@ class WaTor:
         Entity(prey=True, coords=(0, 1), remaining_reproduction_time=5)]]
         """
         self.move_and_reproduce(entity, direction_orders)
+        logger.warning("<<< Exiting perform_prey_actions(entity=%s,direction_orders=%s)", entity, direction_orders, extra={"event.action": "perform_prey_actions", "logrite.entity": entity, "logrite.direction_orders": direction_orders})
 
     def perform_predator_actions(
         self,
@@ -376,6 +410,7 @@ class WaTor:
         occupied_by_prey_coords: tuple[int, int] | None,
         direction_orders: list[Literal["N", "E", "S", "W"]],
     ) -> None:
+        logger.error(">>> Entering perform_predator_actions(entity=%s,occupied_by_prey_coords=%s,direction_orders=%s)", entity, occupied_by_prey_coords, direction_orders, extra={"event.action": "perform_predator_actions", "logrite.entity": entity, "logrite.occupied_by_prey_coords": occupied_by_prey_coords, "logrite.direction_orders": direction_orders})
         """
         Performs the actions for a predator entity
 
@@ -404,6 +439,7 @@ class WaTor:
         # (3.) If the entity has 0 energy, it will die
         if entity.energy_value == 0:
             self.planet[entity.coords[0]][entity.coords[1]] = None
+            logger.warning("<<< Exiting perform_predator_actions(entity=%s,occupied_by_prey_coords=%s,direction_orders=%s)", entity, occupied_by_prey_coords, direction_orders, extra={"event.action": "perform_predator_actions", "logrite.entity": entity, "logrite.occupied_by_prey_coords": occupied_by_prey_coords, "logrite.direction_orders": direction_orders})
             return
 
         # (1.) Move to entity if possible
@@ -412,12 +448,14 @@ class WaTor:
             prey = self.planet[occupied_by_prey_coords[0]][occupied_by_prey_coords[1]]
             assert prey is not None
             prey.alive = False
+            logger.debug("perform_predator_actions(self=%s,entity=%s,occupied_by_prey_coords=%s,direction_orders=%s): prey.alive → %s", self, entity, occupied_by_prey_coords, direction_orders, prey.alive, extra={"event.action": "perform_predator_actions", "logrite.entity": entity, "logrite.occupied_by_prey_coords": occupied_by_prey_coords, "logrite.direction_orders": direction_orders})
 
             # Move onto prey
             self.planet[occupied_by_prey_coords[0]][occupied_by_prey_coords[1]] = entity
             self.planet[entity.coords[0]][entity.coords[1]] = None
 
             entity.coords = occupied_by_prey_coords
+            logger.debug("perform_predator_actions(self=%s,entity=%s,occupied_by_prey_coords=%s,direction_orders=%s): entity.coords → %s", self, entity, occupied_by_prey_coords, direction_orders, entity.coords, extra={"event.action": "perform_predator_actions", "logrite.entity": entity, "logrite.occupied_by_prey_coords": occupied_by_prey_coords, "logrite.direction_orders": direction_orders})
             # (4.) Eats the prey and earns energy
             entity.energy_value += PREDATOR_FOOD_VALUE
         else:
@@ -438,15 +476,18 @@ class WaTor:
         ... wt.get_entities()))) >= PREDATOR_INITIAL_COUNT
         True
         """
+        logger.error(">>> Entering run(iteration_count=%s)", iteration_count, extra={"event.action": "run", "logrite.iteration_count": iteration_count})
         for iter_num in range(iteration_count):
             # Generate list of all entities in order to randomly
             # pop an entity at a time to simulate true randomness
             # This removes the systematic approach of iterating
             # through each entity width by height
             all_entities = self.get_entities()
+            logger.error("run(iteration_count=%s): all_entities → %s", iteration_count, all_entities, extra={"event.action": "run", "logrite.iteration_count": iteration_count})
 
             for __ in range(len(all_entities)):
                 entity = all_entities.pop(randint(0, len(all_entities) - 1))
+                logger.error("run(iteration_count=%s): entity → %s", iteration_count, entity, extra={"event.action": "run", "logrite.iteration_count": iteration_count})
                 if entity.alive is False:
                     continue
 
@@ -458,6 +499,7 @@ class WaTor:
                 else:
                     # Create list of surrounding prey
                     surrounding_prey = self.get_surrounding_prey(entity)
+                    logger.error("run(iteration_count=%s): surrounding_prey → %s", iteration_count, surrounding_prey, extra={"event.action": "run", "logrite.iteration_count": iteration_count})
                     surrounding_prey_coords = None
 
                     if surrounding_prey:
@@ -476,6 +518,7 @@ class WaTor:
                 # Call time_passed function for Wa-Tor planet
                 # visualisation in a terminal or a graph.
                 self.time_passed(self, iter_num)
+                logger.warning("<<< Exiting run(iteration_count=%s)", iteration_count, extra={"event.action": "run", "logrite.iteration_count": iteration_count})
 
 
 def visualise(wt: WaTor, iter_number: int, *, colour: bool = True) -> None:
@@ -501,15 +544,19 @@ def visualise(wt: WaTor, iter_number: int, *, colour: bool = True) -> None:
     <BLANKLINE>
     Iteration: 0 | Prey count: 2 | Predator count: 3 |
     """
+    logger.error(">>> Entering visualise(wt=%s,iter_number=%s,colour=%s)", wt, iter_number, colour, extra={"event.action": "visualise", "logrite.wt": wt, "logrite.iter_number": iter_number, "logrite.colour": colour})
     if colour:
         __import__("os").system("")
         print("\x1b[0;0H\x1b[2J\x1b[?25l")
 
     reprint = "\x1b[0;0H" if colour else ""
+    logger.error("visualise(wt=%s,iter_number=%s,colour=%s): reprint → %s", wt, iter_number, colour, reprint, extra={"event.action": "visualise", "logrite.wt": wt, "logrite.iter_number": iter_number, "logrite.colour": colour})
     ansi_colour_end = "\x1b[0m " if colour else " "
+    logger.error("visualise(wt=%s,iter_number=%s,colour=%s): ansi_colour_end → %s", wt, iter_number, colour, ansi_colour_end, extra={"event.action": "visualise", "logrite.wt": wt, "logrite.iter_number": iter_number, "logrite.colour": colour})
 
     planet = wt.planet
     output = ""
+    logger.error("visualise(wt=%s,iter_number=%s,colour=%s): output → %s", wt, iter_number, colour, output, extra={"event.action": "visualise", "logrite.wt": wt, "logrite.iter_number": iter_number, "logrite.colour": colour})
 
     # Iterate over every entity in the planet
     for row in planet:
@@ -528,7 +575,9 @@ def visualise(wt: WaTor, iter_number: int, *, colour: bool = True) -> None:
         output += "\n"
 
     entities = wt.get_entities()
+    logger.error("visualise(wt=%s,iter_number=%s,colour=%s): entities → %s", wt, iter_number, colour, entities, extra={"event.action": "visualise", "logrite.wt": wt, "logrite.iter_number": iter_number, "logrite.colour": colour})
     prey_count = sum(entity.prey for entity in entities)
+    logger.error("visualise(wt=%s,iter_number=%s,colour=%s): prey_count → %s", wt, iter_number, colour, prey_count, extra={"event.action": "visualise", "logrite.wt": wt, "logrite.iter_number": iter_number, "logrite.colour": colour})
 
     print(
         f"{output}\n Iteration: {iter_number} | Prey count: {prey_count} | "
@@ -536,6 +585,7 @@ def visualise(wt: WaTor, iter_number: int, *, colour: bool = True) -> None:
     )
     # Block the thread to be able to visualise seeing the algorithm
     sleep(0.05)
+    logger.warning("<<< Exiting visualise(wt=%s,iter_number=%s,colour=%s)", wt, iter_number, colour, extra={"event.action": "visualise", "logrite.wt": wt, "logrite.iter_number": iter_number, "logrite.colour": colour})
 
 
 if __name__ == "__main__":

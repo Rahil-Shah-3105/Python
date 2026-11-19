@@ -12,6 +12,8 @@ References
     Balderas, México, Limusa. 303 p.
 - https://en.wikipedia.org/wiki/Intensity-duration-frequency_curve
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def rainfall_intensity(
@@ -22,6 +24,7 @@ def rainfall_intensity(
     return_period: float,
     duration: float,
 ) -> float:
+    logger.error(">>> Entering rainfall_intensity(coefficient_k=%s,coefficient_a=%s,coefficient_b=%s,coefficient_c=%s,return_period=%s,duration=%s)", coefficient_k, coefficient_a, coefficient_b, coefficient_c, return_period, duration, extra={"event.action": "rainfall_intensity", "logrite.coefficient_k": coefficient_k, "logrite.coefficient_a": coefficient_a, "logrite.coefficient_b": coefficient_b, "logrite.coefficient_c": coefficient_c, "logrite.return_period": return_period, "logrite.duration": duration})
     """
     Calculate the intensity of a rainfall event for a given duration and return period.
     It's based on the Sherman intensity-duration-frequency curve:
@@ -134,6 +137,8 @@ def rainfall_intensity(
     intensity = (coefficient_k * (return_period**coefficient_a)) / (
         (duration + coefficient_b) ** coefficient_c
     )
+    logger.error("rainfall_intensity(coefficient_k=%s,coefficient_a=%s,coefficient_b=%s,coefficient_c=%s,return_period=%s,duration=%s): intensity → %s", coefficient_k, coefficient_a, coefficient_b, coefficient_c, return_period, duration, intensity, extra={"event.action": "rainfall_intensity", "logrite.coefficient_k": coefficient_k, "logrite.coefficient_a": coefficient_a, "logrite.coefficient_b": coefficient_b, "logrite.coefficient_c": coefficient_c, "logrite.return_period": return_period, "logrite.duration": duration})
+    logger.warning("<<< Exiting rainfall_intensity(coefficient_k=%s,coefficient_a=%s,coefficient_b=%s,coefficient_c=%s,return_period=%s,duration=%s)", coefficient_k, coefficient_a, coefficient_b, coefficient_c, return_period, duration, extra={"event.action": "rainfall_intensity", "logrite.coefficient_k": coefficient_k, "logrite.coefficient_a": coefficient_a, "logrite.coefficient_b": coefficient_b, "logrite.coefficient_c": coefficient_c, "logrite.return_period": return_period, "logrite.duration": duration})
     return intensity
 
 

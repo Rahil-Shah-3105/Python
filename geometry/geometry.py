@@ -4,6 +4,8 @@ import math
 from dataclasses import dataclass, field
 from types import NoneType
 from typing import Self
+import logging
+logger = logging.getLogger(__name__)
 
 # Building block classes
 
@@ -30,8 +32,10 @@ class Angle:
     degrees: float = 90
 
     def __post_init__(self) -> None:
+        logger.error(">>> Entering __post_init__()", extra={"event.action": "__post_init__"})
         if not isinstance(self.degrees, (int, float)) or not 0 <= self.degrees <= 360:
             raise TypeError("degrees must be a numeric value between 0 and 360.")
+            logger.warning("<<< Exiting __post_init__()", extra={"event.action": "__post_init__"})
 
 
 @dataclass
@@ -97,6 +101,8 @@ class Ellipse:
         >>> Ellipse(5, 10).area
         157.07963267948966
         """
+        logger.error(">>> Entering area()", extra={"event.action": "area"})
+        logger.warning("<<< Exiting area()", extra={"event.action": "area"})
         return math.pi * self.major_radius * self.minor_radius
 
     @property
@@ -105,6 +111,8 @@ class Ellipse:
         >>> Ellipse(5, 10).perimeter
         47.12388980384689
         """
+        logger.error(">>> Entering perimeter()", extra={"event.action": "perimeter"})
+        logger.warning("<<< Exiting perimeter()", extra={"event.action": "perimeter"})
         return math.pi * (self.major_radius + self.minor_radius)
 
 
@@ -126,9 +134,14 @@ class Circle(Ellipse):
 
     def __init__(self, radius: float) -> None:
         super().__init__(radius, radius)
+        logger.error(">>> Entering __init__(radius=%s)", radius, extra={"event.action": "__init__", "logrite.radius": radius})
         self.radius = radius
+        logger.debug("__init__(self=%s,radius=%s): self.radius → %s", self, radius, self.radius, extra={"event.action": "__init__", "logrite.radius": radius})
+        logger.warning("<<< Exiting __init__(radius=%s)", radius, extra={"event.action": "__init__", "logrite.radius": radius})
 
     def __repr__(self) -> str:
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"Circle(radius={self.radius})"
 
     @property
@@ -137,6 +150,8 @@ class Circle(Ellipse):
         >>> Circle(5).diameter
         10
         """
+        logger.error(">>> Entering diameter()", extra={"event.action": "diameter"})
+        logger.warning("<<< Exiting diameter()", extra={"event.action": "diameter"})
         return self.radius * 2
 
     def max_parts(self, num_cuts: float) -> float:
@@ -162,8 +177,10 @@ class Circle(Ellipse):
             ...
         TypeError: num_cuts must be a positive numeric value.
         """
+        logger.error(">>> Entering max_parts(num_cuts=%s)", num_cuts, extra={"event.action": "max_parts", "logrite.num_cuts": num_cuts})
         if not isinstance(num_cuts, (int, float)) or num_cuts < 0:
             raise TypeError("num_cuts must be a positive numeric value.")
+        logger.warning("<<< Exiting max_parts(num_cuts=%s)", num_cuts, extra={"event.action": "max_parts", "logrite.num_cuts": num_cuts})
         return (num_cuts + 2 + num_cuts**2) * 0.5
 
 
@@ -196,7 +213,9 @@ class Polygon:
         >>> Polygon().add_side(Side(5))
         Polygon(sides=[Side(length=5, angle=Angle(degrees=90), next_side=None)])
         """
+        logger.error(">>> Entering add_side(side=%s)", side, extra={"event.action": "add_side", "logrite.side": side})
         self.sides.append(side)
+        logger.warning("<<< Exiting add_side(side=%s)", side, extra={"event.action": "add_side", "logrite.side": side})
         return self
 
     def get_side(self, index: int) -> Side:
@@ -208,6 +227,8 @@ class Polygon:
         >>> Polygon().add_side(Side(5)).get_side(-1)
         Side(length=5, angle=Angle(degrees=90), next_side=None)
         """
+        logger.error(">>> Entering get_side(index=%s)", index, extra={"event.action": "get_side", "logrite.index": index})
+        logger.warning("<<< Exiting get_side(index=%s)", index, extra={"event.action": "get_side", "logrite.index": index})
         return self.sides[index]
 
     def set_side(self, index: int, side: Side) -> Self:
@@ -219,7 +240,9 @@ class Polygon:
         >>> Polygon().add_side(Side(5)).set_side(0, Side(10))
         Polygon(sides=[Side(length=10, angle=Angle(degrees=90), next_side=None)])
         """
+        logger.error(">>> Entering set_side(index=%s,side=%s)", index, side, extra={"event.action": "set_side", "logrite.index": index, "logrite.side": side})
         self.sides[index] = side
+        logger.warning("<<< Exiting set_side(index=%s,side=%s)", index, side, extra={"event.action": "set_side", "logrite.index": index, "logrite.side": side})
         return self
 
 
@@ -240,9 +263,13 @@ class Rectangle(Polygon):
 
     def __init__(self, short_side_length: float, long_side_length: float) -> None:
         super().__init__()
+        logger.error(">>> Entering __init__(short_side_length=%s,long_side_length=%s)", short_side_length, long_side_length, extra={"event.action": "__init__", "logrite.short_side_length": short_side_length, "logrite.long_side_length": long_side_length})
         self.short_side_length = short_side_length
+        logger.debug("__init__(self=%s,short_side_length=%s,long_side_length=%s): self.short_side_length → %s", self, short_side_length, long_side_length, self.short_side_length, extra={"event.action": "__init__", "logrite.short_side_length": short_side_length, "logrite.long_side_length": long_side_length})
         self.long_side_length = long_side_length
+        logger.debug("__init__(self=%s,short_side_length=%s,long_side_length=%s): self.long_side_length → %s", self, short_side_length, long_side_length, self.long_side_length, extra={"event.action": "__init__", "logrite.short_side_length": short_side_length, "logrite.long_side_length": long_side_length})
         self.post_init()
+        logger.warning("<<< Exiting __init__(short_side_length=%s,long_side_length=%s)", short_side_length, long_side_length, extra={"event.action": "__init__", "logrite.short_side_length": short_side_length, "logrite.long_side_length": long_side_length})
 
     def post_init(self) -> None:
         """
@@ -250,10 +277,14 @@ class Rectangle(Polygon):
         Rectangle(sides=[Side(length=5, angle=Angle(degrees=90), next_side=None),
         Side(length=10, angle=Angle(degrees=90), next_side=None)])
         """
+        logger.error(">>> Entering post_init()", extra={"event.action": "post_init"})
         self.short_side = Side(self.short_side_length)
+        logger.error("post_init(): self.short_side → %s", self.short_side, extra={"event.action": "post_init"})
         self.long_side = Side(self.long_side_length)
         super().add_side(self.short_side)
+        logger.error("post_init(): self.long_side → %s", self.long_side, extra={"event.action": "post_init"})
         super().add_side(self.long_side)
+        logger.warning("<<< Exiting post_init()", extra={"event.action": "post_init"})
 
     def perimeter(self) -> float:
         return (self.short_side.length + self.long_side.length) * 2
@@ -276,6 +307,7 @@ class Square(Rectangle):
 
     def __init__(self, side_length: float) -> None:
         super().__init__(side_length, side_length)
+        logger.error(">>> Entering __init__(side_length=%s)", side_length, extra={"event.action": "__init__", "logrite.side_length": side_length})
 
     def perimeter(self) -> float:
         return super().perimeter()

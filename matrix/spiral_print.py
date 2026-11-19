@@ -5,25 +5,32 @@ This problem has been solved through recursive way.
         i) matrix should be only one or two dimensional
         ii) number of column of all rows should be equal
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def check_matrix(matrix: list[list[int]]) -> bool:
+    logger.error(">>> Entering check_matrix(matrix=%s)", matrix, extra={"event.action": "check_matrix", "logrite.matrix": matrix})
     # must be
     matrix = [list(row) for row in matrix]
+    logger.error("check_matrix(matrix=%s): matrix → %s", matrix, matrix, extra={"event.action": "check_matrix", "logrite.matrix": matrix})
     if matrix and isinstance(matrix, list):
         if isinstance(matrix[0], list):
             prev_len = 0
+            logger.error("check_matrix(matrix=%s): prev_len → %s", matrix, prev_len, extra={"event.action": "check_matrix", "logrite.matrix": matrix})
             for row in matrix:
                 if prev_len == 0:
                     prev_len = len(row)
                     result = True
                 else:
                     result = prev_len == len(row)
+                    logger.error("check_matrix(matrix=%s): result → %s", matrix, result, extra={"event.action": "check_matrix", "logrite.matrix": matrix})
         else:
             result = True
     else:
         result = False
 
+    logger.warning("<<< Exiting check_matrix(matrix=%s)", matrix, extra={"event.action": "check_matrix", "logrite.matrix": matrix})
     return result
 
 
@@ -43,12 +50,16 @@ def spiral_print_clockwise(a: list[list[int]]) -> None:
     6
     7
     """
+    logger.error(">>> Entering spiral_print_clockwise(a=%s)", a, extra={"event.action": "spiral_print_clockwise", "logrite.a": a})
     if check_matrix(a) and len(a) > 0:
         a = [list(row) for row in a]
+        logger.error("spiral_print_clockwise(a=%s): a → %s", a, a, extra={"event.action": "spiral_print_clockwise", "logrite.a": a})
         mat_row = len(a)
+        logger.error("spiral_print_clockwise(a=%s): mat_row → %s", a, mat_row, extra={"event.action": "spiral_print_clockwise", "logrite.a": a})
         if isinstance(a[0], list):
             mat_col = len(a[0])
         else:
+            logger.error("spiral_print_clockwise(a=%s): mat_col → %s", a, mat_col, extra={"event.action": "spiral_print_clockwise", "logrite.a": a})
             for dat in a:
                 print(dat)
             return
@@ -73,6 +84,7 @@ def spiral_print_clockwise(a: list[list[int]]) -> None:
             return
     else:
         print("Not a valid matrix")
+        logger.warning("<<< Exiting spiral_print_clockwise(a=%s)", a, extra={"event.action": "spiral_print_clockwise", "logrite.a": a})
         return
 
 
@@ -115,11 +127,13 @@ def spiral_traversal(matrix: list[list]) -> list[int]:
     Stage 6.
     [1, 2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7] + spiral_traversal([])
     """
+    logger.error(">>> Entering spiral_traversal(matrix=%s)", matrix, extra={"event.action": "spiral_traversal", "logrite.matrix": matrix})
     if matrix:
         return list(matrix.pop(0)) + spiral_traversal(
             [list(row) for row in zip(*matrix)][::-1]
         )
     else:
+        logger.warning("<<< Exiting spiral_traversal(matrix=%s)", matrix, extra={"event.action": "spiral_traversal", "logrite.matrix": matrix})
         return []
 
 

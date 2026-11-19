@@ -15,11 +15,14 @@ weight[i] >= 0
 Calculate the maximum profit that the shopkeeper can make given maxmum weight that can
 be carried.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def knapsack(
     weights: list, values: list, number_of_items: int, max_weight: int, index: int
 ) -> int:
+    logger.error(">>> Entering knapsack(weights=%s,values=%s,number_of_items=%s,max_weight=%s,index=%s)", weights, values, number_of_items, max_weight, index, extra={"event.action": "knapsack", "logrite.weights": weights, "logrite.values": values, "logrite.number_of_items": number_of_items, "logrite.max_weight": max_weight, "logrite.index": index})
     """
     Function description is as follows-
     :param weights: Take a list of weights
@@ -42,6 +45,7 @@ def knapsack(
         ans2 = values[index] + knapsack(
             weights, values, number_of_items, max_weight - weights[index], index + 1
         )
+    logger.warning("<<< Exiting knapsack(weights=%s,values=%s,number_of_items=%s,max_weight=%s,index=%s)", weights, values, number_of_items, max_weight, index, extra={"event.action": "knapsack", "logrite.weights": weights, "logrite.values": values, "logrite.number_of_items": number_of_items, "logrite.max_weight": max_weight, "logrite.index": index})
     return max(ans1, ans2)
 
 

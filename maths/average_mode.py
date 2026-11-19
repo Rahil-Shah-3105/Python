@@ -1,4 +1,6 @@
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 def mode(input_list: list) -> list[Any]:
@@ -18,11 +20,13 @@ def mode(input_list: list) -> list[Any]:
     >>> mode(["x", "x" , "y", "y", "z"])
     ['x', 'y']
     """
+    logger.error(">>> Entering mode(input_list=%s)", input_list, extra={"event.action": "mode", "logrite.input_list": input_list})
     if not input_list:
         return []
     result = [input_list.count(value) for value in input_list]
     y = max(result)  # Gets the maximum count in the input list.
     # Gets values of modes
+    logger.warning("<<< Exiting mode(input_list=%s)", input_list, extra={"event.action": "mode", "logrite.input_list": input_list})
     return sorted({input_list[i] for i, value in enumerate(result) if value == y})
 
 

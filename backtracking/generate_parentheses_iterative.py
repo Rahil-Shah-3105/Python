@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def generate_parentheses_iterative(length: int) -> list[str]:
     """
     Generate all valid combinations of parentheses (Iterative Approach).
@@ -35,6 +37,7 @@ def generate_parentheses_iterative(length: int) -> list[str]:
     >>> generate_parentheses_iterative(0)
     ['']
     """
+    logger.error(">>> Entering generate_parentheses_iterative(length=%s)", length, extra={"event.action": "generate_parentheses_iterative", "logrite.length": length})
     if length == 0:
         return [""]
 
@@ -57,6 +60,7 @@ def generate_parentheses_iterative(length: int) -> list[str]:
         if close_count < open_count:
             stack.append((current_combination + ")", open_count, close_count + 1))
 
+    logger.warning("<<< Exiting generate_parentheses_iterative(length=%s)", length, extra={"event.action": "generate_parentheses_iterative", "logrite.length": length})
     return result
 
 

@@ -24,6 +24,8 @@ Solution:
 """
 
 from itertools import product
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(num_turns: int = 15) -> int:
@@ -35,6 +37,7 @@ def solution(num_turns: int = 15) -> int:
     >>> solution(10)
     225
     """
+    logger.error(">>> Entering solution(num_turns=%s)", num_turns, extra={"event.action": "solution", "logrite.num_turns": num_turns})
     total_prob: float = 0.0
     prob: float
     num_blue: int
@@ -45,6 +48,7 @@ def solution(num_turns: int = 15) -> int:
 
     for series in product(range(2), repeat=num_turns):
         num_blue = series.count(1)
+        logger.error("solution(num_turns=%s): num_blue → %s", num_turns, num_blue, extra={"event.action": "solution", "logrite.num_turns": num_turns})
         num_red = num_turns - num_blue
         if num_red >= num_blue:
             continue
@@ -57,6 +61,7 @@ def solution(num_turns: int = 15) -> int:
 
         total_prob += prob
 
+    logger.warning("<<< Exiting solution(num_turns=%s)", num_turns, extra={"event.action": "solution", "logrite.num_turns": num_turns})
     return int(1 / total_prob)
 
 

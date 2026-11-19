@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def decrypt_caesar_with_chi_squared(
@@ -8,6 +10,7 @@ def decrypt_caesar_with_chi_squared(
     frequencies_dict: dict[str, float] | None = None,
     case_sensitive: bool = False,
 ) -> tuple[int, float, str]:
+    logger.error(">>> Entering decrypt_caesar_with_chi_squared(ciphertext=%s,cipher_alphabet=%s,frequencies_dict=%s,case_sensitive=%s)", ciphertext, cipher_alphabet, frequencies_dict, case_sensitive, extra={"event.action": "decrypt_caesar_with_chi_squared", "logrite.ciphertext": ciphertext, "logrite.cipher_alphabet": cipher_alphabet, "logrite.frequencies_dict": frequencies_dict, "logrite.case_sensitive": case_sensitive})
     """
     Basic Usage
     ===========
@@ -128,6 +131,7 @@ def decrypt_caesar_with_chi_squared(
     AttributeError: 'int' object has no attribute 'lower'
     """
     alphabet_letters = cipher_alphabet or [chr(i) for i in range(97, 123)]
+    logger.error("decrypt_caesar_with_chi_squared(ciphertext=%s,cipher_alphabet=%s,frequencies_dict=%s,case_sensitive=%s): alphabet_letters → %s", ciphertext, cipher_alphabet, frequencies_dict, case_sensitive, alphabet_letters, extra={"event.action": "decrypt_caesar_with_chi_squared", "logrite.ciphertext": ciphertext, "logrite.cipher_alphabet": cipher_alphabet, "logrite.frequencies_dict": frequencies_dict, "logrite.case_sensitive": case_sensitive})
 
     # If the argument is None or the user provided an empty dictionary
     if not frequencies_dict:
@@ -166,6 +170,7 @@ def decrypt_caesar_with_chi_squared(
 
     if not case_sensitive:
         ciphertext = ciphertext.lower()
+        logger.error("decrypt_caesar_with_chi_squared(ciphertext=%s,cipher_alphabet=%s,frequencies_dict=%s,case_sensitive=%s): ciphertext → %s", ciphertext, cipher_alphabet, frequencies_dict, case_sensitive, ciphertext, extra={"event.action": "decrypt_caesar_with_chi_squared", "logrite.ciphertext": ciphertext, "logrite.cipher_alphabet": cipher_alphabet, "logrite.frequencies_dict": frequencies_dict, "logrite.case_sensitive": case_sensitive})
 
     # Chi squared statistic values
     chi_squared_statistic_values: dict[int, tuple[float, str]] = {}
@@ -173,6 +178,7 @@ def decrypt_caesar_with_chi_squared(
     # cycle through all of the shifts
     for shift in range(len(alphabet_letters)):
         decrypted_with_shift = ""
+        logger.error("decrypt_caesar_with_chi_squared(ciphertext=%s,cipher_alphabet=%s,frequencies_dict=%s,case_sensitive=%s): decrypted_with_shift → %s", ciphertext, cipher_alphabet, frequencies_dict, case_sensitive, decrypted_with_shift, extra={"event.action": "decrypt_caesar_with_chi_squared", "logrite.ciphertext": ciphertext, "logrite.cipher_alphabet": cipher_alphabet, "logrite.frequencies_dict": frequencies_dict, "logrite.case_sensitive": case_sensitive})
 
         # decrypt the message with the shift
         for letter in ciphertext:
@@ -181,12 +187,14 @@ def decrypt_caesar_with_chi_squared(
                 new_key = (alphabet_letters.index(letter.lower()) - shift) % len(
                     alphabet_letters
                 )
+                logger.error("decrypt_caesar_with_chi_squared(ciphertext=%s,cipher_alphabet=%s,frequencies_dict=%s,case_sensitive=%s): new_key → %s", ciphertext, cipher_alphabet, frequencies_dict, case_sensitive, new_key, extra={"event.action": "decrypt_caesar_with_chi_squared", "logrite.ciphertext": ciphertext, "logrite.cipher_alphabet": cipher_alphabet, "logrite.frequencies_dict": frequencies_dict, "logrite.case_sensitive": case_sensitive})
                 decrypted_with_shift += (
                     alphabet_letters[new_key].upper()
                     if case_sensitive and letter.isupper()
                     else alphabet_letters[new_key]
                 )
             except ValueError:
+                logger.error("Exception in decrypt_caesar_with_chi_squared(ciphertext=%s,cipher_alphabet=%s,frequencies_dict=%s,case_sensitive=%s)", ciphertext, cipher_alphabet, frequencies_dict, case_sensitive, exc_info=True, extra={"event.action": "decrypt_caesar_with_chi_squared", "event.category": "process", "logrite.ciphertext": ciphertext, "logrite.cipher_alphabet": cipher_alphabet, "logrite.frequencies_dict": frequencies_dict, "logrite.case_sensitive": case_sensitive})
                 # Append the character if it isn't in the alphabet
                 decrypted_with_shift += letter
 
@@ -196,9 +204,11 @@ def decrypt_caesar_with_chi_squared(
         for letter in decrypted_with_shift:
             if case_sensitive:
                 letter = letter.lower()
+                logger.error("decrypt_caesar_with_chi_squared(ciphertext=%s,cipher_alphabet=%s,frequencies_dict=%s,case_sensitive=%s): letter → %s", ciphertext, cipher_alphabet, frequencies_dict, case_sensitive, letter, extra={"event.action": "decrypt_caesar_with_chi_squared", "logrite.ciphertext": ciphertext, "logrite.cipher_alphabet": cipher_alphabet, "logrite.frequencies_dict": frequencies_dict, "logrite.case_sensitive": case_sensitive})
                 if letter in frequencies:
                     # Get the amount of times the letter occurs in the message
                     occurrences = decrypted_with_shift.lower().count(letter)
+                    logger.error("decrypt_caesar_with_chi_squared(ciphertext=%s,cipher_alphabet=%s,frequencies_dict=%s,case_sensitive=%s): occurrences → %s", ciphertext, cipher_alphabet, frequencies_dict, case_sensitive, occurrences, extra={"event.action": "decrypt_caesar_with_chi_squared", "logrite.ciphertext": ciphertext, "logrite.cipher_alphabet": cipher_alphabet, "logrite.frequencies_dict": frequencies_dict, "logrite.case_sensitive": case_sensitive})
 
                     # Get the excepcted amount of times the letter should appear based
                     # on letter frequencies
@@ -206,6 +216,7 @@ def decrypt_caesar_with_chi_squared(
 
                     # Complete the chi squared statistic formula
                     chi_letter_value = ((occurrences - expected) ** 2) / expected
+                    logger.error("decrypt_caesar_with_chi_squared(ciphertext=%s,cipher_alphabet=%s,frequencies_dict=%s,case_sensitive=%s): chi_letter_value → %s", ciphertext, cipher_alphabet, frequencies_dict, case_sensitive, chi_letter_value, extra={"event.action": "decrypt_caesar_with_chi_squared", "logrite.ciphertext": ciphertext, "logrite.cipher_alphabet": cipher_alphabet, "logrite.frequencies_dict": frequencies_dict, "logrite.case_sensitive": case_sensitive})
 
                     # Add the margin of error to the total chi squared statistic
                     chi_squared_statistic += chi_letter_value
@@ -228,10 +239,13 @@ def decrypt_caesar_with_chi_squared(
             chi_squared_statistic,
             decrypted_with_shift,
         )
+        logger.warning("<<< Exiting decrypt_caesar_with_chi_squared(ciphertext=%s,cipher_alphabet=%s,frequencies_dict=%s,case_sensitive=%s)", ciphertext, cipher_alphabet, frequencies_dict, case_sensitive, extra={"event.action": "decrypt_caesar_with_chi_squared", "logrite.ciphertext": ciphertext, "logrite.cipher_alphabet": cipher_alphabet, "logrite.frequencies_dict": frequencies_dict, "logrite.case_sensitive": case_sensitive})
 
     # Get the most likely cipher by finding the cipher with the smallest chi squared
     # statistic
     def chi_squared_statistic_values_sorting_key(key: int) -> tuple[float, str]:
+        logger.error(">>> Entering chi_squared_statistic_values_sorting_key(key=%s)", key, extra={"event.action": "chi_squared_statistic_values_sorting_key", "logrite.key": key})
+        logger.warning("<<< Exiting chi_squared_statistic_values_sorting_key(key=%s)", key, extra={"event.action": "chi_squared_statistic_values_sorting_key", "logrite.key": key})
         return chi_squared_statistic_values[key]
 
     most_likely_cipher: int = min(

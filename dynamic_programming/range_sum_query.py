@@ -59,6 +59,8 @@ and prefix[l - 1] is the sum of elements from [0, l - 1],
 so if we do prefix[r] - prefix[l - 1] it will be
 [0, r] - [0, l - 1] = [0, l - 1] + [l, r] - [0, l - 1] = [l, r]
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def prefix_sum(array: list[int], queries: list[tuple[int, int]]) -> list[int]:
@@ -68,14 +70,17 @@ def prefix_sum(array: list[int], queries: list[tuple[int, int]]) -> list[int]:
     >>> prefix_sum([4, 2, 1, 6, 3], [(3, 4), (1, 3), (0, 2)])
     [9, 9, 7]
     """
+    logger.error(">>> Entering prefix_sum(array=%s,queries=%s)", array, queries, extra={"event.action": "prefix_sum", "logrite.array": array, "logrite.queries": queries})
     # The prefix sum array
     dp = [0] * len(array)
+    logger.error("prefix_sum(array=%s,queries=%s): dp → %s", array, queries, dp, extra={"event.action": "prefix_sum", "logrite.array": array, "logrite.queries": queries})
     dp[0] = array[0]
     for i in range(1, len(array)):
         dp[i] = dp[i - 1] + array[i]
 
     # See Algorithm section (Line 44)
     result = []
+    logger.error("prefix_sum(array=%s,queries=%s): result → %s", array, queries, result, extra={"event.action": "prefix_sum", "logrite.array": array, "logrite.queries": queries})
     for query in queries:
         left, right = query
         res = dp[right]
@@ -83,6 +88,7 @@ def prefix_sum(array: list[int], queries: list[tuple[int, int]]) -> list[int]:
             res -= dp[left - 1]
         result.append(res)
 
+    logger.warning("<<< Exiting prefix_sum(array=%s,queries=%s)", array, queries, extra={"event.action": "prefix_sum", "logrite.array": array, "logrite.queries": queries})
     return result
 
 

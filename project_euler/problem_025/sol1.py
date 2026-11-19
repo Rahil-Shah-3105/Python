@@ -23,6 +23,8 @@ The 12th term, F12, is the first term to contain three digits.
 What is the index of the first term in the Fibonacci sequence to contain 1000
 digits?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def fibonacci(n: int) -> int:
@@ -43,6 +45,7 @@ def fibonacci(n: int) -> int:
     144
 
     """
+    logger.error(">>> Entering fibonacci(n=%s)", n, extra={"event.action": "fibonacci", "logrite.n": n})
     if n == 1 or not isinstance(n, int):
         return 0
     elif n == 2:
@@ -52,6 +55,7 @@ def fibonacci(n: int) -> int:
         for i in range(2, n + 1):
             sequence.append(sequence[i - 1] + sequence[i - 2])
 
+        logger.warning("<<< Exiting fibonacci(n=%s)", n, extra={"event.action": "fibonacci", "logrite.n": n})
         return sequence[n]
 
 
@@ -70,13 +74,16 @@ def fibonacci_digits_index(n: int) -> int:
     >>> fibonacci_digits_index(3)
     12
     """
+    logger.error(">>> Entering fibonacci_digits_index(n=%s)", n, extra={"event.action": "fibonacci_digits_index", "logrite.n": n})
     digits = 0
+    logger.error("fibonacci_digits_index(n=%s): digits → %s", n, digits, extra={"event.action": "fibonacci_digits_index", "logrite.n": n})
     index = 2
 
     while digits < n:
         index += 1
         digits = len(str(fibonacci(index)))
 
+    logger.warning("<<< Exiting fibonacci_digits_index(n=%s)", n, extra={"event.action": "fibonacci_digits_index", "logrite.n": n})
     return index
 
 
@@ -94,6 +101,8 @@ def solution(n: int = 1000) -> int:
     >>> solution(3)
     12
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return fibonacci_digits_index(n)
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def to_title_case(word: str) -> str:
     """
     Converts a string to capitalized case, preserving the input as is
@@ -14,12 +16,14 @@ def to_title_case(word: str) -> str:
     >>> to_title_case("aAkAsH")
     'Aakash'
     """
+    logger.error(">>> Entering to_title_case(word=%s)", word, extra={"event.action": "to_title_case", "logrite.word": word})
 
     """
     Convert the first character to uppercase if it's lowercase
     """
     if "a" <= word[0] <= "z":
         word = chr(ord(word[0]) - 32) + word[1:]
+        logger.error("to_title_case(word=%s): word → %s", word, word, extra={"event.action": "to_title_case", "logrite.word": word})
 
     """
     Convert the remaining characters to lowercase if they are uppercase
@@ -28,6 +32,7 @@ def to_title_case(word: str) -> str:
         if "A" <= word[i] <= "Z":
             word = word[:i] + chr(ord(word[i]) + 32) + word[i + 1 :]
 
+    logger.warning("<<< Exiting to_title_case(word=%s)", word, extra={"event.action": "to_title_case", "logrite.word": word})
     return word
 
 
@@ -47,7 +52,9 @@ def sentence_to_title_case(input_str: str) -> str:
     >>> sentence_to_title_case("aAkAsH gIrI")
     'Aakash Giri'
     """
+    logger.error(">>> Entering sentence_to_title_case(input_str=%s)", input_str, extra={"event.action": "sentence_to_title_case", "logrite.input_str": input_str})
 
+    logger.warning("<<< Exiting sentence_to_title_case(input_str=%s)", input_str, extra={"event.action": "sentence_to_title_case", "logrite.input_str": input_str})
     return " ".join(to_title_case(word) for word in input_str.split())
 
 

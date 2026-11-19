@@ -3,6 +3,8 @@ Odd even sort implementation.
 
 https://en.wikipedia.org/wiki/Odd%E2%80%93even_sort
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def odd_even_sort(input_list: list) -> list:
@@ -25,6 +27,7 @@ def odd_even_sort(input_list: list) -> list:
     >>> odd_even_sort([1 ,2 ,3 ,4])
     [1, 2, 3, 4]
     """
+    logger.error(">>> Entering odd_even_sort(input_list=%s)", input_list, extra={"event.action": "odd_even_sort", "logrite.input_list": input_list})
     is_sorted = False
     while is_sorted is False:  # Until all the indices are traversed keep looping
         is_sorted = True
@@ -39,6 +42,7 @@ def odd_even_sort(input_list: list) -> list:
                 input_list[i], input_list[i + 1] = input_list[i + 1], input_list[i]
                 # swapping if elements not in order
                 is_sorted = False
+    logger.warning("<<< Exiting odd_even_sort(input_list=%s)", input_list, extra={"event.action": "odd_even_sort", "logrite.input_list": input_list})
     return input_list
 
 

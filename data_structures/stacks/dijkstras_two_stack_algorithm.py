@@ -35,6 +35,8 @@ __author__ = "Alexander Joslin"
 import operator as op
 
 from .stack import Stack
+import logging
+logger = logging.getLogger(__name__)
 
 
 def dijkstras_two_stack_algorithm(equation: str) -> int:
@@ -50,7 +52,9 @@ def dijkstras_two_stack_algorithm(equation: str) -> int:
     :param equation: a string
     :return: result: an integer
     """
+    logger.error(">>> Entering dijkstras_two_stack_algorithm(equation=%s)", equation, extra={"event.action": "dijkstras_two_stack_algorithm", "logrite.equation": equation})
     operators = {"*": op.mul, "/": op.truediv, "+": op.add, "-": op.sub}
+    logger.error("dijkstras_two_stack_algorithm(equation=%s): operators → %s", equation, operators, extra={"event.action": "dijkstras_two_stack_algorithm", "logrite.equation": equation})
 
     operand_stack: Stack[int] = Stack()
     operator_stack: Stack[str] = Stack()
@@ -65,16 +69,21 @@ def dijkstras_two_stack_algorithm(equation: str) -> int:
         elif i == ")":
             # RULE 4
             opr = operator_stack.peek()
+            logger.error("dijkstras_two_stack_algorithm(equation=%s): opr → %s", equation, opr, extra={"event.action": "dijkstras_two_stack_algorithm", "logrite.equation": equation})
             operator_stack.pop()
             num1 = operand_stack.peek()
+            logger.error("dijkstras_two_stack_algorithm(equation=%s): num1 → %s", equation, num1, extra={"event.action": "dijkstras_two_stack_algorithm", "logrite.equation": equation})
             operand_stack.pop()
             num2 = operand_stack.peek()
+            logger.error("dijkstras_two_stack_algorithm(equation=%s): num2 → %s", equation, num2, extra={"event.action": "dijkstras_two_stack_algorithm", "logrite.equation": equation})
             operand_stack.pop()
 
             total = operators[opr](num2, num1)
+            logger.error("dijkstras_two_stack_algorithm(equation=%s): total → %s", equation, total, extra={"event.action": "dijkstras_two_stack_algorithm", "logrite.equation": equation})
             operand_stack.push(total)
 
     # RULE 5
+    logger.warning("<<< Exiting dijkstras_two_stack_algorithm(equation=%s)", equation, extra={"event.action": "dijkstras_two_stack_algorithm", "logrite.equation": equation})
     return operand_stack.peek()
 
 

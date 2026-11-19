@@ -10,6 +10,8 @@ Therefore any chain that arrives at 1 or 89 will become stuck in an endless loop
 What is most amazing is that EVERY starting number will eventually arrive at 1 or 89.
 How many starting numbers below ten million will arrive at 89?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 DIGITS_SQUARED = [sum(int(c, 10) ** 2 for c in i.__str__()) for i in range(100000)]
 
@@ -27,6 +29,7 @@ def next_number(number: int) -> int:
     >>> next_number(32)
     13
     """
+    logger.error(">>> Entering next_number(number=%s)", number, extra={"event.action": "next_number", "logrite.number": number})
 
     sum_of_digits_squared = 0
     while number:
@@ -34,6 +37,7 @@ def next_number(number: int) -> int:
         sum_of_digits_squared += DIGITS_SQUARED[number % 100000]
         number //= 100000
 
+    logger.warning("<<< Exiting next_number(number=%s)", number, extra={"event.action": "next_number", "logrite.number": number})
     return sum_of_digits_squared
 
 
@@ -66,6 +70,7 @@ def chain(number: int) -> bool:
     >>> chain(1)
     True
     """
+    logger.error(">>> Entering chain(number=%s)", number, extra={"event.action": "chain", "logrite.number": number})
 
     if CHAINS[number - 1] is not None:
         return CHAINS[number - 1]  # type: ignore[return-value]
@@ -77,6 +82,7 @@ def chain(number: int) -> bool:
         CHAINS[number - 1] = number_chain
         number *= 10
 
+    logger.warning("<<< Exiting chain(number=%s)", number, extra={"event.action": "chain", "logrite.number": number})
     return number_chain
 
 
@@ -91,10 +97,12 @@ def solution(number: int = 10000000) -> int:
     >>> solution(10000000)
     8581146
     """
+    logger.error(">>> Entering solution(number=%s)", number, extra={"event.action": "solution", "logrite.number": number})
     for i in range(1, number):
         if CHAINS[i] is None:
             chain(i + 1)
 
+    logger.warning("<<< Exiting solution(number=%s)", number, extra={"event.action": "solution", "logrite.number": number})
     return CHAINS[:number].count(False)
 
 

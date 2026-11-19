@@ -5,6 +5,8 @@ Reference :  https://en.wikipedia.org/wiki/Geometric_mean
 Geometric series
 Reference: https://en.wikipedia.org/wiki/Geometric_series
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_geometric_series(series: list) -> bool:
@@ -27,6 +29,7 @@ def is_geometric_series(series: list) -> bool:
         ...
     ValueError: Input series is not valid, valid series - [2, 4, 8]
     """
+    logger.error(">>> Entering is_geometric_series(series=%s)", series, extra={"event.action": "is_geometric_series", "logrite.series": series})
     if not isinstance(series, list):
         raise ValueError("Input series is not valid, valid series - [2, 4, 8]")
     if len(series) == 0:
@@ -39,7 +42,9 @@ def is_geometric_series(series: list) -> bool:
             if series[index + 1] / series[index] != common_ratio:
                 return False
     except ZeroDivisionError:
+        logger.error("Exception in is_geometric_series(series=%s)", series, exc_info=True, extra={"event.action": "is_geometric_series", "event.category": "process", "logrite.series": series})
         return False
+    logger.warning("<<< Exiting is_geometric_series(series=%s)", series, extra={"event.action": "is_geometric_series", "logrite.series": series})
     return True
 
 
@@ -67,6 +72,7 @@ def geometric_mean(series: list) -> float:
     ValueError: Input list must be a non empty list
 
     """
+    logger.error(">>> Entering geometric_mean(series=%s)", series, extra={"event.action": "geometric_mean", "logrite.series": series})
     if not isinstance(series, list):
         raise ValueError("Input series is not valid, valid series - [2, 4, 8]")
     if len(series) == 0:
@@ -74,6 +80,7 @@ def geometric_mean(series: list) -> float:
     answer = 1
     for value in series:
         answer *= value
+    logger.warning("<<< Exiting geometric_mean(series=%s)", series, extra={"event.action": "geometric_mean", "logrite.series": series})
     return pow(answer, 1 / len(series))
 
 

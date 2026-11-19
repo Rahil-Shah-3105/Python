@@ -20,6 +20,8 @@ Source :
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 # Define the Gravitational Constant G and the function
 GRAVITATIONAL_CONSTANT = 6.6743e-11  # unit of G : m^3 * kg^-1 * s^-2
@@ -28,6 +30,7 @@ GRAVITATIONAL_CONSTANT = 6.6743e-11  # unit of G : m^3 * kg^-1 * s^-2
 def gravitational_law(
     force: float, mass_1: float, mass_2: float, distance: float
 ) -> dict[str, float]:
+    logger.error(">>> Entering gravitational_law(force=%s,mass_1=%s,mass_2=%s,distance=%s)", force, mass_1, mass_2, distance, extra={"event.action": "gravitational_law", "logrite.force": force, "logrite.mass_1": mass_1, "logrite.mass_2": mass_2, "logrite.distance": distance})
     """
     Input Parameters
     ----------------
@@ -79,16 +82,21 @@ def gravitational_law(
         raise ValueError("Mass can not be negative")
     if force == 0:
         force = GRAVITATIONAL_CONSTANT * product_of_mass / (distance**2)
+        logger.error("gravitational_law(force=%s,mass_1=%s,mass_2=%s,distance=%s): force → %s", force, mass_1, mass_2, distance, force, extra={"event.action": "gravitational_law", "logrite.force": force, "logrite.mass_1": mass_1, "logrite.mass_2": mass_2, "logrite.distance": distance})
         return {"force": force}
     elif mass_1 == 0:
         mass_1 = (force) * (distance**2) / (GRAVITATIONAL_CONSTANT * mass_2)
+        logger.error("gravitational_law(force=%s,mass_1=%s,mass_2=%s,distance=%s): mass_1 → %s", force, mass_1, mass_2, distance, mass_1, extra={"event.action": "gravitational_law", "logrite.force": force, "logrite.mass_1": mass_1, "logrite.mass_2": mass_2, "logrite.distance": distance})
         return {"mass_1": mass_1}
     elif mass_2 == 0:
         mass_2 = (force) * (distance**2) / (GRAVITATIONAL_CONSTANT * mass_1)
+        logger.error("gravitational_law(force=%s,mass_1=%s,mass_2=%s,distance=%s): mass_2 → %s", force, mass_1, mass_2, distance, mass_2, extra={"event.action": "gravitational_law", "logrite.force": force, "logrite.mass_1": mass_1, "logrite.mass_2": mass_2, "logrite.distance": distance})
         return {"mass_2": mass_2}
     elif distance == 0:
         distance = (GRAVITATIONAL_CONSTANT * product_of_mass / (force)) ** 0.5
+        logger.error("gravitational_law(force=%s,mass_1=%s,mass_2=%s,distance=%s): distance → %s", force, mass_1, mass_2, distance, distance, extra={"event.action": "gravitational_law", "logrite.force": force, "logrite.mass_1": mass_1, "logrite.mass_2": mass_2, "logrite.distance": distance})
         return {"distance": distance}
+    logger.warning("<<< Exiting gravitational_law(force=%s,mass_1=%s,mass_2=%s,distance=%s)", force, mass_1, mass_2, distance, extra={"event.action": "gravitational_law", "logrite.force": force, "logrite.mass_1": mass_1, "logrite.mass_2": mass_2, "logrite.distance": distance})
     raise ValueError("One and only one argument must be 0")
 
 

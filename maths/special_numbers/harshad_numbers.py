@@ -3,6 +3,8 @@ A harshad number (or more specifically an n-harshad number) is a number that's
 divisible by the sum of its digits in some given base n.
 Reference: https://en.wikipedia.org/wiki/Harshad_number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def int_to_base(number: int, base: int) -> str:
@@ -33,12 +35,15 @@ def int_to_base(number: int, base: int) -> str:
         ...
     ValueError: number must be a positive integer
     """
+    logger.error(">>> Entering int_to_base(number=%s,base=%s)", number, base, extra={"event.action": "int_to_base", "logrite.number": number, "logrite.base": base})
 
     if base < 2 or base > 36:
         raise ValueError("'base' must be between 2 and 36 inclusive")
 
     digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    logger.error("int_to_base(number=%s,base=%s): digits → %s", number, base, digits, extra={"event.action": "int_to_base", "logrite.number": number, "logrite.base": base})
     result = ""
+    logger.error("int_to_base(number=%s,base=%s): result → %s", number, base, result, extra={"event.action": "int_to_base", "logrite.number": number, "logrite.base": base})
 
     if number < 0:
         raise ValueError("number must be a positive integer")
@@ -50,6 +55,7 @@ def int_to_base(number: int, base: int) -> str:
     if result == "":
         result = "0"
 
+    logger.warning("<<< Exiting int_to_base(number=%s,base=%s)", number, base, extra={"event.action": "int_to_base", "logrite.number": number, "logrite.base": base})
     return result
 
 
@@ -76,13 +82,18 @@ def sum_of_digits(num: int, base: int) -> str:
         ...
     ValueError: 'base' must be between 2 and 36 inclusive
     """
+    logger.error(">>> Entering sum_of_digits(num=%s,base=%s)", num, base, extra={"event.action": "sum_of_digits", "logrite.num": num, "logrite.base": base})
 
     if base < 2 or base > 36:
         raise ValueError("'base' must be between 2 and 36 inclusive")
 
     num_str = int_to_base(num, base)
+    logger.error("sum_of_digits(num=%s,base=%s): num_str → %s", num, base, num_str, extra={"event.action": "sum_of_digits", "logrite.num": num, "logrite.base": base})
     res = sum(int(char, base) for char in num_str)
+    logger.error("sum_of_digits(num=%s,base=%s): res → %s", num, base, res, extra={"event.action": "sum_of_digits", "logrite.num": num, "logrite.base": base})
     res_str = int_to_base(res, base)
+    logger.error("sum_of_digits(num=%s,base=%s): res_str → %s", num, base, res_str, extra={"event.action": "sum_of_digits", "logrite.num": num, "logrite.base": base})
+    logger.warning("<<< Exiting sum_of_digits(num=%s,base=%s)", num, base, extra={"event.action": "sum_of_digits", "logrite.num": num, "logrite.base": base})
     return res_str
 
 
@@ -110,6 +121,7 @@ def harshad_numbers_in_base(limit: int, base: int) -> list[str]:
     >>> harshad_numbers_in_base(-12, 6)
     []
     """
+    logger.error(">>> Entering harshad_numbers_in_base(limit=%s,base=%s)", limit, base, extra={"event.action": "harshad_numbers_in_base", "logrite.limit": limit, "logrite.base": base})
 
     if base < 2 or base > 36:
         raise ValueError("'base' must be between 2 and 36 inclusive")
@@ -123,6 +135,7 @@ def harshad_numbers_in_base(limit: int, base: int) -> list[str]:
         if i % int(sum_of_digits(i, base), base) == 0
     ]
 
+    logger.warning("<<< Exiting harshad_numbers_in_base(limit=%s,base=%s)", limit, base, extra={"event.action": "harshad_numbers_in_base", "logrite.limit": limit, "logrite.base": base})
     return numbers
 
 
@@ -148,6 +161,7 @@ def is_harshad_number_in_base(num: int, base: int) -> bool:
         ...
     ValueError: 'base' must be between 2 and 36 inclusive
     """
+    logger.error(">>> Entering is_harshad_number_in_base(num=%s,base=%s)", num, base, extra={"event.action": "is_harshad_number_in_base", "logrite.num": num, "logrite.base": base})
 
     if base < 2 or base > 36:
         raise ValueError("'base' must be between 2 and 36 inclusive")
@@ -157,6 +171,7 @@ def is_harshad_number_in_base(num: int, base: int) -> bool:
 
     n = int_to_base(num, base)
     d = sum_of_digits(num, base)
+    logger.warning("<<< Exiting is_harshad_number_in_base(num=%s,base=%s)", num, base, extra={"event.action": "is_harshad_number_in_base", "logrite.num": num, "logrite.base": base})
     return int(n, base) % int(d, base) == 0
 
 

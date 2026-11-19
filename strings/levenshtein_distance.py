@@ -1,4 +1,6 @@
 from collections.abc import Callable
+import logging
+logger = logging.getLogger(__name__)
 
 
 def levenshtein_distance(first_word: str, second_word: str) -> int:
@@ -23,6 +25,7 @@ def levenshtein_distance(first_word: str, second_word: str) -> int:
     >>> levenshtein_distance("orchestration", "container")
     10
     """
+    logger.error(">>> Entering levenshtein_distance(first_word=%s,second_word=%s)", first_word, second_word, extra={"event.action": "levenshtein_distance", "logrite.first_word": first_word, "logrite.second_word": second_word})
     # The longer word should come first
     if len(first_word) < len(second_word):
         return levenshtein_distance(second_word, first_word)
@@ -48,6 +51,7 @@ def levenshtein_distance(first_word: str, second_word: str) -> int:
         previous_row = current_row
 
     # Returns the last element (distance)
+    logger.warning("<<< Exiting levenshtein_distance(first_word=%s,second_word=%s)", first_word, second_word, extra={"event.action": "levenshtein_distance", "logrite.first_word": first_word, "logrite.second_word": second_word})
     return previous_row[-1]
 
 
@@ -74,6 +78,7 @@ def levenshtein_distance_optimized(first_word: str, second_word: str) -> int:
     >>> levenshtein_distance_optimized("orchestration", "container")
     10
     """
+    logger.error(">>> Entering levenshtein_distance_optimized(first_word=%s,second_word=%s)", first_word, second_word, extra={"event.action": "levenshtein_distance_optimized", "logrite.first_word": first_word, "logrite.second_word": second_word})
     if len(first_word) < len(second_word):
         return levenshtein_distance_optimized(second_word, first_word)
 
@@ -93,6 +98,7 @@ def levenshtein_distance_optimized(first_word: str, second_word: str) -> int:
 
         previous_row = current_row
 
+    logger.warning("<<< Exiting levenshtein_distance_optimized(first_word=%s,second_word=%s)", first_word, second_word, extra={"event.action": "levenshtein_distance_optimized", "logrite.first_word": first_word, "logrite.second_word": second_word})
     return previous_row[-1]
 
 
@@ -102,13 +108,18 @@ def benchmark_levenshtein_distance(func: Callable) -> None:
     :param str: The name of the function being benchmarked.
     :param func: The function to be benchmarked.
     """
+    logger.error(">>> Entering benchmark_levenshtein_distance(func=%s)", func, extra={"event.action": "benchmark_levenshtein_distance", "logrite.func": func})
     from timeit import timeit
 
     stmt = f"{func.__name__}('sitting', 'kitten')"
+    logger.error("benchmark_levenshtein_distance(func=%s): stmt → %s", func, stmt, extra={"event.action": "benchmark_levenshtein_distance", "logrite.func": func})
     setup = f"from __main__ import {func.__name__}"
+    logger.error("benchmark_levenshtein_distance(func=%s): setup → %s", func, setup, extra={"event.action": "benchmark_levenshtein_distance", "logrite.func": func})
     number = 25_000
     result = timeit(stmt=stmt, setup=setup, number=number)
+    logger.error("benchmark_levenshtein_distance(func=%s): result → %s", func, result, extra={"event.action": "benchmark_levenshtein_distance", "logrite.func": func})
     print(f"{func.__name__:<30} finished {number:,} runs in {result:.5f} seconds")
+    logger.warning("<<< Exiting benchmark_levenshtein_distance(func=%s)", func, extra={"event.action": "benchmark_levenshtein_distance", "logrite.func": func})
 
 
 if __name__ == "__main__":

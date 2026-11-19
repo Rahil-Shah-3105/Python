@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solve_maze(
@@ -8,6 +10,7 @@ def solve_maze(
     destination_row: int,
     destination_column: int,
 ) -> list[list[int]]:
+    logger.error(">>> Entering solve_maze(maze=%s,source_row=%s,source_column=%s,destination_row=%s,destination_column=%s)", maze, source_row, source_column, destination_row, destination_column, extra={"event.action": "solve_maze", "logrite.maze": maze, "logrite.source_row": source_row, "logrite.source_column": source_column, "logrite.destination_row": destination_row, "logrite.destination_column": destination_column})
     """
     This method solves the "rat in maze" problem.
     Parameters :
@@ -120,6 +123,7 @@ def solve_maze(
     ValueError: Invalid source or destination coordinates
     """
     size = len(maze)
+    logger.error("solve_maze(maze=%s,source_row=%s,source_column=%s,destination_row=%s,destination_column=%s): size → %s", maze, source_row, source_column, destination_row, destination_column, size, extra={"event.action": "solve_maze", "logrite.maze": maze, "logrite.source_row": source_row, "logrite.source_column": source_column, "logrite.destination_row": destination_row, "logrite.destination_column": destination_column})
     # Check if source and destination coordinates are Invalid.
     if not (0 <= source_row <= size - 1 and 0 <= source_column <= size - 1) or (
         not (0 <= destination_row <= size - 1 and 0 <= destination_column <= size - 1)
@@ -127,12 +131,14 @@ def solve_maze(
         raise ValueError("Invalid source or destination coordinates")
     # We need to create solution object to save path.
     solutions = [[1 for _ in range(size)] for _ in range(size)]
+    logger.error("solve_maze(maze=%s,source_row=%s,source_column=%s,destination_row=%s,destination_column=%s): solutions → %s", maze, source_row, source_column, destination_row, destination_column, solutions, extra={"event.action": "solve_maze", "logrite.maze": maze, "logrite.source_row": source_row, "logrite.source_column": source_column, "logrite.destination_row": destination_row, "logrite.destination_column": destination_column})
     solved = run_maze(
         maze, source_row, source_column, destination_row, destination_column, solutions
     )
     if solved:
         return solutions
     else:
+        logger.warning("<<< Exiting solve_maze(maze=%s,source_row=%s,source_column=%s,destination_row=%s,destination_column=%s)", maze, source_row, source_column, destination_row, destination_column, extra={"event.action": "solve_maze", "logrite.maze": maze, "logrite.source_row": source_row, "logrite.source_column": source_column, "logrite.destination_row": destination_row, "logrite.destination_column": destination_column})
         raise ValueError("No solution exists!")
 
 
@@ -144,6 +150,7 @@ def run_maze(
     destination_column: int,
     solutions: list[list[int]],
 ) -> bool:
+    logger.error(">>> Entering run_maze(maze=%s,i=%s,j=%s,destination_row=%s,destination_column=%s,solutions=%s)", maze, i, j, destination_row, destination_column, solutions, extra={"event.action": "run_maze", "logrite.maze": maze, "logrite.i": i, "logrite.j": j, "logrite.destination_row": destination_row, "logrite.destination_column": destination_column, "logrite.solutions": solutions})
     """
     This method is recursive starting from (i, j) and going in one of four directions:
     up, down, left, right.
@@ -156,6 +163,7 @@ def run_maze(
         Boolean if path is found True, Otherwise False.
     """
     size = len(maze)
+    logger.error("run_maze(maze=%s,i=%s,j=%s,destination_row=%s,destination_column=%s,solutions=%s): size → %s", maze, i, j, destination_row, destination_column, solutions, size, extra={"event.action": "run_maze", "logrite.maze": maze, "logrite.i": i, "logrite.j": j, "logrite.destination_row": destination_row, "logrite.destination_column": destination_column, "logrite.solutions": solutions})
     # Final check point.
     if i == destination_row and j == destination_column and maze[i][j] == 0:
         solutions[i][j] = 0
@@ -188,6 +196,7 @@ def run_maze(
 
             solutions[i][j] = 1
             return False
+    logger.warning("<<< Exiting run_maze(maze=%s,i=%s,j=%s,destination_row=%s,destination_column=%s,solutions=%s)", maze, i, j, destination_row, destination_column, solutions, extra={"event.action": "run_maze", "logrite.maze": maze, "logrite.i": i, "logrite.j": j, "logrite.destination_row": destination_row, "logrite.destination_column": destination_column, "logrite.solutions": solutions})
     return False
 
 

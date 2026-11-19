@@ -8,11 +8,14 @@ consecutive digits of n have a sum greater than 9?
 
 Brute-force recursive solution with caching of intermediate results.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solve(
     digit: int, prev1: int, prev2: int, sum_max: int, first: bool, cache: dict[str, int]
 ) -> int:
+    logger.error(">>> Entering solve(digit=%s,prev1=%s,prev2=%s,sum_max=%s,first=%s,cache=%s)", digit, prev1, prev2, sum_max, first, cache, extra={"event.action": "solve", "logrite.digit": digit, "logrite.prev1": prev1, "logrite.prev2": prev2, "logrite.sum_max": sum_max, "logrite.first": first, "logrite.cache": cache})
     """
     Solve for remaining 'digit' digits, with previous 'prev1' digit, and
     previous-previous 'prev2' digit, total sum of 'sum_max'.
@@ -45,6 +48,7 @@ def solve(
         )
 
     cache[cache_str] = comb
+    logger.warning("<<< Exiting solve(digit=%s,prev1=%s,prev2=%s,sum_max=%s,first=%s,cache=%s)", digit, prev1, prev2, sum_max, first, cache, extra={"event.action": "solve", "logrite.digit": digit, "logrite.prev1": prev1, "logrite.prev2": prev2, "logrite.sum_max": sum_max, "logrite.first": first, "logrite.cache": cache})
     return comb
 
 
@@ -57,7 +61,9 @@ def solution(n_digits: int = 20) -> int:
     >>> solution(10)
     21838806
     """
+    logger.error(">>> Entering solution(n_digits=%s)", n_digits, extra={"event.action": "solution", "logrite.n_digits": n_digits})
     cache: dict[str, int] = {}
+    logger.warning("<<< Exiting solution(n_digits=%s)", n_digits, extra={"event.action": "solution", "logrite.n_digits": n_digits})
     return solve(digit=n_digits, prev1=0, prev2=0, sum_max=9, first=True, cache=cache)
 
 

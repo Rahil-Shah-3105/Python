@@ -9,15 +9,20 @@ where n denotes the length of the given sequence.
 from __future__ import annotations
 
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 def generate_all_subsequences(sequence: list[Any]) -> None:
+    logger.error(">>> Entering generate_all_subsequences(sequence=%s)", sequence, extra={"event.action": "generate_all_subsequences", "logrite.sequence": sequence})
     create_state_space_tree(sequence, [], 0)
+    logger.warning("<<< Exiting generate_all_subsequences(sequence=%s)", sequence, extra={"event.action": "generate_all_subsequences", "logrite.sequence": sequence})
 
 
 def create_state_space_tree(
     sequence: list[Any], current_subsequence: list[Any], index: int
 ) -> None:
+    logger.error(">>> Entering create_state_space_tree(sequence=%s,current_subsequence=%s,index=%s)", sequence, current_subsequence, index, extra={"event.action": "create_state_space_tree", "logrite.sequence": sequence, "logrite.current_subsequence": current_subsequence, "logrite.index": index})
     """
     Creates a state space tree to iterate through each branch using DFS.
     We know that each state has exactly two children.
@@ -76,6 +81,7 @@ def create_state_space_tree(
 
     if index == len(sequence):
         print(current_subsequence)
+        logger.warning("<<< Exiting create_state_space_tree(sequence=%s,current_subsequence=%s,index=%s)", sequence, current_subsequence, index, extra={"event.action": "create_state_space_tree", "logrite.sequence": sequence, "logrite.current_subsequence": current_subsequence, "logrite.index": index})
         return
 
     create_state_space_tree(sequence, current_subsequence, index + 1)

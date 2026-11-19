@@ -13,6 +13,8 @@ How many primes below one million have this remarkable property?
 """
 
 from math import isqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -25,7 +27,9 @@ def is_prime(number: int) -> bool:
     >>> is_prime(4)
     False
     """
+    logger.error(">>> Entering is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
 
+    logger.warning("<<< Exiting is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
     return all(number % divisor != 0 for divisor in range(2, isqrt(number) + 1))
 
 
@@ -36,6 +40,7 @@ def solution(max_prime: int = 10**6) -> int:
     >>> solution(100)
     4
     """
+    logger.error(">>> Entering solution(max_prime=%s)", max_prime, extra={"event.action": "solution", "logrite.max_prime": max_prime})
 
     primes_count = 0
     cube_index = 1
@@ -46,6 +51,7 @@ def solution(max_prime: int = 10**6) -> int:
         cube_index += 1
         prime_candidate += 6 * cube_index
 
+    logger.warning("<<< Exiting solution(max_prime=%s)", max_prime, extra={"event.action": "solution", "logrite.max_prime": max_prime})
     return primes_count
 
 

@@ -36,6 +36,8 @@ Brute force solution, with caching intermediate steps to speed up the calculatio
 
 import numpy as np
 from numpy.typing import NDArray
+import logging
+logger = logging.getLogger(__name__)
 
 MATRIX_1 = [
     "7 53 183 439 863",
@@ -72,8 +74,10 @@ def solve(arr: NDArray, row: int, cols: set[int], cache: dict[str, int]) -> int:
     >>> solve(arr=np.array([[1, 2], [3, 4]]), row=0, cols={0, 1}, cache={})
     5
     """
+    logger.error(">>> Entering solve(arr=%s,row=%s,cols=%s,cache=%s)", arr, row, cols, cache, extra={"event.action": "solve", "logrite.arr": arr, "logrite.row": row, "logrite.cols": cols, "logrite.cache": cache})
 
     cache_id = f"{row}, {sorted(cols)}"
+    logger.error("solve(arr=%s,row=%s,cols=%s,cache=%s): cache_id → %s", arr, row, cols, cache, cache_id, extra={"event.action": "solve", "logrite.arr": arr, "logrite.row": row, "logrite.cols": cols, "logrite.cache": cache})
     if cache_id in cache:
         return cache[cache_id]
 
@@ -89,6 +93,7 @@ def solve(arr: NDArray, row: int, cols: set[int], cache: dict[str, int]) -> int:
             + solve(arr=arr, row=row + 1, cols=new_cols, cache=cache),
         )
     cache[cache_id] = max_sum
+    logger.warning("<<< Exiting solve(arr=%s,row=%s,cols=%s,cache=%s)", arr, row, cols, cache, extra={"event.action": "solve", "logrite.arr": arr, "logrite.row": row, "logrite.cols": cols, "logrite.cache": cache})
     return max_sum
 
 
@@ -101,15 +106,20 @@ def solution(matrix_str: list[str] = MATRIX_2) -> int:
     >>> solution(MATRIX_1)
     3315
     """
+    logger.error(">>> Entering solution(matrix_str=%s)", matrix_str, extra={"event.action": "solution", "logrite.matrix_str": matrix_str})
 
     n = len(matrix_str)
+    logger.error("solution(matrix_str=%s): n → %s", matrix_str, n, extra={"event.action": "solution", "logrite.matrix_str": matrix_str})
     arr = np.empty(shape=(n, n), dtype=int)
+    logger.error("solution(matrix_str=%s): arr → %s", matrix_str, arr, extra={"event.action": "solution", "logrite.matrix_str": matrix_str})
     for row, matrix_row_str in enumerate(matrix_str):
         matrix_row_list_str = matrix_row_str.split()
+        logger.error("solution(matrix_str=%s): matrix_row_list_str → %s", matrix_str, matrix_row_list_str, extra={"event.action": "solution", "logrite.matrix_str": matrix_str})
         for col, elem_str in enumerate(matrix_row_list_str):
             arr[row, col] = int(elem_str)
 
     cache: dict[str, int] = {}
+    logger.warning("<<< Exiting solution(matrix_str=%s)", matrix_str, extra={"event.action": "solution", "logrite.matrix_str": matrix_str})
     return solve(arr=arr, row=0, cols=set(range(n)), cache=cache)
 
 

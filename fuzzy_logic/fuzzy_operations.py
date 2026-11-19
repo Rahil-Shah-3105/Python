@@ -10,6 +10,8 @@ from dataclasses import dataclass
 
 import matplotlib.pyplot as plt
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -70,6 +72,8 @@ class FuzzySet:
         >>> FuzzySet("fuzzy_set", 0.1, 0.2, 0.3)
         FuzzySet(name='fuzzy_set', left_boundary=0.1, peak=0.2, right_boundary=0.3)
         """
+        logger.error(">>> Entering __str__()", extra={"event.action": "__str__"})
+        logger.warning("<<< Exiting __str__()", extra={"event.action": "__str__"})
         return (
             f"{self.name}: [{self.left_boundary}, {self.peak}, {self.right_boundary}]"
         )
@@ -83,6 +87,8 @@ class FuzzySet:
         >>> FuzzySet("fuzzy_set", 0.1, 0.2, 0.3).complement()
         FuzzySet(name='¬fuzzy_set', left_boundary=0.7, peak=0.9, right_boundary=0.8)
         """
+        logger.error(">>> Entering complement()", extra={"event.action": "complement"})
+        logger.warning("<<< Exiting complement()", extra={"event.action": "complement"})
         return FuzzySet(
             f"¬{self.name}",
             1 - self.right_boundary,
@@ -102,6 +108,8 @@ class FuzzySet:
         >>> FuzzySet("a", 0.1, 0.2, 0.3).intersection(FuzzySet("b", 0.4, 0.5, 0.6))
         FuzzySet(name='a ∩ b', left_boundary=0.4, peak=0.3, right_boundary=0.35)
         """
+        logger.error(">>> Entering intersection(other=%s)", other, extra={"event.action": "intersection", "logrite.other": other})
+        logger.warning("<<< Exiting intersection(other=%s)", other, extra={"event.action": "intersection", "logrite.other": other})
         return FuzzySet(
             f"{self.name} ∩ {other.name}",
             max(self.left_boundary, other.left_boundary),
@@ -129,11 +137,13 @@ class FuzzySet:
         >>> FuzzySet("B", 0.2, 0.7, 1).membership(0.6)
         0.8
         """
+        logger.error(">>> Entering membership(x=%s)", x, extra={"event.action": "membership", "logrite.x": x})
         if x <= self.left_boundary or x >= self.right_boundary:
             return 0.0
         elif self.left_boundary < x <= self.peak:
             return (x - self.left_boundary) / (self.peak - self.left_boundary)
         elif self.peak < x < self.right_boundary:
+            logger.warning("<<< Exiting membership(x=%s)", x, extra={"event.action": "membership", "logrite.x": x})
             return (self.right_boundary - x) / (self.right_boundary - self.peak)
         msg = f"Invalid value {x} for fuzzy set {self}"
         raise ValueError(msg)
@@ -149,6 +159,8 @@ class FuzzySet:
         >>> FuzzySet("a", 0.1, 0.2, 0.3).union(FuzzySet("b", 0.4, 0.5, 0.6))
         FuzzySet(name='a U b', left_boundary=0.1, peak=0.6, right_boundary=0.35)
         """
+        logger.error(">>> Entering union(other=%s)", other, extra={"event.action": "union", "logrite.other": other})
+        logger.warning("<<< Exiting union(other=%s)", other, extra={"event.action": "union", "logrite.other": other})
         return FuzzySet(
             f"{self.name} U {other.name}",
             min(self.left_boundary, other.left_boundary),
@@ -160,10 +172,14 @@ class FuzzySet:
         """
         Plot the membership function of the fuzzy set.
         """
+        logger.error(">>> Entering plot()", extra={"event.action": "plot"})
         x = np.linspace(0, 1, 1000)
+        logger.error("plot(): x → %s", x, extra={"event.action": "plot"})
         y = [self.membership(xi) for xi in x]
+        logger.error("plot(): y → %s", y, extra={"event.action": "plot"})
 
         plt.plot(x, y, label=self.name)
+        logger.warning("<<< Exiting plot()", extra={"event.action": "plot"})
 
 
 if __name__ == "__main__":

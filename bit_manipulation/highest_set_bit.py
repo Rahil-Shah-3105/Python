@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def get_highest_set_bit_position(number: int) -> int:
     """
     Returns position of the highest set bit of a number.
@@ -17,6 +19,7 @@ def get_highest_set_bit_position(number: int) -> int:
         ...
     TypeError: Input value must be an 'int' type
     """
+    logger.error(">>> Entering get_highest_set_bit_position(number=%s)", number, extra={"event.action": "get_highest_set_bit_position", "logrite.number": number})
     if not isinstance(number, int):
         raise TypeError("Input value must be an 'int' type")
 
@@ -25,6 +28,7 @@ def get_highest_set_bit_position(number: int) -> int:
         position += 1
         number >>= 1
 
+    logger.warning("<<< Exiting get_highest_set_bit_position(number=%s)", number, extra={"event.action": "get_highest_set_bit_position", "logrite.number": number})
     return position
 
 

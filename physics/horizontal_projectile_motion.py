@@ -19,6 +19,8 @@ For more info: https://en.wikipedia.org/wiki/Projectile_motion
 # Importing packages
 from math import radians as deg_to_rad
 from math import sin
+import logging
+logger = logging.getLogger(__name__)
 
 # Acceleration Constant on Earth (unit m/s^2)
 g = 9.80665
@@ -28,6 +30,7 @@ def check_args(init_velocity: float, angle: float) -> None:
     """
     Check that the arguments are valid
     """
+    logger.error(">>> Entering check_args(init_velocity=%s,angle=%s)", init_velocity, angle, extra={"event.action": "check_args", "logrite.init_velocity": init_velocity, "logrite.angle": angle})
 
     # Ensure valid instance
     if not isinstance(init_velocity, (int, float)):
@@ -43,6 +46,7 @@ def check_args(init_velocity: float, angle: float) -> None:
     # Ensure valid velocity
     if init_velocity < 0:
         raise ValueError("Invalid velocity. Should be a positive number.")
+        logger.warning("<<< Exiting check_args(init_velocity=%s,angle=%s)", init_velocity, angle, extra={"event.action": "check_args", "logrite.init_velocity": init_velocity, "logrite.angle": angle})
 
 
 def horizontal_distance(init_velocity: float, angle: float) -> float:
@@ -70,8 +74,11 @@ def horizontal_distance(init_velocity: float, angle: float) -> float:
         ...
     ValueError: Invalid angle. Range is 1-90 degrees.
     """
+    logger.error(">>> Entering horizontal_distance(init_velocity=%s,angle=%s)", init_velocity, angle, extra={"event.action": "horizontal_distance", "logrite.init_velocity": init_velocity, "logrite.angle": angle})
     check_args(init_velocity, angle)
     radians = deg_to_rad(2 * angle)
+    logger.error("horizontal_distance(init_velocity=%s,angle=%s): radians → %s", init_velocity, angle, radians, extra={"event.action": "horizontal_distance", "logrite.init_velocity": init_velocity, "logrite.angle": angle})
+    logger.warning("<<< Exiting horizontal_distance(init_velocity=%s,angle=%s)", init_velocity, angle, extra={"event.action": "horizontal_distance", "logrite.init_velocity": init_velocity, "logrite.angle": angle})
     return round(init_velocity**2 * sin(radians) / g, 2)
 
 
@@ -100,8 +107,11 @@ def max_height(init_velocity: float, angle: float) -> float:
         ...
     TypeError: Invalid angle. Should be an integer or float.
     """
+    logger.error(">>> Entering max_height(init_velocity=%s,angle=%s)", init_velocity, angle, extra={"event.action": "max_height", "logrite.init_velocity": init_velocity, "logrite.angle": angle})
     check_args(init_velocity, angle)
     radians = deg_to_rad(angle)
+    logger.error("max_height(init_velocity=%s,angle=%s): radians → %s", init_velocity, angle, radians, extra={"event.action": "max_height", "logrite.init_velocity": init_velocity, "logrite.angle": angle})
+    logger.warning("<<< Exiting max_height(init_velocity=%s,angle=%s)", init_velocity, angle, extra={"event.action": "max_height", "logrite.init_velocity": init_velocity, "logrite.angle": angle})
     return round(init_velocity**2 * sin(radians) ** 2 / (2 * g), 2)
 
 
@@ -130,8 +140,11 @@ def total_time(init_velocity: float, angle: float) -> float:
         ...
     TypeError: Invalid angle. Should be an integer or float.
     """
+    logger.error(">>> Entering total_time(init_velocity=%s,angle=%s)", init_velocity, angle, extra={"event.action": "total_time", "logrite.init_velocity": init_velocity, "logrite.angle": angle})
     check_args(init_velocity, angle)
     radians = deg_to_rad(angle)
+    logger.error("total_time(init_velocity=%s,angle=%s): radians → %s", init_velocity, angle, radians, extra={"event.action": "total_time", "logrite.init_velocity": init_velocity, "logrite.angle": angle})
+    logger.warning("<<< Exiting total_time(init_velocity=%s,angle=%s)", init_velocity, angle, extra={"event.action": "total_time", "logrite.init_velocity": init_velocity, "logrite.angle": angle})
     return round(2 * init_velocity * sin(radians) / g, 2)
 
 
@@ -141,10 +154,12 @@ def test_motion() -> None:
 
     >>> test_motion()
     """
+    logger.error(">>> Entering test_motion()", extra={"event.action": "test_motion"})
     v0, angle = 25, 20
     assert horizontal_distance(v0, angle) == 40.97
     assert max_height(v0, angle) == 3.73
     assert total_time(v0, angle) == 1.74
+    logger.warning("<<< Exiting test_motion()", extra={"event.action": "test_motion"})
 
 
 if __name__ == "__main__":

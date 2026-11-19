@@ -1,6 +1,8 @@
 from math import log
 
 from scipy.constants import Boltzmann, physical_constants
+import logging
+logger = logging.getLogger(__name__)
 
 T = 300  # TEMPERATURE (unit = K)
 
@@ -10,6 +12,7 @@ def builtin_voltage(
     acceptor_conc: float,  # acceptor concentration
     intrinsic_conc: float,  # intrinsic concentration
 ) -> float:
+    logger.error(">>> Entering builtin_voltage(donor_conc=%s,float=%s,float=%s,concentration=%s)", donor_conc, float, float, concentration, extra={"event.action": "builtin_voltage", "logrite.donor_conc": donor_conc, "logrite.float": float, "logrite.concentration": concentration})
     """
     This function can calculate the Builtin Voltage of a pn junction diode.
     This is calculated from the given three values.
@@ -53,6 +56,7 @@ def builtin_voltage(
             "Acceptor concentration should be greater than intrinsic concentration"
         )
     else:
+        logger.warning("<<< Exiting builtin_voltage(donor_conc=%s,float=%s,float=%s,concentration=%s)", donor_conc, float, float, concentration, extra={"event.action": "builtin_voltage", "logrite.donor_conc": donor_conc, "logrite.float": float, "logrite.concentration": concentration})
         return (
             Boltzmann
             * T

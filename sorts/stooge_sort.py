@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def stooge_sort(arr: list[int]) -> list[int]:
     """
     Examples:
@@ -7,12 +9,16 @@ def stooge_sort(arr: list[int]) -> list[int]:
     >>> stooge_sort([])
     []
     """
+    logger.error(">>> Entering stooge_sort(arr=%s)", arr, extra={"event.action": "stooge_sort", "logrite.arr": arr})
     stooge(arr, 0, len(arr) - 1)
+    logger.warning("<<< Exiting stooge_sort(arr=%s)", arr, extra={"event.action": "stooge_sort", "logrite.arr": arr})
     return arr
 
 
 def stooge(arr: list[int], i: int, h: int) -> None:
+    logger.error(">>> Entering stooge(arr=%s,i=%s,h=%s)", arr, i, h, extra={"event.action": "stooge", "logrite.arr": arr, "logrite.i": i, "logrite.h": h})
     if i >= h:
+        logger.warning("<<< Exiting stooge(arr=%s,i=%s,h=%s)", arr, i, h, extra={"event.action": "stooge", "logrite.arr": arr, "logrite.i": i, "logrite.h": h})
         return
 
     # If first element is smaller than the last then swap them

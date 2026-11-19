@@ -13,6 +13,8 @@ n & (n - 1) - no intersections = 0
 If the number is a power of 4 then it should be a power of 2
 and the set bit should be at an odd position.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def power_of_4(number: int) -> bool:
@@ -47,6 +49,7 @@ def power_of_4(number: int) -> bool:
     TypeError: number must be an integer
 
     """
+    logger.error(">>> Entering power_of_4(number=%s)", number, extra={"event.action": "power_of_4", "logrite.number": number})
     if not isinstance(number, int):
         raise TypeError("number must be an integer")
     if number <= 0:
@@ -58,6 +61,7 @@ def power_of_4(number: int) -> bool:
             number >>= 1
         return c % 2 == 1
     else:
+        logger.warning("<<< Exiting power_of_4(number=%s)", number, extra={"event.action": "power_of_4", "logrite.number": number})
         return False
 
 

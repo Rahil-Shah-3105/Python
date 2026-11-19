@@ -14,6 +14,8 @@ References:
 
 import itertools
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -35,6 +37,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(1)
     False
     """
+    logger.error(">>> Entering is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -47,6 +50,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.warning("<<< Exiting is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
     return True
 
 
@@ -54,12 +58,14 @@ def prime_generator():
     """
     Generate a sequence of prime numbers
     """
+    logger.error(">>> Entering prime_generator()", extra={"event.action": "prime_generator"})
 
     num = 2
     while True:
         if is_prime(num):
             yield num
         num += 1
+        logger.warning("<<< Exiting prime_generator()", extra={"event.action": "prime_generator"})
 
 
 def solution(nth: int = 10001) -> int:
@@ -79,6 +85,8 @@ def solution(nth: int = 10001) -> int:
     >>> solution(100)
     541
     """
+    logger.error(">>> Entering solution(nth=%s)", nth, extra={"event.action": "solution", "logrite.nth": nth})
+    logger.warning("<<< Exiting solution(nth=%s)", nth, extra={"event.action": "solution", "logrite.nth": nth})
     return next(itertools.islice(prime_generator(), nth - 1, nth))
 
 

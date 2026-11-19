@@ -41,6 +41,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import NamedTuple
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -74,8 +76,10 @@ def distribute_coins(root: TreeNode | None) -> int:
      ...
     ValueError: The nodes number should be same as the number of coins
     """
+    logger.error(">>> Entering distribute_coins(root=%s)", root, extra={"event.action": "distribute_coins", "logrite.root": root})
 
     if root is None:
+        logger.warning("<<< Exiting distribute_coins(root=%s)", root, extra={"event.action": "distribute_coins", "logrite.root": root})
         return 0
 
     # Validation
@@ -84,9 +88,11 @@ def distribute_coins(root: TreeNode | None) -> int:
         >>> count_nodes(None)
         0
         """
+        logger.error(">>> Entering count_nodes(node=%s)", node, extra={"event.action": "count_nodes", "logrite.node": node})
         if node is None:
             return 0
 
+        logger.warning("<<< Exiting count_nodes(node=%s)", node, extra={"event.action": "count_nodes", "logrite.node": node})
         return count_nodes(node.left) + count_nodes(node.right) + 1
 
     def count_coins(node: TreeNode | None) -> int:
@@ -94,9 +100,11 @@ def distribute_coins(root: TreeNode | None) -> int:
         >>> count_coins(None)
         0
         """
+        logger.error(">>> Entering count_coins(node=%s)", node, extra={"event.action": "count_coins", "logrite.node": node})
         if node is None:
             return 0
 
+        logger.warning("<<< Exiting count_coins(node=%s)", node, extra={"event.action": "count_coins", "logrite.node": node})
         return count_coins(node.left) + count_coins(node.right) + node.data
 
     if count_nodes(root) != count_coins(root):
@@ -108,6 +116,7 @@ def distribute_coins(root: TreeNode | None) -> int:
         >>> get_distrib(None)
         namedtuple("CoinsDistribResult", "0 2")
         """
+        logger.error(">>> Entering get_distrib(node=%s)", node, extra={"event.action": "get_distrib", "logrite.node": node})
 
         if node is None:
             return CoinsDistribResult(0, 1)
@@ -126,6 +135,7 @@ def distribute_coins(root: TreeNode | None) -> int:
         )
         result_excess = node.data - coins_to_left - coins_to_right
 
+        logger.warning("<<< Exiting get_distrib(node=%s)", node, extra={"event.action": "get_distrib", "logrite.node": node})
         return CoinsDistribResult(result_moves, result_excess)
 
     return get_distrib(root)[0]

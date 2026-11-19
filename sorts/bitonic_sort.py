@@ -5,6 +5,8 @@ Note that this program works only when size of input is a power of 2.
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def comp_and_swap(array: list[int], index1: int, index2: int, direction: int) -> None:
@@ -32,10 +34,12 @@ def comp_and_swap(array: list[int], index1: int, index2: int, direction: int) ->
     >>> arr
     [12, 42, -21, 1]
     """
+    logger.error(">>> Entering comp_and_swap(array=%s,index1=%s,index2=%s,direction=%s)", array, index1, index2, direction, extra={"event.action": "comp_and_swap", "logrite.array": array, "logrite.index1": index1, "logrite.index2": index2, "logrite.direction": direction})
     if (direction == 1 and array[index1] > array[index2]) or (
         direction == 0 and array[index1] < array[index2]
     ):
         array[index1], array[index2] = array[index2], array[index1]
+        logger.warning("<<< Exiting comp_and_swap(array=%s,index1=%s,index2=%s,direction=%s)", array, index1, index2, direction, extra={"event.action": "comp_and_swap", "logrite.array": array, "logrite.index1": index1, "logrite.index2": index2, "logrite.direction": direction})
 
 
 def bitonic_merge(array: list[int], low: int, length: int, direction: int) -> None:
@@ -54,12 +58,15 @@ def bitonic_merge(array: list[int], low: int, length: int, direction: int) -> No
     >>> arr
     [42, 12, 1, -21]
     """
+    logger.error(">>> Entering bitonic_merge(array=%s,low=%s,length=%s,direction=%s)", array, low, length, direction, extra={"event.action": "bitonic_merge", "logrite.array": array, "logrite.low": low, "logrite.length": length, "logrite.direction": direction})
     if length > 1:
         middle = int(length / 2)
+        logger.error("bitonic_merge(array=%s,low=%s,length=%s,direction=%s): middle → %s", array, low, length, direction, middle, extra={"event.action": "bitonic_merge", "logrite.array": array, "logrite.low": low, "logrite.length": length, "logrite.direction": direction})
         for i in range(low, low + middle):
             comp_and_swap(array, i, i + middle, direction)
         bitonic_merge(array, low, middle, direction)
         bitonic_merge(array, low + middle, middle, direction)
+        logger.warning("<<< Exiting bitonic_merge(array=%s,low=%s,length=%s,direction=%s)", array, low, length, direction, extra={"event.action": "bitonic_merge", "logrite.array": array, "logrite.low": low, "logrite.length": length, "logrite.direction": direction})
 
 
 def bitonic_sort(array: list[int], low: int, length: int, direction: int) -> None:
@@ -77,11 +84,14 @@ def bitonic_sort(array: list[int], low: int, length: int, direction: int) -> Non
     >>> arr
     [145, 92, 34, 12, 0, -23, -121, -167]
     """
+    logger.error(">>> Entering bitonic_sort(array=%s,low=%s,length=%s,direction=%s)", array, low, length, direction, extra={"event.action": "bitonic_sort", "logrite.array": array, "logrite.low": low, "logrite.length": length, "logrite.direction": direction})
     if length > 1:
         middle = int(length / 2)
+        logger.error("bitonic_sort(array=%s,low=%s,length=%s,direction=%s): middle → %s", array, low, length, direction, middle, extra={"event.action": "bitonic_sort", "logrite.array": array, "logrite.low": low, "logrite.length": length, "logrite.direction": direction})
         bitonic_sort(array, low, middle, 1)
         bitonic_sort(array, low + middle, middle, 0)
         bitonic_merge(array, low, length, direction)
+        logger.warning("<<< Exiting bitonic_sort(array=%s,low=%s,length=%s,direction=%s)", array, low, length, direction, extra={"event.action": "bitonic_sort", "logrite.array": array, "logrite.low": low, "logrite.length": length, "logrite.direction": direction})
 
 
 if __name__ == "__main__":

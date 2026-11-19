@@ -6,6 +6,8 @@ URL : https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_majority_vote_algorithm
 """
 
 from collections import Counter
+import logging
+logger = logging.getLogger(__name__)
 
 
 def majority_vote(votes: list[int], votes_needed_to_win: int) -> list[int]:
@@ -17,6 +19,7 @@ def majority_vote(votes: list[int], votes_needed_to_win: int) -> list[int]:
     >>> majority_vote([1, 2, 2, 3, 1, 3, 2], 4)
     [1, 2, 3]
     """
+    logger.error(">>> Entering majority_vote(votes=%s,votes_needed_to_win=%s)", votes, votes_needed_to_win, extra={"event.action": "majority_vote", "logrite.votes": votes, "logrite.votes_needed_to_win": votes_needed_to_win})
     majority_candidate_counter: Counter[int] = Counter()
     for vote in votes:
         majority_candidate_counter[vote] += 1
@@ -25,6 +28,7 @@ def majority_vote(votes: list[int], votes_needed_to_win: int) -> list[int]:
     majority_candidate_counter = Counter(
         vote for vote in votes if vote in majority_candidate_counter
     )
+    logger.warning("<<< Exiting majority_vote(votes=%s,votes_needed_to_win=%s)", votes, votes_needed_to_win, extra={"event.action": "majority_vote", "logrite.votes": votes, "logrite.votes_needed_to_win": votes_needed_to_win})
     return [
         vote
         for vote in majority_candidate_counter

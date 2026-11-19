@@ -7,15 +7,19 @@ This container system holds integers at indexes.
 Further explained in this leetcode problem
 > https://leetcode.com/problems/minimum-cost-tree-from-leaf-values
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 class NumberContainer:
     def __init__(self) -> None:
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
         # numbermap keys are the number and its values are lists of indexes sorted
         # in ascending order
         self.numbermap: dict[int, list[int]] = {}
         # indexmap keys are an index and it's values are the number at that index
         self.indexmap: dict[int, int] = {}
+        logger.warning("<<< Exiting __init__()", extra={"event.action": "__init__"})
 
     def binary_search_delete(self, array: list | str | range, item: int) -> list[int]:
         """
@@ -51,9 +55,11 @@ class NumberContainer:
             ...
         TypeError: binary_search_delete() only accepts either a list, range or str
         """
+        logger.error(">>> Entering binary_search_delete(array=%s,item=%s)", array, item, extra={"event.action": "binary_search_delete", "logrite.array": array, "logrite.item": item})
         if isinstance(array, (range, str)):
             array = list(array)
         elif not isinstance(array, list):
+            logger.error("binary_search_delete(array=%s,item=%s): array → %s", array, item, array, extra={"event.action": "binary_search_delete", "logrite.array": array, "logrite.item": item})
             raise TypeError(
                 "binary_search_delete() only accepts either a list, range or str"
             )
@@ -63,10 +69,12 @@ class NumberContainer:
 
         while low <= high:
             mid = (low + high) // 2
+            logger.error("binary_search_delete(array=%s,item=%s): mid → %s", array, item, mid, extra={"event.action": "binary_search_delete", "logrite.array": array, "logrite.item": item})
             if array[mid] == item:
                 array.pop(mid)
                 return array
             elif array[mid] < item:
+                logger.warning("<<< Exiting binary_search_delete(array=%s,item=%s)", array, item, extra={"event.action": "binary_search_delete", "logrite.array": array, "logrite.item": item})
                 low = mid + 1
             else:
                 high = mid - 1
@@ -96,9 +104,11 @@ class NumberContainer:
             ...
         TypeError: binary_search_insert() only accepts either a list, range or str
         """
+        logger.error(">>> Entering binary_search_insert(array=%s,index=%s)", array, index, extra={"event.action": "binary_search_insert", "logrite.array": array, "logrite.index": index})
         if isinstance(array, (range, str)):
             array = list(array)
         elif not isinstance(array, list):
+            logger.error("binary_search_insert(array=%s,index=%s): array → %s", array, index, array, extra={"event.action": "binary_search_insert", "logrite.array": array, "logrite.index": index})
             raise TypeError(
                 "binary_search_insert() only accepts either a list, range or str"
             )
@@ -108,6 +118,7 @@ class NumberContainer:
 
         while low <= high:
             mid = (low + high) // 2
+            logger.error("binary_search_insert(array=%s,index=%s): mid → %s", array, index, mid, extra={"event.action": "binary_search_insert", "logrite.array": array, "logrite.index": index})
             if array[mid] == index:
                 # If the item already exists in the array,
                 # insert it after the existing item
@@ -120,6 +131,7 @@ class NumberContainer:
 
         # If the item doesn't exist in the array, insert it at the appropriate position
         array.insert(low, index)
+        logger.warning("<<< Exiting binary_search_insert(array=%s,index=%s)", array, index, extra={"event.action": "binary_search_insert", "logrite.array": array, "logrite.index": index})
         return array
 
     def change(self, index: int, number: int) -> None:
@@ -132,6 +144,7 @@ class NumberContainer:
         >>> cont.change(-13, 20)
         >>> cont.change(-100030, 20032903290)
         """
+        logger.error(">>> Entering change(index=%s,number=%s)", index, number, extra={"event.action": "change", "logrite.index": index, "logrite.number": number})
         # Remove previous index
         if index in self.indexmap:
             n = self.indexmap[index]
@@ -153,6 +166,7 @@ class NumberContainer:
             self.numbermap[number] = self.binary_search_insert(
                 self.numbermap[number], index
             )
+            logger.warning("<<< Exiting change(index=%s,number=%s)", index, number, extra={"event.action": "change", "logrite.index": index, "logrite.number": number})
 
     def find(self, number: int) -> int:
         """
@@ -170,7 +184,9 @@ class NumberContainer:
         >>> cont.find(20)
         0
         """
+        logger.error(">>> Entering find(number=%s)", number, extra={"event.action": "find", "logrite.number": number})
         # Simply return the 0th index (smallest) of the indexes found (or -1)
+        logger.warning("<<< Exiting find(number=%s)", number, extra={"event.action": "find", "logrite.number": number})
         return self.numbermap.get(number, [-1])[0]
 
 

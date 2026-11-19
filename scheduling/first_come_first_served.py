@@ -3,6 +3,8 @@
 # without carring about their duration time
 # https://en.wikipedia.org/wiki/Scheduling_(computing)#First_come,_first_served
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def calculate_waiting_times(duration_times: list[int]) -> list[int]:
@@ -17,15 +19,19 @@ def calculate_waiting_times(duration_times: list[int]) -> list[int]:
     >>> calculate_waiting_times([10, 3])
     [0, 10]
     """
+    logger.error(">>> Entering calculate_waiting_times(duration_times=%s)", duration_times, extra={"event.action": "calculate_waiting_times", "logrite.duration_times": duration_times})
     waiting_times = [0] * len(duration_times)
+    logger.error("calculate_waiting_times(duration_times=%s): waiting_times → %s", duration_times, waiting_times, extra={"event.action": "calculate_waiting_times", "logrite.duration_times": duration_times})
     for i in range(1, len(duration_times)):
         waiting_times[i] = duration_times[i - 1] + waiting_times[i - 1]
+    logger.warning("<<< Exiting calculate_waiting_times(duration_times=%s)", duration_times, extra={"event.action": "calculate_waiting_times", "logrite.duration_times": duration_times})
     return waiting_times
 
 
 def calculate_turnaround_times(
     duration_times: list[int], waiting_times: list[int]
 ) -> list[int]:
+    logger.error(">>> Entering calculate_turnaround_times(duration_times=%s,waiting_times=%s)", duration_times, waiting_times, extra={"event.action": "calculate_turnaround_times", "logrite.duration_times": duration_times, "logrite.waiting_times": waiting_times})
     """
     This function calculates the turnaround time of some processes.
         Return: The time difference between the completion time and the
@@ -38,6 +44,7 @@ def calculate_turnaround_times(
     >>> calculate_turnaround_times([10, 3], [0, 10])
     [10, 13]
     """
+    logger.warning("<<< Exiting calculate_turnaround_times(duration_times=%s,waiting_times=%s)", duration_times, waiting_times, extra={"event.action": "calculate_turnaround_times", "logrite.duration_times": duration_times, "logrite.waiting_times": waiting_times})
     return [
         duration_time + waiting_times[i]
         for i, duration_time in enumerate(duration_times)
@@ -55,6 +62,8 @@ def calculate_average_turnaround_time(turnaround_times: list[int]) -> float:
     >>> calculate_average_turnaround_time([10, 24])
     17.0
     """
+    logger.error(">>> Entering calculate_average_turnaround_time(turnaround_times=%s)", turnaround_times, extra={"event.action": "calculate_average_turnaround_time", "logrite.turnaround_times": turnaround_times})
+    logger.warning("<<< Exiting calculate_average_turnaround_time(turnaround_times=%s)", turnaround_times, extra={"event.action": "calculate_average_turnaround_time", "logrite.turnaround_times": turnaround_times})
     return sum(turnaround_times) / len(turnaround_times)
 
 
@@ -69,6 +78,8 @@ def calculate_average_waiting_time(waiting_times: list[int]) -> float:
     >>> calculate_average_waiting_time([10, 24])
     17.0
     """
+    logger.error(">>> Entering calculate_average_waiting_time(waiting_times=%s)", waiting_times, extra={"event.action": "calculate_average_waiting_time", "logrite.waiting_times": waiting_times})
+    logger.warning("<<< Exiting calculate_average_waiting_time(waiting_times=%s)", waiting_times, extra={"event.action": "calculate_average_waiting_time", "logrite.waiting_times": waiting_times})
     return sum(waiting_times) / len(waiting_times)
 
 

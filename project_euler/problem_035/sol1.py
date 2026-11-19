@@ -17,6 +17,8 @@ generate each circular combination of the number and check if all are prime.
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 sieve = [True] * 1000001
 i = 2
@@ -37,6 +39,8 @@ def is_prime(n: int) -> bool:
     >>> is_prime(25363)
     False
     """
+    logger.error(">>> Entering is_prime(n=%s)", n, extra={"event.action": "is_prime", "logrite.n": n})
+    logger.warning("<<< Exiting is_prime(n=%s)", n, extra={"event.action": "is_prime", "logrite.n": n})
     return sieve[n]
 
 
@@ -50,6 +54,8 @@ def contains_an_even_digit(n: int) -> bool:
     >>> contains_an_even_digit(-245679)
     True
     """
+    logger.error(">>> Entering contains_an_even_digit(n=%s)", n, extra={"event.action": "contains_an_even_digit", "logrite.n": n})
+    logger.warning("<<< Exiting contains_an_even_digit(n=%s)", n, extra={"event.action": "contains_an_even_digit", "logrite.n": n})
     return any(digit in "02468" for digit in str(n))
 
 
@@ -61,13 +67,18 @@ def find_circular_primes(limit: int = 1000000) -> list[int]:
     >>> len(find_circular_primes(1000000))
     55
     """
+    logger.error(">>> Entering find_circular_primes(limit=%s)", limit, extra={"event.action": "find_circular_primes", "logrite.limit": limit})
     result = [2]  # result already includes the number 2.
+    logger.error("find_circular_primes(limit=%s): result → %s", limit, result, extra={"event.action": "find_circular_primes", "logrite.limit": limit})
     for num in range(3, limit + 1, 2):
         if is_prime(num) and not contains_an_even_digit(num):
             str_num = str(num)
+            logger.error("find_circular_primes(limit=%s): str_num → %s", limit, str_num, extra={"event.action": "find_circular_primes", "logrite.limit": limit})
             list_nums = [int(str_num[j:] + str_num[:j]) for j in range(len(str_num))]
+            logger.error("find_circular_primes(limit=%s): list_nums → %s", limit, list_nums, extra={"event.action": "find_circular_primes", "logrite.limit": limit})
             if all(is_prime(i) for i in list_nums):
                 result.append(num)
+    logger.warning("<<< Exiting find_circular_primes(limit=%s)", limit, extra={"event.action": "find_circular_primes", "logrite.limit": limit})
     return result
 
 
@@ -76,6 +87,8 @@ def solution() -> int:
     >>> solution()
     55
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return len(find_circular_primes())
 
 

@@ -4,6 +4,8 @@ present in both of them.  A subsequence is a sequence that appears in the same r
 order, but not necessarily continuous.
 Example:"abc", "abg" are subsequences of "abcdefgh".
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def longest_common_subsequence(x: str, y: str):
@@ -47,16 +49,20 @@ def longest_common_subsequence(x: str, y: str):
     >>> longest_common_subsequence("ABCD", "ACBD")  # No repeated characters
     (3, 'ABD')
     """
+    logger.error(">>> Entering longest_common_subsequence(x=%s,y=%s)", x, y, extra={"event.action": "longest_common_subsequence", "logrite.x": x, "logrite.y": y})
     # find the length of strings
 
     assert x is not None
     assert y is not None
 
     m = len(x)
+    logger.error("longest_common_subsequence(x=%s,y=%s): m → %s", x, y, m, extra={"event.action": "longest_common_subsequence", "logrite.x": x, "logrite.y": y})
     n = len(y)
+    logger.error("longest_common_subsequence(x=%s,y=%s): n → %s", x, y, n, extra={"event.action": "longest_common_subsequence", "logrite.x": x, "logrite.y": y})
 
     # declaring the array for storing the dp values
     dp = [[0] * (n + 1) for _ in range(m + 1)]
+    logger.error("longest_common_subsequence(x=%s,y=%s): dp → %s", x, y, dp, extra={"event.action": "longest_common_subsequence", "logrite.x": x, "logrite.y": y})
 
     for i in range(1, m + 1):
         for j in range(1, n + 1):
@@ -79,6 +85,7 @@ def longest_common_subsequence(x: str, y: str):
         else:
             j -= 1
 
+    logger.warning("<<< Exiting longest_common_subsequence(x=%s,y=%s)", x, y, extra={"event.action": "longest_common_subsequence", "logrite.x": x, "logrite.y": y})
     return dp[m][n], seq
 
 

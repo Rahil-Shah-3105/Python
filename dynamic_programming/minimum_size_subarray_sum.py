@@ -1,4 +1,6 @@
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 
 def minimum_subarray_sum(target: int, numbers: list[int]) -> int:
@@ -39,6 +41,7 @@ def minimum_subarray_sum(target: int, numbers: list[int]) -> int:
         ...
     ValueError: numbers must be an iterable of integers
     """
+    logger.error(">>> Entering minimum_subarray_sum(target=%s,numbers=%s)", target, numbers, extra={"event.action": "minimum_subarray_sum", "logrite.target": target, "logrite.numbers": numbers})
     if not numbers:
         return 0
     if target == 0 and target in numbers:
@@ -59,4 +62,5 @@ def minimum_subarray_sum(target: int, numbers: list[int]) -> int:
             left += 1
         right += 1
 
+    logger.warning("<<< Exiting minimum_subarray_sum(target=%s,numbers=%s)", target, numbers, extra={"event.action": "minimum_subarray_sum", "logrite.target": target, "logrite.numbers": numbers})
     return 0 if min_len == sys.maxsize else min_len

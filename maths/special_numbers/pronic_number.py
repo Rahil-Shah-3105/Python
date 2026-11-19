@@ -6,6 +6,8 @@ there exists an integer m such that n = m * (m + 1)
 Examples of Proic Numbers: 0, 2, 6, 12, 20, 30, 42, 56, 72, 90, 110 ...
 https://en.wikipedia.org/wiki/Pronic_number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 # Author : Akshay Dubey (https://github.com/itsAkshayDubey)
 
@@ -40,12 +42,15 @@ def is_pronic(number: int) -> bool:
         ...
     TypeError: Input value of [number=6.0] must be an integer
     """
+    logger.error(">>> Entering is_pronic(number=%s)", number, extra={"event.action": "is_pronic", "logrite.number": number})
     if not isinstance(number, int):
         msg = f"Input value of [number={number}] must be an integer"
+        logger.error("is_pronic(number=%s): msg → %s", number, msg, extra={"event.action": "is_pronic", "logrite.number": number})
         raise TypeError(msg)
     if number < 0 or number % 2 == 1:
         return False
     number_sqrt = int(number**0.5)
+    logger.warning("<<< Exiting is_pronic(number=%s)", number, extra={"event.action": "is_pronic", "logrite.number": number})
     return number == number_sqrt * (number_sqrt + 1)
 
 

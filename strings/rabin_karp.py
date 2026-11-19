@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # Numbers of alphabet which we call base
 alphabet_size = 256
 # Modulus to hash a string
@@ -21,8 +23,11 @@ def rabin_karp(pattern: str, text: str) -> bool:
         calculating the hash of the text within the window compare it with the hash
         of the pattern. Only testing equality if the hashes match
     """
+    logger.error(">>> Entering rabin_karp(pattern=%s,text=%s)", pattern, text, extra={"event.action": "rabin_karp", "logrite.pattern": pattern, "logrite.text": text})
     p_len = len(pattern)
+    logger.error("rabin_karp(pattern=%s,text=%s): p_len → %s", pattern, text, p_len, extra={"event.action": "rabin_karp", "logrite.pattern": pattern, "logrite.text": text})
     t_len = len(text)
+    logger.error("rabin_karp(pattern=%s,text=%s): t_len → %s", pattern, text, t_len, extra={"event.action": "rabin_karp", "logrite.pattern": pattern, "logrite.text": text})
     if p_len > t_len:
         return False
 
@@ -48,6 +53,7 @@ def rabin_karp(pattern: str, text: str) -> bool:
             (text_hash - ord(text[i]) * modulus_power) * alphabet_size
             + ord(text[i + p_len])
         ) % modulus
+    logger.warning("<<< Exiting rabin_karp(pattern=%s,text=%s)", pattern, text, extra={"event.action": "rabin_karp", "logrite.pattern": pattern, "logrite.text": text})
     return False
 
 
@@ -56,16 +62,21 @@ def test_rabin_karp() -> None:
     >>> test_rabin_karp()
     Success.
     """
+    logger.error(">>> Entering test_rabin_karp()", extra={"event.action": "test_rabin_karp"})
     # Test 1)
     pattern = "abc1abc12"
+    logger.error("test_rabin_karp(): pattern → %s", pattern, extra={"event.action": "test_rabin_karp"})
     text1 = "alskfjaldsabc1abc1abc12k23adsfabcabc"
+    logger.error("test_rabin_karp(): text1 → %s", text1, extra={"event.action": "test_rabin_karp"})
     text2 = "alskfjaldsk23adsfabcabc"
+    logger.error("test_rabin_karp(): text2 → %s", text2, extra={"event.action": "test_rabin_karp"})
     assert rabin_karp(pattern, text1)
     assert not rabin_karp(pattern, text2)
 
     # Test 2)
     pattern = "ABABX"
     text = "ABABZABABYABABX"
+    logger.error("test_rabin_karp(): text → %s", text, extra={"event.action": "test_rabin_karp"})
     assert rabin_karp(pattern, text)
 
     # Test 3)
@@ -85,6 +96,7 @@ def test_rabin_karp() -> None:
     pattern = "Lue"
     assert not rabin_karp(pattern, text)
     print("Success.")
+    logger.warning("<<< Exiting test_rabin_karp()", extra={"event.action": "test_rabin_karp"})
 
 
 if __name__ == "__main__":

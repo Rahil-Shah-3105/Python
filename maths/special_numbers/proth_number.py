@@ -5,6 +5,8 @@ Source:
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def proth(number: int) -> int:
@@ -27,9 +29,11 @@ def proth(number: int) -> int:
         ...
     TypeError: Input value of [number=6.0] must be an integer
     """
+    logger.error(">>> Entering proth(number=%s)", number, extra={"event.action": "proth", "logrite.number": number})
 
     if not isinstance(number, int):
         msg = f"Input value of [number={number}] must be an integer"
+        logger.error("proth(number=%s): msg → %s", number, msg, extra={"event.action": "proth", "logrite.number": number})
         raise TypeError(msg)
 
     if number < 1:

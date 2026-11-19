@@ -40,6 +40,8 @@ goldbach(number)  // Goldbach's assumption
 from math import sqrt
 
 from maths.greatest_common_divisor import gcd_by_iterative
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -64,6 +66,7 @@ def is_prime(number: int) -> bool:
         ...
     AssertionError: 'number' must been an int and positive
     """
+    logger.error(">>> Entering is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
 
     # precondition
     assert isinstance(number, int) and (number >= 0), (
@@ -71,6 +74,7 @@ def is_prime(number: int) -> bool:
     )
 
     status = True
+    logger.error("is_prime(number=%s): status → %s", number, status, extra={"event.action": "is_prime", "logrite.number": number})
 
     # 0 and 1 are none primes.
     if number <= 1:
@@ -86,6 +90,7 @@ def is_prime(number: int) -> bool:
     # precondition
     assert isinstance(status, bool), "'status' must been from type bool"
 
+    logger.warning("<<< Exiting is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
     return status
 
 
@@ -111,12 +116,14 @@ def sieve_er(n):
         ...
     AssertionError: 'N' must been an int and > 2
     """
+    logger.error(">>> Entering sieve_er(n=%s)", n, extra={"event.action": "sieve_er", "logrite.n": n})
 
     # precondition
     assert isinstance(n, int) and (n > 2), "'N' must been an int and > 2"
 
     # beginList: contains all natural numbers from 2 up to N
     begin_list = list(range(2, n + 1))
+    logger.error("sieve_er(n=%s): begin_list → %s", n, begin_list, extra={"event.action": "sieve_er", "logrite.n": n})
 
     ans = []  # this list will be returns.
 
@@ -132,6 +139,7 @@ def sieve_er(n):
     # precondition
     assert isinstance(ans, list), "'ans' must been from type list"
 
+    logger.warning("<<< Exiting sieve_er(n=%s)", n, extra={"event.action": "sieve_er", "logrite.n": n})
     return ans
 
 
@@ -155,6 +163,7 @@ def get_prime_numbers(n):
         ...
     AssertionError: 'N' must been an int and > 2
     """
+    logger.error(">>> Entering get_prime_numbers(n=%s)", n, extra={"event.action": "get_prime_numbers", "logrite.n": n})
 
     # precondition
     assert isinstance(n, int) and (n > 2), "'N' must been an int and > 2"
@@ -170,6 +179,7 @@ def get_prime_numbers(n):
     # precondition
     assert isinstance(ans, list), "'ans' must been from type list"
 
+    logger.warning("<<< Exiting get_prime_numbers(n=%s)", n, extra={"event.action": "get_prime_numbers", "logrite.n": n})
     return ans
 
 
@@ -196,6 +206,7 @@ def prime_factorization(number):
         ...
     AssertionError: 'number' must been an int and >= 0
     """
+    logger.error(">>> Entering prime_factorization(number=%s)", number, extra={"event.action": "prime_factorization", "logrite.number": number})
 
     # precondition
     assert isinstance(number, int) and number >= 0, "'number' must been an int and >= 0"
@@ -226,6 +237,7 @@ def prime_factorization(number):
     # precondition
     assert isinstance(ans, list), "'ans' must been from type list"
 
+    logger.warning("<<< Exiting prime_factorization(number=%s)", number, extra={"event.action": "prime_factorization", "logrite.number": number})
     return ans
 
 
@@ -252,6 +264,7 @@ def greatest_prime_factor(number):
         ...
     AssertionError: 'number' must been an int and >= 0
     """
+    logger.error(">>> Entering greatest_prime_factor(number=%s)", number, extra={"event.action": "greatest_prime_factor", "logrite.number": number})
 
     # precondition
     assert isinstance(number, int) and (number >= 0), (
@@ -259,15 +272,18 @@ def greatest_prime_factor(number):
     )
 
     ans = 0
+    logger.error("greatest_prime_factor(number=%s): ans → %s", number, ans, extra={"event.action": "greatest_prime_factor", "logrite.number": number})
 
     # prime factorization of 'number'
     prime_factors = prime_factorization(number)
+    logger.error("greatest_prime_factor(number=%s): prime_factors → %s", number, prime_factors, extra={"event.action": "greatest_prime_factor", "logrite.number": number})
 
     ans = max(prime_factors)
 
     # precondition
     assert isinstance(ans, int), "'ans' must been from type int"
 
+    logger.warning("<<< Exiting greatest_prime_factor(number=%s)", number, extra={"event.action": "greatest_prime_factor", "logrite.number": number})
     return ans
 
 
@@ -294,6 +310,7 @@ def smallest_prime_factor(number):
         ...
     AssertionError: 'number' must been an int and >= 0
     """
+    logger.error(">>> Entering smallest_prime_factor(number=%s)", number, extra={"event.action": "smallest_prime_factor", "logrite.number": number})
 
     # precondition
     assert isinstance(number, int) and (number >= 0), (
@@ -301,15 +318,18 @@ def smallest_prime_factor(number):
     )
 
     ans = 0
+    logger.error("smallest_prime_factor(number=%s): ans → %s", number, ans, extra={"event.action": "smallest_prime_factor", "logrite.number": number})
 
     # prime factorization of 'number'
     prime_factors = prime_factorization(number)
+    logger.error("smallest_prime_factor(number=%s): prime_factors → %s", number, prime_factors, extra={"event.action": "smallest_prime_factor", "logrite.number": number})
 
     ans = min(prime_factors)
 
     # precondition
     assert isinstance(ans, int), "'ans' must been from type int"
 
+    logger.warning("<<< Exiting smallest_prime_factor(number=%s)", number, extra={"event.action": "smallest_prime_factor", "logrite.number": number})
     return ans
 
 
@@ -334,11 +354,13 @@ def is_even(number):
         ...
     AssertionError: 'number' must been an int
     """
+    logger.error(">>> Entering is_even(number=%s)", number, extra={"event.action": "is_even", "logrite.number": number})
 
     # precondition
     assert isinstance(number, int), "'number' must been an int"
     assert isinstance(number % 2 == 0, bool), "compare must been from type bool"
 
+    logger.warning("<<< Exiting is_even(number=%s)", number, extra={"event.action": "is_even", "logrite.number": number})
     return number % 2 == 0
 
 
@@ -363,11 +385,13 @@ def is_odd(number):
         ...
     AssertionError: 'number' must been an int
     """
+    logger.error(">>> Entering is_odd(number=%s)", number, extra={"event.action": "is_odd", "logrite.number": number})
 
     # precondition
     assert isinstance(number, int), "'number' must been an int"
     assert isinstance(number % 2 != 0, bool), "compare must been from type bool"
 
+    logger.warning("<<< Exiting is_odd(number=%s)", number, extra={"event.action": "is_odd", "logrite.number": number})
     return number % 2 != 0
 
 
@@ -397,6 +421,7 @@ def goldbach(number):
         ...
     AssertionError: 'number' must been an int, even and > 2
     """
+    logger.error(">>> Entering goldbach(number=%s)", number, extra={"event.action": "goldbach", "logrite.number": number})
 
     # precondition
     assert isinstance(number, int) and (number > 2) and is_even(number), (
@@ -407,7 +432,9 @@ def goldbach(number):
 
     # creates a list of prime numbers between 2 up to 'number'
     prime_numbers = get_prime_numbers(number)
+    logger.error("goldbach(number=%s): prime_numbers → %s", number, prime_numbers, extra={"event.action": "goldbach", "logrite.number": number})
     len_pn = len(prime_numbers)
+    logger.error("goldbach(number=%s): len_pn → %s", number, len_pn, extra={"event.action": "goldbach", "logrite.number": number})
 
     # run variable for while-loops.
     i = 0
@@ -438,6 +465,7 @@ def goldbach(number):
         and is_prime(ans[1])
     ), "'ans' must contains two primes. And sum of elements must been eq 'number'"
 
+    logger.warning("<<< Exiting goldbach(number=%s)", number, extra={"event.action": "goldbach", "logrite.number": number})
     return ans
 
 
@@ -469,6 +497,7 @@ def kg_v(number1, number2):
         ...
     AssertionError: 'number1' and 'number2' must been positive integer.
     """
+    logger.error(">>> Entering kg_v(number1=%s,number2=%s)", number1, number2, extra={"event.action": "kg_v", "logrite.number1": number1, "logrite.number2": number2})
 
     # precondition
     assert (
@@ -479,6 +508,7 @@ def kg_v(number1, number2):
     ), "'number1' and 'number2' must been positive integer."
 
     ans = 1  # actual answer that will be return.
+    logger.error("kg_v(number1=%s,number2=%s): ans → %s", number1, number2, ans, extra={"event.action": "kg_v", "logrite.number1": number1, "logrite.number2": number2})
 
     # for kgV (x,1)
     if number1 > 1 and number2 > 1:
@@ -492,9 +522,12 @@ def kg_v(number1, number2):
         ans = max(number1, number2)
 
     count1 = 0
+    logger.error("kg_v(number1=%s,number2=%s): count1 → %s", number1, number2, count1, extra={"event.action": "kg_v", "logrite.number1": number1, "logrite.number2": number2})
     count2 = 0
+    logger.error("kg_v(number1=%s,number2=%s): count2 → %s", number1, number2, count2, extra={"event.action": "kg_v", "logrite.number1": number1, "logrite.number2": number2})
 
     done = []  # captured numbers int both 'primeFac1' and 'primeFac2'
+    logger.error("kg_v(number1=%s,number2=%s): done → %s", number1, number2, done, extra={"event.action": "kg_v", "logrite.number1": number1, "logrite.number2": number2})
 
     # iterates through primeFac1
     for n in prime_fac_1:
@@ -529,6 +562,7 @@ def kg_v(number1, number2):
         "'ans' must been from type int and positive"
     )
 
+    logger.warning("<<< Exiting kg_v(number1=%s,number2=%s)", number1, number2, extra={"event.action": "kg_v", "logrite.number1": number1, "logrite.number2": number2})
     return ans
 
 
@@ -556,6 +590,7 @@ def get_prime(n):
         ...
     AssertionError: 'number' must been a positive int
     """
+    logger.error(">>> Entering get_prime(n=%s)", n, extra={"event.action": "get_prime", "logrite.n": n})
 
     # precondition
     assert isinstance(n, int) and (n >= 0), "'number' must been a positive int"
@@ -578,6 +613,7 @@ def get_prime(n):
         "'ans' must been a prime number and from type int"
     )
 
+    logger.warning("<<< Exiting get_prime(n=%s)", n, extra={"event.action": "get_prime", "logrite.n": n})
     return ans
 
 
@@ -610,6 +646,7 @@ def get_primes_between(p_number_1, p_number_2):
         ...
     AssertionError: 'number' must been an int and positive
     """
+    logger.error(">>> Entering get_primes_between(p_number_1=%s,p_number_2=%s)", p_number_1, p_number_2, extra={"event.action": "get_primes_between", "logrite.p_number_1": p_number_1, "logrite.p_number_2": p_number_2})
 
     # precondition
     assert (
@@ -642,6 +679,7 @@ def get_primes_between(p_number_1, p_number_2):
     ), "'ans' must been a list without the arguments"
 
     # 'ans' contains not 'pNumber1' and 'pNumber2' !
+    logger.warning("<<< Exiting get_primes_between(p_number_1=%s,p_number_2=%s)", p_number_1, p_number_2, extra={"event.action": "get_primes_between", "logrite.p_number_1": p_number_1, "logrite.p_number_2": p_number_2})
     return ans
 
 
@@ -666,6 +704,7 @@ def get_divisors(n):
         ...
     AssertionError: 'n' must been int and >= 1
     """
+    logger.error(">>> Entering get_divisors(n=%s)", n, extra={"event.action": "get_divisors", "logrite.n": n})
 
     # precondition
     assert isinstance(n, int) and (n >= 1), "'n' must been int and >= 1"
@@ -679,6 +718,7 @@ def get_divisors(n):
     # precondition
     assert ans[0] == 1 and ans[len(ans) - 1] == n, "Error in function getDivisiors(...)"
 
+    logger.warning("<<< Exiting get_divisors(n=%s)", n, extra={"event.action": "get_divisors", "logrite.n": n})
     return ans
 
 
@@ -703,6 +743,7 @@ def is_perfect_number(number):
         ...
     AssertionError: 'number' must been an int and >= 1
     """
+    logger.error(">>> Entering is_perfect_number(number=%s)", number, extra={"event.action": "is_perfect_number", "logrite.number": number})
 
     # precondition
     assert isinstance(number, int) and (number > 1), (
@@ -710,6 +751,7 @@ def is_perfect_number(number):
     )
 
     divisors = get_divisors(number)
+    logger.error("is_perfect_number(number=%s): divisors → %s", number, divisors, extra={"event.action": "is_perfect_number", "logrite.number": number})
 
     # precondition
     assert (
@@ -719,6 +761,7 @@ def is_perfect_number(number):
     ), "Error in help-function getDivisiors(...)"
 
     # summed all divisors up to 'number' (exclusive), hence [:-1]
+    logger.warning("<<< Exiting is_perfect_number(number=%s)", number, extra={"event.action": "is_perfect_number", "logrite.number": number})
     return sum(divisors[:-1]) == number
 
 
@@ -740,6 +783,7 @@ def simplify_fraction(numerator, denominator):
         ...
     AssertionError: The arguments must been from type int and 'denominator' != 0
     """
+    logger.error(">>> Entering simplify_fraction(numerator=%s,denominator=%s)", numerator, denominator, extra={"event.action": "simplify_fraction", "logrite.numerator": numerator, "logrite.denominator": denominator})
 
     # precondition
     assert (
@@ -750,6 +794,7 @@ def simplify_fraction(numerator, denominator):
 
     # build the greatest common divisor of numerator and denominator.
     gcd_of_fraction = gcd_by_iterative(abs(numerator), abs(denominator))
+    logger.error("simplify_fraction(numerator=%s,denominator=%s): gcd_of_fraction → %s", numerator, denominator, gcd_of_fraction, extra={"event.action": "simplify_fraction", "logrite.numerator": numerator, "logrite.denominator": denominator})
 
     # precondition
     assert (

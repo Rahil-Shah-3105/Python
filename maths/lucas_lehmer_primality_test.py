@@ -9,6 +9,8 @@ https://en.wikipedia.org/wiki/Mersenne_prime
 The Lucas-Lehmer test is the primality test used by the
 Great Internet Mersenne Prime Search (GIMPS) to locate large primes.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 # Primality test 2^p - 1
@@ -23,6 +25,7 @@ def lucas_lehmer_test(p: int) -> bool:
 
     # M_11 = 2^11 - 1 = 2047 = 23 * 89
     """
+    logger.error(">>> Entering lucas_lehmer_test(p=%s)", p, extra={"event.action": "lucas_lehmer_test", "logrite.p": p})
 
     if p < 2:
         raise ValueError("p should not be less than 2!")
@@ -33,6 +36,7 @@ def lucas_lehmer_test(p: int) -> bool:
     m = (1 << p) - 1
     for _ in range(p - 2):
         s = ((s * s) - 2) % m
+    logger.warning("<<< Exiting lucas_lehmer_test(p=%s)", p, extra={"event.action": "lucas_lehmer_test", "logrite.p": p})
     return s == 0
 
 

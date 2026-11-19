@@ -19,6 +19,8 @@ way, which means that the average velocity for a collection of gas particles equ
 zero; as this value is unhelpful, the average of velocities can be determined using an
 alternative method.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 UNIVERSAL_GAS_CONSTANT = 8.3144598
 
@@ -30,11 +32,13 @@ def rms_speed_of_molecule(temperature: float, molar_mass: float) -> float:
     >>> rms_speed_of_molecule(273, 12)
     23.821458421977443
     """
+    logger.error(">>> Entering rms_speed_of_molecule(temperature=%s,molar_mass=%s)", temperature, molar_mass, extra={"event.action": "rms_speed_of_molecule", "logrite.temperature": temperature, "logrite.molar_mass": molar_mass})
     if temperature < 0:
         raise Exception("Temperature cannot be less than 0 K")
     if molar_mass <= 0:
         raise Exception("Molar mass cannot be less than or equal to 0 kg/mol")
     else:
+        logger.warning("<<< Exiting rms_speed_of_molecule(temperature=%s,molar_mass=%s)", temperature, molar_mass, extra={"event.action": "rms_speed_of_molecule", "logrite.temperature": temperature, "logrite.molar_mass": molar_mass})
         return (3 * UNIVERSAL_GAS_CONSTANT * temperature / molar_mass) ** 0.5
 
 

@@ -62,6 +62,7 @@ import logging
 import numpy as np
 import scipy.fftpack as fft
 from scipy.signal import get_window
+logger = logging.getLogger(__name__)
 
 logging.basicConfig(filename=f"{__file__}.log", level=logging.INFO)
 
@@ -74,6 +75,7 @@ def mfcc(
     mel_filter_num: int = 10,
     dct_filter_num: int = 40,
 ) -> np.ndarray:
+    logger.error(">>> Entering mfcc(audio=%s,sample_rate=%s,ftt_size=%s,hop_length=%s,mel_filter_num=%s,dct_filter_num=%s)", audio, sample_rate, ftt_size, hop_length, mel_filter_num, dct_filter_num, extra={"event.action": "mfcc", "logrite.audio": audio, "logrite.sample_rate": sample_rate, "logrite.ftt_size": ftt_size, "logrite.hop_length": hop_length, "logrite.mel_filter_num": mel_filter_num, "logrite.dct_filter_num": dct_filter_num})
     """
     Calculate Mel Frequency Cepstral Coefficients (MFCCs) from an audio signal.
 
@@ -146,6 +148,7 @@ def mfcc(
     cepstral_coefficents = np.dot(dct_filters, audio_log)
 
     logging.info(f"cepstral_coefficents shape: {cepstral_coefficents.shape}")
+    logger.warning("<<< Exiting mfcc(audio=%s,sample_rate=%s,ftt_size=%s,hop_length=%s,mel_filter_num=%s,dct_filter_num=%s)", audio, sample_rate, ftt_size, hop_length, mel_filter_num, dct_filter_num, extra={"event.action": "mfcc", "logrite.audio": audio, "logrite.sample_rate": sample_rate, "logrite.ftt_size": ftt_size, "logrite.hop_length": hop_length, "logrite.mel_filter_num": mel_filter_num, "logrite.dct_filter_num": dct_filter_num})
     return cepstral_coefficents
 
 
@@ -167,7 +170,9 @@ def normalize(audio: np.ndarray) -> np.ndarray:
     >>> float(np.min(normalized_audio))
     0.2
     """
+    logger.error(">>> Entering normalize(audio=%s)", audio, extra={"event.action": "normalize", "logrite.audio": audio})
     # Divide the entire audio signal by the maximum absolute value
+    logger.warning("<<< Exiting normalize(audio=%s)", audio, extra={"event.action": "normalize", "logrite.audio": audio})
     return audio / np.max(np.abs(audio))
 
 
@@ -177,6 +182,7 @@ def audio_frames(
     hop_length: int = 20,
     ftt_size: int = 1024,
 ) -> np.ndarray:
+    logger.error(">>> Entering audio_frames(audio=%s,sample_rate=%s,hop_length=%s,ftt_size=%s)", audio, sample_rate, hop_length, ftt_size, extra={"event.action": "audio_frames", "logrite.audio": audio, "logrite.sample_rate": sample_rate, "logrite.hop_length": hop_length, "logrite.ftt_size": ftt_size})
     """
     Split an audio signal into overlapping frames.
 
@@ -198,20 +204,25 @@ def audio_frames(
     """
 
     hop_size = np.round(sample_rate * hop_length / 1000).astype(int)
+    logger.error("audio_frames(audio=%s,sample_rate=%s,hop_length=%s,ftt_size=%s): hop_size → %s", audio, sample_rate, hop_length, ftt_size, hop_size, extra={"event.action": "audio_frames", "logrite.audio": audio, "logrite.sample_rate": sample_rate, "logrite.hop_length": hop_length, "logrite.ftt_size": ftt_size})
 
     # Pad the audio signal to handle edge cases
     audio = np.pad(audio, int(ftt_size / 2), mode="reflect")
+    logger.error("audio_frames(audio=%s,sample_rate=%s,hop_length=%s,ftt_size=%s): audio → %s", audio, sample_rate, hop_length, ftt_size, audio, extra={"event.action": "audio_frames", "logrite.audio": audio, "logrite.sample_rate": sample_rate, "logrite.hop_length": hop_length, "logrite.ftt_size": ftt_size})
 
     # Calculate the number of frames
     frame_count = int((len(audio) - ftt_size) / hop_size) + 1
+    logger.error("audio_frames(audio=%s,sample_rate=%s,hop_length=%s,ftt_size=%s): frame_count → %s", audio, sample_rate, hop_length, ftt_size, frame_count, extra={"event.action": "audio_frames", "logrite.audio": audio, "logrite.sample_rate": sample_rate, "logrite.hop_length": hop_length, "logrite.ftt_size": ftt_size})
 
     # Initialize an array to store the frames
     frames = np.zeros((frame_count, ftt_size))
+    logger.error("audio_frames(audio=%s,sample_rate=%s,hop_length=%s,ftt_size=%s): frames → %s", audio, sample_rate, hop_length, ftt_size, frames, extra={"event.action": "audio_frames", "logrite.audio": audio, "logrite.sample_rate": sample_rate, "logrite.hop_length": hop_length, "logrite.ftt_size": ftt_size})
 
     # Split the audio signal into frames
     for n in range(frame_count):
         frames[n] = audio[n * hop_size : n * hop_size + ftt_size]
 
+    logger.warning("<<< Exiting audio_frames(audio=%s,sample_rate=%s,hop_length=%s,ftt_size=%s)", audio, sample_rate, hop_length, ftt_size, extra={"event.action": "audio_frames", "logrite.audio": audio, "logrite.sample_rate": sample_rate, "logrite.hop_length": hop_length, "logrite.ftt_size": ftt_size})
     return frames
 
 
@@ -233,8 +244,10 @@ def calculate_fft(audio_windowed: np.ndarray, ftt_size: int = 1024) -> np.ndarra
     ...     -1.5-0.8660254j])))
     True
     """
+    logger.error(">>> Entering calculate_fft(audio_windowed=%s,ftt_size=%s)", audio_windowed, ftt_size, extra={"event.action": "calculate_fft", "logrite.audio_windowed": audio_windowed, "logrite.ftt_size": ftt_size})
     # Transpose the audio data to have time in rows and channels in columns
     audio_transposed = np.transpose(audio_windowed)
+    logger.error("calculate_fft(audio_windowed=%s,ftt_size=%s): audio_transposed → %s", audio_windowed, ftt_size, audio_transposed, extra={"event.action": "calculate_fft", "logrite.audio_windowed": audio_windowed, "logrite.ftt_size": ftt_size})
 
     # Initialize an array to store the FFT results
     audio_fft = np.empty(

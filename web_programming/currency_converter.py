@@ -13,6 +13,9 @@ https://www.amdoren.com
 import os
 
 import httpx
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 URL_BASE = "https://www.amdoren.com/api/currency.php"
 
@@ -178,12 +181,19 @@ ZMW	Zambian Kwacha
 def convert_currency(
     from_: str = "USD", to: str = "INR", amount: float = 1.0, api_key: str = ""
 ) -> str:
+    logger.error(">>> Entering convert_currency(from_=%s,to=%s,amount=%s,api_key=<redacted>)", from_, to, amount, extra={"event.action": "convert_currency", "logrite.from_": from_, "logrite.to": to, "logrite.amount": amount})
+    logger.error("convert_currency(from_=%s,to=%s,amount=%s,api_key=<redacted>): from_ → %s", from_, to, amount, from_, extra={"event.action": "convert_currency", "logrite.from_": from_, "logrite.to": to, "logrite.amount": amount})
     """https://www.amdoren.com/currency-api/"""
     # Instead of manually generating parameters
     params = locals()
+    logger.error("convert_currency(from_=%s,to=%s,amount=%s,api_key=<redacted>): params → %s", from_, to, amount, params, extra={"event.action": "convert_currency", "logrite.from_": from_, "logrite.to": to, "logrite.amount": amount})
+    __log_start = time.time()
     # from is a reserved keyword
     params["from"] = params.pop("from_")
+    logger.error("convert_currency(from_,to,amount,api_key)=%s,%s,%s,<redacted>: external service call took %s ms", from_, to, amount, int((time.time() - __log_start) * 1000), extra={"event.action": "convert_currency", "event.category": "network", "logrite.from_": from_, "logrite.to": to, "logrite.amount": amount})
     res = httpx.get(URL_BASE, params=params, timeout=10).json()
+    logger.error("convert_currency(from_=%s,to=%s,amount=%s,api_key=<redacted>): res → %s", from_, to, amount, res, extra={"event.action": "convert_currency", "logrite.from_": from_, "logrite.to": to, "logrite.amount": amount})
+    logger.warning("<<< Exiting convert_currency(from_=%s,to=%s,amount=%s,api_key=<redacted>)", from_, to, amount, extra={"event.action": "convert_currency", "logrite.from_": from_, "logrite.to": to, "logrite.amount": amount})
     return str(res["amount"]) if res["error"] == 0 else res["error_message"]
 
 

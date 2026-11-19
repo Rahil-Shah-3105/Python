@@ -17,6 +17,8 @@ from __future__ import annotations
 
 from functools import lru_cache
 from math import ceil
+import logging
+logger = logging.getLogger(__name__)
 
 NUM_PRIMES = 100
 
@@ -43,6 +45,7 @@ def partition(number_to_partition: int) -> set[int]:
     >>> len(partition(20))
     26
     """
+    logger.error(">>> Entering partition(number_to_partition=%s)", number_to_partition, extra={"event.action": "partition", "logrite.number_to_partition": number_to_partition})
     if number_to_partition < 0:
         return set()
     elif number_to_partition == 0:
@@ -58,6 +61,7 @@ def partition(number_to_partition: int) -> set[int]:
         for sub in partition(number_to_partition - prime):
             ret.add(sub * prime)
 
+    logger.warning("<<< Exiting partition(number_to_partition=%s)", number_to_partition, extra={"event.action": "partition", "logrite.number_to_partition": number_to_partition})
     return ret
 
 
@@ -72,9 +76,11 @@ def solution(number_unique_partitions: int = 5000) -> int | None:
     >>> solution(1000)
     53
     """
+    logger.error(">>> Entering solution(number_unique_partitions=%s)", number_unique_partitions, extra={"event.action": "solution", "logrite.number_unique_partitions": number_unique_partitions})
     for number_to_partition in range(1, NUM_PRIMES):
         if len(partition(number_to_partition)) > number_unique_partitions:
             return number_to_partition
+    logger.warning("<<< Exiting solution(number_unique_partitions=%s)", number_unique_partitions, extra={"event.action": "solution", "logrite.number_unique_partitions": number_unique_partitions})
     return None
 
 

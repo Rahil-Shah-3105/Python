@@ -22,13 +22,19 @@ This cipher is regarded as insecure since before World War I.
 import itertools
 import string
 from collections.abc import Generator, Iterable
+import logging
+logger = logging.getLogger(__name__)
 
 
 def chunker(seq: Iterable[str], size: int) -> Generator[tuple[str, ...]]:
+    logger.error(">>> Entering chunker(seq=%s,size=%s)", seq, size, extra={"event.action": "chunker", "logrite.seq": seq, "logrite.size": size})
     it = iter(seq)
+    logger.error("chunker(seq=%s,size=%s): it → %s", seq, size, it, extra={"event.action": "chunker", "logrite.seq": seq, "logrite.size": size})
     while True:
         chunk = tuple(itertools.islice(it, size))
+        logger.error("chunker(seq=%s,size=%s): chunk → %s", seq, size, chunk, extra={"event.action": "chunker", "logrite.seq": seq, "logrite.size": size})
         if not chunk:
+            logger.warning("<<< Exiting chunker(seq=%s,size=%s)", seq, size, extra={"event.action": "chunker", "logrite.seq": seq, "logrite.size": size})
             return
         yield chunk
 
@@ -38,9 +44,12 @@ def prepare_input(dirty: str) -> str:
     Prepare the plaintext by up-casing it
     and separating repeated letters with X's
     """
+    logger.error(">>> Entering prepare_input(dirty=%s)", dirty, extra={"event.action": "prepare_input", "logrite.dirty": dirty})
 
     dirty = "".join([c.upper() for c in dirty if c in string.ascii_letters])
+    logger.error("prepare_input(dirty=%s): dirty → %s", dirty, dirty, extra={"event.action": "prepare_input", "logrite.dirty": dirty})
     clean = ""
+    logger.error("prepare_input(dirty=%s): clean → %s", dirty, clean, extra={"event.action": "prepare_input", "logrite.dirty": dirty})
 
     if len(dirty) < 2:
         return dirty
@@ -56,13 +65,16 @@ def prepare_input(dirty: str) -> str:
     if len(clean) & 1:
         clean += "X"
 
+    logger.warning("<<< Exiting prepare_input(dirty=%s)", dirty, extra={"event.action": "prepare_input", "logrite.dirty": dirty})
     return clean
 
 
 def generate_table(key: str) -> list[str]:
+    logger.error(">>> Entering generate_table(key=%s)", key, extra={"event.action": "generate_table", "logrite.key": key})
     # I and J are used interchangeably to allow
     # us to use a 5x5 table (25 letters)
     alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
+    logger.error("generate_table(key=%s): alphabet → %s", key, alphabet, extra={"event.action": "generate_table", "logrite.key": key})
     # we're using a list instead of a '2d' array because it makes the math
     # for setting up the table and doing the actual encoding/decoding simpler
     table = []
@@ -77,6 +89,7 @@ def generate_table(key: str) -> list[str]:
         if char not in table:
             table.append(char)
 
+    logger.warning("<<< Exiting generate_table(key=%s)", key, extra={"event.action": "generate_table", "logrite.key": key})
     return table
 
 
@@ -96,10 +109,14 @@ def encode(plaintext: str, key: str) -> str:
     >>> encode("Photosynthesis!", "THE SUN")
     'OEMHQHVCHESUKE'
     """
+    logger.error(">>> Entering encode(plaintext=%s,key=%s)", plaintext, key, extra={"event.action": "encode", "logrite.plaintext": plaintext, "logrite.key": key})
 
     table = generate_table(key)
+    logger.error("encode(plaintext=%s,key=%s): table → %s", plaintext, key, table, extra={"event.action": "encode", "logrite.plaintext": plaintext, "logrite.key": key})
     plaintext = prepare_input(plaintext)
+    logger.error("encode(plaintext=%s,key=%s): plaintext → %s", plaintext, key, plaintext, extra={"event.action": "encode", "logrite.plaintext": plaintext, "logrite.key": key})
     ciphertext = ""
+    logger.error("encode(plaintext=%s,key=%s): ciphertext → %s", plaintext, key, ciphertext, extra={"event.action": "encode", "logrite.plaintext": plaintext, "logrite.key": key})
 
     for char1, char2 in chunker(plaintext, 2):
         row1, col1 = divmod(table.index(char1), 5)
@@ -115,6 +132,7 @@ def encode(plaintext: str, key: str) -> str:
             ciphertext += table[row1 * 5 + col2]
             ciphertext += table[row2 * 5 + col1]
 
+    logger.warning("<<< Exiting encode(plaintext=%s,key=%s)", plaintext, key, extra={"event.action": "encode", "logrite.plaintext": plaintext, "logrite.key": key})
     return ciphertext
 
 
@@ -129,9 +147,12 @@ def decode(ciphertext: str, key: str) -> str:
     >>> decode("SLYSSAQS", "CASTLE")
     'ATXTACKX'
     """
+    logger.error(">>> Entering decode(ciphertext=%s,key=%s)", ciphertext, key, extra={"event.action": "decode", "logrite.ciphertext": ciphertext, "logrite.key": key})
 
     table = generate_table(key)
+    logger.error("decode(ciphertext=%s,key=%s): table → %s", ciphertext, key, table, extra={"event.action": "decode", "logrite.ciphertext": ciphertext, "logrite.key": key})
     plaintext = ""
+    logger.error("decode(ciphertext=%s,key=%s): plaintext → %s", ciphertext, key, plaintext, extra={"event.action": "decode", "logrite.ciphertext": ciphertext, "logrite.key": key})
 
     for char1, char2 in chunker(ciphertext, 2):
         row1, col1 = divmod(table.index(char1), 5)
@@ -147,6 +168,7 @@ def decode(ciphertext: str, key: str) -> str:
             plaintext += table[row1 * 5 + col2]
             plaintext += table[row2 * 5 + col1]
 
+    logger.warning("<<< Exiting decode(ciphertext=%s,key=%s)", ciphertext, key, extra={"event.action": "decode", "logrite.ciphertext": ciphertext, "logrite.key": key})
     return plaintext
 
 

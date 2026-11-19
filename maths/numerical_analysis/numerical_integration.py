@@ -5,6 +5,8 @@ Approximates the area under the curve using the trapezoidal rule
 from __future__ import annotations
 
 from collections.abc import Callable
+import logging
+logger = logging.getLogger(__name__)
 
 
 def trapezoidal_area(
@@ -13,6 +15,7 @@ def trapezoidal_area(
     x_end: float,
     steps: int = 100,
 ) -> float:
+    logger.error(">>> Entering trapezoidal_area(fnc=%s,x_start=%s,x_end=%s,steps=%s)", fnc, x_start, x_end, steps, extra={"event.action": "trapezoidal_area", "logrite.fnc": fnc, "logrite.x_start": x_start, "logrite.x_end": x_end, "logrite.steps": steps})
     """
     Treats curve as a collection of linear lines and sums the area of the
     trapezium shape they form
@@ -43,18 +46,23 @@ def trapezoidal_area(
         # Approximates small segments of curve as linear and solve
         # for trapezoidal area
         x2 = (x_end - x_start) / steps + x1
+        logger.error("trapezoidal_area(fnc=%s,x_start=%s,x_end=%s,steps=%s): x2 → %s", fnc, x_start, x_end, steps, x2, extra={"event.action": "trapezoidal_area", "logrite.fnc": fnc, "logrite.x_start": x_start, "logrite.x_end": x_end, "logrite.steps": steps})
         fx2 = fnc(x2)
+        logger.error("trapezoidal_area(fnc=%s,x_start=%s,x_end=%s,steps=%s): fx2 → %s", fnc, x_start, x_end, steps, fx2, extra={"event.action": "trapezoidal_area", "logrite.fnc": fnc, "logrite.x_start": x_start, "logrite.x_end": x_end, "logrite.steps": steps})
         area += abs(fx2 + fx1) * (x2 - x1) / 2
 
         # Increment step
         x1 = x2
         fx1 = fx2
+    logger.warning("<<< Exiting trapezoidal_area(fnc=%s,x_start=%s,x_end=%s,steps=%s)", fnc, x_start, x_end, steps, extra={"event.action": "trapezoidal_area", "logrite.fnc": fnc, "logrite.x_start": x_start, "logrite.x_end": x_end, "logrite.steps": steps})
     return area
 
 
 if __name__ == "__main__":
 
     def f(x):
+        logger.error(">>> Entering f(x=%s)", x, extra={"event.action": "f", "logrite.x": x})
+        logger.warning("<<< Exiting f(x=%s)", x, extra={"event.action": "f", "logrite.x": x})
         return x**3
 
     print("f(x) = x^3")

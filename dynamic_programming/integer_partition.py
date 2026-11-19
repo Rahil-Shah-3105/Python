@@ -6,6 +6,8 @@ into k parts. These two facts together are used for this algorithm.
 * https://en.wikipedia.org/wiki/Partition_(number_theory)
 * https://en.wikipedia.org/wiki/Partition_function_(number_theory)
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def partition(m: int) -> int:
@@ -31,6 +33,7 @@ def partition(m: int) -> int:
         ...
     TypeError: 'float' object cannot be interpreted as an integer
     """
+    logger.error(">>> Entering partition(m=%s)", m, extra={"event.action": "partition", "logrite.m": m})
     memo: list[list[int]] = [[0 for _ in range(m)] for _ in range(m + 1)]
     for i in range(m + 1):
         memo[i][0] = 1
@@ -41,6 +44,7 @@ def partition(m: int) -> int:
             if n - k > 0:
                 memo[n][k] += memo[n - k - 1][k]
 
+    logger.warning("<<< Exiting partition(m=%s)", m, extra={"event.action": "partition", "logrite.m": m})
     return memo[m][m - 1]
 
 

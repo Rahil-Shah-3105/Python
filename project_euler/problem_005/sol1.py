@@ -12,6 +12,8 @@ of the numbers from 1 to 20?
 References:
     - https://en.wiktionary.org/wiki/evenly_divisible
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 20) -> int:
@@ -44,10 +46,12 @@ def solution(n: int = 20) -> int:
         ...
     TypeError: Parameter n must be int or castable to int.
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     try:
         n = int(n)
     except TypeError, ValueError:
+        logger.error("Exception in solution(n=%s)", n, exc_info=True, extra={"event.action": "solution", "event.category": "process", "logrite.n": n})
         raise TypeError("Parameter n must be int or castable to int.")
     if n <= 0:
         raise ValueError("Parameter n must be greater than or equal to one.")
@@ -63,6 +67,7 @@ def solution(n: int = 20) -> int:
             if i == 0:
                 i = 1
             return i
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return None
 
 

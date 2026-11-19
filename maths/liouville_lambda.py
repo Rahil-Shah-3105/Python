@@ -9,6 +9,8 @@ https://en.wikipedia.org/wiki/Liouville_function
 
 # Author : Akshay Dubey (https://github.com/itsAkshayDubey)
 from maths.prime_factors import prime_factors
+import logging
+logger = logging.getLogger(__name__)
 
 
 def liouville_lambda(number: int) -> int:
@@ -32,11 +34,14 @@ def liouville_lambda(number: int) -> int:
         ...
     TypeError: Input value of [number=11.0] must be an integer
     """
+    logger.error(">>> Entering liouville_lambda(number=%s)", number, extra={"event.action": "liouville_lambda", "logrite.number": number})
     if not isinstance(number, int):
         msg = f"Input value of [number={number}] must be an integer"
+        logger.error("liouville_lambda(number=%s): msg → %s", number, msg, extra={"event.action": "liouville_lambda", "logrite.number": number})
         raise TypeError(msg)
     if number < 1:
         raise ValueError("Input must be a positive integer")
+    logger.warning("<<< Exiting liouville_lambda(number=%s)", number, extra={"event.action": "liouville_lambda", "logrite.number": number})
     return -1 if len(prime_factors(number)) % 2 else 1
 
 

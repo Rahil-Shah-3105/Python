@@ -1,6 +1,9 @@
+import logging
+logger = logging.getLogger(__name__)
 def orbital_transfer_work(
     mass_central: float, mass_object: float, r_initial: float, r_final: float
 ) -> str:
+    logger.error(">>> Entering orbital_transfer_work(mass_central=%s,mass_object=%s,r_initial=%s,r_final=%s)", mass_central, mass_object, r_initial, r_final, extra={"event.action": "orbital_transfer_work", "logrite.mass_central": mass_central, "logrite.mass_object": mass_object, "logrite.r_initial": r_initial, "logrite.r_final": r_final})
     """
     Calculates the work required to move an object from one orbit to another in a
     gravitational field based on the change in total mechanical energy.
@@ -33,6 +36,10 @@ def orbital_transfer_work(
         >>> orbital_transfer_work(1.989e30, 1000, 1.5e11, 2.28e11)
         '1.514e+11'
     """
+    logger.error("orbital_transfer_work(mass_central=%s,mass_object=%s,r_initial=%s,r_final=%s): M → %s", mass_central, mass_object, r_initial, r_final, M, extra={"event.action": "orbital_transfer_work", "logrite.mass_central": mass_central, "logrite.mass_object": mass_object, "logrite.r_initial": r_initial, "logrite.r_final": r_final})
+    logger.error("orbital_transfer_work(mass_central=%s,mass_object=%s,r_initial=%s,r_final=%s): m → %s", mass_central, mass_object, r_initial, r_final, m, extra={"event.action": "orbital_transfer_work", "logrite.mass_central": mass_central, "logrite.mass_object": mass_object, "logrite.r_initial": r_initial, "logrite.r_final": r_final})
+    logger.error("orbital_transfer_work(mass_central=%s,mass_object=%s,r_initial=%s,r_final=%s): r_initial → %s", mass_central, mass_object, r_initial, r_final, r_initial, extra={"event.action": "orbital_transfer_work", "logrite.mass_central": mass_central, "logrite.mass_object": mass_object, "logrite.r_initial": r_initial, "logrite.r_final": r_final})
+    logger.error("orbital_transfer_work(mass_central=%s,mass_object=%s,r_initial=%s,r_final=%s): r_final → %s", mass_central, mass_object, r_initial, r_final, r_final, extra={"event.action": "orbital_transfer_work", "logrite.mass_central": mass_central, "logrite.mass_object": mass_object, "logrite.r_initial": r_initial, "logrite.r_final": r_final})
     gravitational_constant = 6.67430e-11
 
     if r_initial <= 0 or r_final <= 0:
@@ -41,6 +48,8 @@ def orbital_transfer_work(
     work = (gravitational_constant * mass_central * mass_object / 2) * (
         1 / r_initial - 1 / r_final
     )
+    logger.error("orbital_transfer_work(mass_central=%s,mass_object=%s,r_initial=%s,r_final=%s): work → %s", mass_central, mass_object, r_initial, r_final, work, extra={"event.action": "orbital_transfer_work", "logrite.mass_central": mass_central, "logrite.mass_object": mass_object, "logrite.r_initial": r_initial, "logrite.r_final": r_final})
+    logger.warning("<<< Exiting orbital_transfer_work(mass_central=%s,mass_object=%s,r_initial=%s,r_final=%s)", mass_central, mass_object, r_initial, r_final, extra={"event.action": "orbital_transfer_work", "logrite.mass_central": mass_central, "logrite.mass_object": mass_object, "logrite.r_initial": r_initial, "logrite.r_final": r_final})
     return f"{work:.3e}"
 
 

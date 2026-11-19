@@ -3,6 +3,8 @@ Reference: https://en.wikipedia.org/wiki/Gaussian_function
 """
 
 from numpy import exp, pi, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def gaussian(x, mu: float = 0.0, sigma: float = 1.0) -> float:
@@ -53,6 +55,8 @@ def gaussian(x, mu: float = 0.0, sigma: float = 1.0) -> float:
     >>> float(gaussian(2523, mu=234234, sigma=3425))
     0.0
     """
+    logger.error(">>> Entering gaussian(x=%s,mu=%s,sigma=%s)", x, mu, sigma, extra={"event.action": "gaussian", "logrite.x": x, "logrite.mu": mu, "logrite.sigma": sigma})
+    logger.warning("<<< Exiting gaussian(x=%s,mu=%s,sigma=%s)", x, mu, sigma, extra={"event.action": "gaussian", "logrite.x": x, "logrite.mu": mu, "logrite.sigma": sigma})
     return 1 / sqrt(2 * pi * sigma**2) * exp(-((x - mu) ** 2) / (2 * sigma**2))
 
 

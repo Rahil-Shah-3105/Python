@@ -7,6 +7,8 @@ For example:
 if input numbers = [3, 5, 2, 1, 6, 4]
 one possible Wiggle Sorted answer is [3, 5, 1, 6, 2, 4].
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def wiggle_sort(nums: list) -> list:
@@ -22,10 +24,12 @@ def wiggle_sort(nums: list) -> list:
     >>> wiggle_sort([-2.1, -5.68, -45.11])
     [-45.11, -2.1, -5.68]
     """
+    logger.error(">>> Entering wiggle_sort(nums=%s)", nums, extra={"event.action": "wiggle_sort", "logrite.nums": nums})
     for i, _ in enumerate(nums):
         if (i % 2 == 1) == (nums[i - 1] > nums[i]):
             nums[i - 1], nums[i] = nums[i], nums[i - 1]
 
+    logger.warning("<<< Exiting wiggle_sort(nums=%s)", nums, extra={"event.action": "wiggle_sort", "logrite.nums": nums})
     return nums
 
 

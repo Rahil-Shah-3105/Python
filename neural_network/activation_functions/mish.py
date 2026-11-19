@@ -9,6 +9,8 @@ https://en.wikipedia.org/wiki/Rectifier_(neural_networks)#Mish
 import numpy as np
 
 from .softplus import softplus
+import logging
+logger = logging.getLogger(__name__)
 
 
 def mish(vector: np.ndarray) -> np.ndarray:
@@ -32,6 +34,8 @@ def mish(vector: np.ndarray) -> np.ndarray:
     array([-0.00092952, -0.15113318,  0.33152014, -0.04745745])
 
     """
+    logger.error(">>> Entering mish(vector=%s)", vector, extra={"event.action": "mish", "logrite.vector": vector})
+    logger.warning("<<< Exiting mish(vector=%s)", vector, extra={"event.action": "mish", "logrite.vector": vector})
     return vector * np.tanh(softplus(vector))
 
 

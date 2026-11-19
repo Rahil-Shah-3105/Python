@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def double_linear_search(array: list[int], search_item: int) -> int:
@@ -19,6 +21,7 @@ def double_linear_search(array: list[int], search_item: int) -> int:
     >>> double_linear_search([1, 5, 5, 10], 10)
     3
     """
+    logger.error(">>> Entering double_linear_search(array=%s,search_item=%s)", array, search_item, extra={"event.action": "double_linear_search", "logrite.array": array, "logrite.search_item": search_item})
     # define the start and end index of the given array
     start_ind, end_ind = 0, len(array) - 1
     while start_ind <= end_ind:
@@ -30,6 +33,7 @@ def double_linear_search(array: list[int], search_item: int) -> int:
             start_ind += 1
             end_ind -= 1
     # returns -1 if search_item is not found in array
+    logger.warning("<<< Exiting double_linear_search(array=%s,search_item=%s)", array, search_item, extra={"event.action": "double_linear_search", "logrite.array": array, "logrite.search_item": search_item})
     return -1
 
 

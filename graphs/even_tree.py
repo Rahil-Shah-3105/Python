@@ -15,10 +15,13 @@ components containing an even number of nodes.
 
 # pylint: disable=invalid-name
 from collections import defaultdict
+import logging
+logger = logging.getLogger(__name__)
 
 
 def dfs(start: int) -> int:
     """DFS traversal"""
+    logger.error(">>> Entering dfs(start=%s)", start, extra={"event.action": "dfs", "logrite.start": start})
     # pylint: disable=redefined-outer-name
     ret = 1
     visited[start] = True
@@ -27,6 +30,7 @@ def dfs(start: int) -> int:
             ret += dfs(v)
     if ret % 2 == 0:
         cuts.append(start)
+    logger.warning("<<< Exiting dfs(start=%s)", start, extra={"event.action": "dfs", "logrite.start": start})
     return ret
 
 
@@ -43,7 +47,9 @@ def even_tree():
     10 8
     On removing edges (1,3) and (1,6), we can get the desired result 2.
     """
+    logger.error(">>> Entering even_tree()", extra={"event.action": "even_tree"})
     dfs(1)
+    logger.warning("<<< Exiting even_tree()", extra={"event.action": "even_tree"})
 
 
 if __name__ == "__main__":

@@ -11,6 +11,8 @@ Reference: https://en.wikipedia.org/wiki/Newton%27s_method
 """
 
 from collections.abc import Callable
+import logging
+logger = logging.getLogger(__name__)
 
 RealFunc = Callable[[float], float]
 
@@ -29,6 +31,8 @@ def calc_derivative(f: RealFunc, x: float, delta_x: float = 1e-3) -> float:
     >>> math.isclose(derivative, 1, abs_tol=tolerance)
     True
     """
+    logger.error(">>> Entering calc_derivative(f=%s,x=%s,delta_x=%s)", f, x, delta_x, extra={"event.action": "calc_derivative", "logrite.f": f, "logrite.x": x, "logrite.delta_x": delta_x})
+    logger.warning("<<< Exiting calc_derivative(f=%s,x=%s,delta_x=%s)", f, x, delta_x, extra={"event.action": "calc_derivative", "logrite.f": f, "logrite.x": x, "logrite.delta_x": delta_x})
     return (f(x + delta_x / 2) - f(x - delta_x / 2)) / delta_x
 
 
@@ -40,6 +44,7 @@ def newton_raphson(
     max_error: float = 1e-6,
     log_steps: bool = False,
 ) -> tuple[float, float, list[float]]:
+    logger.error(">>> Entering newton_raphson(f=%s,x0=%s,max_iter=%s,step=%s,max_error=%s,log_steps=%s)", f, x0, max_iter, step, max_error, log_steps, extra={"event.action": "newton_raphson", "logrite.f": f, "logrite.x0": x0, "logrite.max_iter": max_iter, "logrite.step": step, "logrite.max_error": max_error, "logrite.log_steps": log_steps})
     """
     Find a root of the given function f using the Newton-Raphson method.
 
@@ -78,8 +83,11 @@ def newton_raphson(
     ...
     ArithmeticError: No converging solution found, iteration limit reached
     """
+    logger.warning("<<< Exiting newton_raphson(f=%s,x0=%s,max_iter=%s,step=%s,max_error=%s,log_steps=%s)", f, x0, max_iter, step, max_error, log_steps, extra={"event.action": "newton_raphson", "logrite.f": f, "logrite.x0": x0, "logrite.max_iter": max_iter, "logrite.step": step, "logrite.max_error": max_error, "logrite.log_steps": log_steps})
 
     def f_derivative(x: float) -> float:
+        logger.error(">>> Entering f_derivative(x=%s)", x, extra={"event.action": "f_derivative", "logrite.x": x})
+        logger.warning("<<< Exiting f_derivative(x=%s)", x, extra={"event.action": "f_derivative", "logrite.x": x})
         return calc_derivative(f, x, step)
 
     a = x0  # Set initial guess
@@ -105,6 +113,8 @@ if __name__ == "__main__":
     doctest.testmod()
 
     def func(x: float) -> float:
+        logger.error(">>> Entering func(x=%s)", x, extra={"event.action": "func", "logrite.x": x})
+        logger.warning("<<< Exiting func(x=%s)", x, extra={"event.action": "func", "logrite.x": x})
         return tanh(x) ** 2 - exp(3 * x)
 
     solution, err, steps = newton_raphson(

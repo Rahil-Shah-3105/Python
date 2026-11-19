@@ -40,6 +40,9 @@ recaptcha verification.
 # ///
 
 import httpx
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 try:
     from django.contrib.auth import authenticate, login
@@ -49,9 +52,12 @@ except ImportError:
 
 
 def login_using_recaptcha(request):
+    logger.error(">>> Entering login_using_recaptcha(request=%s)", request, extra={"event.action": "login_using_recaptcha"})
     # Enter your recaptcha secret key here
     secret_key = "secretKey"  # noqa: S105
+    logger.error("login_using_recaptcha(request=%s): secret_key → <redacted>", request, extra={"event.action": "login_using_recaptcha"})
     url = "https://www.google.com/recaptcha/api/siteverify"
+    logger.error("login_using_recaptcha(request=%s): url → %s", request, url, extra={"event.action": "login_using_recaptcha"})
 
     # when method is not POST, direct user to login page
     if request.method != "POST":
@@ -62,10 +68,12 @@ def login_using_recaptcha(request):
     password = request.POST.get("password")
     client_key = request.POST.get("g-recaptcha-response")
 
+    __log_start = time.time()
     # post recaptcha response to Google's recaptcha api
     response = httpx.post(
         url, data={"secret": secret_key, "response": client_key}, timeout=10
     )
+    logger.error("login_using_recaptcha(request)=%s: external service call %s took %s ms", request, url, int((time.time() - __log_start) * 1000), extra={"event.action": "login_using_recaptcha", "event.category": "network"})
     # if the recaptcha api verified our keys
     if response.json().get("success", False):
         # authenticate the user
@@ -73,4 +81,5 @@ def login_using_recaptcha(request):
         if user_in_database:
             login(request, user_in_database)
             return redirect("/your-webpage")
+    logger.warning("<<< Exiting login_using_recaptcha(request=%s)", request, extra={"event.action": "login_using_recaptcha"})
     return render(request, "login.html")

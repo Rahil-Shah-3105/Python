@@ -8,6 +8,9 @@
 
 import httpx
 from bs4 import BeautifulSoup
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 """
 Get the HTML code of finance yahoo and select the current qsp-price
@@ -27,14 +30,20 @@ def stock_price(symbol: str = "AAPL") -> str:
     >>> isinstance(float(stock_price("GOOG")),float)
     True
     """
+    logger.error(">>> Entering stock_price(symbol=%s)", symbol, extra={"event.action": "stock_price", "logrite.symbol": symbol})
+    __log_start = time.time()
     url = f"https://finance.yahoo.com/quote/{symbol}?p={symbol}"
     yahoo_finance_source = httpx.get(
         url, headers={"USER-AGENT": "Mozilla/5.0"}, timeout=10, follow_redirects=True
     ).text
+    logger.error("stock_price(symbol=%s): url → %s", symbol, url, extra={"event.action": "stock_price", "logrite.symbol": symbol})
+    logger.error("stock_price(symbol)=%s: external service call took %s ms", symbol, int((time.time() - __log_start) * 1000), extra={"event.action": "stock_price", "event.category": "network", "logrite.symbol": symbol})
     soup = BeautifulSoup(yahoo_finance_source, "html.parser")
+    logger.error("stock_price(symbol=%s): soup → %s", symbol, soup, extra={"event.action": "stock_price", "logrite.symbol": symbol})
 
     if specific_fin_streamer_tag := soup.find("span", {"data-testid": "qsp-price"}):
         return specific_fin_streamer_tag.get_text()
+    logger.warning("<<< Exiting stock_price(symbol=%s)", symbol, extra={"event.action": "stock_price", "logrite.symbol": symbol})
     return "No <fin-streamer> tag with the specified data-testid attribute found."
 
 

@@ -39,6 +39,8 @@ Enter the change you want to make: 456
 Following is minimal   change for 456 :
 100 100 100 100 5 5 5 5 5 5 5 5 5 5 5 1
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_minimum_change(denominations: list[int], value: str) -> list[int]:
@@ -55,7 +57,9 @@ def find_minimum_change(denominations: list[int], value: str) -> list[int]:
     >>> find_minimum_change([1, 5, 100, 500, 1000], 456)
     [100, 100, 100, 100, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1]
     """
+    logger.error(">>> Entering find_minimum_change(denominations=%s,value=%s)", denominations, value, extra={"event.action": "find_minimum_change", "logrite.denominations": denominations, "logrite.value": value})
     total_value = int(value)
+    logger.error("find_minimum_change(denominations=%s,value=%s): total_value → %s", denominations, value, total_value, extra={"event.action": "find_minimum_change", "logrite.denominations": denominations, "logrite.value": value})
 
     # Initialize Result
     answer = []
@@ -67,6 +71,7 @@ def find_minimum_change(denominations: list[int], value: str) -> list[int]:
             total_value -= int(denomination)
             answer.append(denomination)  # Append the "answers" array
 
+    logger.warning("<<< Exiting find_minimum_change(denominations=%s,value=%s)", denominations, value, extra={"event.action": "find_minimum_change", "logrite.denominations": denominations, "logrite.value": value})
     return answer
 
 

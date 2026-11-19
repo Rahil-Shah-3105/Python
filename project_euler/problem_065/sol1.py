@@ -51,6 +51,8 @@ n_9 = 6 * 193 + 106 = 1264
 n_10 = 1 * 193 + 1264 = 1457
 1 + 4 + 5 + 7 = 17
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sum_digits(num: int) -> int:
@@ -64,10 +66,12 @@ def sum_digits(num: int) -> int:
     >>> sum_digits(999001)
     28
     """
+    logger.error(">>> Entering sum_digits(num=%s)", num, extra={"event.action": "sum_digits", "logrite.num": num})
     digit_sum = 0
     while num > 0:
         digit_sum += num % 10
         num //= 10
+    logger.warning("<<< Exiting sum_digits(num=%s)", num, extra={"event.action": "sum_digits", "logrite.num": num})
     return digit_sum
 
 
@@ -83,6 +87,7 @@ def solution(max_n: int = 100) -> int:
     >>> solution(50)
     91
     """
+    logger.error(">>> Entering solution(max_n=%s)", max_n, extra={"event.action": "solution", "logrite.max_n": max_n})
     pre_numerator = 1
     cur_numerator = 2
 
@@ -92,6 +97,7 @@ def solution(max_n: int = 100) -> int:
         pre_numerator = cur_numerator
         cur_numerator = e_cont * pre_numerator + temp
 
+    logger.warning("<<< Exiting solution(max_n=%s)", max_n, extra={"event.action": "solution", "logrite.max_n": max_n})
     return sum_digits(cur_numerator)
 
 

@@ -7,6 +7,8 @@ python3 -m doctest -v linear_search.py
 For manual testing run:
 python3 linear_search.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def linear_search(sequence: list, target: int) -> int:
@@ -27,9 +29,11 @@ def linear_search(sequence: list, target: int) -> int:
     >>> linear_search([0, 5, 7, 10, 15], 6)
     -1
     """
+    logger.error(">>> Entering linear_search(sequence=%s,target=%s)", sequence, target, extra={"event.action": "linear_search", "logrite.sequence": sequence, "logrite.target": target})
     for index, item in enumerate(sequence):
         if item == target:
             return index
+    logger.warning("<<< Exiting linear_search(sequence=%s,target=%s)", sequence, target, extra={"event.action": "linear_search", "logrite.sequence": sequence, "logrite.target": target})
     return -1
 
 
@@ -54,6 +58,7 @@ def rec_linear_search(sequence: list, low: int, high: int, target: int) -> int:
     >>> rec_linear_search([0, 30, 500, 100, 700], 0, 4, -6)
     -1
     """
+    logger.error(">>> Entering rec_linear_search(sequence=%s,low=%s,high=%s,target=%s)", sequence, low, high, target, extra={"event.action": "rec_linear_search", "logrite.sequence": sequence, "logrite.low": low, "logrite.high": high, "logrite.target": target})
     if not (0 <= high < len(sequence) and 0 <= low < len(sequence)):
         raise Exception("Invalid upper or lower bound!")
     if high < low:
@@ -62,6 +67,7 @@ def rec_linear_search(sequence: list, low: int, high: int, target: int) -> int:
         return low
     if sequence[high] == target:
         return high
+    logger.warning("<<< Exiting rec_linear_search(sequence=%s,low=%s,high=%s,target=%s)", sequence, low, high, target, extra={"event.action": "rec_linear_search", "logrite.sequence": sequence, "logrite.low": low, "logrite.high": high, "logrite.target": target})
     return rec_linear_search(sequence, low + 1, high - 1, target)
 
 

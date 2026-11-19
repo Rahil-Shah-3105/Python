@@ -8,11 +8,14 @@ https://en.wikipedia.org/wiki/Shortest_job_next
 from __future__ import annotations
 
 from statistics import mean
+import logging
+logger = logging.getLogger(__name__)
 
 
 def calculate_waitingtime(
     arrival_time: list[int], burst_time: list[int], no_of_processes: int
 ) -> list[int]:
+    logger.error(">>> Entering calculate_waitingtime(arrival_time=%s,burst_time=%s,no_of_processes=%s)", arrival_time, burst_time, no_of_processes, extra={"event.action": "calculate_waitingtime", "logrite.arrival_time": arrival_time, "logrite.burst_time": burst_time, "logrite.no_of_processes": no_of_processes})
     """
     Calculate the waiting time of each processes
 
@@ -64,12 +67,14 @@ def calculate_waitingtime(
         else:
             total_time += 1
 
+    logger.warning("<<< Exiting calculate_waitingtime(arrival_time=%s,burst_time=%s,no_of_processes=%s)", arrival_time, burst_time, no_of_processes, extra={"event.action": "calculate_waitingtime", "logrite.arrival_time": arrival_time, "logrite.burst_time": burst_time, "logrite.no_of_processes": no_of_processes})
     return waiting_time
 
 
 def calculate_turnaroundtime(
     burst_time: list[int], no_of_processes: int, waiting_time: list[int]
 ) -> list[int]:
+    logger.error(">>> Entering calculate_turnaroundtime(burst_time=%s,no_of_processes=%s,waiting_time=%s)", burst_time, no_of_processes, waiting_time, extra={"event.action": "calculate_turnaroundtime", "logrite.burst_time": burst_time, "logrite.no_of_processes": no_of_processes, "logrite.waiting_time": waiting_time})
     """
     Calculate the turnaround time of each process.
 
@@ -85,6 +90,7 @@ def calculate_turnaroundtime(
     turn_around_time = [0] * no_of_processes
     for i in range(no_of_processes):
         turn_around_time[i] = burst_time[i] + waiting_time[i]
+    logger.warning("<<< Exiting calculate_turnaroundtime(burst_time=%s,no_of_processes=%s,waiting_time=%s)", burst_time, no_of_processes, waiting_time, extra={"event.action": "calculate_turnaroundtime", "logrite.burst_time": burst_time, "logrite.no_of_processes": no_of_processes, "logrite.waiting_time": waiting_time})
     return turn_around_time
 
 

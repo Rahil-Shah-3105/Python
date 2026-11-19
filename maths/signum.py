@@ -1,6 +1,8 @@
 """
 Signum function -- https://en.wikipedia.org/wiki/Sign_function
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def signum(num: float) -> int:
@@ -31,8 +33,10 @@ def signum(num: float) -> int:
         ...
     TypeError: '<' not supported between instances of 'list' and 'int'
     """
+    logger.error(">>> Entering signum(num=%s)", num, extra={"event.action": "signum", "logrite.num": num})
     if num < 0:
         return -1
+    logger.warning("<<< Exiting signum(num=%s)", num, extra={"event.action": "signum", "logrite.num": num})
     return 1 if num else 0
 
 
@@ -41,6 +45,7 @@ def test_signum() -> None:
     Tests the signum function
     >>> test_signum()
     """
+    logger.error(">>> Entering test_signum()", extra={"event.action": "test_signum"})
     assert signum(5) == 1
     assert signum(-5) == -1
     assert signum(0) == 0
@@ -50,6 +55,7 @@ def test_signum() -> None:
     assert signum(-1e-6) == -1
     assert signum(123456789) == 1
     assert signum(-123456789) == -1
+    logger.warning("<<< Exiting test_signum()", extra={"event.action": "test_signum"})
 
 
 if __name__ == "__main__":

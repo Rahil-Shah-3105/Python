@@ -1,4 +1,6 @@
 """example of simple chaos machine"""
+import logging
+logger = logging.getLogger(__name__)
 
 # Chaos Machine (K, t, m)
 K = [0.33, 0.44, 0.55, 0.44, 0.33]
@@ -14,18 +16,22 @@ machine_time = 0
 
 
 def push(seed):
+    logger.error(">>> Entering push(seed=%s)", seed, extra={"event.action": "push", "logrite.seed": seed})
     global buffer_space, params_space, machine_time, K, m, t
 
     # Choosing Dynamical Systems (All)
     for key, value in enumerate(buffer_space):
         # Evolution Parameter
         e = float(seed / value)
+        logger.error("push(seed=%s): e → %s", seed, e, extra={"event.action": "push", "logrite.seed": seed})
 
         # Control Theory: Orbit Change
         value = (buffer_space[(key + 1) % m] + e) % 1
+        logger.error("push(seed=%s): value → %s", seed, value, extra={"event.action": "push", "logrite.seed": seed})
 
         # Control Theory: Trajectory Change
         r = (params_space[key] + e) % 1 + 3
+        logger.error("push(seed=%s): r → %s", seed, r, extra={"event.action": "push", "logrite.seed": seed})
 
         # Modification (Transition Function) - Jumps
         buffer_space[key] = round(float(r * value * (1 - value)), 10)
@@ -37,16 +43,21 @@ def push(seed):
 
     # Machine Time
     machine_time += 1
+    logger.warning("<<< Exiting push(seed=%s)", seed, extra={"event.action": "push", "logrite.seed": seed})
 
 
 def pull():
+    logger.error(">>> Entering pull()", extra={"event.action": "pull"})
     global buffer_space, params_space, machine_time, K, m, t
+    logger.warning("<<< Exiting pull()", extra={"event.action": "pull"})
 
     # PRNG (Xorshift by George Marsaglia)
     def xorshift(x, y):
+        logger.error(">>> Entering xorshift(x=%s,y=%s)", x, y, extra={"event.action": "xorshift", "logrite.x": x, "logrite.y": y})
         x ^= y >> 13
         y ^= x << 17
         x ^= y >> 5
+        logger.warning("<<< Exiting xorshift(x=%s,y=%s)", x, y, extra={"event.action": "xorshift", "logrite.x": x, "logrite.y": y})
         return x
 
     # Choosing Dynamical Systems (Increment)
@@ -73,11 +84,13 @@ def pull():
 
 
 def reset():
+    logger.error(">>> Entering reset()", extra={"event.action": "reset"})
     global buffer_space, params_space, machine_time, K, m, t
 
     buffer_space = K
     params_space = [0] * m
     machine_time = 0
+    logger.warning("<<< Exiting reset()", extra={"event.action": "reset"})
 
 
 if __name__ == "__main__":

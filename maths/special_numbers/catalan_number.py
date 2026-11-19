@@ -6,6 +6,8 @@ Source:
     https://en.wikipedia.org/wiki/Catalan_number
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def catalan(number: int) -> int:
@@ -29,9 +31,11 @@ def catalan(number: int) -> int:
         ...
     TypeError: Input value of [number=5.0] must be an integer
     """
+    logger.error(">>> Entering catalan(number=%s)", number, extra={"event.action": "catalan", "logrite.number": number})
 
     if not isinstance(number, int):
         msg = f"Input value of [number={number}] must be an integer"
+        logger.error("catalan(number=%s): msg → %s", number, msg, extra={"event.action": "catalan", "logrite.number": number})
         raise TypeError(msg)
 
     if number < 1:
@@ -44,6 +48,7 @@ def catalan(number: int) -> int:
         current_number *= 4 * i - 2
         current_number //= i + 1
 
+    logger.warning("<<< Exiting catalan(number=%s)", number, extra={"event.action": "catalan", "logrite.number": number})
     return current_number
 
 

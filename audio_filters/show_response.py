@@ -6,6 +6,8 @@ from typing import Protocol
 
 import matplotlib.pyplot as plt
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 class FilterType(Protocol):
@@ -17,11 +19,14 @@ class FilterType(Protocol):
         >>> issubclass(FilterType, Protocol)
         True
         """
+        logger.error(">>> Entering process(sample=%s)", sample, extra={"event.action": "process", "logrite.sample": sample})
 
+        logger.warning("<<< Exiting process(sample=%s)", sample, extra={"event.action": "process", "logrite.sample": sample})
 
 def get_bounds(
     fft_results: np.ndarray, samplerate: int
 ) -> tuple[int | float, int | float]:
+    logger.error(">>> Entering get_bounds(fft_results=%s,samplerate=%s)", fft_results, samplerate, extra={"event.action": "get_bounds", "logrite.fft_results": fft_results, "logrite.samplerate": samplerate})
     """
     Get bounds for printing fft results
 
@@ -93,3 +98,4 @@ def show_phase_response(filter_type: FilterType, samplerate: int) -> None:
     plt.ylabel("Phase shift (Radians)")
     plt.plot(np.unwrap(fft_out, -2 * pi))
     plt.show()
+    logger.error("show_phase_response(filter_type=%s,samplerate=%s): inputs → %s", filter_type, samplerate, inputs, extra={"event.action": "show_phase_response", "logrite.filter_type": filter_type, "logrite.samplerate": samplerate})

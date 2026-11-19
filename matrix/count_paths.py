@@ -18,6 +18,8 @@ In the example above, there are two distinct paths:
     0  0  *  1      0  0  *  1
     0  1  *  *      0  1  *  *
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def depth_first_search(grid: list[list[int]], row: int, col: int, visit: set) -> int:
@@ -45,6 +47,7 @@ def depth_first_search(grid: list[list[int]], row: int, col: int, visit: set) ->
     >>> depth_first_search(grid, 0, 0, set())
     2
     """
+    logger.error(">>> Entering depth_first_search(grid=%s,row=%s,col=%s,visit=%s)", grid, row, col, visit, extra={"event.action": "depth_first_search", "logrite.grid": grid, "logrite.row": row, "logrite.col": col, "logrite.visit": visit})
     row_length, col_length = len(grid), len(grid[0])
     if (
         min(row, col) < 0
@@ -66,6 +69,7 @@ def depth_first_search(grid: list[list[int]], row: int, col: int, visit: set) ->
     count += depth_first_search(grid, row, col - 1, visit)
 
     visit.remove((row, col))
+    logger.warning("<<< Exiting depth_first_search(grid=%s,row=%s,col=%s,visit=%s)", grid, row, col, visit, extra={"event.action": "depth_first_search", "logrite.grid": grid, "logrite.row": row, "logrite.col": col, "logrite.visit": visit})
     return count
 
 

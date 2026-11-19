@@ -6,6 +6,8 @@ the square of n "ends" in the same digits as n itself.
 Examples of Automorphic Numbers: 0, 1, 5, 6, 25, 76, 376, 625, 9376, 90625, ...
 https://en.wikipedia.org/wiki/Automorphic_number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 # Author : Akshay Dubey (https://github.com/itsAkshayDubey)
 # Time Complexity : O(log10n)
@@ -39,8 +41,10 @@ def is_automorphic_number(number: int) -> bool:
         ...
     TypeError: Input value of [number=5.0] must be an integer
     """
+    logger.error(">>> Entering is_automorphic_number(number=%s)", number, extra={"event.action": "is_automorphic_number", "logrite.number": number})
     if not isinstance(number, int):
         msg = f"Input value of [number={number}] must be an integer"
+        logger.error("is_automorphic_number(number=%s): msg → %s", number, msg, extra={"event.action": "is_automorphic_number", "logrite.number": number})
         raise TypeError(msg)
     if number < 0:
         return False
@@ -50,6 +54,7 @@ def is_automorphic_number(number: int) -> bool:
             return False
         number //= 10
         number_square //= 10
+    logger.warning("<<< Exiting is_automorphic_number(number=%s)", number, extra={"event.action": "is_automorphic_number", "logrite.number": number})
     return True
 
 

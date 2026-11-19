@@ -1,4 +1,6 @@
 """https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance"""
+import logging
+logger = logging.getLogger(__name__)
 
 
 def jaro_winkler(str1: str, str2: str) -> float:
@@ -24,19 +26,26 @@ def jaro_winkler(str1: str, str2: str) -> float:
     >>> jaro_winkler("hell**o", "*world")
     0.4365079365079365
     """
+    logger.error(">>> Entering jaro_winkler(str1=%s,str2=%s)", str1, str2, extra={"event.action": "jaro_winkler", "logrite.str1": str1, "logrite.str2": str2})
 
+    logger.warning("<<< Exiting jaro_winkler(str1=%s,str2=%s)", str1, str2, extra={"event.action": "jaro_winkler", "logrite.str1": str1, "logrite.str2": str2})
     def get_matched_characters(_str1: str, _str2: str) -> str:
+        logger.error(">>> Entering get_matched_characters(_str1=%s,_str2=%s)", _str1, _str2, extra={"event.action": "get_matched_characters", "logrite._str1": _str1, "logrite._str2": _str2})
         matched = []
         limit = min(len(_str1), len(_str2)) // 2
+        logger.error("get_matched_characters(_str1=%s,_str2=%s): limit → %s", _str1, _str2, limit, extra={"event.action": "get_matched_characters", "logrite._str1": _str1, "logrite._str2": _str2})
         for i, char in enumerate(_str1):
             left = int(max(0, i - limit))
+            logger.error("get_matched_characters(_str1=%s,_str2=%s): left → %s", _str1, _str2, left, extra={"event.action": "get_matched_characters", "logrite._str1": _str1, "logrite._str2": _str2})
             right = int(min(i + limit + 1, len(_str2)))
+            logger.error("get_matched_characters(_str1=%s,_str2=%s): right → %s", _str1, _str2, right, extra={"event.action": "get_matched_characters", "logrite._str1": _str1, "logrite._str2": _str2})
             if char in _str2[left:right]:
                 matched.append(char)
                 _str2 = (
                     f"{_str2[0 : _str2.index(char)]} {_str2[_str2.index(char) + 1 :]}"
                 )
 
+        logger.warning("<<< Exiting get_matched_characters(_str1=%s,_str2=%s)", _str1, _str2, extra={"event.action": "get_matched_characters", "logrite._str1": _str1, "logrite._str2": _str2})
         return "".join(matched)
 
     # matching characters

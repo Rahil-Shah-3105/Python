@@ -2,6 +2,8 @@
 Binomial Heap
 Reference: Advanced Data Structures, Peter Brass
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
@@ -13,35 +15,52 @@ class Node:
     """
 
     def __init__(self, val):
+        logger.error(">>> Entering __init__(val=%s)", val, extra={"event.action": "__init__", "logrite.val": val})
         self.val = val
+        logger.debug("__init__(self=%s,val=%s): self.val → %s", self, val, self.val, extra={"event.action": "__init__", "logrite.val": val})
         # Number of nodes in left subtree
+        logger.warning("<<< Exiting __init__(val=%s)", val, extra={"event.action": "__init__", "logrite.val": val})
         self.left_tree_size = 0
+        logger.debug("__init__(self=%s,val=%s): self.left_tree_size → %s", self, val, self.left_tree_size, extra={"event.action": "__init__", "logrite.val": val})
         self.left = None
+        logger.debug("__init__(self=%s,val=%s): self.left → %s", self, val, self.left, extra={"event.action": "__init__", "logrite.val": val})
         self.right = None
+        logger.debug("__init__(self=%s,val=%s): self.right → %s", self, val, self.right, extra={"event.action": "__init__", "logrite.val": val})
         self.parent = None
+        logger.debug("__init__(self=%s,val=%s): self.parent → %s", self, val, self.parent, extra={"event.action": "__init__", "logrite.val": val})
 
     def merge_trees(self, other):
         """
         In-place merge of two binomial trees of equal size.
         Returns the root of the resulting tree
         """
+        logger.error(">>> Entering merge_trees(other=%s)", other, extra={"event.action": "merge_trees", "logrite.other": other})
         assert self.left_tree_size == other.left_tree_size, "Unequal Sizes of Blocks"
 
         if self.val < other.val:
             other.left = self.right
+            logger.debug("merge_trees(self=%s,other=%s): other.left → %s", self, other, other.left, extra={"event.action": "merge_trees", "logrite.other": other})
             other.parent = None
+            logger.debug("merge_trees(self=%s,other=%s): other.parent → %s", self, other, other.parent, extra={"event.action": "merge_trees", "logrite.other": other})
             if self.right:
                 self.right.parent = other
             self.right = other
+            logger.debug("merge_trees(self=%s,other=%s): self.right → %s", self, other, self.right, extra={"event.action": "merge_trees", "logrite.other": other})
             self.left_tree_size = self.left_tree_size * 2 + 1
+            logger.debug("merge_trees(self=%s,other=%s): self.left_tree_size → %s", self, other, self.left_tree_size, extra={"event.action": "merge_trees", "logrite.other": other})
             return self
         else:
             self.left = other.right
+            logger.debug("merge_trees(self=%s,other=%s): self.left → %s", self, other, self.left, extra={"event.action": "merge_trees", "logrite.other": other})
             self.parent = None
+            logger.debug("merge_trees(self=%s,other=%s): self.parent → %s", self, other, self.parent, extra={"event.action": "merge_trees", "logrite.other": other})
             if other.right:
                 other.right.parent = self
             other.right = self
+            logger.debug("merge_trees(self=%s,other=%s): other.right → %s", self, other, other.right, extra={"event.action": "merge_trees", "logrite.other": other})
             other.left_tree_size = other.left_tree_size * 2 + 1
+            logger.debug("merge_trees(self=%s,other=%s): other.left_tree_size → %s", self, other, other.left_tree_size, extra={"event.action": "merge_trees", "logrite.other": other})
+            logger.warning("<<< Exiting merge_trees(other=%s)", other, extra={"event.action": "merge_trees", "logrite.other": other})
             return other
 
 
@@ -124,23 +143,32 @@ class BinomialHeap:
     """
 
     def __init__(self, bottom_root=None, min_node=None, heap_size=0):
+        logger.error(">>> Entering __init__(bottom_root=%s,min_node=%s,heap_size=%s)", bottom_root, min_node, heap_size, extra={"event.action": "__init__", "logrite.bottom_root": bottom_root, "logrite.min_node": min_node, "logrite.heap_size": heap_size})
         self.size = heap_size
+        logger.debug("__init__(self=%s,bottom_root=%s,min_node=%s,heap_size=%s): self.size → %s", self, bottom_root, min_node, heap_size, self.size, extra={"event.action": "__init__", "logrite.bottom_root": bottom_root, "logrite.min_node": min_node, "logrite.heap_size": heap_size})
         self.bottom_root = bottom_root
+        logger.debug("__init__(self=%s,bottom_root=%s,min_node=%s,heap_size=%s): self.bottom_root → %s", self, bottom_root, min_node, heap_size, self.bottom_root, extra={"event.action": "__init__", "logrite.bottom_root": bottom_root, "logrite.min_node": min_node, "logrite.heap_size": heap_size})
         self.min_node = min_node
+        logger.warning("<<< Exiting __init__(bottom_root=%s,min_node=%s,heap_size=%s)", bottom_root, min_node, heap_size, extra={"event.action": "__init__", "logrite.bottom_root": bottom_root, "logrite.min_node": min_node, "logrite.heap_size": heap_size})
+        logger.debug("__init__(self=%s,bottom_root=%s,min_node=%s,heap_size=%s): self.min_node → %s", self, bottom_root, min_node, heap_size, self.min_node, extra={"event.action": "__init__", "logrite.bottom_root": bottom_root, "logrite.min_node": min_node, "logrite.heap_size": heap_size})
 
     def merge_heaps(self, other):
         """
         In-place merge of two binomial heaps.
         Both of them become the resulting merged heap
         """
+        logger.error(">>> Entering merge_heaps(other=%s)", other, extra={"event.action": "merge_heaps", "logrite.other": other})
 
         # Empty heaps corner cases
         if other.size == 0:
             return None
         if self.size == 0:
             self.size = other.size
+            logger.debug("merge_heaps(self=%s,other=%s): self.size → %s", self, other, self.size, extra={"event.action": "merge_heaps", "logrite.other": other})
             self.bottom_root = other.bottom_root
+            logger.debug("merge_heaps(self=%s,other=%s): self.bottom_root → %s", self, other, self.bottom_root, extra={"event.action": "merge_heaps", "logrite.other": other})
             self.min_node = other.min_node
+            logger.debug("merge_heaps(self=%s,other=%s): self.min_node → %s", self, other, self.min_node, extra={"event.action": "merge_heaps", "logrite.other": other})
             return None
         # Update size
         self.size = self.size + other.size
@@ -183,12 +211,16 @@ class BinomialHeap:
 
                 # Updating links
                 i.left = previous_node
+                logger.debug("merge_heaps(self=%s,other=%s): i.left → %s", self, other, i.left, extra={"event.action": "merge_heaps", "logrite.other": other})
                 i.parent = next_node
+                logger.debug("merge_heaps(self=%s,other=%s): i.parent → %s", self, other, i.parent, extra={"event.action": "merge_heaps", "logrite.other": other})
                 if previous_node:
                     previous_node.parent = i
+                    logger.debug("merge_heaps(self=%s,other=%s): previous_node.parent → %s", self, other, previous_node.parent, extra={"event.action": "merge_heaps", "logrite.other": other})
                 if next_node:
                     next_node.left = i
             else:
+                logger.debug("merge_heaps(self=%s,other=%s): next_node.left → %s", self, other, next_node.left, extra={"event.action": "merge_heaps", "logrite.other": other})
                 i = i.parent
         # Updating self.bottom_root
         while i.left:
@@ -197,23 +229,32 @@ class BinomialHeap:
 
         # Update other
         other.size = self.size
+        logger.debug("merge_heaps(self=%s,other=%s): other.size → %s", self, other, other.size, extra={"event.action": "merge_heaps", "logrite.other": other})
         other.bottom_root = self.bottom_root
+        logger.debug("merge_heaps(self=%s,other=%s): other.bottom_root → %s", self, other, other.bottom_root, extra={"event.action": "merge_heaps", "logrite.other": other})
         other.min_node = self.min_node
+        logger.debug("merge_heaps(self=%s,other=%s): other.min_node → %s", self, other, other.min_node, extra={"event.action": "merge_heaps", "logrite.other": other})
 
         # Return the merged heap
+        logger.warning("<<< Exiting merge_heaps(other=%s)", other, extra={"event.action": "merge_heaps", "logrite.other": other})
         return self
 
     def insert(self, val):
         """
         insert a value in the heap
         """
+        logger.error(">>> Entering insert(val=%s)", val, extra={"event.action": "insert", "logrite.val": val})
         if self.size == 0:
             self.bottom_root = Node(val)
+            logger.error("insert(val=%s): self.bottom_root → %s", val, self.bottom_root, extra={"event.action": "insert", "logrite.val": val})
             self.size = 1
+            logger.debug("insert(self=%s,val=%s): self.size → %s", self, val, self.size, extra={"event.action": "insert", "logrite.val": val})
             self.min_node = self.bottom_root
         else:
+            logger.debug("insert(self=%s,val=%s): self.min_node → %s", self, val, self.min_node, extra={"event.action": "insert", "logrite.val": val})
             # Create new node
             new_node = Node(val)
+            logger.error("insert(val=%s): new_node → %s", val, new_node, extra={"event.action": "insert", "logrite.val": val})
 
             # Update size
             self.size += 1
@@ -224,7 +265,9 @@ class BinomialHeap:
             # Put new_node as a bottom_root in heap
             self.bottom_root.left = new_node
             new_node.parent = self.bottom_root
+            logger.debug("insert(self=%s,val=%s): new_node.parent → %s", self, val, new_node.parent, extra={"event.action": "insert", "logrite.val": val})
             self.bottom_root = new_node
+            logger.debug("insert(self=%s,val=%s): self.bottom_root → %s", self, val, self.bottom_root, extra={"event.action": "insert", "logrite.val": val})
 
             # Consecutively merge roots with same left_tree_size
             while (
@@ -242,21 +285,28 @@ class BinomialHeap:
                 self.bottom_root.parent = next_node
                 self.bottom_root.left = None
                 if next_node:
+                    logger.warning("<<< Exiting insert(val=%s)", val, extra={"event.action": "insert", "logrite.val": val})
                     next_node.left = self.bottom_root
+                    logger.debug("insert(self=%s,val=%s): next_node.left → %s", self, val, next_node.left, extra={"event.action": "insert", "logrite.val": val})
 
     def peek(self):
         """
         return min element without deleting it
         """
+        logger.error(">>> Entering peek()", extra={"event.action": "peek"})
+        logger.warning("<<< Exiting peek()", extra={"event.action": "peek"})
         return self.min_node.val
 
     def is_empty(self):
+        logger.error(">>> Entering is_empty()", extra={"event.action": "is_empty"})
+        logger.warning("<<< Exiting is_empty()", extra={"event.action": "is_empty"})
         return self.size == 0
 
     def delete_min(self):
         """
         delete min element and return it
         """
+        logger.error(">>> Entering delete_min()", extra={"event.action": "delete_min"})
         # assert not self.isEmpty(), "Empty Heap"
 
         # Save minimal value
@@ -266,12 +316,15 @@ class BinomialHeap:
         if self.size == 1:
             # Update size
             self.size = 0
+            logger.debug("delete_min(self=%s): self.size → %s", self, self.size, extra={"event.action": "delete_min"})
 
             # Update bottom root
             self.bottom_root = None
+            logger.debug("delete_min(self=%s): self.bottom_root → %s", self, self.bottom_root, extra={"event.action": "delete_min"})
 
             # Update min_node
             self.min_node = None
+            logger.debug("delete_min(self=%s): self.min_node → %s", self, self.min_node, extra={"event.action": "delete_min"})
 
             return min_value
         # No right subtree corner case
@@ -297,6 +350,7 @@ class BinomialHeap:
         # Find the BinomialHeap of the right subtree of min_node
         bottom_of_new = self.min_node.right
         bottom_of_new.parent = None
+        logger.debug("delete_min(self=%s): bottom_of_new.parent → %s", self, bottom_of_new.parent, extra={"event.action": "delete_min"})
         min_of_new = bottom_of_new
         size_of_new = 1
 
@@ -334,6 +388,7 @@ class BinomialHeap:
         # bottom_root
         if previous_node:
             previous_node.parent = next_node
+            logger.debug("delete_min(self=%s): previous_node.parent → %s", self, previous_node.parent, extra={"event.action": "delete_min"})
 
             # Update bottom_root and search for min_node below
             self.bottom_root = previous_node
@@ -344,6 +399,7 @@ class BinomialHeap:
                     self.min_node = self.bottom_root
         if next_node:
             next_node.left = previous_node
+            logger.debug("delete_min(self=%s): next_node.left → %s", self, next_node.left, extra={"event.action": "delete_min"})
 
             # Search for new min_node above min_node
             i = next_node
@@ -354,6 +410,7 @@ class BinomialHeap:
         # Merge heaps
         self.merge_heaps(new_heap)
 
+        logger.warning("<<< Exiting delete_min()", extra={"event.action": "delete_min"})
         return int(min_value)
 
     def pre_order(self):
@@ -362,6 +419,7 @@ class BinomialHeap:
         values of nodes plus their level distance from the root;
         Empty nodes appear as #
         """
+        logger.error(">>> Entering pre_order()", extra={"event.action": "pre_order"})
         # Find top root
         top_root = self.bottom_root
         while top_root.parent:
@@ -369,28 +427,33 @@ class BinomialHeap:
         # preorder
         heap_pre_order = []
         self.__traversal(top_root, heap_pre_order)
+        logger.warning("<<< Exiting pre_order()", extra={"event.action": "pre_order"})
         return heap_pre_order
 
     def __traversal(self, curr_node, preorder, level=0):
         """
         Pre-order traversal of nodes
         """
+        logger.error(">>> Entering __traversal(curr_node=%s,preorder=%s,level=%s)", curr_node, preorder, level, extra={"event.action": "__traversal", "logrite.curr_node": curr_node, "logrite.preorder": preorder, "logrite.level": level})
         if curr_node:
             preorder.append((curr_node.val, level))
             self.__traversal(curr_node.left, preorder, level + 1)
             self.__traversal(curr_node.right, preorder, level + 1)
         else:
             preorder.append(("#", level))
+            logger.warning("<<< Exiting __traversal(curr_node=%s,preorder=%s,level=%s)", curr_node, preorder, level, extra={"event.action": "__traversal", "logrite.curr_node": curr_node, "logrite.preorder": preorder, "logrite.level": level})
 
     def __str__(self):
         """
         Overwriting str for a pre-order print of nodes in heap;
         Performance is poor, so use only for small examples
         """
+        logger.error(">>> Entering __str__()", extra={"event.action": "__str__"})
         if self.is_empty():
             return ""
         preorder_heap = self.pre_order()
 
+        logger.warning("<<< Exiting __str__()", extra={"event.action": "__str__"})
         return "\n".join(("-" * level + str(value)) for value, level in preorder_heap)
 
 

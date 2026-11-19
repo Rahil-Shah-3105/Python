@@ -6,6 +6,8 @@ https://en.wikipedia.org/wiki/Radix_sort
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def msd_radix_sort(list_of_ints: list[int]) -> list[int]:
@@ -27,6 +29,7 @@ def msd_radix_sort(list_of_ints: list[int]) -> list[int]:
         ...
     ValueError: All numbers must be positive
     """
+    logger.error(">>> Entering msd_radix_sort(list_of_ints=%s)", list_of_ints, extra={"event.action": "msd_radix_sort", "logrite.list_of_ints": list_of_ints})
     if not list_of_ints:
         return []
 
@@ -34,6 +37,7 @@ def msd_radix_sort(list_of_ints: list[int]) -> list[int]:
         raise ValueError("All numbers must be positive")
 
     most_bits = max(len(bin(x)[2:]) for x in list_of_ints)
+    logger.warning("<<< Exiting msd_radix_sort(list_of_ints=%s)", list_of_ints, extra={"event.action": "msd_radix_sort", "logrite.list_of_ints": list_of_ints})
     return _msd_radix_sort(list_of_ints, most_bits)
 
 
@@ -50,6 +54,7 @@ def _msd_radix_sort(list_of_ints: list[int], bit_position: int) -> list[int]:
     >>> _msd_radix_sort([10, 4, 12], 2)
     [4, 12, 10]
     """
+    logger.error(">>> Entering _msd_radix_sort(list_of_ints=%s,bit_position=%s)", list_of_ints, bit_position, extra={"event.action": "_msd_radix_sort", "logrite.list_of_ints": list_of_ints, "logrite.bit_position": bit_position})
     if bit_position == 0 or len(list_of_ints) in [0, 1]:
         return list_of_ints
 
@@ -72,6 +77,7 @@ def _msd_radix_sort(list_of_ints: list[int], bit_position: int) -> list[int]:
     res = zeros
     res.extend(ones)
 
+    logger.warning("<<< Exiting _msd_radix_sort(list_of_ints=%s,bit_position=%s)", list_of_ints, bit_position, extra={"event.action": "_msd_radix_sort", "logrite.list_of_ints": list_of_ints, "logrite.bit_position": bit_position})
     return res
 
 
@@ -97,9 +103,12 @@ def msd_radix_sort_inplace(list_of_ints: list[int]):
         ...
     ValueError: All numbers must be positive
     """
+    logger.error(">>> Entering msd_radix_sort_inplace(list_of_ints=%s)", list_of_ints, extra={"event.action": "msd_radix_sort_inplace", "logrite.list_of_ints": list_of_ints})
 
     length = len(list_of_ints)
+    logger.error("msd_radix_sort_inplace(list_of_ints=%s): length → %s", list_of_ints, length, extra={"event.action": "msd_radix_sort_inplace", "logrite.list_of_ints": list_of_ints})
     if not list_of_ints or length == 1:
+        logger.warning("<<< Exiting msd_radix_sort_inplace(list_of_ints=%s)", list_of_ints, extra={"event.action": "msd_radix_sort_inplace", "logrite.list_of_ints": list_of_ints})
         return
 
     if min(list_of_ints) < 0:
@@ -112,6 +121,7 @@ def msd_radix_sort_inplace(list_of_ints: list[int]):
 def _msd_radix_sort_inplace(
     list_of_ints: list[int], bit_position: int, begin_index: int, end_index: int
 ):
+    logger.error(">>> Entering _msd_radix_sort_inplace(list_of_ints=%s,bit_position=%s,begin_index=%s,end_index=%s)", list_of_ints, bit_position, begin_index, end_index, extra={"event.action": "_msd_radix_sort_inplace", "logrite.list_of_ints": list_of_ints, "logrite.bit_position": bit_position, "logrite.begin_index": begin_index, "logrite.end_index": end_index})
     """
     Sort the given list based on the bit at bit_position. Numbers with a
     0 at that position will be at the start of the list, numbers with a
@@ -126,6 +136,7 @@ def _msd_radix_sort_inplace(
     True
     """
     if bit_position == 0 or end_index - begin_index <= 1:
+        logger.warning("<<< Exiting _msd_radix_sort_inplace(list_of_ints=%s,bit_position=%s,begin_index=%s,end_index=%s)", list_of_ints, bit_position, begin_index, end_index, extra={"event.action": "_msd_radix_sort_inplace", "logrite.list_of_ints": list_of_ints, "logrite.bit_position": bit_position, "logrite.begin_index": begin_index, "logrite.end_index": end_index})
         return
 
     bit_position -= 1

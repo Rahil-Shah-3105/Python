@@ -1,6 +1,8 @@
 """A merge sort which accepts an array as input and recursively
 splits an array in half and sorts and combines them.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 """https://en.wikipedia.org/wiki/Merge_sort """
 
@@ -18,8 +20,10 @@ def merge(arr: list[int]) -> list[int]:
     >>> merge([])
     []
     """
+    logger.error(">>> Entering merge(arr=%s)", arr, extra={"event.action": "merge", "logrite.arr": arr})
     if len(arr) > 1:
         middle_length = len(arr) // 2  # Finds the middle of the array
+        logger.error("merge(arr=%s): middle_length → %s", arr, middle_length, extra={"event.action": "merge", "logrite.arr": arr})
         left_array = arr[
             :middle_length
         ]  # Creates an array of the elements in the first half.
@@ -27,7 +31,9 @@ def merge(arr: list[int]) -> list[int]:
             middle_length:
         ]  # Creates an array of the elements in the second half.
         left_size = len(left_array)
+        logger.error("merge(arr=%s): left_size → %s", arr, left_size, extra={"event.action": "merge", "logrite.arr": arr})
         right_size = len(right_array)
+        logger.error("merge(arr=%s): right_size → %s", arr, right_size, extra={"event.action": "merge", "logrite.arr": arr})
         merge(left_array)  # Starts sorting the left.
         merge(right_array)  # Starts sorting the right
         left_index = 0  # Left Counter
@@ -55,6 +61,7 @@ def merge(arr: list[int]) -> list[int]:
             arr[index] = right_array[right_index]
             right_index += 1
             index += 1
+    logger.warning("<<< Exiting merge(arr=%s)", arr, extra={"event.action": "merge", "logrite.arr": arr})
     return arr
 
 

@@ -11,6 +11,8 @@ Note:
     - The algorithm has a time complexity of O(log(x)).
     - Original algorithm idea based on binary search.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def integer_square_root(num: int) -> int:
@@ -44,6 +46,7 @@ def integer_square_root(num: int) -> int:
         ...
     ValueError: num must be non-negative integer
     """
+    logger.error(">>> Entering integer_square_root(num=%s)", num, extra={"event.action": "integer_square_root", "logrite.num": num})
     if not isinstance(num, int) or num < 0:
         raise ValueError("num must be non-negative integer")
 
@@ -64,6 +67,7 @@ def integer_square_root(num: int) -> int:
         else:
             right_bound = mid - 1
 
+    logger.warning("<<< Exiting integer_square_root(num=%s)", num, extra={"event.action": "integer_square_root", "logrite.num": num})
     return right_bound
 
 

@@ -12,6 +12,8 @@ python3 fibonacci_search.py
 """
 
 from functools import lru_cache
+import logging
+logger = logging.getLogger(__name__)
 
 
 @lru_cache
@@ -43,6 +45,7 @@ def fibonacci(k: int) -> int:
     Traceback (most recent call last):
     ValueError: k integer must be greater or equal to zero.
     """
+    logger.error(">>> Entering fibonacci(k=%s)", k, extra={"event.action": "fibonacci", "logrite.k": k})
     if not isinstance(k, int):
         raise TypeError("k must be an integer.")
     if k < 0:
@@ -52,6 +55,7 @@ def fibonacci(k: int) -> int:
     elif k == 1:
         return 1
     else:
+        logger.warning("<<< Exiting fibonacci(k=%s)", k, extra={"event.action": "fibonacci", "logrite.k": k})
         return fibonacci(k - 1) + fibonacci(k - 2)
 
 
@@ -102,7 +106,9 @@ def fibonacci_search(arr: list, val: int) -> int:
     >>> fibonacci_search(list(range(-100, 100, 5)), 95)
     39
     """
+    logger.error(">>> Entering fibonacci_search(arr=%s,val=%s)", arr, val, extra={"event.action": "fibonacci_search", "logrite.arr": arr, "logrite.val": val})
     len_list = len(arr)
+    logger.error("fibonacci_search(arr=%s,val=%s): len_list → %s", arr, val, len_list, extra={"event.action": "fibonacci_search", "logrite.arr": arr, "logrite.val": val})
     # Find m such that F_m >= n where F_i is the i_th fibonacci number.
     i = 0
     while True:
@@ -123,6 +129,7 @@ def fibonacci_search(arr: list, val: int) -> int:
         elif val > item_k_1:
             offset += fibonacci(fibb_k - 1)
             fibb_k -= 2
+    logger.warning("<<< Exiting fibonacci_search(arr=%s,val=%s)", arr, val, extra={"event.action": "fibonacci_search", "logrite.arr": arr, "logrite.val": val})
     return -1
 
 

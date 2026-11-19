@@ -11,6 +11,8 @@ discs at random, is a box containing eighty-five blue discs and thirty-five red 
 By finding the first arrangement to contain over 10^12 = 1,000,000,000,000 discs
 in total, determine the number of blue discs that the box would contain.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(min_total: int = 10**12) -> int:
@@ -27,6 +29,7 @@ def solution(min_total: int = 10**12) -> int:
     >>> solution(21)
     85
     """
+    logger.error(">>> Entering solution(min_total=%s)", min_total, extra={"event.action": "solution", "logrite.min_total": min_total})
 
     prev_numerator = 1
     prev_denominator = 0
@@ -41,6 +44,7 @@ def solution(min_total: int = 10**12) -> int:
         prev_denominator += 2 * denominator
         denominator += 2 * prev_denominator
 
+    logger.warning("<<< Exiting solution(min_total=%s)", min_total, extra={"event.action": "solution", "logrite.min_total": min_total})
     return (denominator + 1) // 2
 
 

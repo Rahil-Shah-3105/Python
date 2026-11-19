@@ -1,4 +1,6 @@
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 def viterbi(
@@ -8,6 +10,7 @@ def viterbi(
     transition_probabilities: dict,
     emission_probabilities: dict,
 ) -> list:
+    logger.error(">>> Entering viterbi(observations_space=%s,states_space=%s,initial_probabilities=%s,transition_probabilities=%s,emission_probabilities=%s)", observations_space, states_space, initial_probabilities, transition_probabilities, emission_probabilities, extra={"event.action": "viterbi", "logrite.observations_space": observations_space, "logrite.states_space": states_space, "logrite.initial_probabilities": initial_probabilities, "logrite.transition_probabilities": transition_probabilities, "logrite.emission_probabilities": emission_probabilities})
     """
     Viterbi Algorithm, to find the most likely path of
     states from the start and the expected output.
@@ -154,12 +157,14 @@ def viterbi(
 
     # The final observation
     final_observation = observations_space[len(observations_space) - 1]
+    logger.error("viterbi(observations_space=%s,states_space=%s,initial_probabilities=%s,transition_probabilities=%s,emission_probabilities=%s): final_observation → %s", observations_space, states_space, initial_probabilities, transition_probabilities, emission_probabilities, final_observation, extra={"event.action": "viterbi", "logrite.observations_space": observations_space, "logrite.states_space": states_space, "logrite.initial_probabilities": initial_probabilities, "logrite.transition_probabilities": transition_probabilities, "logrite.emission_probabilities": emission_probabilities})
 
     # argmax for given final observation
     arg_max = ""
     max_probability = -1
     for k_state in states_space:
         probability = probabilities[(k_state, final_observation)]
+        logger.error("viterbi(observations_space=%s,states_space=%s,initial_probabilities=%s,transition_probabilities=%s,emission_probabilities=%s): probability → %s", observations_space, states_space, initial_probabilities, transition_probabilities, emission_probabilities, probability, extra={"event.action": "viterbi", "logrite.observations_space": observations_space, "logrite.states_space": states_space, "logrite.initial_probabilities": initial_probabilities, "logrite.transition_probabilities": transition_probabilities, "logrite.emission_probabilities": emission_probabilities})
         if probability > max_probability:
             max_probability = probability
             arg_max = k_state
@@ -168,11 +173,13 @@ def viterbi(
     # Process pointers backwards
     previous = last_state
     result = []
+    logger.error("viterbi(observations_space=%s,states_space=%s,initial_probabilities=%s,transition_probabilities=%s,emission_probabilities=%s): result → %s", observations_space, states_space, initial_probabilities, transition_probabilities, emission_probabilities, result, extra={"event.action": "viterbi", "logrite.observations_space": observations_space, "logrite.states_space": states_space, "logrite.initial_probabilities": initial_probabilities, "logrite.transition_probabilities": transition_probabilities, "logrite.emission_probabilities": emission_probabilities})
     for o in range(len(observations_space) - 1, -1, -1):
         result.append(previous)
         previous = pointers[previous, observations_space[o]]
     result.reverse()
 
+    logger.warning("<<< Exiting viterbi(observations_space=%s,states_space=%s,initial_probabilities=%s,transition_probabilities=%s,emission_probabilities=%s)", observations_space, states_space, initial_probabilities, transition_probabilities, emission_probabilities, extra={"event.action": "viterbi", "logrite.observations_space": observations_space, "logrite.states_space": states_space, "logrite.initial_probabilities": initial_probabilities, "logrite.transition_probabilities": transition_probabilities, "logrite.emission_probabilities": emission_probabilities})
     return result
 
 
@@ -183,6 +190,7 @@ def _validation(
     transition_probabilities: Any,
     emission_probabilities: Any,
 ) -> None:
+    logger.error(">>> Entering _validation(observations_space=%s,states_space=%s,initial_probabilities=%s,transition_probabilities=%s,emission_probabilities=%s)", observations_space, states_space, initial_probabilities, transition_probabilities, emission_probabilities, extra={"event.action": "_validation", "logrite.observations_space": observations_space, "logrite.states_space": states_space, "logrite.initial_probabilities": initial_probabilities, "logrite.transition_probabilities": transition_probabilities, "logrite.emission_probabilities": emission_probabilities})
     """
     >>> observations = ["normal", "cold", "dizzy"]
     >>> states = ["Healthy", "Fever"]
@@ -212,6 +220,7 @@ def _validation(
     _validate_dicts(
         initial_probabilities, transition_probabilities, emission_probabilities
     )
+    logger.warning("<<< Exiting _validation(observations_space=%s,states_space=%s,initial_probabilities=%s,transition_probabilities=%s,emission_probabilities=%s)", observations_space, states_space, initial_probabilities, transition_probabilities, emission_probabilities, extra={"event.action": "_validation", "logrite.observations_space": observations_space, "logrite.states_space": states_space, "logrite.initial_probabilities": initial_probabilities, "logrite.transition_probabilities": transition_probabilities, "logrite.emission_probabilities": emission_probabilities})
 
 
 def _validate_not_empty(
@@ -221,6 +230,7 @@ def _validate_not_empty(
     transition_probabilities: Any,
     emission_probabilities: Any,
 ) -> None:
+    logger.error(">>> Entering _validate_not_empty(observations_space=%s,states_space=%s,initial_probabilities=%s,transition_probabilities=%s,emission_probabilities=%s)", observations_space, states_space, initial_probabilities, transition_probabilities, emission_probabilities, extra={"event.action": "_validate_not_empty", "logrite.observations_space": observations_space, "logrite.states_space": states_space, "logrite.initial_probabilities": initial_probabilities, "logrite.transition_probabilities": transition_probabilities, "logrite.emission_probabilities": emission_probabilities})
     """
     >>> _validate_not_empty(["a"], ["b"], {"c":0.5},
     ... {"d": {"e": 0.6}}, {"f": {"g": 0.7}})
@@ -242,6 +252,7 @@ def _validate_not_empty(
             emission_probabilities,
         ]
     ):
+        logger.warning("<<< Exiting _validate_not_empty(observations_space=%s,states_space=%s,initial_probabilities=%s,transition_probabilities=%s,emission_probabilities=%s)", observations_space, states_space, initial_probabilities, transition_probabilities, emission_probabilities, extra={"event.action": "_validate_not_empty", "logrite.observations_space": observations_space, "logrite.states_space": states_space, "logrite.initial_probabilities": initial_probabilities, "logrite.transition_probabilities": transition_probabilities, "logrite.emission_probabilities": emission_probabilities})
         raise ValueError("There's an empty parameter")
 
 
@@ -257,8 +268,10 @@ def _validate_lists(observations_space: Any, states_space: Any) -> None:
             ...
     ValueError: states_space must be a list of strings
     """
+    logger.error(">>> Entering _validate_lists(observations_space=%s,states_space=%s)", observations_space, states_space, extra={"event.action": "_validate_lists", "logrite.observations_space": observations_space, "logrite.states_space": states_space})
     _validate_list(observations_space, "observations_space")
     _validate_list(states_space, "states_space")
+    logger.warning("<<< Exiting _validate_lists(observations_space=%s,states_space=%s)", observations_space, states_space, extra={"event.action": "_validate_lists", "logrite.observations_space": observations_space, "logrite.states_space": states_space})
 
 
 def _validate_list(_object: Any, var_name: str) -> None:
@@ -273,13 +286,16 @@ def _validate_list(_object: Any, var_name: str) -> None:
             ...
     ValueError: mock_name must be a list of strings
     """
+    logger.error(">>> Entering _validate_list(_object=%s,var_name=%s)", _object, var_name, extra={"event.action": "_validate_list", "logrite._object": _object, "logrite.var_name": var_name})
     if not isinstance(_object, list):
         msg = f"{var_name} must be a list"
+        logger.error("_validate_list(_object=%s,var_name=%s): msg → %s", _object, var_name, msg, extra={"event.action": "_validate_list", "logrite._object": _object, "logrite.var_name": var_name})
         raise ValueError(msg)
     else:
         for x in _object:
             if not isinstance(x, str):
                 msg = f"{var_name} must be a list of strings"
+                logger.warning("<<< Exiting _validate_list(_object=%s,var_name=%s)", _object, var_name, extra={"event.action": "_validate_list", "logrite._object": _object, "logrite.var_name": var_name})
                 raise ValueError(msg)
 
 
@@ -288,6 +304,7 @@ def _validate_dicts(
     transition_probabilities: Any,
     emission_probabilities: Any,
 ) -> None:
+    logger.error(">>> Entering _validate_dicts(initial_probabilities=%s,transition_probabilities=%s,emission_probabilities=%s)", initial_probabilities, transition_probabilities, emission_probabilities, extra={"event.action": "_validate_dicts", "logrite.initial_probabilities": initial_probabilities, "logrite.transition_probabilities": transition_probabilities, "logrite.emission_probabilities": emission_probabilities})
     """
     >>> _validate_dicts({"c":0.5}, {"d": {"e": 0.6}}, {"f": {"g": 0.7}})
     >>> _validate_dicts("invalid", {"d": {"e": 0.6}}, {"f": {"g": 0.7}})
@@ -310,6 +327,7 @@ def _validate_dicts(
     _validate_dict(initial_probabilities, "initial_probabilities", float)
     _validate_nested_dict(transition_probabilities, "transition_probabilities")
     _validate_nested_dict(emission_probabilities, "emission_probabilities")
+    logger.warning("<<< Exiting _validate_dicts(initial_probabilities=%s,transition_probabilities=%s,emission_probabilities=%s)", initial_probabilities, transition_probabilities, emission_probabilities, extra={"event.action": "_validate_dicts", "logrite.initial_probabilities": initial_probabilities, "logrite.transition_probabilities": transition_probabilities, "logrite.emission_probabilities": emission_probabilities})
 
 
 def _validate_nested_dict(_object: Any, var_name: str) -> None:
@@ -332,14 +350,17 @@ def _validate_nested_dict(_object: Any, var_name: str) -> None:
             ...
     ValueError: mock_name nested dictionary all values must be float
     """
+    logger.error(">>> Entering _validate_nested_dict(_object=%s,var_name=%s)", _object, var_name, extra={"event.action": "_validate_nested_dict", "logrite._object": _object, "logrite.var_name": var_name})
     _validate_dict(_object, var_name, dict)
     for x in _object.values():
         _validate_dict(x, var_name, float, True)
+        logger.warning("<<< Exiting _validate_nested_dict(_object=%s,var_name=%s)", _object, var_name, extra={"event.action": "_validate_nested_dict", "logrite._object": _object, "logrite.var_name": var_name})
 
 
 def _validate_dict(
     _object: Any, var_name: str, value_type: type, nested: bool = False
 ) -> None:
+    logger.error(">>> Entering _validate_dict(_object=%s,var_name=%s,value_type=%s,nested=%s)", _object, var_name, value_type, nested, extra={"event.action": "_validate_dict", "logrite._object": _object, "logrite.var_name": var_name, "logrite.value_type": value_type, "logrite.nested": nested})
     """
     >>> _validate_dict({"b": 0.5}, "mock_name", float)
     >>> _validate_dict("invalid", "mock_name", float)
@@ -361,13 +382,16 @@ def _validate_dict(
     """
     if not isinstance(_object, dict):
         msg = f"{var_name} must be a dict"
+        logger.error("_validate_dict(_object=%s,var_name=%s,value_type=%s,nested=%s): msg → %s", _object, var_name, value_type, nested, msg, extra={"event.action": "_validate_dict", "logrite._object": _object, "logrite.var_name": var_name, "logrite.value_type": value_type, "logrite.nested": nested})
         raise ValueError(msg)
     if not all(isinstance(x, str) for x in _object):
         msg = f"{var_name} all keys must be strings"
         raise ValueError(msg)
     if not all(isinstance(x, value_type) for x in _object.values()):
         nested_text = "nested dictionary " if nested else ""
+        logger.error("_validate_dict(_object=%s,var_name=%s,value_type=%s,nested=%s): nested_text → %s", _object, var_name, value_type, nested, nested_text, extra={"event.action": "_validate_dict", "logrite._object": _object, "logrite.var_name": var_name, "logrite.value_type": value_type, "logrite.nested": nested})
         msg = f"{var_name} {nested_text}all values must be {value_type.__name__}"
+        logger.warning("<<< Exiting _validate_dict(_object=%s,var_name=%s,value_type=%s,nested=%s)", _object, var_name, value_type, nested, extra={"event.action": "_validate_dict", "logrite._object": _object, "logrite.var_name": var_name, "logrite.value_type": value_type, "logrite.nested": nested})
         raise ValueError(msg)
 
 

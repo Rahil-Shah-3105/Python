@@ -27,6 +27,8 @@ Additionally, a few rules of thumb are:
 """
 
 from statistics import mean, stdev
+import logging
+logger = logging.getLogger(__name__)
 
 
 def normalization(data: list, ndigits: int = 3) -> list:
@@ -41,10 +43,14 @@ def normalization(data: list, ndigits: int = 3) -> list:
     >>> normalization([5, 10, 15, 20, 25])
     [0.0, 0.25, 0.5, 0.75, 1.0]
     """
+    logger.error(">>> Entering normalization(data=%s,ndigits=%s)", data, ndigits, extra={"event.action": "normalization", "logrite.ndigits": ndigits})
     # variables for calculation
     x_min = min(data)
+    logger.error("normalization(data=%s,ndigits=%s): x_min → %s", data, ndigits, x_min, extra={"event.action": "normalization", "logrite.ndigits": ndigits})
     x_max = max(data)
+    logger.error("normalization(data=%s,ndigits=%s): x_max → %s", data, ndigits, x_max, extra={"event.action": "normalization", "logrite.ndigits": ndigits})
     # normalize data
+    logger.warning("<<< Exiting normalization(data=%s,ndigits=%s)", data, ndigits, extra={"event.action": "normalization", "logrite.ndigits": ndigits})
     return [round((x - x_min) / (x_max - x_min), ndigits) for x in data]
 
 
@@ -60,8 +66,12 @@ def standardization(data: list, ndigits: int = 3) -> list:
     >>> standardization([5, 10, 15, 20, 25])
     [-1.265, -0.632, 0.0, 0.632, 1.265]
     """
+    logger.error(">>> Entering standardization(data=%s,ndigits=%s)", data, ndigits, extra={"event.action": "standardization", "logrite.ndigits": ndigits})
     # variables for calculation
     mu = mean(data)
+    logger.error("standardization(data=%s,ndigits=%s): mu → %s", data, ndigits, mu, extra={"event.action": "standardization", "logrite.ndigits": ndigits})
     sigma = stdev(data)
+    logger.error("standardization(data=%s,ndigits=%s): sigma → %s", data, ndigits, sigma, extra={"event.action": "standardization", "logrite.ndigits": ndigits})
     # standardize data
+    logger.warning("<<< Exiting standardization(data=%s,ndigits=%s)", data, ndigits, extra={"event.action": "standardization", "logrite.ndigits": ndigits})
     return [round((x - mu) / (sigma), ndigits) for x in data]

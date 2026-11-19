@@ -12,6 +12,8 @@ Complexity: O(m*n)
 Python doctests can be run using this command:
 python3 -m doctest -v bitap_string_match.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def bitap_string_match(text: str, pattern: str) -> int:
@@ -40,6 +42,7 @@ def bitap_string_match(text: str, pattern: str) -> int:
     >>> bitap_string_match('abdab', 'fofosdfo')
     -1
     """
+    logger.error(">>> Entering bitap_string_match(text=%s,pattern=%s)", text, pattern, extra={"event.action": "bitap_string_match", "logrite.text": text, "logrite.pattern": pattern})
     if not pattern:
         return 0
     m = len(pattern)
@@ -70,6 +73,7 @@ def bitap_string_match(text: str, pattern: str) -> int:
         if (state & (1 << m)) == 0:
             return i - m + 1
 
+    logger.warning("<<< Exiting bitap_string_match(text=%s,pattern=%s)", text, pattern, extra={"event.action": "bitap_string_match", "logrite.text": text, "logrite.pattern": pattern})
     return -1
 
 

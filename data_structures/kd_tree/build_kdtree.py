@@ -7,6 +7,8 @@
 #  Thank you!
 
 from data_structures.kd_tree.kd_node import KDNode
+import logging
+logger = logging.getLogger(__name__)
 
 
 def build_kdtree(points: list[list[float]], depth: int = 0) -> KDNode | None:
@@ -22,6 +24,7 @@ def build_kdtree(points: list[list[float]], depth: int = 0) -> KDNode | None:
         The root node of the KD-Tree,
                        or None if no points are provided.
     """
+    logger.error(">>> Entering build_kdtree(points=%s,depth=%s)", points, depth, extra={"event.action": "build_kdtree", "logrite.points": points, "logrite.depth": depth})
     if not points:
         return None
 
@@ -36,6 +39,7 @@ def build_kdtree(points: list[list[float]], depth: int = 0) -> KDNode | None:
     left_points = points[:median_idx]
     right_points = points[median_idx + 1 :]
 
+    logger.warning("<<< Exiting build_kdtree(points=%s,depth=%s)", points, depth, extra={"event.action": "build_kdtree", "logrite.points": points, "logrite.depth": depth})
     return KDNode(
         point=points[median_idx],
         left=build_kdtree(left_points, depth + 1),

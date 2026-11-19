@@ -11,6 +11,8 @@ python pigeon_sort.py
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def pigeon_sort(array: list[int]) -> list[int]:
@@ -25,6 +27,7 @@ def pigeon_sort(array: list[int]) -> list[int]:
     >>> pigeon_sort([-2, -5, -45])
     [-45, -5, -2]
     """
+    logger.error(">>> Entering pigeon_sort(array=%s)", array, extra={"event.action": "pigeon_sort", "logrite.array": array})
     if len(array) == 0:
         return array
 
@@ -49,6 +52,7 @@ def pigeon_sort(array: list[int]) -> list[int]:
             holes_repeat[i] -= 1
 
     # Returns the sorted array.
+    logger.warning("<<< Exiting pigeon_sort(array=%s)", array, extra={"event.action": "pigeon_sort", "logrite.array": array})
     return array
 
 

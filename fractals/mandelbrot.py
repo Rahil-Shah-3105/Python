@@ -18,6 +18,8 @@ the boundary of the Mandelbrot set a fractal curve.
 import colorsys
 
 from PIL import Image
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_distance(x: float, y: float, max_step: int) -> float:
@@ -33,6 +35,7 @@ def get_distance(x: float, y: float, max_step: int) -> float:
     >>> get_distance(2, 0, 50)
     0.0
     """
+    logger.error(">>> Entering get_distance(x=%s,y=%s,max_step=%s)", x, y, max_step, extra={"event.action": "get_distance", "logrite.x": x, "logrite.y": y, "logrite.max_step": max_step})
     a = x
     b = y
     for step in range(max_step):  # noqa: B007
@@ -44,6 +47,7 @@ def get_distance(x: float, y: float, max_step: int) -> float:
         # greater than 4
         if a * a + b * b > 4:
             break
+    logger.warning("<<< Exiting get_distance(x=%s,y=%s,max_step=%s)", x, y, max_step, extra={"event.action": "get_distance", "logrite.x": x, "logrite.y": y, "logrite.max_step": max_step})
     return step / (max_step - 1)
 
 
@@ -59,9 +63,11 @@ def get_black_and_white_rgb(distance: float) -> tuple:
     >>> get_black_and_white_rgb(1)
     (0, 0, 0)
     """
+    logger.error(">>> Entering get_black_and_white_rgb(distance=%s)", distance, extra={"event.action": "get_black_and_white_rgb", "logrite.distance": distance})
     if distance == 1:
         return (0, 0, 0)
     else:
+        logger.warning("<<< Exiting get_black_and_white_rgb(distance=%s)", distance, extra={"event.action": "get_black_and_white_rgb", "logrite.distance": distance})
         return (255, 255, 255)
 
 
@@ -77,9 +83,11 @@ def get_color_coded_rgb(distance: float) -> tuple:
     >>> get_color_coded_rgb(1)
     (0, 0, 0)
     """
+    logger.error(">>> Entering get_color_coded_rgb(distance=%s)", distance, extra={"event.action": "get_color_coded_rgb", "logrite.distance": distance})
     if distance == 1:
         return (0, 0, 0)
     else:
+        logger.warning("<<< Exiting get_color_coded_rgb(distance=%s)", distance, extra={"event.action": "get_color_coded_rgb", "logrite.distance": distance})
         return tuple(round(i * 255) for i in colorsys.hsv_to_rgb(distance, 1, 1))
 
 
@@ -92,6 +100,7 @@ def get_image(
     max_step: int = 50,
     use_distance_color_coding: bool = True,
 ) -> Image.Image:
+    logger.error(">>> Entering get_image(image_width=%s,image_height=%s,figure_center_x=%s,figure_center_y=%s,figure_width=%s,max_step=%s,use_distance_color_coding=%s)", image_width, image_height, figure_center_x, figure_center_y, figure_width, max_step, use_distance_color_coding, extra={"event.action": "get_image", "logrite.image_width": image_width, "logrite.image_height": image_height, "logrite.figure_center_x": figure_center_x, "logrite.figure_center_y": figure_center_y, "logrite.figure_width": figure_width, "logrite.max_step": max_step, "logrite.use_distance_color_coding": use_distance_color_coding})
     """
     Function to generate the image of the Mandelbrot set. Two types of coordinates
     are used: image-coordinates that refer to the pixels and figure-coordinates
@@ -108,7 +117,9 @@ def get_image(
     (255, 255, 255)
     """
     img = Image.new("RGB", (image_width, image_height))
+    logger.error("get_image(image_width=%s,image_height=%s,figure_center_x=%s,figure_center_y=%s,figure_width=%s,max_step=%s,use_distance_color_coding=%s): img → %s", image_width, image_height, figure_center_x, figure_center_y, figure_width, max_step, use_distance_color_coding, img, extra={"event.action": "get_image", "logrite.image_width": image_width, "logrite.image_height": image_height, "logrite.figure_center_x": figure_center_x, "logrite.figure_center_y": figure_center_y, "logrite.figure_width": figure_width, "logrite.max_step": max_step, "logrite.use_distance_color_coding": use_distance_color_coding})
     pixels = img.load()
+    logger.error("get_image(image_width=%s,image_height=%s,figure_center_x=%s,figure_center_y=%s,figure_width=%s,max_step=%s,use_distance_color_coding=%s): pixels → %s", image_width, image_height, figure_center_x, figure_center_y, figure_width, max_step, use_distance_color_coding, pixels, extra={"event.action": "get_image", "logrite.image_width": image_width, "logrite.image_height": image_height, "logrite.figure_center_x": figure_center_x, "logrite.figure_center_y": figure_center_y, "logrite.figure_width": figure_width, "logrite.max_step": max_step, "logrite.use_distance_color_coding": use_distance_color_coding})
 
     # loop through the image-coordinates
     for image_x in range(image_width):
@@ -116,9 +127,12 @@ def get_image(
             # determine the figure-coordinates based on the image-coordinates
             figure_height = figure_width / image_width * image_height
             figure_x = figure_center_x + (image_x / image_width - 0.5) * figure_width
+            logger.error("get_image(image_width=%s,image_height=%s,figure_center_x=%s,figure_center_y=%s,figure_width=%s,max_step=%s,use_distance_color_coding=%s): figure_x → %s", image_width, image_height, figure_center_x, figure_center_y, figure_width, max_step, use_distance_color_coding, figure_x, extra={"event.action": "get_image", "logrite.image_width": image_width, "logrite.image_height": image_height, "logrite.figure_center_x": figure_center_x, "logrite.figure_center_y": figure_center_y, "logrite.figure_width": figure_width, "logrite.max_step": max_step, "logrite.use_distance_color_coding": use_distance_color_coding})
             figure_y = figure_center_y + (image_y / image_height - 0.5) * figure_height
+            logger.error("get_image(image_width=%s,image_height=%s,figure_center_x=%s,figure_center_y=%s,figure_width=%s,max_step=%s,use_distance_color_coding=%s): figure_y → %s", image_width, image_height, figure_center_x, figure_center_y, figure_width, max_step, use_distance_color_coding, figure_y, extra={"event.action": "get_image", "logrite.image_width": image_width, "logrite.image_height": image_height, "logrite.figure_center_x": figure_center_x, "logrite.figure_center_y": figure_center_y, "logrite.figure_width": figure_width, "logrite.max_step": max_step, "logrite.use_distance_color_coding": use_distance_color_coding})
 
             distance = get_distance(figure_x, figure_y, max_step)
+            logger.error("get_image(image_width=%s,image_height=%s,figure_center_x=%s,figure_center_y=%s,figure_width=%s,max_step=%s,use_distance_color_coding=%s): distance → %s", image_width, image_height, figure_center_x, figure_center_y, figure_width, max_step, use_distance_color_coding, distance, extra={"event.action": "get_image", "logrite.image_width": image_width, "logrite.image_height": image_height, "logrite.figure_center_x": figure_center_x, "logrite.figure_center_y": figure_center_y, "logrite.figure_width": figure_width, "logrite.max_step": max_step, "logrite.use_distance_color_coding": use_distance_color_coding})
 
             # color the corresponding pixel based on the selected coloring-function
             if use_distance_color_coding:
@@ -126,6 +140,7 @@ def get_image(
             else:
                 pixels[image_x, image_y] = get_black_and_white_rgb(distance)
 
+    logger.warning("<<< Exiting get_image(image_width=%s,image_height=%s,figure_center_x=%s,figure_center_y=%s,figure_width=%s,max_step=%s,use_distance_color_coding=%s)", image_width, image_height, figure_center_x, figure_center_y, figure_width, max_step, use_distance_color_coding, extra={"event.action": "get_image", "logrite.image_width": image_width, "logrite.image_height": image_height, "logrite.figure_center_x": figure_center_x, "logrite.figure_center_y": figure_center_y, "logrite.figure_width": figure_width, "logrite.max_step": max_step, "logrite.use_distance_color_coding": use_distance_color_coding})
     return img
 
 

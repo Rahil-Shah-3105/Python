@@ -2,6 +2,8 @@
 Pure Python implementations of a Fixed Priority Queue and an Element Priority Queue
 using Python lists.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 class OverFlowError(Exception):
@@ -67,11 +69,14 @@ class FixedPriorityQueue:
     """  # noqa: E501
 
     def __init__(self):
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
         self.queues = [
             [],
             [],
             [],
         ]
+        logger.warning("<<< Exiting __init__()", extra={"event.action": "__init__"})
+        logger.debug("__init__(self=%s): self.queues → %s", self, self.queues, extra={"event.action": "__init__"})
 
     def enqueue(self, priority: int, data: int) -> None:
         """
@@ -79,11 +84,14 @@ class FixedPriorityQueue:
         If the priority is invalid ValueError is raised.
         If the queue is full an OverFlowError is raised.
         """
+        logger.error(">>> Entering enqueue(priority=%s,data=%s)", priority, data, extra={"event.action": "enqueue", "logrite.priority": priority})
         try:
             if len(self.queues[priority]) >= 100:
                 raise OverflowError("Maximum queue size is 100")
             self.queues[priority].append(data)
         except IndexError:
+            logger.error("Exception in enqueue(priority=%s,data=%s)", priority, data, exc_info=True, extra={"event.action": "enqueue", "event.category": "process", "logrite.priority": priority})
+            logger.warning("<<< Exiting enqueue(priority=%s,data=%s)", priority, data, extra={"event.action": "enqueue", "logrite.priority": priority})
             raise ValueError("Valid priorities are 0, 1, and 2")
 
     def dequeue(self) -> int:
@@ -91,12 +99,16 @@ class FixedPriorityQueue:
         Return the highest priority element in FIFO order.
         If the queue is empty then an under flow exception is raised.
         """
+        logger.error(">>> Entering dequeue()", extra={"event.action": "dequeue"})
         for queue in self.queues:
             if queue:
                 return queue.pop(0)
+        logger.warning("<<< Exiting dequeue()", extra={"event.action": "dequeue"})
         raise UnderFlowError("All queues are empty")
 
     def __str__(self) -> str:
+        logger.error(">>> Entering __str__()", extra={"event.action": "__str__"})
+        logger.warning("<<< Exiting __str__()", extra={"event.action": "__str__"})
         return "\n".join(f"Priority {i}: {q}" for i, q in enumerate(self.queues))
 
 
@@ -148,15 +160,18 @@ class ElementPriorityQueue:
 
     def __init__(self):
         self.queue = []
+        logger.debug("__init__(self=%s): self.queue → %s", self, self.queue, extra={"event.action": "__init__"})
 
     def enqueue(self, data: int) -> None:
         """
         This function enters the element into the queue
         If the queue is full an Exception is raised saying Over Flow!
         """
+        logger.error(">>> Entering enqueue(data=%s)", data, extra={"event.action": "enqueue"})
         if len(self.queue) == 100:
             raise OverFlowError("Maximum queue size is 100")
         self.queue.append(data)
+        logger.warning("<<< Exiting enqueue(data=%s)", data, extra={"event.action": "enqueue"})
 
     def dequeue(self) -> int:
         """
@@ -167,6 +182,7 @@ class ElementPriorityQueue:
             raise UnderFlowError("The queue is empty")
         else:
             data = min(self.queue)
+            logger.error("dequeue(): data → %s", data, extra={"event.action": "dequeue"})
             self.queue.remove(data)
             return data
 
@@ -178,7 +194,9 @@ class ElementPriorityQueue:
 
 
 def fixed_priority_queue():
+    logger.error(">>> Entering fixed_priority_queue()", extra={"event.action": "fixed_priority_queue"})
     fpq = FixedPriorityQueue()
+    logger.error("fixed_priority_queue(): fpq → %s", fpq, extra={"event.action": "fixed_priority_queue"})
     fpq.enqueue(0, 10)
     fpq.enqueue(1, 70)
     fpq.enqueue(0, 100)
@@ -200,10 +218,13 @@ def fixed_priority_queue():
     print(fpq.dequeue())
     print(fpq.dequeue())
     print(fpq.dequeue())
+    logger.warning("<<< Exiting fixed_priority_queue()", extra={"event.action": "fixed_priority_queue"})
 
 
 def element_priority_queue():
+    logger.error(">>> Entering element_priority_queue()", extra={"event.action": "element_priority_queue"})
     epq = ElementPriorityQueue()
+    logger.error("element_priority_queue(): epq → %s", epq, extra={"event.action": "element_priority_queue"})
     epq.enqueue(10)
     epq.enqueue(70)
     epq.enqueue(100)
@@ -225,6 +246,7 @@ def element_priority_queue():
     print(epq.dequeue())
     print(epq.dequeue())
     print(epq.dequeue())
+    logger.warning("<<< Exiting element_priority_queue()", extra={"event.action": "element_priority_queue"})
 
 
 if __name__ == "__main__":

@@ -1,6 +1,8 @@
 """
 https://en.wikipedia.org/wiki/N-gram
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def create_ngram(sentence: str, ngram_size: int) -> list[str]:
@@ -14,6 +16,8 @@ def create_ngram(sentence: str, ngram_size: int) -> list[str]:
     >>> create_ngram("This is short", 50)
     []
     """
+    logger.error(">>> Entering create_ngram(sentence=%s,ngram_size=%s)", sentence, ngram_size, extra={"event.action": "create_ngram", "logrite.sentence": sentence, "logrite.ngram_size": ngram_size})
+    logger.warning("<<< Exiting create_ngram(sentence=%s,ngram_size=%s)", sentence, ngram_size, extra={"event.action": "create_ngram", "logrite.sentence": sentence, "logrite.ngram_size": ngram_size})
     return [sentence[i : i + ngram_size] for i in range(len(sentence) - ngram_size + 1)]
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def is_int_palindrome(num: int) -> bool:
     """
     Returns whether `num` is a palindrome or not
@@ -16,6 +18,7 @@ def is_int_palindrome(num: int) -> bool:
     >>> is_int_palindrome(120)
     False
     """
+    logger.error(">>> Entering is_int_palindrome(num=%s)", num, extra={"event.action": "is_int_palindrome", "logrite.num": num})
     if num < 0:
         return False
 
@@ -25,6 +28,7 @@ def is_int_palindrome(num: int) -> bool:
         rev_num = rev_num * 10 + (num % 10)
         num //= 10
 
+    logger.warning("<<< Exiting is_int_palindrome(num=%s)", num, extra={"event.action": "is_int_palindrome", "logrite.num": num})
     return num_copy == rev_num
 
 

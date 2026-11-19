@@ -7,6 +7,8 @@ https://en.wikipedia.org/wiki/Rectifier_(neural_networks)#Leaky_ReLU
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def leaky_rectified_linear_unit(vector: np.ndarray, alpha: float) -> np.ndarray:
@@ -30,6 +32,8 @@ def leaky_rectified_linear_unit(vector: np.ndarray, alpha: float) -> np.ndarray:
     array([-0.6164 , -0.0201 ,  0.45   , -0.30552])
 
     """
+    logger.error(">>> Entering leaky_rectified_linear_unit(vector=%s,alpha=%s)", vector, alpha, extra={"event.action": "leaky_rectified_linear_unit", "logrite.vector": vector, "logrite.alpha": alpha})
+    logger.warning("<<< Exiting leaky_rectified_linear_unit(vector=%s,alpha=%s)", vector, alpha, extra={"event.action": "leaky_rectified_linear_unit", "logrite.vector": vector, "logrite.alpha": alpha})
     return np.where(vector > 0, vector, alpha * vector)
 
 

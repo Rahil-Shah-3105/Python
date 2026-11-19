@@ -5,6 +5,8 @@ Functions for 2D matrix operations
 from __future__ import annotations
 
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 def add(*matrix_s: list[list[int]]) -> list[list[int]]:
@@ -20,10 +22,12 @@ def add(*matrix_s: list[list[int]]) -> list[list[int]]:
       ...
     TypeError: Expected a matrix, got int/list instead
     """
+    logger.error(">>> Entering add()", extra={"event.action": "add"})
     if all(_check_not_integer(m) for m in matrix_s):
         for i in matrix_s[1:]:
             _verify_matrix_sizes(matrix_s[0], i)
         return [[sum(t) for t in zip(*m)] for m in zip(*matrix_s)]
+    logger.warning("<<< Exiting add()", extra={"event.action": "add"})
     raise TypeError("Expected a matrix, got int/list instead")
 
 
@@ -38,12 +42,14 @@ def subtract(matrix_a: list[list[int]], matrix_b: list[list[int]]) -> list[list[
       ...
     TypeError: Expected a matrix, got int/list instead
     """
+    logger.error(">>> Entering subtract(matrix_a=%s,matrix_b=%s)", matrix_a, matrix_b, extra={"event.action": "subtract", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
     if (
         _check_not_integer(matrix_a)
         and _check_not_integer(matrix_b)
         and _verify_matrix_sizes(matrix_a, matrix_b)
     ):
         return [[i - j for i, j in zip(*m)] for m in zip(matrix_a, matrix_b)]
+    logger.warning("<<< Exiting subtract(matrix_a=%s,matrix_b=%s)", matrix_a, matrix_b, extra={"event.action": "subtract", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
     raise TypeError("Expected a matrix, got int/list instead")
 
 
@@ -54,6 +60,8 @@ def scalar_multiply(matrix: list[list[int]], n: float) -> list[list[float]]:
     >>> scalar_multiply([[1.4,2.3],[3,4]],5)
     [[7.0, 11.5], [15, 20]]
     """
+    logger.error(">>> Entering scalar_multiply(matrix=%s,n=%s)", matrix, n, extra={"event.action": "scalar_multiply", "logrite.matrix": matrix, "logrite.n": n})
+    logger.warning("<<< Exiting scalar_multiply(matrix=%s,n=%s)", matrix, n, extra={"event.action": "scalar_multiply", "logrite.matrix": matrix, "logrite.n": n})
     return [[x * n for x in row] for row in matrix]
 
 
@@ -66,6 +74,7 @@ def multiply(matrix_a: list[list[int]], matrix_b: list[list[int]]) -> list[list[
     >>> multiply([[1, 2, 3]], [[2], [3], [4]])
     [[20]]
     """
+    logger.error(">>> Entering multiply(matrix_a=%s,matrix_b=%s)", matrix_a, matrix_b, extra={"event.action": "multiply", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
     if _check_not_integer(matrix_a) and _check_not_integer(matrix_b):
         rows, cols = _verify_matrix_sizes(matrix_a, matrix_b)
 
@@ -74,6 +83,7 @@ def multiply(matrix_a: list[list[int]], matrix_b: list[list[int]]) -> list[list[
             "Cannot multiply matrix of dimensions "
             f"({rows[0]},{cols[0]}) and ({rows[1]},{cols[1]})"
         )
+        logger.warning("<<< Exiting multiply(matrix_a=%s,matrix_b=%s)", matrix_a, matrix_b, extra={"event.action": "multiply", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
         raise ValueError(msg)
     return [
         [sum(m * n for m, n in zip(i, j)) for j in zip(*matrix_b)] for i in matrix_a
@@ -88,13 +98,17 @@ def identity(n: int) -> list[list[int]]:
     >>> identity(3)
     [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
     """
+    logger.error(">>> Entering identity(n=%s)", n, extra={"event.action": "identity", "logrite.n": n})
     n = int(n)
+    logger.error("identity(n=%s): n → %s", n, n, extra={"event.action": "identity", "logrite.n": n})
+    logger.warning("<<< Exiting identity(n=%s)", n, extra={"event.action": "identity", "logrite.n": n})
     return [[int(row == column) for column in range(n)] for row in range(n)]
 
 
 def transpose(
     matrix: list[list[int]], return_map: bool = True
 ) -> list[list[int]] | map[list[int]]:
+    logger.error(">>> Entering transpose(matrix=%s,return_map=%s)", matrix, return_map, extra={"event.action": "transpose", "logrite.matrix": matrix, "logrite.return_map": return_map})
     """
     >>> transpose([[1,2],[3,4]]) # doctest: +ELLIPSIS
     <map object at ...
@@ -112,13 +126,16 @@ def transpose(
             return list(map(list, zip(*matrix)))
     raise TypeError("Expected a matrix, got int/list instead")
 
+    logger.warning("<<< Exiting transpose(matrix=%s,return_map=%s)", matrix, return_map, extra={"event.action": "transpose", "logrite.matrix": matrix, "logrite.return_map": return_map})
 
 def minor(matrix: list[list[int]], row: int, column: int) -> list[list[int]]:
     """
     >>> minor([[1, 2], [3, 4]], 1, 1)
     [[1]]
     """
+    logger.error(">>> Entering minor(matrix=%s,row=%s,column=%s)", matrix, row, column, extra={"event.action": "minor", "logrite.matrix": matrix, "logrite.row": row, "logrite.column": column})
     minor = matrix[:row] + matrix[row + 1 :]
+    logger.warning("<<< Exiting minor(matrix=%s,row=%s,column=%s)", matrix, row, column, extra={"event.action": "minor", "logrite.matrix": matrix, "logrite.row": row, "logrite.column": column})
     return [row[:column] + row[column + 1 :] for row in minor]
 
 
@@ -129,7 +146,9 @@ def determinant(matrix: list[list[int]]) -> Any:
     >>> determinant([[1.5, 2.5], [3, 4]])
     -1.5
     """
+    logger.error(">>> Entering determinant(matrix=%s)", matrix, extra={"event.action": "determinant", "logrite.matrix": matrix})
     if len(matrix) == 1:
+        logger.warning("<<< Exiting determinant(matrix=%s)", matrix, extra={"event.action": "determinant", "logrite.matrix": matrix})
         return matrix[0][0]
 
     return sum(
@@ -144,8 +163,10 @@ def inverse(matrix: list[list[int]]) -> list[list[float]] | None:
     [[-2.0, 1.0], [1.5, -0.5]]
     >>> inverse([[1, 1], [1, 1]])
     """
+    logger.error(">>> Entering inverse(matrix=%s)", matrix, extra={"event.action": "inverse", "logrite.matrix": matrix})
     # https://stackoverflow.com/questions/20047519/python-doctests-test-for-none
     det = determinant(matrix)
+    logger.error("inverse(matrix=%s): det → %s", matrix, det, extra={"event.action": "inverse", "logrite.matrix": matrix})
     if det == 0:
         return None
 
@@ -159,31 +180,40 @@ def inverse(matrix: list[list[int]]) -> list[list[float]] | None:
         for row in range(len(matrix))
     ]
     adjugate = list(transpose(cofactors))
+    logger.warning("<<< Exiting inverse(matrix=%s)", matrix, extra={"event.action": "inverse", "logrite.matrix": matrix})
     return scalar_multiply(adjugate, 1 / det)
 
 
 def _check_not_integer(matrix: list[list[int]]) -> bool:
+    logger.error(">>> Entering _check_not_integer(matrix=%s)", matrix, extra={"event.action": "_check_not_integer", "logrite.matrix": matrix})
+    logger.warning("<<< Exiting _check_not_integer(matrix=%s)", matrix, extra={"event.action": "_check_not_integer", "logrite.matrix": matrix})
     return not isinstance(matrix, int) and not isinstance(matrix[0], int)
 
 
 def _shape(matrix: list[list[int]]) -> tuple[int, int]:
+    logger.error(">>> Entering _shape(matrix=%s)", matrix, extra={"event.action": "_shape", "logrite.matrix": matrix})
+    logger.warning("<<< Exiting _shape(matrix=%s)", matrix, extra={"event.action": "_shape", "logrite.matrix": matrix})
     return len(matrix), len(matrix[0])
 
 
 def _verify_matrix_sizes(
     matrix_a: list[list[int]], matrix_b: list[list[int]]
 ) -> tuple[tuple[int, int], tuple[int, int]]:
+    logger.error(">>> Entering _verify_matrix_sizes(matrix_a=%s,matrix_b=%s)", matrix_a, matrix_b, extra={"event.action": "_verify_matrix_sizes", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
     shape = _shape(matrix_a) + _shape(matrix_b)
+    logger.error("_verify_matrix_sizes(matrix_a=%s,matrix_b=%s): shape → %s", matrix_a, matrix_b, shape, extra={"event.action": "_verify_matrix_sizes", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
     if shape[0] != shape[3] or shape[1] != shape[2]:
         msg = (
             "operands could not be broadcast together with shape "
             f"({shape[0], shape[1]}), ({shape[2], shape[3]})"
         )
         raise ValueError(msg)
+    logger.warning("<<< Exiting _verify_matrix_sizes(matrix_a=%s,matrix_b=%s)", matrix_a, matrix_b, extra={"event.action": "_verify_matrix_sizes", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
     return (shape[0], shape[2]), (shape[1], shape[3])
 
 
 def main() -> None:
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     matrix_a = [[12, 10], [3, 9]]
     matrix_b = [[3, 4], [7, 4]]
     matrix_c = [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41, 42, 43, 44]]
@@ -194,6 +224,7 @@ def main() -> None:
     print(f"Minor of {matrix_c} = {minor(matrix_c, 1, 2)} \n")
     print(f"Determinant of {matrix_b} = {determinant(matrix_b)} \n")
     print(f"Inverse of {matrix_d} = {inverse(matrix_d)}\n")
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

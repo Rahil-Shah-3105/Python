@@ -9,6 +9,8 @@ https://en.wikipedia.org/wiki/Safe_and_Sophie_Germain_primes
 """
 
 from maths.prime_check import is_prime
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_germain_prime(number: int) -> bool:
@@ -31,10 +33,13 @@ def is_germain_prime(number: int) -> bool:
         ...
     TypeError: Input value must be a positive integer. Input value: abc
     """
+    logger.error(">>> Entering is_germain_prime(number=%s)", number, extra={"event.action": "is_germain_prime", "logrite.number": number})
     if not isinstance(number, int) or number < 1:
         msg = f"Input value must be a positive integer. Input value: {number}"
+        logger.error("is_germain_prime(number=%s): msg → %s", number, msg, extra={"event.action": "is_germain_prime", "logrite.number": number})
         raise TypeError(msg)
 
+    logger.warning("<<< Exiting is_germain_prime(number=%s)", number, extra={"event.action": "is_germain_prime", "logrite.number": number})
     return is_prime(number) and is_prime(2 * number + 1)
 
 
@@ -59,8 +64,10 @@ def is_safe_prime(number: int) -> bool:
         ...
     TypeError: Input value must be a positive integer. Input value: abc
     """
+    logger.error(">>> Entering is_safe_prime(number=%s)", number, extra={"event.action": "is_safe_prime", "logrite.number": number})
     if not isinstance(number, int) or number < 1:
         msg = f"Input value must be a positive integer. Input value: {number}"
+        logger.error("is_safe_prime(number=%s): msg → %s", number, msg, extra={"event.action": "is_safe_prime", "logrite.number": number})
         raise TypeError(msg)
 
     return (number - 1) % 2 == 0 and is_prime(number) and is_prime((number - 1) // 2)

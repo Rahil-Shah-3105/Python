@@ -3,6 +3,8 @@ Stalin Sort algorithm: Removes elements that are out of order.
 Elements that are not greater than or equal to the previous element are discarded.
 Reference: https://medium.com/@kaweendra/the-ultimate-sorting-algorithm-6513d6968420
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def stalin_sort(sequence: list[int]) -> list[int]:
@@ -33,11 +35,14 @@ def stalin_sort(sequence: list[int]) -> list[int]:
     >>> stalin_sort([1, 2, 8, 7, 6])
     [1, 2, 8]
     """
+    logger.error(">>> Entering stalin_sort(sequence=%s)", sequence, extra={"event.action": "stalin_sort", "logrite.sequence": sequence})
     result = [sequence[0]]
+    logger.error("stalin_sort(sequence=%s): result → %s", sequence, result, extra={"event.action": "stalin_sort", "logrite.sequence": sequence})
     for element in sequence[1:]:
         if element >= result[-1]:
             result.append(element)
 
+    logger.warning("<<< Exiting stalin_sort(sequence=%s)", sequence, extra={"event.action": "stalin_sort", "logrite.sequence": sequence})
     return result
 
 

@@ -20,6 +20,8 @@ Only the filled cells need to be validated according to the mentioned rules.
 """
 
 from collections import defaultdict
+import logging
+logger = logging.getLogger(__name__)
 
 NUM_SQUARES = 9
 EMPTY_CELL = "."
@@ -125,10 +127,12 @@ def is_valid_sudoku_board(sudoku_board: list[list[str]]) -> bool:
         ...
     ValueError: Sudoku boards must be 9x9 squares.
     """
+    logger.error(">>> Entering is_valid_sudoku_board(sudoku_board=%s)", sudoku_board, extra={"event.action": "is_valid_sudoku_board", "logrite.sudoku_board": sudoku_board})
     if len(sudoku_board) != NUM_SQUARES or (
         any(len(row) != NUM_SQUARES for row in sudoku_board)
     ):
         error_message = f"Sudoku boards must be {NUM_SQUARES}x{NUM_SQUARES} squares."
+        logger.error("is_valid_sudoku_board(sudoku_board=%s): error_message → %s", sudoku_board, error_message, extra={"event.action": "is_valid_sudoku_board", "logrite.sudoku_board": sudoku_board})
         raise ValueError(error_message)
 
     row_values: defaultdict[int, set[str]] = defaultdict(set)
@@ -142,6 +146,7 @@ def is_valid_sudoku_board(sudoku_board: list[list[str]]) -> bool:
             if value == EMPTY_CELL:
                 continue
 
+                logger.error("is_valid_sudoku_board(sudoku_board=%s): box → %s", sudoku_board, box, extra={"event.action": "is_valid_sudoku_board", "logrite.sudoku_board": sudoku_board})
             box = (row // 3, col // 3)
 
             if (

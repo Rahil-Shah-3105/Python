@@ -4,6 +4,8 @@ Fast Polynomial Multiplication using radix-2 fast Fourier Transform.
 
 import mpmath  # for roots of unity
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 class FFT:
@@ -50,18 +52,23 @@ class FFT:
     """
 
     def __init__(self, poly_a=None, poly_b=None):
+        logger.error(">>> Entering __init__(poly_a=%s,poly_b=%s)", poly_a, poly_b, extra={"event.action": "__init__", "logrite.poly_a": poly_a, "logrite.poly_b": poly_b})
         # Input as list
         self.polyA = list(poly_a or [0])[:]
+        logger.error("__init__(poly_a=%s,poly_b=%s): self.polyA → %s", poly_a, poly_b, self.polyA, extra={"event.action": "__init__", "logrite.poly_a": poly_a, "logrite.poly_b": poly_b})
         self.polyB = list(poly_b or [0])[:]
+        logger.error("__init__(poly_a=%s,poly_b=%s): self.polyB → %s", poly_a, poly_b, self.polyB, extra={"event.action": "__init__", "logrite.poly_a": poly_a, "logrite.poly_b": poly_b})
 
         # Remove leading zero coefficients
         while self.polyA[-1] == 0:
             self.polyA.pop()
         self.len_A = len(self.polyA)
+        logger.error("__init__(poly_a=%s,poly_b=%s): self.len_A → %s", poly_a, poly_b, self.len_A, extra={"event.action": "__init__", "logrite.poly_a": poly_a, "logrite.poly_b": poly_b})
 
         while self.polyB[-1] == 0:
             self.polyB.pop()
         self.len_B = len(self.polyB)
+        logger.error("__init__(poly_a=%s,poly_b=%s): self.len_B → %s", poly_a, poly_b, self.len_B, extra={"event.action": "__init__", "logrite.poly_a": poly_a, "logrite.poly_b": poly_b})
 
         # Add 0 to make lengths equal a power of 2
         self.c_max_length = int(
@@ -74,12 +81,16 @@ class FFT:
             self.polyB.append(0)
         # A complex root used for the fourier transform
         self.root = complex(mpmath.root(x=1, n=self.c_max_length, k=1))
+        logger.error("__init__(poly_a=%s,poly_b=%s): self.root → %s", poly_a, poly_b, self.root, extra={"event.action": "__init__", "logrite.poly_a": poly_a, "logrite.poly_b": poly_b})
 
         # The product
+        logger.warning("<<< Exiting __init__(poly_a=%s,poly_b=%s)", poly_a, poly_b, extra={"event.action": "__init__", "logrite.poly_a": poly_a, "logrite.poly_b": poly_b})
         self.product = self.__multiply()
+        logger.error("__init__(poly_a=%s,poly_b=%s): self.product → %s", poly_a, poly_b, self.product, extra={"event.action": "__init__", "logrite.poly_a": poly_a, "logrite.poly_b": poly_b})
 
     # Discrete fourier transform of A and B
     def __dft(self, which):
+        logger.error(">>> Entering __dft(which=%s)", which, extra={"event.action": "__dft", "logrite.which": which})
         dft = [[x] for x in self.polyA] if which == "A" else [[x] for x in self.polyB]
         # Corner case
         if len(dft) <= 1:

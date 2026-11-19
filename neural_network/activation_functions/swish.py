@@ -16,6 +16,8 @@ This script is inspired by a corresponding research paper.
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sigmoid(vector: np.ndarray) -> np.ndarray:
@@ -27,6 +29,8 @@ def sigmoid(vector: np.ndarray) -> np.ndarray:
     >>> sigmoid(np.array([-1.0, 1.0, 2.0]))
     array([0.26894142, 0.73105858, 0.88079708])
     """
+    logger.error(">>> Entering sigmoid(vector=%s)", vector, extra={"event.action": "sigmoid", "logrite.vector": vector})
+    logger.warning("<<< Exiting sigmoid(vector=%s)", vector, extra={"event.action": "sigmoid", "logrite.vector": vector})
     return 1 / (1 + np.exp(-vector))
 
 
@@ -47,6 +51,8 @@ def sigmoid_linear_unit(vector: np.ndarray) -> np.ndarray:
     >>> sigmoid_linear_unit(np.array([-2]))
     array([-0.23840584])
     """
+    logger.error(">>> Entering sigmoid_linear_unit(vector=%s)", vector, extra={"event.action": "sigmoid_linear_unit", "logrite.vector": vector})
+    logger.warning("<<< Exiting sigmoid_linear_unit(vector=%s)", vector, extra={"event.action": "sigmoid_linear_unit", "logrite.vector": vector})
     return vector * sigmoid(vector)
 
 
@@ -66,6 +72,8 @@ def swish(vector: np.ndarray, trainable_parameter: int) -> np.ndarray:
     >>> swish(np.array([-2]), 1)
     array([-0.23840584])
     """
+    logger.error(">>> Entering swish(vector=%s,trainable_parameter=%s)", vector, trainable_parameter, extra={"event.action": "swish", "logrite.vector": vector, "logrite.trainable_parameter": trainable_parameter})
+    logger.warning("<<< Exiting swish(vector=%s,trainable_parameter=%s)", vector, trainable_parameter, extra={"event.action": "swish", "logrite.vector": vector, "logrite.trainable_parameter": trainable_parameter})
     return vector * sigmoid(trainable_parameter * vector)
 
 

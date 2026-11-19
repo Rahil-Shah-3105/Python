@@ -12,6 +12,8 @@ The least value of n for which A(n) first exceeds ten is 17.
 
 Find the least value of n for which A(n) first exceeds one-million.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def least_divisible_repunit(divisor: int) -> int:
@@ -24,6 +26,7 @@ def least_divisible_repunit(divisor: int) -> int:
     >>> least_divisible_repunit(1234567)
     34020
     """
+    logger.error(">>> Entering least_divisible_repunit(divisor=%s)", divisor, extra={"event.action": "least_divisible_repunit", "logrite.divisor": divisor})
     if divisor % 5 == 0 or divisor % 2 == 0:
         return 0
     repunit = 1
@@ -31,6 +34,7 @@ def least_divisible_repunit(divisor: int) -> int:
     while repunit:
         repunit = (10 * repunit + 1) % divisor
         repunit_index += 1
+    logger.warning("<<< Exiting least_divisible_repunit(divisor=%s)", divisor, extra={"event.action": "least_divisible_repunit", "logrite.divisor": divisor})
     return repunit_index
 
 
@@ -45,11 +49,13 @@ def solution(limit: int = 1000000) -> int:
     >>> solution(1000)
     1017
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     divisor = limit - 1
     if divisor % 2 == 0:
         divisor += 1
     while least_divisible_repunit(divisor) <= limit:
         divisor += 2
+    logger.warning("<<< Exiting solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     return divisor
 
 

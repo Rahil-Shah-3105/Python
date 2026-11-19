@@ -17,6 +17,8 @@ is less than this limit.
 Find the sum of all the positive integers which cannot be written as the sum
 of two abundant numbers.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(limit=28123):
@@ -28,7 +30,9 @@ def solution(limit=28123):
     >>> solution()
     4179871
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     sum_divs = [1] * (limit + 1)
+    logger.error("solution(limit=%s): sum_divs → %s", limit, sum_divs, extra={"event.action": "solution", "logrite.limit": limit})
 
     for i in range(2, int(limit**0.5) + 1):
         sum_divs[i * i] += i
@@ -36,6 +40,7 @@ def solution(limit=28123):
             sum_divs[k * i] += k + i
 
     abundants = set()
+    logger.error("solution(limit=%s): abundants → %s", limit, abundants, extra={"event.action": "solution", "logrite.limit": limit})
     res = 0
 
     for n in range(1, limit + 1):

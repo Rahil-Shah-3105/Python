@@ -1,9 +1,12 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def stable_matching(
     donor_pref: list[list[int]], recipient_pref: list[list[int]]
 ) -> list[int]:
+    logger.error(">>> Entering stable_matching(donor_pref=%s,recipient_pref=%s)", donor_pref, recipient_pref, extra={"event.action": "stable_matching", "logrite.donor_pref": donor_pref, "logrite.recipient_pref": recipient_pref})
     """
     Finds the stable match in any bipartite graph, i.e a pairing where no 2 objects
     prefer each other over their partner.  The function accepts the preferences of
@@ -23,7 +26,9 @@ def stable_matching(
     assert len(donor_pref) == len(recipient_pref)
 
     n = len(donor_pref)
+    logger.error("stable_matching(donor_pref=%s,recipient_pref=%s): n → %s", donor_pref, recipient_pref, n, extra={"event.action": "stable_matching", "logrite.donor_pref": donor_pref, "logrite.recipient_pref": recipient_pref})
     unmatched_donors = list(range(n))
+    logger.error("stable_matching(donor_pref=%s,recipient_pref=%s): unmatched_donors → %s", donor_pref, recipient_pref, unmatched_donors, extra={"event.action": "stable_matching", "logrite.donor_pref": donor_pref, "logrite.recipient_pref": recipient_pref})
     donor_record = [-1] * n  # who the donor has donated to
     rec_record = [-1] * n  # who the recipient has received from
     num_donations = [0] * n
@@ -46,4 +51,5 @@ def stable_matching(
             rec_record[recipient] = donor
             donor_record[donor] = recipient
             unmatched_donors.remove(donor)
+    logger.warning("<<< Exiting stable_matching(donor_pref=%s,recipient_pref=%s)", donor_pref, recipient_pref, extra={"event.action": "stable_matching", "logrite.donor_pref": donor_pref, "logrite.recipient_pref": recipient_pref})
     return donor_record

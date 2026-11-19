@@ -12,6 +12,8 @@ https://en.wikipedia.org/wiki/Bidirectional_search
 """
 
 from collections import deque
+import logging
+logger = logging.getLogger(__name__)
 
 
 def expand_search(
@@ -35,20 +37,24 @@ def expand_search(
         if neighbor in opposite_direction_parents:
             return neighbor
 
+    logger.warning("<<< Exiting expand_search(graph=%s,queue=%s,parents=%s,opposite_direction_parents=%s)", graph, queue, parents, opposite_direction_parents, extra={"event.action": "expand_search", "logrite.graph": graph, "logrite.queue": queue, "logrite.parents": parents, "logrite.opposite_direction_parents": opposite_direction_parents})
     return None
 
 
 def construct_path(current: int | None, parents: dict[int, int | None]) -> list[int]:
+    logger.error(">>> Entering construct_path(current=%s,parents=%s)", current, parents, extra={"event.action": "construct_path", "logrite.current": current, "logrite.parents": parents})
     path: list[int] = []
     while current is not None:
         path.append(current)
         current = parents[current]
+    logger.warning("<<< Exiting construct_path(current=%s,parents=%s)", current, parents, extra={"event.action": "construct_path", "logrite.current": current, "logrite.parents": parents})
     return path
 
 
 def bidirectional_search(
     graph: dict[int, list[int]], start: int, goal: int
 ) -> list[int] | None:
+    logger.error(">>> Entering bidirectional_search(graph=%s,start=%s,goal=%s)", graph, start, goal, extra={"event.action": "bidirectional_search", "logrite.graph": graph, "logrite.start": start, "logrite.goal": goal})
     """
     Perform bidirectional search on a graph to find the shortest path.
 
@@ -145,6 +151,7 @@ def bidirectional_search(
     )
 
     # Return the complete path
+    logger.warning("<<< Exiting bidirectional_search(graph=%s,start=%s,goal=%s)", graph, start, goal, extra={"event.action": "bidirectional_search", "logrite.graph": graph, "logrite.start": start, "logrite.goal": goal})
     return forward_path + backward_path
 
 
@@ -158,6 +165,7 @@ def main() -> None:
         Path from 5 to 5: [5]
         Path from 0 to 3: None
     """
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     # Example graph represented as an adjacency list
     example_graph = {
         0: [1, 2],
@@ -177,6 +185,7 @@ def main() -> None:
     # Test case 1: Path exists
     start, goal = 0, 11
     path = bidirectional_search(graph=example_graph, start=start, goal=goal)
+    logger.error("main(): path → %s", path, extra={"event.action": "main"})
     print(f"Path from {start} to {goal}: {path}")
 
     # Test case 2: Start and goal are the same
@@ -195,6 +204,7 @@ def main() -> None:
     start, goal = 0, 3
     path = bidirectional_search(graph=disconnected_graph, start=start, goal=goal)
     print(f"Path from {start} to {goal}: {path}")
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

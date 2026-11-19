@@ -3,11 +3,14 @@
 # https://medium.com/walkinthecode/greedy-algorithm-fractional-knapsack-problem-9aba1daecc93
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def fractional_knapsack(
     value: list[int], weight: list[int], capacity: int
 ) -> tuple[float, list[float]]:
+    logger.error(">>> Entering fractional_knapsack(value=%s,weight=%s,capacity=%s)", value, weight, capacity, extra={"event.action": "fractional_knapsack", "logrite.value": value, "logrite.weight": weight, "logrite.capacity": capacity})
     """
     >>> value = [1, 3, 5, 7, 9]
     >>> weight = [0.9, 0.7, 0.5, 0.3, 0.1]
@@ -30,6 +33,7 @@ def fractional_knapsack(
     """
     index = list(range(len(value)))
     ratio = [v / w for v, w in zip(value, weight)]
+    logger.error("fractional_knapsack(value=%s,weight=%s,capacity=%s): ratio → %s", value, weight, capacity, ratio, extra={"event.action": "fractional_knapsack", "logrite.value": value, "logrite.weight": weight, "logrite.capacity": capacity})
     index.sort(key=lambda i: ratio[i], reverse=True)
 
     max_value: float = 0
@@ -44,6 +48,7 @@ def fractional_knapsack(
             max_value += value[i] * capacity / weight[i]
             break
 
+    logger.warning("<<< Exiting fractional_knapsack(value=%s,weight=%s,capacity=%s)", value, weight, capacity, extra={"event.action": "fractional_knapsack", "logrite.value": value, "logrite.weight": weight, "logrite.capacity": capacity})
     return max_value, fractions
 
 

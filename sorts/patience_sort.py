@@ -3,6 +3,8 @@ from __future__ import annotations
 from bisect import bisect_left
 from functools import total_ordering
 from heapq import merge
+import logging
+logger = logging.getLogger(__name__)
 
 """
 A pure Python implementation of the patience sort algorithm
@@ -22,9 +24,13 @@ python3 patience_sort.py
 @total_ordering
 class Stack(list):
     def __lt__(self, other):
+        logger.error(">>> Entering __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
+        logger.warning("<<< Exiting __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
         return self[-1] < other[-1]
 
     def __eq__(self, other):
+        logger.error(">>> Entering __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
+        logger.warning("<<< Exiting __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
         return self[-1] == other[-1]
 
 
@@ -45,10 +51,12 @@ def patience_sort(collection: list) -> list:
     >>> patience_sort([-3, -17, -48])
     [-48, -17, -3]
     """
+    logger.error(">>> Entering patience_sort(collection=%s)", collection, extra={"event.action": "patience_sort", "logrite.collection": collection})
     stacks: list[Stack] = []
     # sort into stacks
     for element in collection:
         new_stacks = Stack([element])
+        logger.error("patience_sort(collection=%s): new_stacks → %s", collection, new_stacks, extra={"event.action": "patience_sort", "logrite.collection": collection})
         i = bisect_left(stacks, new_stacks)
         if i != len(stacks):
             stacks[i].append(element)
@@ -57,6 +65,7 @@ def patience_sort(collection: list) -> list:
 
     # use a heap-based merge to merge stack efficiently
     collection[:] = merge(*(reversed(stack) for stack in stacks))
+    logger.warning("<<< Exiting patience_sort(collection=%s)", collection, extra={"event.action": "patience_sort", "logrite.collection": collection})
     return collection
 
 

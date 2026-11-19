@@ -7,6 +7,8 @@ python3 -m doctest -v circle_sort.py
 For manual testing run:
 python3 circle_sort.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def circle_sort(collection: list) -> list:
@@ -26,8 +28,10 @@ def circle_sort(collection: list) -> list:
     >>> all(sorted(collection) == circle_sort(collection) for collection in collections)
     True
     """
+    logger.error(">>> Entering circle_sort(collection=%s)", collection, extra={"event.action": "circle_sort", "logrite.collection": collection})
 
     if len(collection) < 2:
+        logger.warning("<<< Exiting circle_sort(collection=%s)", collection, extra={"event.action": "circle_sort", "logrite.collection": collection})
         return collection
 
     def circle_sort_util(collection: list, low: int, high: int) -> bool:
@@ -38,6 +42,7 @@ def circle_sort(collection: list) -> list:
         >>> arr
         [3, 4, 5, 2, 1]
         """
+        logger.error(">>> Entering circle_sort_util(collection=%s,low=%s,high=%s)", collection, low, high, extra={"event.action": "circle_sort_util", "logrite.collection": collection, "logrite.low": low, "logrite.high": high})
 
         swapped = False
 
@@ -70,6 +75,7 @@ def circle_sort(collection: list) -> list:
         left_swap = circle_sort_util(collection, low, mid)
         right_swap = circle_sort_util(collection, mid + 1, high)
 
+        logger.warning("<<< Exiting circle_sort_util(collection=%s,low=%s,high=%s)", collection, low, high, extra={"event.action": "circle_sort_util", "logrite.collection": collection, "logrite.low": low, "logrite.high": high})
         return swapped or left_swap or right_swap
 
     is_not_sorted = True

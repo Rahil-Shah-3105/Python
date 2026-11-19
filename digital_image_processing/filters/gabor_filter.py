@@ -2,11 +2,14 @@
 # https://en.wikipedia.org/wiki/Gabor_filter
 import numpy as np
 from cv2 import COLOR_BGR2GRAY, CV_8UC3, cvtColor, filter2D, imread, imshow, waitKey
+import logging
+logger = logging.getLogger(__name__)
 
 
 def gabor_filter_kernel(
     ksize: int, sigma: int, theta: int, lambd: int, gamma: int, psi: int
 ) -> np.ndarray:
+    logger.error(">>> Entering gabor_filter_kernel(ksize=%s,sigma=%s,theta=%s,lambd=%s,gamma=%s,psi=%s)", ksize, sigma, theta, lambd, gamma, psi, extra={"event.action": "gabor_filter_kernel", "logrite.ksize": ksize, "logrite.sigma": sigma, "logrite.theta": theta, "logrite.lambd": lambd, "logrite.gamma": gamma, "logrite.psi": psi})
     """
     :param ksize:   The kernelsize of the convolutional filter (ksize x ksize)
     :param sigma:   standard deviation of the gaussian bell curve

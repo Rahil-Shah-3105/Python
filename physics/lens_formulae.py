@@ -46,6 +46,8 @@ https://www.toppr.com/ask/content/concept/sign-convention-for-lenses-210246/
 Reference for assumptions:
 https://testbook.com/physics/derivation-of-lens-maker-formula
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def focal_length_of_lens(
@@ -79,6 +81,7 @@ def focal_length_of_lens(
 def object_distance(
     focal_length_of_lens: float, image_distance_from_lens: float
 ) -> float:
+    logger.error(">>> Entering object_distance(focal_length_of_lens=%s,image_distance_from_lens=%s)", focal_length_of_lens, image_distance_from_lens, extra={"event.action": "object_distance", "logrite.focal_length_of_lens": focal_length_of_lens, "logrite.image_distance_from_lens": image_distance_from_lens})
     """
     Doctests:
     >>> from math import isclose
@@ -102,12 +105,15 @@ def object_distance(
         )
 
     object_distance = 1 / ((1 / image_distance_from_lens) - (1 / focal_length_of_lens))
+    logger.error("object_distance(focal_length_of_lens=%s,image_distance_from_lens=%s): object_distance → %s", focal_length_of_lens, image_distance_from_lens, object_distance, extra={"event.action": "object_distance", "logrite.focal_length_of_lens": focal_length_of_lens, "logrite.image_distance_from_lens": image_distance_from_lens})
+    logger.warning("<<< Exiting object_distance(focal_length_of_lens=%s,image_distance_from_lens=%s)", focal_length_of_lens, image_distance_from_lens, extra={"event.action": "object_distance", "logrite.focal_length_of_lens": focal_length_of_lens, "logrite.image_distance_from_lens": image_distance_from_lens})
     return object_distance
 
 
 def image_distance(
     focal_length_of_lens: float, object_distance_from_lens: float
 ) -> float:
+    logger.error(">>> Entering image_distance(focal_length_of_lens=%s,object_distance_from_lens=%s)", focal_length_of_lens, object_distance_from_lens, extra={"event.action": "image_distance", "logrite.focal_length_of_lens": focal_length_of_lens, "logrite.object_distance_from_lens": object_distance_from_lens})
     """
     Doctests:
     >>> from math import isclose
@@ -128,4 +134,6 @@ def image_distance(
             "Invalid inputs. Enter non zero values with respect to the sign convention."
         )
     image_distance = 1 / ((1 / object_distance_from_lens) + (1 / focal_length_of_lens))
+    logger.error("image_distance(focal_length_of_lens=%s,object_distance_from_lens=%s): image_distance → %s", focal_length_of_lens, object_distance_from_lens, image_distance, extra={"event.action": "image_distance", "logrite.focal_length_of_lens": focal_length_of_lens, "logrite.object_distance_from_lens": object_distance_from_lens})
+    logger.warning("<<< Exiting image_distance(focal_length_of_lens=%s,object_distance_from_lens=%s)", focal_length_of_lens, object_distance_from_lens, extra={"event.action": "image_distance", "logrite.focal_length_of_lens": focal_length_of_lens, "logrite.object_distance_from_lens": object_distance_from_lens})
     return image_distance

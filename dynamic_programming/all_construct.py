@@ -4,6 +4,8 @@ constructed from the given list of substrings
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def all_construct(target: str, word_bank: list[str] | None = None) -> list[list[str]]:
@@ -17,10 +19,12 @@ def all_construct(target: str, word_bank: list[str] | None = None) -> list[list[
     >>> all_construct("purple",["purp","p","ur","le","purpl"])
     [['purp', 'le'], ['p', 'ur', 'p', 'le']]
     """
+    logger.error(">>> Entering all_construct(target=%s,word_bank=%s)", target, word_bank, extra={"event.action": "all_construct", "logrite.target": target, "logrite.word_bank": word_bank})
 
     word_bank = word_bank or []
     # create a table
     table_size: int = len(target) + 1
+    logger.error("all_construct(target=%s,word_bank=%s): table_size → %s", target, word_bank, table_size, extra={"event.action": "all_construct", "logrite.target": target, "logrite.word_bank": word_bank})
 
     table: list[list[list[str]]] = []
     for _ in range(table_size):
@@ -46,6 +50,7 @@ def all_construct(target: str, word_bank: list[str] | None = None) -> list[list[
     for combination in table[len(target)]:
         combination.reverse()
 
+    logger.warning("<<< Exiting all_construct(target=%s,word_bank=%s)", target, word_bank, extra={"event.action": "all_construct", "logrite.target": target, "logrite.word_bank": word_bank})
     return table[len(target)]
 
 

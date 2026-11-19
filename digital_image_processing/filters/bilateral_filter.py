@@ -15,23 +15,33 @@ import sys
 
 import cv2
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def vec_gaussian(img: np.ndarray, variance: float) -> np.ndarray:
+    logger.error(">>> Entering vec_gaussian(img=%s,variance=%s)", img, variance, extra={"event.action": "vec_gaussian", "logrite.img": img, "logrite.variance": variance})
     # For applying gaussian function for each element in matrix.
     sigma = math.sqrt(variance)
+    logger.error("vec_gaussian(img=%s,variance=%s): sigma → %s", img, variance, sigma, extra={"event.action": "vec_gaussian", "logrite.img": img, "logrite.variance": variance})
     cons = 1 / (sigma * math.sqrt(2 * math.pi))
+    logger.error("vec_gaussian(img=%s,variance=%s): cons → %s", img, variance, cons, extra={"event.action": "vec_gaussian", "logrite.img": img, "logrite.variance": variance})
+    logger.warning("<<< Exiting vec_gaussian(img=%s,variance=%s)", img, variance, extra={"event.action": "vec_gaussian", "logrite.img": img, "logrite.variance": variance})
     return cons * np.exp(-((img / sigma) ** 2) * 0.5)
 
 
 def get_slice(img: np.ndarray, x: int, y: int, kernel_size: int) -> np.ndarray:
+    logger.error(">>> Entering get_slice(img=%s,x=%s,y=%s,kernel_size=%s)", img, x, y, kernel_size, extra={"event.action": "get_slice", "logrite.img": img, "logrite.x": x, "logrite.y": y, "logrite.kernel_size": kernel_size})
     half = kernel_size // 2
+    logger.warning("<<< Exiting get_slice(img=%s,x=%s,y=%s,kernel_size=%s)", img, x, y, kernel_size, extra={"event.action": "get_slice", "logrite.img": img, "logrite.x": x, "logrite.y": y, "logrite.kernel_size": kernel_size})
     return img[x - half : x + half + 1, y - half : y + half + 1]
 
 
 def get_gauss_kernel(kernel_size: int, spatial_variance: float) -> np.ndarray:
+    logger.error(">>> Entering get_gauss_kernel(kernel_size=%s,spatial_variance=%s)", kernel_size, spatial_variance, extra={"event.action": "get_gauss_kernel", "logrite.kernel_size": kernel_size, "logrite.spatial_variance": spatial_variance})
     # Creates a gaussian kernel of given dimension.
     arr = np.zeros((kernel_size, kernel_size))
+    logger.error("get_gauss_kernel(kernel_size=%s,spatial_variance=%s): arr → %s", kernel_size, spatial_variance, arr, extra={"event.action": "get_gauss_kernel", "logrite.kernel_size": kernel_size, "logrite.spatial_variance": spatial_variance})
     for i in range(kernel_size):
         for j in range(kernel_size):
             arr[i, j] = math.sqrt(

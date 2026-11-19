@@ -18,20 +18,28 @@
 # reducing search time in the most frequent instances.
 import sys
 from random import randint
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
     """Binary Search Tree Node"""
 
     def __init__(self, key, freq):
+        logger.error(">>> Entering __init__(key=%s,freq=%s)", key, freq, extra={"event.action": "__init__", "logrite.key": key, "logrite.freq": freq})
         self.key = key
         self.freq = freq
+        logger.debug("__init__(self=%s,key=%s,freq=%s): self.freq → %s", self, key, freq, self.freq, extra={"event.action": "__init__", "logrite.key": key, "logrite.freq": freq})
+        logger.debug("__init__(self=%s,key=%s,freq=%s): self.key → %s", self, key, freq, self.key, extra={"event.action": "__init__", "logrite.key": key, "logrite.freq": freq})
+        logger.error("__init__(key=%s,freq=%s): self.key → %s", key, freq, self.key, extra={"event.action": "__init__", "logrite.key": key, "logrite.freq": freq})
 
     def __str__(self):
         """
         >>> str(Node(1, 2))
         'Node(key=1, freq=2)'
         """
+        logger.error(">>> Entering __str__()", extra={"event.action": "__str__"})
+        logger.warning("<<< Exiting __str__()", extra={"event.action": "__str__"})
         return f"Node(key={self.key}, freq={self.freq})"
 
 
@@ -50,7 +58,9 @@ def print_binary_search_tree(root, key, i, j, parent, is_left):
     21 is the right child of key 10.
     17 is the left child of key 21.
     """
+    logger.error(">>> Entering print_binary_search_tree(root=%s,key=%s,i=%s,j=%s,parent=%s,is_left=%s)", root, key, i, j, parent, is_left, extra={"event.action": "print_binary_search_tree", "logrite.root": root, "logrite.key": key, "logrite.i": i, "logrite.j": j, "logrite.is_left": is_left})
     if i > j or i < 0 or j > len(root) - 1:
+        logger.warning("<<< Exiting print_binary_search_tree(root=%s,key=%s,i=%s,j=%s,parent=%s,is_left=%s)", root, key, i, j, parent, is_left, extra={"event.action": "print_binary_search_tree", "logrite.root": root, "logrite.key": key, "logrite.i": i, "logrite.j": j, "logrite.is_left": is_left})
         return
 
     node = root[i][j]
@@ -90,23 +100,30 @@ def find_optimal_binary_search_tree(nodes):
     37 is the right child of key 25.
     42 is the right child of key 37.
     """
+    logger.error(">>> Entering find_optimal_binary_search_tree(nodes=%s)", nodes, extra={"event.action": "find_optimal_binary_search_tree", "logrite.nodes": nodes})
     # Tree nodes must be sorted first, the code below sorts the keys in
     # increasing order and rearrange its frequencies accordingly.
     nodes.sort(key=lambda node: node.key)
 
     n = len(nodes)
+    logger.error("find_optimal_binary_search_tree(nodes=%s): n → %s", nodes, n, extra={"event.action": "find_optimal_binary_search_tree", "logrite.nodes": nodes})
 
     keys = [nodes[i].key for i in range(n)]
+    logger.error("find_optimal_binary_search_tree(nodes=%s): keys → %s", nodes, keys, extra={"event.action": "find_optimal_binary_search_tree", "logrite.nodes": nodes})
     freqs = [nodes[i].freq for i in range(n)]
+    logger.error("find_optimal_binary_search_tree(nodes=%s): freqs → %s", nodes, freqs, extra={"event.action": "find_optimal_binary_search_tree", "logrite.nodes": nodes})
 
     # This 2D array stores the overall tree cost (which's as minimized as possible);
     # for a single key, cost is equal to frequency of the key.
     dp = [[freqs[i] if i == j else 0 for j in range(n)] for i in range(n)]
+    logger.error("find_optimal_binary_search_tree(nodes=%s): dp → %s", nodes, dp, extra={"event.action": "find_optimal_binary_search_tree", "logrite.nodes": nodes})
     # sum[i][j] stores the sum of key frequencies between i and j inclusive in nodes
     # array
     total = [[freqs[i] if i == j else 0 for j in range(n)] for i in range(n)]
+    logger.error("find_optimal_binary_search_tree(nodes=%s): total → %s", nodes, total, extra={"event.action": "find_optimal_binary_search_tree", "logrite.nodes": nodes})
     # stores tree roots that will be used later for constructing binary search tree
     root = [[i if i == j else 0 for j in range(n)] for i in range(n)]
+    logger.error("find_optimal_binary_search_tree(nodes=%s): root → %s", nodes, root, extra={"event.action": "find_optimal_binary_search_tree", "logrite.nodes": nodes})
 
     for interval_length in range(2, n + 1):
         for i in range(n - interval_length + 1):
@@ -132,12 +149,16 @@ def find_optimal_binary_search_tree(nodes):
 
     print(f"\nThe cost of optimal BST for given tree nodes is {dp[0][n - 1]}.")
     print_binary_search_tree(root, keys, 0, n - 1, -1, False)
+    logger.warning("<<< Exiting find_optimal_binary_search_tree(nodes=%s)", nodes, extra={"event.action": "find_optimal_binary_search_tree", "logrite.nodes": nodes})
 
 
 def main():
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     # A sample binary search tree
     nodes = [Node(i, randint(1, 50)) for i in range(10, 0, -1)]
+    logger.error("main(): nodes → %s", nodes, extra={"event.action": "main"})
     find_optimal_binary_search_tree(nodes)
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

@@ -10,6 +10,8 @@ python cyclic_sort.py
 or
 python3 cyclic_sort.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def cyclic_sort(nums: list[int]) -> list[int]:
@@ -28,6 +30,7 @@ def cyclic_sort(nums: list[int]) -> list[int]:
     >>> cyclic_sort([3, 5, 2, 1, 4])
     [1, 2, 3, 4, 5]
     """
+    logger.error(">>> Entering cyclic_sort(nums=%s)", nums, extra={"event.action": "cyclic_sort", "logrite.nums": nums})
 
     # Perform cyclic sort
     index = 0
@@ -43,6 +46,7 @@ def cyclic_sort(nums: list[int]) -> list[int]:
             # move to the next element
             index += 1
 
+    logger.warning("<<< Exiting cyclic_sort(nums=%s)", nums, extra={"event.action": "cyclic_sort", "logrite.nums": nums})
     return nums
 
 

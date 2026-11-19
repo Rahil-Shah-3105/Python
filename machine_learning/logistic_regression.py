@@ -18,6 +18,8 @@ https://medium.com/@martinpella/logistic-regression-from-scratch-in-python-124c5
 import numpy as np
 from matplotlib import pyplot as plt
 from sklearn import datasets
+import logging
+logger = logging.getLogger(__name__)
 
 # get_ipython().run_line_magic('matplotlib', 'inline')
 
@@ -60,6 +62,8 @@ def sigmoid_function(z: float | np.ndarray) -> float | np.ndarray:
     >>> sigmoid_function(np.array([0.8]))
     array([0.68997448])
     """
+    logger.error(">>> Entering sigmoid_function(z=%s)", z, extra={"event.action": "sigmoid_function", "logrite.z": z})
+    logger.warning("<<< Exiting sigmoid_function(z=%s)", z, extra={"event.action": "sigmoid_function", "logrite.z": z})
     return 1 / (1 + np.exp(-z))
 
 
@@ -100,28 +104,38 @@ def cost_function(h: np.ndarray, y: np.ndarray) -> float:
     References:
        - https://en.wikipedia.org/wiki/Logistic_regression
     """
+    logger.error(">>> Entering cost_function(h=%s,y=%s)", h, y, extra={"event.action": "cost_function", "logrite.h": h, "logrite.y": y})
+    logger.warning("<<< Exiting cost_function(h=%s,y=%s)", h, y, extra={"event.action": "cost_function", "logrite.h": h, "logrite.y": y})
     return float((-y * np.log(h) - (1 - y) * np.log(1 - h)).mean())
 
 
 def log_likelihood(x, y, weights):
+    logger.error(">>> Entering log_likelihood(x=%s,y=%s,weights=%s)", x, y, weights, extra={"event.action": "log_likelihood", "logrite.x": x, "logrite.y": y, "logrite.weights": weights})
     scores = np.dot(x, weights)
+    logger.error("log_likelihood(x=%s,y=%s,weights=%s): scores → %s", x, y, weights, scores, extra={"event.action": "log_likelihood", "logrite.x": x, "logrite.y": y, "logrite.weights": weights})
+    logger.warning("<<< Exiting log_likelihood(x=%s,y=%s,weights=%s)", x, y, weights, extra={"event.action": "log_likelihood", "logrite.x": x, "logrite.y": y, "logrite.weights": weights})
     return np.sum(y * scores - np.log(1 + np.exp(scores)))
 
 
 # here alpha is the learning rate, X is the feature matrix,y is the target matrix
 def logistic_reg(alpha, x, y, max_iterations=70000):
+    logger.error(">>> Entering logistic_reg(alpha=%s,x=%s,y=%s,max_iterations=%s)", alpha, x, y, max_iterations, extra={"event.action": "logistic_reg", "logrite.alpha": alpha, "logrite.x": x, "logrite.y": y, "logrite.max_iterations": max_iterations})
     theta = np.zeros(x.shape[1])
 
     for iterations in range(max_iterations):
         z = np.dot(x, theta)
         h = sigmoid_function(z)
         gradient = np.dot(x.T, h - y) / y.size
+        logger.error("logistic_reg(alpha=%s,x=%s,y=%s,max_iterations=%s): gradient → %s", alpha, x, y, max_iterations, gradient, extra={"event.action": "logistic_reg", "logrite.alpha": alpha, "logrite.x": x, "logrite.y": y, "logrite.max_iterations": max_iterations})
         theta = theta - alpha * gradient  # updating the weights
         z = np.dot(x, theta)
+        logger.error("logistic_reg(alpha=%s,x=%s,y=%s,max_iterations=%s): z → %s", alpha, x, y, max_iterations, z, extra={"event.action": "logistic_reg", "logrite.alpha": alpha, "logrite.x": x, "logrite.y": y, "logrite.max_iterations": max_iterations})
         h = sigmoid_function(z)
+        logger.error("logistic_reg(alpha=%s,x=%s,y=%s,max_iterations=%s): h → %s", alpha, x, y, max_iterations, h, extra={"event.action": "logistic_reg", "logrite.alpha": alpha, "logrite.x": x, "logrite.y": y, "logrite.max_iterations": max_iterations})
         j = cost_function(h, y)
         if iterations % 100 == 0:
             print(f"loss: {j} \t")  # printing the loss after every 100 iterations
+    logger.warning("<<< Exiting logistic_reg(alpha=%s,x=%s,y=%s,max_iterations=%s)", alpha, x, y, max_iterations, extra={"event.action": "logistic_reg", "logrite.alpha": alpha, "logrite.x": x, "logrite.y": y, "logrite.max_iterations": max_iterations})
     return theta
 
 
@@ -141,6 +155,8 @@ if __name__ == "__main__":
     print("theta: ", theta)  # printing the theta i.e our weights vector
 
     def predict_prob(x):
+        logger.error(">>> Entering predict_prob(x=%s)", x, extra={"event.action": "predict_prob", "logrite.x": x})
+        logger.warning("<<< Exiting predict_prob(x=%s)", x, extra={"event.action": "predict_prob", "logrite.x": x})
         return sigmoid_function(
             np.dot(x, theta)
         )  # predicting the value of probability from the logistic regression algorithm

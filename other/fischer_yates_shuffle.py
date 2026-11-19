@@ -8,13 +8,19 @@ wikipedia/Fischer-Yates-Shuffle.
 
 import random
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 def fisher_yates_shuffle(data: list) -> list[Any]:
+    logger.error(">>> Entering fisher_yates_shuffle(data=%s)", data, extra={"event.action": "fisher_yates_shuffle"})
     for _ in range(len(data)):
         a = random.randint(0, len(data) - 1)
+        logger.error("fisher_yates_shuffle(data=%s): a → %s", data, a, extra={"event.action": "fisher_yates_shuffle"})
         b = random.randint(0, len(data) - 1)
+        logger.error("fisher_yates_shuffle(data=%s): b → %s", data, b, extra={"event.action": "fisher_yates_shuffle"})
         data[a], data[b] = data[b], data[a]
+    logger.warning("<<< Exiting fisher_yates_shuffle(data=%s)", data, extra={"event.action": "fisher_yates_shuffle"})
     return data
 
 

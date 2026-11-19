@@ -23,6 +23,8 @@ Enter a Postfix Equation (space separated) = 5 6 9 * +
 
         Result =  59
 """
+import logging
+logger = logging.getLogger(__name__)
 
 # Defining valid unary operator symbols
 UNARY_OP_SYMBOLS = ("-", "+")
@@ -52,12 +54,15 @@ def parse_token(token: str | float) -> float | str:
     float or str
         Returns a float if `token` is a number or a str if `token` is an operator
     """
+    logger.error(">>> Entering parse_token(token=<redacted>)", extra={"event.action": "parse_token"})
     if token in OPERATORS:
         return token
     try:
         return float(token)
     except ValueError:
+        logger.error("Exception in parse_token(token=<redacted>)", exc_info=True, extra={"event.action": "parse_token", "event.category": "process"})
         msg = f"{token} is neither a number nor a valid operator"
+        logger.warning("<<< Exiting parse_token(token=<redacted>)", extra={"event.action": "parse_token"})
         raise ValueError(msg)
 
 
@@ -107,6 +112,7 @@ def evaluate(post_fix: list[str], verbose: bool = False) -> float:
     float
         The evaluated value
     """
+    logger.error(">>> Entering evaluate(post_fix=%s,verbose=%s)", post_fix, verbose, extra={"event.action": "evaluate", "logrite.post_fix": post_fix, "logrite.verbose": verbose})
     if not post_fix:
         return 0
     # Checking the list to find out whether the postfix expression is valid
@@ -184,6 +190,7 @@ def evaluate(post_fix: list[str], verbose: bool = False) -> float:
     # only one element which is the result
     if len(stack) != 1:
         raise ArithmeticError("Input is not a valid postfix expression")
+    logger.warning("<<< Exiting evaluate(post_fix=%s,verbose=%s)", post_fix, verbose, extra={"event.action": "evaluate", "logrite.post_fix": post_fix, "logrite.verbose": verbose})
     return float(stack[0])
 
 

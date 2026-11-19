@@ -13,6 +13,8 @@ from typing import SupportsIndex
 
 import numpy as np
 from scipy.ndimage import convolve
+import logging
+logger = logging.getLogger(__name__)
 
 
 def warp(
@@ -64,6 +66,7 @@ def horn_schunck(
     num_iter: SupportsIndex,
     alpha: float | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
+    logger.error(">>> Entering horn_schunck(image0=%s,image1=%s,num_iter=%s,alpha=%s)", image0, image1, num_iter, alpha, extra={"event.action": "horn_schunck", "logrite.image0": image0, "logrite.image1": image1, "logrite.num_iter": num_iter, "logrite.alpha": alpha})
     """
     This function performs the Horn-Schunck algorithm and returns the estimated
     optical flow. It is assumed that the input images are grayscale and
@@ -95,8 +98,11 @@ def horn_schunck(
 
     # Prepare kernels for the calculation of the derivatives and the average velocity
     kernel_x = np.array([[-1, 1], [-1, 1]]) * 0.25
+    logger.error("horn_schunck(image0=%s,image1=%s,num_iter=%s,alpha=%s): kernel_x → %s", image0, image1, num_iter, alpha, kernel_x, extra={"event.action": "horn_schunck", "logrite.image0": image0, "logrite.image1": image1, "logrite.num_iter": num_iter, "logrite.alpha": alpha})
     kernel_y = np.array([[-1, -1], [1, 1]]) * 0.25
+    logger.error("horn_schunck(image0=%s,image1=%s,num_iter=%s,alpha=%s): kernel_y → %s", image0, image1, num_iter, alpha, kernel_y, extra={"event.action": "horn_schunck", "logrite.image0": image0, "logrite.image1": image1, "logrite.num_iter": num_iter, "logrite.alpha": alpha})
     kernel_t = np.array([[1, 1], [1, 1]]) * 0.25
+    logger.error("horn_schunck(image0=%s,image1=%s,num_iter=%s,alpha=%s): kernel_t → %s", image0, image1, num_iter, alpha, kernel_t, extra={"event.action": "horn_schunck", "logrite.image0": image0, "logrite.image1": image1, "logrite.num_iter": num_iter, "logrite.alpha": alpha})
     kernel_laplacian = np.array(
         [[1 / 12, 1 / 6, 1 / 12], [1 / 6, 0, 1 / 6], [1 / 12, 1 / 6, 1 / 12]]
     )
@@ -104,12 +110,18 @@ def horn_schunck(
     # Iteratively refine the flow
     for _ in range(num_iter):
         warped_image = warp(image0, horizontal_flow, vertical_flow)
+        logger.error("horn_schunck(image0=%s,image1=%s,num_iter=%s,alpha=%s): warped_image → %s", image0, image1, num_iter, alpha, warped_image, extra={"event.action": "horn_schunck", "logrite.image0": image0, "logrite.image1": image1, "logrite.num_iter": num_iter, "logrite.alpha": alpha})
         derivative_x = convolve(warped_image, kernel_x) + convolve(image1, kernel_x)
+        logger.error("horn_schunck(image0=%s,image1=%s,num_iter=%s,alpha=%s): derivative_x → %s", image0, image1, num_iter, alpha, derivative_x, extra={"event.action": "horn_schunck", "logrite.image0": image0, "logrite.image1": image1, "logrite.num_iter": num_iter, "logrite.alpha": alpha})
         derivative_y = convolve(warped_image, kernel_y) + convolve(image1, kernel_y)
+        logger.error("horn_schunck(image0=%s,image1=%s,num_iter=%s,alpha=%s): derivative_y → %s", image0, image1, num_iter, alpha, derivative_y, extra={"event.action": "horn_schunck", "logrite.image0": image0, "logrite.image1": image1, "logrite.num_iter": num_iter, "logrite.alpha": alpha})
         derivative_t = convolve(warped_image, kernel_t) + convolve(image1, -kernel_t)
+        logger.error("horn_schunck(image0=%s,image1=%s,num_iter=%s,alpha=%s): derivative_t → %s", image0, image1, num_iter, alpha, derivative_t, extra={"event.action": "horn_schunck", "logrite.image0": image0, "logrite.image1": image1, "logrite.num_iter": num_iter, "logrite.alpha": alpha})
 
         avg_horizontal_velocity = convolve(horizontal_flow, kernel_laplacian)
+        logger.error("horn_schunck(image0=%s,image1=%s,num_iter=%s,alpha=%s): avg_horizontal_velocity → %s", image0, image1, num_iter, alpha, avg_horizontal_velocity, extra={"event.action": "horn_schunck", "logrite.image0": image0, "logrite.image1": image1, "logrite.num_iter": num_iter, "logrite.alpha": alpha})
         avg_vertical_velocity = convolve(vertical_flow, kernel_laplacian)
+        logger.error("horn_schunck(image0=%s,image1=%s,num_iter=%s,alpha=%s): avg_vertical_velocity → %s", image0, image1, num_iter, alpha, avg_vertical_velocity, extra={"event.action": "horn_schunck", "logrite.image0": image0, "logrite.image1": image1, "logrite.num_iter": num_iter, "logrite.alpha": alpha})
 
         # This updates the flow as proposed in the paper (Step 12)
         update = (
@@ -118,10 +130,12 @@ def horn_schunck(
             + derivative_t
         )
         update = update / (alpha**2 + derivative_x**2 + derivative_y**2)
+        logger.error("horn_schunck(image0=%s,image1=%s,num_iter=%s,alpha=%s): update → %s", image0, image1, num_iter, alpha, update, extra={"event.action": "horn_schunck", "logrite.image0": image0, "logrite.image1": image1, "logrite.num_iter": num_iter, "logrite.alpha": alpha})
 
         horizontal_flow = avg_horizontal_velocity - derivative_x * update
         vertical_flow = avg_vertical_velocity - derivative_y * update
 
+    logger.warning("<<< Exiting horn_schunck(image0=%s,image1=%s,num_iter=%s,alpha=%s)", image0, image1, num_iter, alpha, extra={"event.action": "horn_schunck", "logrite.image0": image0, "logrite.image1": image1, "logrite.num_iter": num_iter, "logrite.alpha": alpha})
     return horizontal_flow, vertical_flow
 
 

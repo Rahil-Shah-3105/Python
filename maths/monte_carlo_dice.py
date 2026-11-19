@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Dice:
@@ -8,9 +10,14 @@ class Dice:
 
     def __init__(self):
         """Initialize a six sided dice"""
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
         self.sides = list(range(1, Dice.NUM_SIDES + 1))
+        logger.warning("<<< Exiting __init__()", extra={"event.action": "__init__"})
+        logger.error("__init__(): self.sides → %s", self.sides, extra={"event.action": "__init__"})
 
     def roll(self):
+        logger.error(">>> Entering roll()", extra={"event.action": "roll"})
+        logger.warning("<<< Exiting roll()", extra={"event.action": "roll"})
         return random.choice(self.sides)
 
 
@@ -30,11 +37,16 @@ def throw_dice(num_throws: int, num_dice: int = 2) -> list[float]:
     >>> throw_dice(10000, 2)
     [2.74, 5.6, 7.99, 11.26, 13.92, 16.7, 14.44, 10.63, 8.05, 5.92, 2.75]
     """
+    logger.error(">>> Entering throw_dice(num_throws=%s,num_dice=%s)", num_throws, num_dice, extra={"event.action": "throw_dice", "logrite.num_throws": num_throws, "logrite.num_dice": num_dice})
     dices = [Dice() for i in range(num_dice)]
+    logger.error("throw_dice(num_throws=%s,num_dice=%s): dices → %s", num_throws, num_dice, dices, extra={"event.action": "throw_dice", "logrite.num_throws": num_throws, "logrite.num_dice": num_dice})
     count_of_sum = [0] * (len(dices) * Dice.NUM_SIDES + 1)
+    logger.error("throw_dice(num_throws=%s,num_dice=%s): count_of_sum → %s", num_throws, num_dice, count_of_sum, extra={"event.action": "throw_dice", "logrite.num_throws": num_throws, "logrite.num_dice": num_dice})
     for _ in range(num_throws):
         count_of_sum[sum(dice.roll() for dice in dices)] += 1
     probability = [round((count * 100) / num_throws, 2) for count in count_of_sum]
+    logger.error("throw_dice(num_throws=%s,num_dice=%s): probability → %s", num_throws, num_dice, probability, extra={"event.action": "throw_dice", "logrite.num_throws": num_throws, "logrite.num_dice": num_dice})
+    logger.warning("<<< Exiting throw_dice(num_throws=%s,num_dice=%s)", num_throws, num_dice, extra={"event.action": "throw_dice", "logrite.num_throws": num_throws, "logrite.num_dice": num_dice})
     return probability[num_dice:]  # remove probability of sums that never appear
 
 

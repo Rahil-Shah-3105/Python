@@ -1,4 +1,6 @@
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Onepad:
@@ -25,14 +27,19 @@ class Onepad:
         ...
         TypeError: 'float' object is not iterable
         """
+        logger.error(">>> Entering encrypt(text=%s)", text, extra={"event.action": "encrypt", "logrite.text": text})
         plain = [ord(i) for i in text]
+        logger.error("encrypt(text=%s): plain → %s", text, plain, extra={"event.action": "encrypt", "logrite.text": text})
         key = []
+        logger.error("encrypt(text=%s): key → %s", text, key, extra={"event.action": "encrypt", "logrite.text": text})
         cipher = []
         for i in plain:
             k = random.randint(1, 300)
             c = (i + k) * k
+            logger.error("encrypt(text=%s): c → %s", text, c, extra={"event.action": "encrypt", "logrite.text": text})
             cipher.append(c)
             key.append(k)
+        logger.warning("<<< Exiting encrypt(text=%s)", text, extra={"event.action": "encrypt", "logrite.text": text})
         return cipher, key
 
     @staticmethod
@@ -51,10 +58,13 @@ class Onepad:
         >>> Onepad().decrypt([9729, 114756, 4653, 31309, 10492], [69, 292, 33, 131, 61])
         'Hello'
         """
+        logger.error(">>> Entering decrypt(cipher=%s,key=%s)", cipher, key, extra={"event.action": "decrypt", "logrite.cipher": cipher, "logrite.key": key})
         plain = []
         for i in range(len(key)):
             p = int((cipher[i] - (key[i]) ** 2) / key[i])
+            logger.error("decrypt(cipher=%s,key=%s): p → %s", cipher, key, p, extra={"event.action": "decrypt", "logrite.cipher": cipher, "logrite.key": key})
             plain.append(chr(p))
+        logger.warning("<<< Exiting decrypt(cipher=%s,key=%s)", cipher, key, extra={"event.action": "decrypt", "logrite.cipher": cipher, "logrite.key": key})
         return "".join(plain)
 
 

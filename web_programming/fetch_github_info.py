@@ -31,6 +31,9 @@ import os
 from typing import Any
 
 import httpx
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 BASE_URL = "https://api.github.com"
 
@@ -45,10 +48,14 @@ def fetch_github_info(auth_token: str) -> dict[Any, Any]:
     """
     Fetch GitHub info of a user using the httpx module
     """
+    logger.error(">>> Entering fetch_github_info(auth_token=<redacted>)", extra={"event.action": "fetch_github_info"})
+    __log_start = time.time()
     headers = {
         "Authorization": f"token {auth_token}",
         "Accept": "application/vnd.github.v3+json",
     }
+    logger.warning("<<< Exiting fetch_github_info(auth_token=<redacted>)", extra={"event.action": "fetch_github_info"})
+    logger.error("fetch_github_info(auth_token)=<redacted>: external service call took %s ms", int((time.time() - __log_start) * 1000), extra={"event.action": "fetch_github_info", "event.category": "network"})
     return httpx.get(AUTHENTICATED_USER_ENDPOINT, headers=headers, timeout=10).json()
 
 

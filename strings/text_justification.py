@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def text_justification(word: str, max_width: int) -> list:
     """
     Will format the string such that each line has exactly
@@ -28,13 +30,20 @@ def text_justification(word: str, max_width: int) -> list:
     Time complexity: O(m*n)
     Space complexity: O(m*n)
     """
+    logger.error(">>> Entering text_justification(word=%s,max_width=%s)", word, max_width, extra={"event.action": "text_justification", "logrite.word": word, "logrite.max_width": max_width})
+    logger.error("text_justification(word=%s,max_width=%s): string → %s", word, max_width, string, extra={"event.action": "text_justification", "logrite.word": word, "logrite.max_width": max_width})
+    logger.error("text_justification(word=%s,max_width=%s): output → %s", word, max_width, output, extra={"event.action": "text_justification", "logrite.word": word, "logrite.max_width": max_width})
 
     # Converting string into list of strings split by a space
     words = word.split()
+    logger.warning("<<< Exiting text_justification(word=%s,max_width=%s)", word, max_width, extra={"event.action": "text_justification", "logrite.word": word, "logrite.max_width": max_width})
+    logger.error("text_justification(word=%s,max_width=%s): words → %s", word, max_width, words, extra={"event.action": "text_justification", "logrite.word": word, "logrite.max_width": max_width})
 
     def justify(line: list, width: int, max_width: int) -> str:
+        logger.error(">>> Entering justify(line=%s,width=%s,max_width=%s)", line, width, max_width, extra={"event.action": "justify", "logrite.line": line, "logrite.width": width, "logrite.max_width": max_width})
         overall_spaces_count = max_width - width
         words_count = len(line)
+        logger.error("justify(line=%s,width=%s,max_width=%s): words_count → %s", line, width, max_width, words_count, extra={"event.action": "justify", "logrite.line": line, "logrite.width": width, "logrite.max_width": max_width})
         if len(line) == 1:
             # if there is only word in line
             # just insert overall_spaces_count for the remainder of line
@@ -62,6 +71,7 @@ def text_justification(word: str, max_width: int) -> list:
             # just add the last word to the sentence
             aligned_words_list.append(line[-1])
             # join the aligned words list to form a justified line
+            logger.warning("<<< Exiting justify(line=%s,width=%s,max_width=%s)", line, width, max_width, extra={"event.action": "justify", "logrite.line": line, "logrite.width": width, "logrite.max_width": max_width})
             return "".join(aligned_words_list)
 
     answer = []

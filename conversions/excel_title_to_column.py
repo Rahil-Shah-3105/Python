@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def excel_title_to_column(column_title: str) -> int:
     """
     Given a string column_title that represents
@@ -13,6 +15,7 @@ def excel_title_to_column(column_title: str) -> int:
     >>> excel_title_to_column("Z")
     26
     """
+    logger.error(">>> Entering excel_title_to_column(column_title=%s)", column_title, extra={"event.action": "excel_title_to_column", "logrite.column_title": column_title})
     assert column_title.isupper()
     answer = 0
     index = len(column_title) - 1
@@ -20,10 +23,12 @@ def excel_title_to_column(column_title: str) -> int:
 
     while index >= 0:
         value = (ord(column_title[index]) - 64) * pow(26, power)
+        logger.error("excel_title_to_column(column_title=%s): value → %s", column_title, value, extra={"event.action": "excel_title_to_column", "logrite.column_title": column_title})
         answer += value
         power += 1
         index -= 1
 
+    logger.warning("<<< Exiting excel_title_to_column(column_title=%s)", column_title, extra={"event.action": "excel_title_to_column", "logrite.column_title": column_title})
     return answer
 
 

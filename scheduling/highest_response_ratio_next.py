@@ -8,11 +8,14 @@ https://en.wikipedia.org/wiki/Highest_response_ratio_next
 from statistics import mean
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def calculate_turn_around_time(
     process_name: list, arrival_time: list, burst_time: list, no_of_process: int
 ) -> list:
+    logger.error(">>> Entering calculate_turn_around_time(process_name=%s,arrival_time=%s,burst_time=%s,no_of_process=%s)", process_name, arrival_time, burst_time, no_of_process, extra={"event.action": "calculate_turn_around_time", "logrite.process_name": process_name, "logrite.arrival_time": arrival_time, "logrite.burst_time": burst_time, "logrite.no_of_process": no_of_process})
     """
     Calculate the turn around time of each processes
 
@@ -24,6 +27,7 @@ def calculate_turn_around_time(
     """
 
     current_time = 0
+    logger.error("calculate_turn_around_time(process_name=%s,arrival_time=%s,burst_time=%s,no_of_process=%s): current_time → %s", process_name, arrival_time, burst_time, no_of_process, current_time, extra={"event.action": "calculate_turn_around_time", "logrite.process_name": process_name, "logrite.arrival_time": arrival_time, "logrite.burst_time": burst_time, "logrite.no_of_process": no_of_process})
     # Number of processes finished
     finished_process_count = 0
     # Displays the finished process.
@@ -34,7 +38,9 @@ def calculate_turn_around_time(
 
     # Sort by arrival time.
     burst_time = [burst_time[i] for i in np.argsort(arrival_time)]
+    logger.error("calculate_turn_around_time(process_name=%s,arrival_time=%s,burst_time=%s,no_of_process=%s): burst_time → %s", process_name, arrival_time, burst_time, no_of_process, burst_time, extra={"event.action": "calculate_turn_around_time", "logrite.process_name": process_name, "logrite.arrival_time": arrival_time, "logrite.burst_time": burst_time, "logrite.no_of_process": no_of_process})
     process_name = [process_name[i] for i in np.argsort(arrival_time)]
+    logger.error("calculate_turn_around_time(process_name=%s,arrival_time=%s,burst_time=%s,no_of_process=%s): process_name → %s", process_name, arrival_time, burst_time, no_of_process, process_name, extra={"event.action": "calculate_turn_around_time", "logrite.process_name": process_name, "logrite.arrival_time": arrival_time, "logrite.burst_time": burst_time, "logrite.no_of_process": no_of_process})
     arrival_time.sort()
 
     while no_of_process > finished_process_count:
@@ -49,6 +55,7 @@ def calculate_turn_around_time(
         current_time = max(current_time, arrival_time[i])
 
         response_ratio = 0
+        logger.error("calculate_turn_around_time(process_name=%s,arrival_time=%s,burst_time=%s,no_of_process=%s): response_ratio → %s", process_name, arrival_time, burst_time, no_of_process, response_ratio, extra={"event.action": "calculate_turn_around_time", "logrite.process_name": process_name, "logrite.arrival_time": arrival_time, "logrite.burst_time": burst_time, "logrite.no_of_process": no_of_process})
         # Index showing the location of the process being performed
         loc = 0
         # Saves the current response ratio.
@@ -70,6 +77,7 @@ def calculate_turn_around_time(
         # Increase finished_process_count by 1
         finished_process_count += 1
 
+    logger.warning("<<< Exiting calculate_turn_around_time(process_name=%s,arrival_time=%s,burst_time=%s,no_of_process=%s)", process_name, arrival_time, burst_time, no_of_process, extra={"event.action": "calculate_turn_around_time", "logrite.process_name": process_name, "logrite.arrival_time": arrival_time, "logrite.burst_time": burst_time, "logrite.no_of_process": no_of_process})
     return turn_around_time
 
 
@@ -79,6 +87,7 @@ def calculate_waiting_time(
     burst_time: list,
     no_of_process: int,
 ) -> list:
+    logger.error(">>> Entering calculate_waiting_time(process_name=%s,list=%s,burst_time=%s,no_of_process=%s)", process_name, list, burst_time, no_of_process, extra={"event.action": "calculate_waiting_time", "logrite.process_name": process_name, "logrite.list": list, "logrite.burst_time": burst_time, "logrite.no_of_process": no_of_process})
     """
     Calculate the waiting time of each processes.
 
@@ -92,6 +101,7 @@ def calculate_waiting_time(
     waiting_time = [0] * no_of_process
     for i in range(no_of_process):
         waiting_time[i] = turn_around_time[i] - burst_time[i]
+    logger.warning("<<< Exiting calculate_waiting_time(process_name=%s,list=%s,burst_time=%s,no_of_process=%s)", process_name, list, burst_time, no_of_process, extra={"event.action": "calculate_waiting_time", "logrite.process_name": process_name, "logrite.list": list, "logrite.burst_time": burst_time, "logrite.no_of_process": no_of_process})
     return waiting_time
 
 

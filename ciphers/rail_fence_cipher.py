@@ -1,4 +1,6 @@
 """https://en.wikipedia.org/wiki/Rail_fence_cipher"""
+import logging
+logger = logging.getLogger(__name__)
 
 
 def encrypt(input_string: str, key: int) -> str:
@@ -20,6 +22,7 @@ def encrypt(input_string: str, key: int) -> str:
         ...
     TypeError: sequence item 0: expected str instance, int found
     """
+    logger.error(">>> Entering encrypt(input_string=%s,key=%s)", input_string, key, extra={"event.action": "encrypt", "logrite.input_string": input_string, "logrite.key": key})
     temp_grid: list[list[str]] = [[] for _ in range(key)]
     lowest = key - 1
 
@@ -35,6 +38,7 @@ def encrypt(input_string: str, key: int) -> str:
     grid = ["".join(row) for row in temp_grid]
     output_string = "".join(grid)
 
+    logger.warning("<<< Exiting encrypt(input_string=%s,key=%s)", input_string, key, extra={"event.action": "encrypt", "logrite.input_string": input_string, "logrite.key": key})
     return output_string
 
 
@@ -55,6 +59,7 @@ def decrypt(input_string: str, key: int) -> str:
     >>> decrypt("My key is very big", 100)
     'My key is very big'
     """
+    logger.error(">>> Entering decrypt(input_string=%s,key=%s)", input_string, key, extra={"event.action": "decrypt", "logrite.input_string": input_string, "logrite.key": key})
     grid = []
     lowest = key - 1
 
@@ -81,6 +86,7 @@ def decrypt(input_string: str, key: int) -> str:
         num = min(num, lowest * 2 - num)  # creates zigzag pattern
         output_string += grid[num][0]
         grid[num].pop(0)
+    logger.warning("<<< Exiting decrypt(input_string=%s,key=%s)", input_string, key, extra={"event.action": "decrypt", "logrite.input_string": input_string, "logrite.key": key})
     return output_string
 
 
@@ -90,9 +96,12 @@ def bruteforce(input_string: str) -> dict[int, str]:
     >>> bruteforce("HWe olordll")[4]
     'Hello World'
     """
+    logger.error(">>> Entering bruteforce(input_string=%s)", input_string, extra={"event.action": "bruteforce", "logrite.input_string": input_string})
     results = {}
+    logger.error("bruteforce(input_string=%s): results → %s", input_string, results, extra={"event.action": "bruteforce", "logrite.input_string": input_string})
     for key_guess in range(1, len(input_string)):  # tries every key
         results[key_guess] = decrypt(input_string, key_guess)
+    logger.warning("<<< Exiting bruteforce(input_string=%s)", input_string, extra={"event.action": "bruteforce", "logrite.input_string": input_string})
     return results
 
 

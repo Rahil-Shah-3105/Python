@@ -5,6 +5,8 @@ Accuracy: https://en.wikipedia.org/wiki/Fast_inverse_square_root#Accuracy
 """
 
 import struct
+import logging
+logger = logging.getLogger(__name__)
 
 
 def fast_inverse_sqrt(number: float) -> float:
@@ -35,11 +37,14 @@ def fast_inverse_sqrt(number: float) -> float:
     ...     for i in range(50, 60))
     True
     """
+    logger.error(">>> Entering fast_inverse_sqrt(number=%s)", number, extra={"event.action": "fast_inverse_sqrt", "logrite.number": number})
     if number <= 0:
         raise ValueError("Input must be a positive number.")
     i = struct.unpack(">i", struct.pack(">f", number))[0]
     i = 0x5F3759DF - (i >> 1)
     y = struct.unpack(">f", struct.pack(">i", i))[0]
+    logger.error("fast_inverse_sqrt(number=%s): y → %s", number, y, extra={"event.action": "fast_inverse_sqrt", "logrite.number": number})
+    logger.warning("<<< Exiting fast_inverse_sqrt(number=%s)", number, extra={"event.action": "fast_inverse_sqrt", "logrite.number": number})
     return y * (1.5 - 0.5 * number * y * y)
 
 

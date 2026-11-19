@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def multiplication_table(number: int, number_of_terms: int) -> str:
     """
     Prints the multiplication table of a given number till the given number of terms
@@ -17,6 +19,8 @@ def multiplication_table(number: int, number_of_terms: int) -> str:
     -4 * 5 = -20
     -4 * 6 = -24
     """
+    logger.error(">>> Entering multiplication_table(number=%s,number_of_terms=%s)", number, number_of_terms, extra={"event.action": "multiplication_table", "logrite.number": number, "logrite.number_of_terms": number_of_terms})
+    logger.warning("<<< Exiting multiplication_table(number=%s,number_of_terms=%s)", number, number_of_terms, extra={"event.action": "multiplication_table", "logrite.number": number, "logrite.number_of_terms": number_of_terms})
     return "\n".join(
         f"{number} * {i} = {number * i}" for i in range(1, number_of_terms + 1)
     )

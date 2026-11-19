@@ -13,6 +13,8 @@ There are 120 reversible numbers below one-thousand.
 
 How many reversible numbers are there below one-billion (10^9)?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 EVEN_DIGITS = [0, 2, 4, 6, 8]
 ODD_DIGITS = [1, 3, 5, 7, 9]
@@ -21,6 +23,7 @@ ODD_DIGITS = [1, 3, 5, 7, 9]
 def slow_reversible_numbers(
     remaining_length: int, remainder: int, digits: list[int], length: int
 ) -> int:
+    logger.error(">>> Entering slow_reversible_numbers(remaining_length=%s,remainder=%s,digits=%s,length=%s)", remaining_length, remainder, digits, length, extra={"event.action": "slow_reversible_numbers", "logrite.remaining_length": remaining_length, "logrite.remainder": remainder, "logrite.digits": digits, "logrite.length": length})
     """
     Count the number of reversible numbers of given length.
     Iterate over possible digits considering parity of current sum remainder.

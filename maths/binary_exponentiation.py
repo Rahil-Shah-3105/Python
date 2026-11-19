@@ -12,6 +12,8 @@ Repeat until b = 1 or b = 0
 
 For modular exponentiation, we use the fact that (a * b) % c = ((a % c) * (b % c)) % c
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binary_exp_recursive(base: float, exponent: int) -> float:
@@ -37,6 +39,7 @@ def binary_exp_recursive(base: float, exponent: int) -> float:
         ...
     ValueError: Exponent must be a non-negative integer
     """
+    logger.error(">>> Entering binary_exp_recursive(base=%s,exponent=%s)", base, exponent, extra={"event.action": "binary_exp_recursive", "logrite.base": base, "logrite.exponent": exponent})
     if exponent < 0:
         raise ValueError("Exponent must be a non-negative integer")
 

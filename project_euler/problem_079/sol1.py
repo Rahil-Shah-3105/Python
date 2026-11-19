@@ -16,6 +16,8 @@ so as to determine the shortest possible secret passcode of unknown length.
 
 import itertools
 from pathlib import Path
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_secret_passcode(logins: list[str]) -> int:
@@ -30,9 +32,11 @@ def find_secret_passcode(logins: list[str]) -> int:
     ...     "428", "209", "689", "019", "421", "469", "261", "681", "201"])
     4206819
     """
+    logger.error(">>> Entering find_secret_passcode(logins=%s)", logins, extra={"event.action": "find_secret_passcode", "logrite.logins": logins})
 
     # Split each login by character e.g. '319' -> ('3', '1', '9')
     split_logins = [tuple(login) for login in logins]
+    logger.error("find_secret_passcode(logins=%s): split_logins → %s", logins, split_logins, extra={"event.action": "find_secret_passcode", "logrite.logins": logins})
 
     unique_chars = {char for login in split_logins for char in login}
 
@@ -48,6 +52,7 @@ def find_secret_passcode(logins: list[str]) -> int:
                 break
 
         if satisfied:
+            logger.warning("<<< Exiting find_secret_passcode(logins=%s)", logins, extra={"event.action": "find_secret_passcode", "logrite.logins": logins})
             return int("".join(permutation))
 
     raise Exception("Unable to find the secret passcode")
@@ -61,8 +66,11 @@ def solution(input_file: str = "keylog.txt") -> int:
     >>> solution("keylog_test.txt")
     6312980
     """
+    logger.error(">>> Entering solution(input_file=%s)", input_file, extra={"event.action": "solution", "logrite.input_file": input_file})
     logins = Path(__file__).parent.joinpath(input_file).read_text().splitlines()
+    logger.error("solution(input_file=%s): logins → %s", input_file, logins, extra={"event.action": "solution", "logrite.input_file": input_file})
 
+    logger.warning("<<< Exiting solution(input_file=%s)", input_file, extra={"event.action": "solution", "logrite.input_file": input_file})
     return find_secret_passcode(logins)
 
 

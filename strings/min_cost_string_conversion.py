@@ -7,6 +7,8 @@ The only allowed operations are
 --- Cost to delete a character is delete_cost
 --- Cost to insert a character is insert_cost
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def compute_transform_tables(
@@ -17,6 +19,7 @@ def compute_transform_tables(
     delete_cost: int,
     insert_cost: int,
 ) -> tuple[list[list[int]], list[list[str]]]:
+    logger.error(">>> Entering compute_transform_tables(source_string=%s,destination_string=%s,copy_cost=%s,replace_cost=%s,delete_cost=%s,insert_cost=%s)", source_string, destination_string, copy_cost, replace_cost, delete_cost, insert_cost, extra={"event.action": "compute_transform_tables", "logrite.source_string": source_string, "logrite.destination_string": destination_string, "logrite.copy_cost": copy_cost, "logrite.replace_cost": replace_cost, "logrite.delete_cost": delete_cost, "logrite.insert_cost": insert_cost})
     """
     Finds the most cost efficient sequence
     for converting one string into another.
@@ -35,9 +38,13 @@ def compute_transform_tables(
     ([[0]], [['0']])
     """
     source_seq = list(source_string)
+    logger.error("compute_transform_tables(source_string=%s,destination_string=%s,copy_cost=%s,replace_cost=%s,delete_cost=%s,insert_cost=%s): source_seq → %s", source_string, destination_string, copy_cost, replace_cost, delete_cost, insert_cost, source_seq, extra={"event.action": "compute_transform_tables", "logrite.source_string": source_string, "logrite.destination_string": destination_string, "logrite.copy_cost": copy_cost, "logrite.replace_cost": replace_cost, "logrite.delete_cost": delete_cost, "logrite.insert_cost": insert_cost})
     destination_seq = list(destination_string)
+    logger.error("compute_transform_tables(source_string=%s,destination_string=%s,copy_cost=%s,replace_cost=%s,delete_cost=%s,insert_cost=%s): destination_seq → %s", source_string, destination_string, copy_cost, replace_cost, delete_cost, insert_cost, destination_seq, extra={"event.action": "compute_transform_tables", "logrite.source_string": source_string, "logrite.destination_string": destination_string, "logrite.copy_cost": copy_cost, "logrite.replace_cost": replace_cost, "logrite.delete_cost": delete_cost, "logrite.insert_cost": insert_cost})
     len_source_seq = len(source_seq)
+    logger.error("compute_transform_tables(source_string=%s,destination_string=%s,copy_cost=%s,replace_cost=%s,delete_cost=%s,insert_cost=%s): len_source_seq → %s", source_string, destination_string, copy_cost, replace_cost, delete_cost, insert_cost, len_source_seq, extra={"event.action": "compute_transform_tables", "logrite.source_string": source_string, "logrite.destination_string": destination_string, "logrite.copy_cost": copy_cost, "logrite.replace_cost": replace_cost, "logrite.delete_cost": delete_cost, "logrite.insert_cost": insert_cost})
     len_destination_seq = len(destination_seq)
+    logger.error("compute_transform_tables(source_string=%s,destination_string=%s,copy_cost=%s,replace_cost=%s,delete_cost=%s,insert_cost=%s): len_destination_seq → %s", source_string, destination_string, copy_cost, replace_cost, delete_cost, insert_cost, len_destination_seq, extra={"event.action": "compute_transform_tables", "logrite.source_string": source_string, "logrite.destination_string": destination_string, "logrite.copy_cost": copy_cost, "logrite.replace_cost": replace_cost, "logrite.delete_cost": delete_cost, "logrite.insert_cost": insert_cost})
     costs = [
         [0 for _ in range(len_destination_seq + 1)] for _ in range(len_source_seq + 1)
     ]
@@ -70,6 +77,7 @@ def compute_transform_tables(
                 costs[i][j] = costs[i][j - 1] + insert_cost
                 ops[i][j] = f"I{destination_seq[j - 1]}"
 
+    logger.warning("<<< Exiting compute_transform_tables(source_string=%s,destination_string=%s,copy_cost=%s,replace_cost=%s,delete_cost=%s,insert_cost=%s)", source_string, destination_string, copy_cost, replace_cost, delete_cost, insert_cost, extra={"event.action": "compute_transform_tables", "logrite.source_string": source_string, "logrite.destination_string": destination_string, "logrite.copy_cost": copy_cost, "logrite.replace_cost": replace_cost, "logrite.delete_cost": delete_cost, "logrite.insert_cost": insert_cost})
     return costs, ops
 
 
@@ -100,6 +108,7 @@ def assemble_transformation(ops: list[list[str]], i: int, j: int) -> list[str]:
     >>> assemble_transformation(ops2, x2, y2)
     ['C1', 'I2', 'R23']
     """
+    logger.error(">>> Entering assemble_transformation(ops=%s,i=%s,j=%s)", ops, i, j, extra={"event.action": "assemble_transformation", "logrite.ops": ops, "logrite.i": i, "logrite.j": j})
     if i == 0 and j == 0:
         return []
     elif ops[i][j][0] in {"C", "R"}:
@@ -113,6 +122,7 @@ def assemble_transformation(ops: list[list[str]], i: int, j: int) -> list[str]:
     else:
         seq = assemble_transformation(ops, i, j - 1)
         seq.append(ops[i][j])
+        logger.warning("<<< Exiting assemble_transformation(ops=%s,i=%s,j=%s)", ops, i, j, extra={"event.action": "assemble_transformation", "logrite.ops": ops, "logrite.i": i, "logrite.j": j})
         return seq
 
 

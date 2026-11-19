@@ -3,6 +3,8 @@ A Hamming number is a positive integer of the form 2^i*3^j*5^k, for some
 non-negative integers i, j, and k. They are often referred to as regular numbers.
 More info at: https://en.wikipedia.org/wiki/Regular_number.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def hamming(n_element: int) -> list:
@@ -24,9 +26,12 @@ def hamming(n_element: int) -> list:
     >>> hamming(15)
     [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 16, 18, 20, 24]
     """
+    logger.error(">>> Entering hamming(n_element=%s)", n_element, extra={"event.action": "hamming", "logrite.n_element": n_element})
     n_element = int(n_element)
+    logger.error("hamming(n_element=%s): n_element → %s", n_element, n_element, extra={"event.action": "hamming", "logrite.n_element": n_element})
     if n_element < 1:
         my_error = ValueError("n_element should be a positive number")
+        logger.error("hamming(n_element=%s): my_error → %s", n_element, my_error, extra={"event.action": "hamming", "logrite.n_element": n_element})
         raise my_error
 
     hamming_list = [1]
@@ -43,6 +48,7 @@ def hamming(n_element: int) -> list:
             min(hamming_list[i] * 2, hamming_list[j] * 3, hamming_list[k] * 5)
         )
         index += 1
+    logger.warning("<<< Exiting hamming(n_element=%s)", n_element, extra={"event.action": "hamming", "logrite.n_element": n_element})
     return hamming_list
 
 

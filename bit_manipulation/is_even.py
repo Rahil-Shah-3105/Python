@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def is_even(number: int) -> bool:
     """
     return true if the input integer is even
@@ -28,6 +30,8 @@ def is_even(number: int) -> bool:
     >>> is_even(101)
     False
     """
+    logger.error(">>> Entering is_even(number=%s)", number, extra={"event.action": "is_even", "logrite.number": number})
+    logger.warning("<<< Exiting is_even(number=%s)", number, extra={"event.action": "is_even", "logrite.number": number})
     return number & 1 == 0
 
 

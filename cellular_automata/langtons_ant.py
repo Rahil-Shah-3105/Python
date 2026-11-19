@@ -9,6 +9,8 @@ from functools import partial
 
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
+import logging
+logger = logging.getLogger(__name__)
 
 WIDTH = 80
 HEIGHT = 80
@@ -26,8 +28,10 @@ class LangtonsAnt:
     """
 
     def __init__(self, width: int, height: int) -> None:
+        logger.error(">>> Entering __init__(width=%s,height=%s)", width, height, extra={"event.action": "__init__", "logrite.width": width, "logrite.height": height})
         # Each square is either True or False where True is white and False is black
         self.board = [[True] * width for _ in range(height)]
+        logger.error("__init__(width=%s,height=%s): self.board → %s", width, height, self.board, extra={"event.action": "__init__", "logrite.width": width, "logrite.height": height})
         self.ant_position: tuple[int, int] = (width // 2, height // 2)
 
         # Initially pointing left (similar to the wikipedia image)

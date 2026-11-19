@@ -16,6 +16,8 @@ import math
 import numpy as np
 import qiskit
 from qiskit import Aer, ClassicalRegister, QuantumCircuit, QuantumRegister, execute
+import logging
+logger = logging.getLogger(__name__)
 
 
 def quantum_fourier_transform(number_of_qubits: int = 3) -> qiskit.result.counts.Counts:
@@ -55,6 +57,7 @@ def quantum_fourier_transform(number_of_qubits: int = 3) -> qiskit.result.counts
         ...
     ValueError: number of qubits must be exact integer.
     """
+    logger.error(">>> Entering quantum_fourier_transform(number_of_qubits=%s)", number_of_qubits, extra={"event.action": "quantum_fourier_transform", "logrite.number_of_qubits": number_of_qubits})
     if isinstance(number_of_qubits, str):
         raise TypeError("number of qubits must be a integer.")
     if number_of_qubits <= 0:
@@ -65,9 +68,12 @@ def quantum_fourier_transform(number_of_qubits: int = 3) -> qiskit.result.counts
         raise ValueError("number of qubits too large to simulate(>10).")
 
     qr = QuantumRegister(number_of_qubits, "qr")
+    logger.error("quantum_fourier_transform(number_of_qubits=%s): qr → %s", number_of_qubits, qr, extra={"event.action": "quantum_fourier_transform", "logrite.number_of_qubits": number_of_qubits})
     cr = ClassicalRegister(number_of_qubits, "cr")
+    logger.error("quantum_fourier_transform(number_of_qubits=%s): cr → %s", number_of_qubits, cr, extra={"event.action": "quantum_fourier_transform", "logrite.number_of_qubits": number_of_qubits})
 
     quantum_circuit = QuantumCircuit(qr, cr)
+    logger.error("quantum_fourier_transform(number_of_qubits=%s): quantum_circuit → %s", number_of_qubits, quantum_circuit, extra={"event.action": "quantum_fourier_transform", "logrite.number_of_qubits": number_of_qubits})
 
     counter = number_of_qubits
 
@@ -77,6 +83,8 @@ def quantum_fourier_transform(number_of_qubits: int = 3) -> qiskit.result.counts
         for j in range(counter):
             quantum_circuit.cp(np.pi / 2 ** (counter - j), j, counter)
 
+            logger.error("quantum_fourier_transform(number_of_qubits=%s): backend → %s", number_of_qubits, backend, extra={"event.action": "quantum_fourier_transform", "logrite.number_of_qubits": number_of_qubits})
+            logger.error("quantum_fourier_transform(number_of_qubits=%s): job → %s", number_of_qubits, job, extra={"event.action": "quantum_fourier_transform", "logrite.number_of_qubits": number_of_qubits})
     for k in range(number_of_qubits // 2):
         quantum_circuit.swap(k, number_of_qubits - k - 1)
 

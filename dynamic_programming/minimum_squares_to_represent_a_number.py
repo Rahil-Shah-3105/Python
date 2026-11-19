@@ -1,5 +1,7 @@
 import math
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 
 def minimum_squares_to_represent_a_number(number: int) -> int:
@@ -25,6 +27,7 @@ def minimum_squares_to_represent_a_number(number: int) -> int:
         ...
     ValueError: the value of input must be a natural number
     """
+    logger.error(">>> Entering minimum_squares_to_represent_a_number(number=%s)", number, extra={"event.action": "minimum_squares_to_represent_a_number", "logrite.number": number})
     if number != int(number):
         raise ValueError("the value of input must be a natural number")
     if number < 0:
@@ -40,6 +43,7 @@ def minimum_squares_to_represent_a_number(number: int) -> int:
             current_answer = 1 + answers[i - (j**2)]
             answer = min(answer, current_answer)
         answers[i] = answer
+    logger.warning("<<< Exiting minimum_squares_to_represent_a_number(number=%s)", number, extra={"event.action": "minimum_squares_to_represent_a_number", "logrite.number": number})
     return answers[number]
 
 

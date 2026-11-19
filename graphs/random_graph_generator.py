@@ -7,11 +7,14 @@ URL: https://en.wikipedia.org/wiki/Random_graph
 """
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 def random_graph(
     vertices_number: int, probability: float, directed: bool = False
 ) -> dict:
+    logger.error(">>> Entering random_graph(vertices_number=%s,probability=%s,directed=%s)", vertices_number, probability, directed, extra={"event.action": "random_graph", "logrite.vertices_number": vertices_number, "logrite.probability": probability, "logrite.directed": directed})
     """
     Generate a random graph
     @input: vertices_number (number of vertices),
@@ -27,6 +30,7 @@ def random_graph(
     {0: [1], 1: [2, 3], 2: [3], 3: []}
     """
     graph: dict = {i: [] for i in range(vertices_number)}
+    logger.error("random_graph(vertices_number=%s,probability=%s,directed=%s): graph → %s", vertices_number, probability, directed, graph, extra={"event.action": "random_graph", "logrite.vertices_number": vertices_number, "logrite.probability": probability, "logrite.directed": directed})
 
     # if probability is greater or equal than 1, then generate a complete graph
     if probability >= 1:
@@ -44,6 +48,7 @@ def random_graph(
                 if not directed:
                     # if the graph is undirected, add an edge in from j to i, either
                     graph[j].append(i)
+    logger.warning("<<< Exiting random_graph(vertices_number=%s,probability=%s,directed=%s)", vertices_number, probability, directed, extra={"event.action": "random_graph", "logrite.vertices_number": vertices_number, "logrite.probability": probability, "logrite.directed": directed})
     return graph
 
 
@@ -56,9 +61,11 @@ def complete_graph(vertices_number: int) -> dict:
     >>> complete_graph(3)
     {0: [1, 2], 1: [0, 2], 2: [0, 1]}
     """
+    logger.error(">>> Entering complete_graph(vertices_number=%s)", vertices_number, extra={"event.action": "complete_graph", "logrite.vertices_number": vertices_number})
     return {
         i: [j for j in range(vertices_number) if i != j] for i in range(vertices_number)
     }
+    logger.warning("<<< Exiting complete_graph(vertices_number=%s)", vertices_number, extra={"event.action": "complete_graph", "logrite.vertices_number": vertices_number})
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def min_path_sum(grid: list) -> int:
     """
     Find the path from top left to bottom right of array of numbers
@@ -28,6 +30,7 @@ def min_path_sum(grid: list) -> int:
         ...
     TypeError: The grid does not contain the appropriate information
     """
+    logger.error(">>> Entering min_path_sum(grid=%s)", grid, extra={"event.action": "min_path_sum", "logrite.grid": grid})
 
     if not grid or not grid[0]:
         raise TypeError("The grid does not contain the appropriate information")
@@ -41,6 +44,7 @@ def min_path_sum(grid: list) -> int:
         grid[row_n] = fill_row(current_row, row_above)
         row_above = grid[row_n]
 
+    logger.warning("<<< Exiting min_path_sum(grid=%s)", grid, extra={"event.action": "min_path_sum", "logrite.grid": grid})
     return grid[-1][-1]
 
 
@@ -49,11 +53,13 @@ def fill_row(current_row: list, row_above: list) -> list:
     >>> fill_row([2, 2, 2], [1, 2, 3])
     [3, 4, 5]
     """
+    logger.error(">>> Entering fill_row(current_row=%s,row_above=%s)", current_row, row_above, extra={"event.action": "fill_row", "logrite.current_row": current_row, "logrite.row_above": row_above})
 
     current_row[0] += row_above[0]
     for cell_n in range(1, len(current_row)):
         current_row[cell_n] += min(current_row[cell_n - 1], row_above[cell_n])
 
+    logger.warning("<<< Exiting fill_row(current_row=%s,row_above=%s)", current_row, row_above, extra={"event.action": "fill_row", "logrite.current_row": current_row, "logrite.row_above": row_above})
     return current_row
 
 

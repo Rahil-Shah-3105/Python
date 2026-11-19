@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def max_product_subarray(numbers: list[int]) -> int:
     """
     Returns the maximum product that can be obtained by multiplying a
@@ -30,6 +32,7 @@ def max_product_subarray(numbers: list[int]) -> int:
         ...
     ValueError: numbers must be an iterable of integers
     """
+    logger.error(">>> Entering max_product_subarray(numbers=%s)", numbers, extra={"event.action": "max_product_subarray", "logrite.numbers": numbers})
     if not numbers:
         return 0
 
@@ -51,4 +54,5 @@ def max_product_subarray(numbers: list[int]) -> int:
         # update the maximum product found till now
         max_prod = max(max_prod, max_till_now)
 
+    logger.warning("<<< Exiting max_product_subarray(numbers=%s)", numbers, extra={"event.action": "max_product_subarray", "logrite.numbers": numbers})
     return max_prod

@@ -1,6 +1,8 @@
 """
 https://en.wikipedia.org/wiki/Shellsort#Pseudocode
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def shell_sort(collection: list[int]) -> list[int]:
@@ -16,6 +18,7 @@ def shell_sort(collection: list[int]) -> list[int]:
     >>> shell_sort([-2, -5, -45])
     [-45, -5, -2]
     """
+    logger.error(">>> Entering shell_sort(collection=%s)", collection, extra={"event.action": "shell_sort", "logrite.collection": collection})
     # Marcin Ciura's gap sequence
 
     gaps = [701, 301, 132, 57, 23, 10, 4, 1]
@@ -28,6 +31,7 @@ def shell_sort(collection: list[int]) -> list[int]:
                 j -= gap
             if j != i:
                 collection[j] = insert_value
+    logger.warning("<<< Exiting shell_sort(collection=%s)", collection, extra={"event.action": "shell_sort", "logrite.collection": collection})
     return collection
 
 

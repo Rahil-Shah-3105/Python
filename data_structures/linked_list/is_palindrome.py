@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -35,6 +37,7 @@ def is_palindrome(head: ListNode | None) -> bool:
         >>> is_palindrome(ListNode(1, ListNode(2, ListNode(2, ListNode(1)))))
         True
     """
+    logger.error(">>> Entering is_palindrome(head=%s)", head, extra={"event.action": "is_palindrome", "logrite.head": head})
     if not head:
         return True
     # split the list to two parts
@@ -48,11 +51,13 @@ def is_palindrome(head: ListNode | None) -> bool:
         # adding this check to resolve mypy static check
         second = slow.next_node
         slow.next_node = None  # Don't forget here! But forget still works!
+        logger.debug("is_palindrome(head=%s): slow.next_node → %s", head, slow.next_node, extra={"event.action": "is_palindrome", "logrite.head": head})
     # reverse the second part
     node: ListNode | None = None
     while second:
         nxt = second.next_node
         second.next_node = node
+        logger.debug("is_palindrome(head=%s): second.next_node → %s", head, second.next_node, extra={"event.action": "is_palindrome", "logrite.head": head})
         node = second
         second = nxt
     # compare two parts
@@ -62,6 +67,7 @@ def is_palindrome(head: ListNode | None) -> bool:
             return False
         node = node.next_node
         head = head.next_node
+    logger.warning("<<< Exiting is_palindrome(head=%s)", head, extra={"event.action": "is_palindrome", "logrite.head": head})
     return True
 
 
@@ -91,6 +97,7 @@ def is_palindrome_stack(head: ListNode | None) -> bool:
         >>> is_palindrome_stack(ListNode(1, ListNode(2, ListNode(2, ListNode(1)))))
         True
     """
+    logger.error(">>> Entering is_palindrome_stack(head=%s)", head, extra={"event.action": "is_palindrome_stack", "logrite.head": head})
     if not head or not head.next_node:
         return True
 
@@ -118,6 +125,7 @@ def is_palindrome_stack(head: ListNode | None) -> bool:
                 return False
             cur = cur.next_node
 
+    logger.warning("<<< Exiting is_palindrome_stack(head=%s)", head, extra={"event.action": "is_palindrome_stack", "logrite.head": head})
     return True
 
 
@@ -154,6 +162,7 @@ def is_palindrome_dict(head: ListNode | None) -> bool:
         ... )
         False
     """
+    logger.error(">>> Entering is_palindrome_dict(head=%s)", head, extra={"event.action": "is_palindrome_dict", "logrite.head": head})
     if not head or not head.next_node:
         return True
     d: dict[int, list[int]] = {}
@@ -176,6 +185,7 @@ def is_palindrome_dict(head: ListNode | None) -> bool:
                     return False
         if middle > 1:
             return False
+    logger.warning("<<< Exiting is_palindrome_dict(head=%s)", head, extra={"event.action": "is_palindrome_dict", "logrite.head": head})
     return True
 
 

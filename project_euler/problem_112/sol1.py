@@ -15,6 +15,8 @@ Surprisingly, bouncy numbers become more and more common and by the time we reac
 
 Find the least number for which the proportion of bouncy numbers is exactly 99%.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def check_bouncy(n: int) -> bool:
@@ -45,10 +47,14 @@ def check_bouncy(n: int) -> bool:
     >>> check_bouncy(-6548)
     True
     """
+    logger.error(">>> Entering check_bouncy(n=%s)", n, extra={"event.action": "check_bouncy", "logrite.n": n})
     if not isinstance(n, int):
         raise ValueError("check_bouncy() accepts only integer arguments")
     str_n = str(n)
+    logger.error("check_bouncy(n=%s): str_n → %s", n, str_n, extra={"event.action": "check_bouncy", "logrite.n": n})
     sorted_str_n = "".join(sorted(str_n))
+    logger.error("check_bouncy(n=%s): sorted_str_n → %s", n, sorted_str_n, extra={"event.action": "check_bouncy", "logrite.n": n})
+    logger.warning("<<< Exiting check_bouncy(n=%s)", n, extra={"event.action": "check_bouncy", "logrite.n": n})
     return str_n not in {sorted_str_n, sorted_str_n[::-1]}
 
 
@@ -71,6 +77,7 @@ def solution(percent: float = 99) -> int:
         ...
     ValueError: solution() only accepts values from 0 to 100
     """
+    logger.error(">>> Entering solution(percent=%s)", percent, extra={"event.action": "solution", "logrite.percent": percent})
     if not 0 < percent < 100:
         raise ValueError("solution() only accepts values from 0 to 100")
     bouncy_num = 0
@@ -80,6 +87,7 @@ def solution(percent: float = 99) -> int:
         if check_bouncy(num):
             bouncy_num += 1
         if (bouncy_num / num) * 100 >= percent:
+            logger.warning("<<< Exiting solution(percent=%s)", percent, extra={"event.action": "solution", "logrite.percent": percent})
             return num
         num += 1
 

@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def merge(left_half: list, right_half: list) -> list:
@@ -29,7 +31,9 @@ def merge(left_half: list, right_half: list) -> list:
     >>> merge(left_half, right_half)
     []
     """
+    logger.error(">>> Entering merge(left_half=%s,right_half=%s)", left_half, right_half, extra={"event.action": "merge", "logrite.left_half": left_half, "logrite.right_half": right_half})
     sorted_array = [None] * (len(right_half) + len(left_half))
+    logger.error("merge(left_half=%s,right_half=%s): sorted_array → %s", left_half, right_half, sorted_array, extra={"event.action": "merge", "logrite.left_half": left_half, "logrite.right_half": right_half})
 
     pointer1 = 0  # pointer to current index for left Half
     pointer2 = 0  # pointer to current index for the right Half
@@ -54,6 +58,7 @@ def merge(left_half: list, right_half: list) -> list:
         pointer2 += 1
         index += 1
 
+    logger.warning("<<< Exiting merge(left_half=%s,right_half=%s)", left_half, right_half, extra={"event.action": "merge", "logrite.left_half": left_half, "logrite.right_half": right_half})
     return sorted_array
 
 
@@ -91,6 +96,7 @@ def merge_sort(array: list) -> list:
     >>> sorted(array) == merge_sort(array)
     True
     """
+    logger.error(">>> Entering merge_sort(array=%s)", array, extra={"event.action": "merge_sort", "logrite.array": array})
     if len(array) <= 1:
         return array
     # the actual formula to calculate the middle element = left + (right - left) // 2
@@ -103,6 +109,7 @@ def merge_sort(array: list) -> list:
     left_half = array[:middle]
     right_half = array[middle:]
 
+    logger.warning("<<< Exiting merge_sort(array=%s)", array, extra={"event.action": "merge_sort", "logrite.array": array})
     return merge(merge_sort(left_half), merge_sort(right_half))
 
 

@@ -4,6 +4,8 @@ module to operations with prime numbers
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -30,6 +32,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(67483)
     False
     """
+    logger.error(">>> Entering is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
 
     # precondition
     assert isinstance(number, int) and (number >= 0), (
@@ -44,10 +47,12 @@ def is_prime(number: int) -> bool:
         return False
 
     odd_numbers = range(3, int(math.sqrt(number) + 1), 2)
+    logger.warning("<<< Exiting is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
     return not any(not number % i for i in odd_numbers)
 
 
 def next_prime(value, factor=1, **kwargs):
+    logger.error(">>> Entering next_prime(value=%s,factor=%s)", value, factor, extra={"event.action": "next_prime", "logrite.value": value, "logrite.factor": factor})
     value = factor * value
     first_value_val = value
 
@@ -56,4 +61,5 @@ def next_prime(value, factor=1, **kwargs):
 
     if value == first_value_val:
         return next_prime(value + 1, **kwargs)
+    logger.warning("<<< Exiting next_prime(value=%s,factor=%s)", value, factor, extra={"event.action": "next_prime", "logrite.value": value, "logrite.factor": factor})
     return value

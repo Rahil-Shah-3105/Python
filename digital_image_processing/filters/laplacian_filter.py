@@ -15,6 +15,8 @@ from cv2 import (
 )
 
 from digital_image_processing.filters.gaussian_filter import gaussian_filter
+import logging
+logger = logging.getLogger(__name__)
 
 
 def my_laplacian(src: np.ndarray, ksize: int) -> np.ndarray:
@@ -28,6 +30,7 @@ def my_laplacian(src: np.ndarray, ksize: int) -> np.ndarray:
         ...
     ValueError: ksize must be in (1, 3, 5, 7)
     """
+    logger.error(">>> Entering my_laplacian(src=%s,ksize=%s)", src, ksize, extra={"event.action": "my_laplacian", "logrite.src": src, "logrite.ksize": ksize})
     kernels = {
         1: np.array([[0, -1, 0], [-1, 4, -1], [0, -1, 0]]),
         3: np.array([[0, 1, 0], [1, -4, 1], [0, 1, 0]]),
@@ -54,9 +57,11 @@ def my_laplacian(src: np.ndarray, ksize: int) -> np.ndarray:
     }
     if ksize not in kernels:
         msg = f"ksize must be in {tuple(kernels)}"
+        logger.error("my_laplacian(src=%s,ksize=%s): msg → %s", src, ksize, msg, extra={"event.action": "my_laplacian", "logrite.src": src, "logrite.ksize": ksize})
         raise ValueError(msg)
 
     # Apply the Laplacian kernel using convolution
+    logger.warning("<<< Exiting my_laplacian(src=%s,ksize=%s)", src, ksize, extra={"event.action": "my_laplacian", "logrite.src": src, "logrite.ksize": ksize})
     return filter2D(
         src, CV_64F, kernels[ksize], 0, borderType=BORDER_DEFAULT, anchor=(0, 0)
     )

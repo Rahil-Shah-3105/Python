@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 DIRECTIONS = [
     [-1, 0],  # left
@@ -16,6 +18,7 @@ def search(
     cost: int,
     heuristic: list[list[int]],
 ) -> tuple[list[list[int]], list[list[int]]]:
+    logger.error(">>> Entering search(grid=%s,init=%s,goal=%s,cost=%s,heuristic=%s)", grid, init, goal, cost, heuristic, extra={"event.action": "search", "logrite.grid": grid, "logrite.init": init, "logrite.goal": goal, "logrite.cost": cost, "logrite.heuristic": heuristic})
     """
     Search for a path on a grid avoiding obstacles.
     >>> grid = [[0, 1, 0, 0, 0, 0],
@@ -57,6 +60,7 @@ def search(
 
     found = False  # flag that is set when search is complete
     resign = False  # flag set if we can't find expand
+    logger.error("search(grid=%s,init=%s,goal=%s,cost=%s,heuristic=%s): resign → %s", grid, init, goal, cost, heuristic, resign, extra={"event.action": "search", "logrite.grid": grid, "logrite.init": init, "logrite.goal": goal, "logrite.cost": cost, "logrite.heuristic": heuristic})
 
     while not found and not resign:
         if len(cell) == 0:
@@ -65,6 +69,7 @@ def search(
             cell.sort()
             cell.reverse()
             next_cell = cell.pop()
+            logger.error("search(grid=%s,init=%s,goal=%s,cost=%s,heuristic=%s): next_cell → %s", grid, init, goal, cost, heuristic, next_cell, extra={"event.action": "search", "logrite.grid": grid, "logrite.init": init, "logrite.goal": goal, "logrite.cost": cost, "logrite.heuristic": heuristic})
             x = next_cell[2]
             y = next_cell[3]
             g = next_cell[1]
@@ -102,6 +107,7 @@ def search(
     path = []
     for i in range(len(invpath)):
         path.append(invpath[len(invpath) - 1 - i])
+    logger.warning("<<< Exiting search(grid=%s,init=%s,goal=%s,cost=%s,heuristic=%s)", grid, init, goal, cost, heuristic, extra={"event.action": "search", "logrite.grid": grid, "logrite.init": init, "logrite.goal": goal, "logrite.cost": cost, "logrite.heuristic": heuristic})
     return path, action
 
 

@@ -34,6 +34,8 @@ import sys
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.colors import ListedColormap
+import logging
+logger = logging.getLogger(__name__)
 
 usage_doc = "Usage of script: script_name <size_of_canvas:int>"
 
@@ -42,14 +44,19 @@ random.shuffle(choice)
 
 
 def create_canvas(size: int) -> list[list[bool]]:
+    logger.error(">>> Entering create_canvas(size=%s)", size, extra={"event.action": "create_canvas", "logrite.size": size})
     canvas = [[False for i in range(size)] for j in range(size)]
+    logger.error("create_canvas(size=%s): canvas → %s", size, canvas, extra={"event.action": "create_canvas", "logrite.size": size})
+    logger.warning("<<< Exiting create_canvas(size=%s)", size, extra={"event.action": "create_canvas", "logrite.size": size})
     return canvas
 
 
 def seed(canvas: list[list[bool]]) -> None:
+    logger.error(">>> Entering seed(canvas=%s)", canvas, extra={"event.action": "seed", "logrite.canvas": canvas})
     for i, row in enumerate(canvas):
         for j, _ in enumerate(row):
             canvas[i][j] = bool(random.getrandbits(1))
+            logger.warning("<<< Exiting seed(canvas=%s)", canvas, extra={"event.action": "seed", "logrite.canvas": canvas})
 
 
 def run(canvas: list[list[bool]]) -> list[list[bool]]:
@@ -64,18 +71,23 @@ def run(canvas: list[list[bool]]) -> list[list[bool]]:
     --
     canvas of population after one step
     """
+    logger.error(">>> Entering run(canvas=%s)", canvas, extra={"event.action": "run", "logrite.canvas": canvas})
     current_canvas = np.array(canvas)
+    logger.error("run(canvas=%s): current_canvas → %s", canvas, current_canvas, extra={"event.action": "run", "logrite.canvas": canvas})
     next_gen_canvas = np.array(create_canvas(current_canvas.shape[0]))
+    logger.error("run(canvas=%s): next_gen_canvas → %s", canvas, next_gen_canvas, extra={"event.action": "run", "logrite.canvas": canvas})
     for r, row in enumerate(current_canvas):
         for c, pt in enumerate(row):
             next_gen_canvas[r][c] = __judge_point(
                 pt, current_canvas[r - 1 : r + 2, c - 1 : c + 2]
             )
 
+    logger.warning("<<< Exiting run(canvas=%s)", canvas, extra={"event.action": "run", "logrite.canvas": canvas})
     return next_gen_canvas.tolist()
 
 
 def __judge_point(pt: bool, neighbours: list[list[bool]]) -> bool:
+    logger.error(">>> Entering __judge_point(pt=%s,neighbours=%s)", pt, neighbours, extra={"event.action": "__judge_point", "logrite.pt": pt, "logrite.neighbours": neighbours})
     dead = 0
     alive = 0
     # finding dead or alive neighbours count.
@@ -94,6 +106,7 @@ def __judge_point(pt: bool, neighbours: list[list[bool]]) -> bool:
 
     # running the rules of game here.
     state = pt
+    logger.error("__judge_point(pt=%s,neighbours=%s): state → %s", pt, neighbours, state, extra={"event.action": "__judge_point", "logrite.pt": pt, "logrite.neighbours": neighbours})
     if pt:
         if alive < 2:
             state = False
@@ -104,6 +117,7 @@ def __judge_point(pt: bool, neighbours: list[list[bool]]) -> bool:
     elif alive == 3:
         state = True
 
+    logger.warning("<<< Exiting __judge_point(pt=%s,neighbours=%s)", pt, neighbours, extra={"event.action": "__judge_point", "logrite.pt": pt, "logrite.neighbours": neighbours})
     return state
 
 

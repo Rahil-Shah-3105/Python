@@ -6,21 +6,28 @@ https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch
 import math
 import os
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 
 def read_file_binary(file_path: str) -> str:
     """
     Reads given file as bytes and returns them as a long string
     """
+    logger.error(">>> Entering read_file_binary(file_path=%s)", file_path, extra={"event.action": "read_file_binary", "logrite.file_path": file_path})
     result = ""
+    logger.error("read_file_binary(file_path=%s): result → %s", file_path, result, extra={"event.action": "read_file_binary", "logrite.file_path": file_path})
     try:
         with open(file_path, "rb") as binary_file:
             data = binary_file.read()
+            logger.error("read_file_binary(file_path=%s): data → %s", file_path, data, extra={"event.action": "read_file_binary", "logrite.file_path": file_path})
         for dat in data:
             curr_byte = f"{dat:08b}"
+            logger.error("read_file_binary(file_path=%s): curr_byte → %s", file_path, curr_byte, extra={"event.action": "read_file_binary", "logrite.file_path": file_path})
             result += curr_byte
         return result
     except OSError:
+        logger.warning("<<< Exiting read_file_binary(file_path=%s)", file_path, extra={"event.action": "read_file_binary", "logrite.file_path": file_path})
         print("File not accessible")
         sys.exit()
 
@@ -28,6 +35,7 @@ def read_file_binary(file_path: str) -> str:
 def add_key_to_lexicon(
     lexicon: dict[str, str], curr_string: str, index: int, last_match_id: str
 ) -> None:
+    logger.error(">>> Entering add_key_to_lexicon(lexicon=%s,curr_string=%s,index=%s,last_match_id=%s)", lexicon, curr_string, index, last_match_id, extra={"event.action": "add_key_to_lexicon", "logrite.lexicon": lexicon, "logrite.curr_string": curr_string, "logrite.index": index, "logrite.last_match_id": last_match_id})
     """
     Adds new strings (curr_string + "0",  curr_string + "1") to the lexicon
     """
@@ -39,6 +47,7 @@ def add_key_to_lexicon(
             lexicon[curr_key] = f"0{value}"
 
     lexicon[curr_string + "1"] = bin(index)[2:]
+    logger.warning("<<< Exiting add_key_to_lexicon(lexicon=%s,curr_string=%s,index=%s,last_match_id=%s)", lexicon, curr_string, index, last_match_id, extra={"event.action": "add_key_to_lexicon", "logrite.lexicon": lexicon, "logrite.curr_string": curr_string, "logrite.index": index, "logrite.last_match_id": last_match_id})
 
 
 def compress_data(data_bits: str) -> str:
@@ -46,7 +55,9 @@ def compress_data(data_bits: str) -> str:
     Compresses given data_bits using Lempel-Ziv-Welch compression algorithm
     and returns the result as a string
     """
+    logger.error(">>> Entering compress_data(data_bits=%s)", data_bits, extra={"event.action": "compress_data", "logrite.data_bits": data_bits})
     lexicon = {"0": "0", "1": "1"}
+    logger.error("compress_data(data_bits=%s): lexicon → %s", data_bits, lexicon, extra={"event.action": "compress_data", "logrite.data_bits": data_bits})
     result, curr_string = "", ""
     index = len(lexicon)
 
@@ -60,6 +71,7 @@ def compress_data(data_bits: str) -> str:
         add_key_to_lexicon(lexicon, curr_string, index, last_match_id)
         index += 1
         curr_string = ""
+        logger.error("compress_data(data_bits=%s): curr_string → %s", data_bits, curr_string, extra={"event.action": "compress_data", "logrite.data_bits": data_bits})
 
     while curr_string != "" and curr_string not in lexicon:
         curr_string += "0"
@@ -68,6 +80,7 @@ def compress_data(data_bits: str) -> str:
         last_match_id = lexicon[curr_string]
         result += last_match_id
 
+    logger.warning("<<< Exiting compress_data(data_bits=%s)", data_bits, extra={"event.action": "compress_data", "logrite.data_bits": data_bits})
     return result
 
 
@@ -76,10 +89,15 @@ def add_file_length(source_path: str, compressed: str) -> str:
     Adds given file's length in front (using Elias  gamma coding) of the compressed
     string
     """
+    logger.error(">>> Entering add_file_length(source_path=%s,compressed=%s)", source_path, compressed, extra={"event.action": "add_file_length", "logrite.source_path": source_path, "logrite.compressed": compressed})
     file_length = os.path.getsize(source_path)
+    logger.error("add_file_length(source_path=%s,compressed=%s): file_length → %s", source_path, compressed, file_length, extra={"event.action": "add_file_length", "logrite.source_path": source_path, "logrite.compressed": compressed})
     file_length_binary = bin(file_length)[2:]
+    logger.error("add_file_length(source_path=%s,compressed=%s): file_length_binary → %s", source_path, compressed, file_length_binary, extra={"event.action": "add_file_length", "logrite.source_path": source_path, "logrite.compressed": compressed})
     length_length = len(file_length_binary)
+    logger.error("add_file_length(source_path=%s,compressed=%s): length_length → %s", source_path, compressed, length_length, extra={"event.action": "add_file_length", "logrite.source_path": source_path, "logrite.compressed": compressed})
 
+    logger.warning("<<< Exiting add_file_length(source_path=%s,compressed=%s)", source_path, compressed, extra={"event.action": "add_file_length", "logrite.source_path": source_path, "logrite.compressed": compressed})
     return "0" * (length_length - 1) + file_length_binary + compressed
 
 
@@ -88,6 +106,7 @@ def write_file_binary(file_path: str, to_write: str) -> None:
     Writes given to_write string (should only consist of 0's and 1's) as bytes in the
     file
     """
+    logger.error(">>> Entering write_file_binary(file_path=%s,to_write=%s)", file_path, to_write, extra={"event.action": "write_file_binary", "logrite.file_path": file_path, "logrite.to_write": to_write})
     byte_length = 8
     try:
         with open(file_path, "wb") as opened_file:
@@ -95,6 +114,7 @@ def write_file_binary(file_path: str, to_write: str) -> None:
                 to_write[i : i + byte_length]
                 for i in range(0, len(to_write), byte_length)
             ]
+            logger.error("write_file_binary(file_path=%s,to_write=%s): result_byte_array → %s", file_path, to_write, result_byte_array, extra={"event.action": "write_file_binary", "logrite.file_path": file_path, "logrite.to_write": to_write})
 
             if len(result_byte_array[-1]) % byte_length == 0:
                 result_byte_array.append("10000000")
@@ -108,6 +128,7 @@ def write_file_binary(file_path: str, to_write: str) -> None:
     except OSError:
         print("File not accessible")
         sys.exit()
+        logger.warning("<<< Exiting write_file_binary(file_path=%s,to_write=%s)", file_path, to_write, extra={"event.action": "write_file_binary", "logrite.file_path": file_path, "logrite.to_write": to_write})
 
 
 def compress(source_path: str, destination_path: str) -> None:
@@ -115,10 +136,14 @@ def compress(source_path: str, destination_path: str) -> None:
     Reads source file, compresses it and writes the compressed result in destination
     file
     """
+    logger.error(">>> Entering compress(source_path=%s,destination_path=%s)", source_path, destination_path, extra={"event.action": "compress", "logrite.source_path": source_path, "logrite.destination_path": destination_path})
     data_bits = read_file_binary(source_path)
+    logger.error("compress(source_path=%s,destination_path=%s): data_bits → %s", source_path, destination_path, data_bits, extra={"event.action": "compress", "logrite.source_path": source_path, "logrite.destination_path": destination_path})
     compressed = compress_data(data_bits)
     compressed = add_file_length(source_path, compressed)
+    logger.error("compress(source_path=%s,destination_path=%s): compressed → %s", source_path, destination_path, compressed, extra={"event.action": "compress", "logrite.source_path": source_path, "logrite.destination_path": destination_path})
     write_file_binary(destination_path, compressed)
+    logger.warning("<<< Exiting compress(source_path=%s,destination_path=%s)", source_path, destination_path, extra={"event.action": "compress", "logrite.source_path": source_path, "logrite.destination_path": destination_path})
 
 
 if __name__ == "__main__":

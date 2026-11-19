@@ -5,6 +5,8 @@ Reference: https://en.wikipedia.org/wiki/Harmonic_mean
 Harmonic series
 Reference: https://en.wikipedia.org/wiki/Harmonic_series(mathematics)
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_harmonic_series(series: list) -> bool:
@@ -37,6 +39,7 @@ def is_harmonic_series(series: list) -> bool:
         ...
     ValueError: Input series cannot have 0 as an element
     """
+    logger.error(">>> Entering is_harmonic_series(series=%s)", series, extra={"event.action": "is_harmonic_series", "logrite.series": series})
     if not isinstance(series, list):
         raise ValueError("Input series is not valid, valid series - [1, 2/3, 2]")
     if len(series) == 0:
@@ -53,6 +56,7 @@ def is_harmonic_series(series: list) -> bool:
     for index in range(2, series_len):
         if rec_series[index] - rec_series[index - 1] != common_diff:
             return False
+    logger.warning("<<< Exiting is_harmonic_series(series=%s)", series, extra={"event.action": "is_harmonic_series", "logrite.series": series})
     return True
 
 
@@ -76,6 +80,7 @@ def harmonic_mean(series: list) -> float:
     ValueError: Input list must be a non empty list
 
     """
+    logger.error(">>> Entering harmonic_mean(series=%s)", series, extra={"event.action": "harmonic_mean", "logrite.series": series})
     if not isinstance(series, list):
         raise ValueError("Input series is not valid, valid series - [2, 4, 6]")
     if len(series) == 0:
@@ -83,6 +88,7 @@ def harmonic_mean(series: list) -> float:
     answer = 0
     for val in series:
         answer += 1 / val
+    logger.warning("<<< Exiting harmonic_mean(series=%s)", series, extra={"event.action": "harmonic_mean", "logrite.series": series})
     return len(series) / answer
 
 

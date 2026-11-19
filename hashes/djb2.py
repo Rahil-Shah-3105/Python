@@ -16,6 +16,8 @@ Another version of this algorithm (now favored by Bernstein) uses xor:
 
     source: http://www.cse.yorku.ca/~oz/hash.html
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def djb2(s: str) -> int:
@@ -29,7 +31,10 @@ def djb2(s: str) -> int:
     >>> djb2('scramble bits')
     1609059040
     """
+    logger.error(">>> Entering djb2(s=%s)", s, extra={"event.action": "djb2", "logrite.s": s})
     hash_value = 5381
+    logger.error("djb2(s=%s): hash_value → <redacted>", s, extra={"event.action": "djb2", "logrite.s": s})
     for x in s:
         hash_value = ((hash_value << 5) + hash_value) + ord(x)
+    logger.warning("<<< Exiting djb2(s=%s)", s, extra={"event.action": "djb2", "logrite.s": s})
     return hash_value & 0xFFFFFFFF

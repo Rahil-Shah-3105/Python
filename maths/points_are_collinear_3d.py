@@ -27,6 +27,8 @@ but we will decide directly from the vector whether it is equal to (0, 0, 0) or 
 Read More:
     https://math.stackexchange.com/a/1951650
 """
+import logging
+logger = logging.getLogger(__name__)
 
 Vector3d = tuple[float, float, float]
 Point3d = tuple[float, float, float]
@@ -43,9 +45,11 @@ def create_vector(end_point1: Point3d, end_point2: Point3d) -> Vector3d:
     >>> create_vector((-14, -1, -8), (-7, 6, 4))
     (7, 7, 12)
     """
+    logger.error(">>> Entering create_vector(end_point1=%s,end_point2=%s)", end_point1, end_point2, extra={"event.action": "create_vector", "logrite.end_point1": end_point1, "logrite.end_point2": end_point2})
     x = end_point2[0] - end_point1[0]
     y = end_point2[1] - end_point1[1]
     z = end_point2[2] - end_point1[2]
+    logger.warning("<<< Exiting create_vector(end_point1=%s,end_point2=%s)", end_point1, end_point2, extra={"event.action": "create_vector", "logrite.end_point1": end_point1, "logrite.end_point2": end_point2})
     return (x, y, z)
 
 
@@ -68,9 +72,12 @@ def get_3d_vectors_cross(ab: Vector3d, ac: Vector3d) -> Vector3d:
     >>> get_3d_vectors_cross((17.67, 4.7, 6.78), (-9.5, 4.78, -19.33))
     (-123.2594, 277.15110000000004, 129.11260000000001)
     """
+    logger.error(">>> Entering get_3d_vectors_cross(ab=%s,ac=%s)", ab, ac, extra={"event.action": "get_3d_vectors_cross", "logrite.ab": ab, "logrite.ac": ac})
     x = ab[1] * ac[2] - ab[2] * ac[1]  # *i
     y = (ab[0] * ac[2] - ab[2] * ac[0]) * -1  # *j
+    logger.error("get_3d_vectors_cross(ab=%s,ac=%s): y → %s", ab, ac, y, extra={"event.action": "get_3d_vectors_cross", "logrite.ab": ab, "logrite.ac": ac})
     z = ab[0] * ac[1] - ab[1] * ac[0]  # *k
+    logger.warning("<<< Exiting get_3d_vectors_cross(ab=%s,ac=%s)", ab, ac, extra={"event.action": "get_3d_vectors_cross", "logrite.ab": ab, "logrite.ac": ac})
     return (x, y, z)
 
 
@@ -90,6 +97,8 @@ def is_zero_vector(vector: Vector3d, accuracy: int) -> bool:
     >>> is_zero_vector((-15, -74, -32), accuracy=10)
     False
     """
+    logger.error(">>> Entering is_zero_vector(vector=%s,accuracy=%s)", vector, accuracy, extra={"event.action": "is_zero_vector", "logrite.vector": vector, "logrite.accuracy": accuracy})
+    logger.warning("<<< Exiting is_zero_vector(vector=%s,accuracy=%s)", vector, accuracy, extra={"event.action": "is_zero_vector", "logrite.vector": vector, "logrite.accuracy": accuracy})
     return tuple(round(x, accuracy) for x in vector) == (0, 0, 0)
 
 
@@ -121,6 +130,10 @@ def are_collinear(a: Point3d, b: Point3d, c: Point3d, accuracy: int = 10) -> boo
     ...               (-2.564606140206386, 3.937845170672183, 7))
     False
     """
+    logger.error(">>> Entering are_collinear(a=%s,b=%s,c=%s,accuracy=%s)", a, b, c, accuracy, extra={"event.action": "are_collinear", "logrite.a": a, "logrite.b": b, "logrite.c": c, "logrite.accuracy": accuracy})
     ab = create_vector(a, b)
+    logger.error("are_collinear(a=%s,b=%s,c=%s,accuracy=%s): ab → %s", a, b, c, accuracy, ab, extra={"event.action": "are_collinear", "logrite.a": a, "logrite.b": b, "logrite.c": c, "logrite.accuracy": accuracy})
     ac = create_vector(a, c)
+    logger.error("are_collinear(a=%s,b=%s,c=%s,accuracy=%s): ac → %s", a, b, c, accuracy, ac, extra={"event.action": "are_collinear", "logrite.a": a, "logrite.b": b, "logrite.c": c, "logrite.accuracy": accuracy})
+    logger.warning("<<< Exiting are_collinear(a=%s,b=%s,c=%s,accuracy=%s)", a, b, c, accuracy, extra={"event.action": "are_collinear", "logrite.a": a, "logrite.b": b, "logrite.c": c, "logrite.accuracy": accuracy})
     return is_zero_vector(get_3d_vectors_cross(ab, ac), accuracy)

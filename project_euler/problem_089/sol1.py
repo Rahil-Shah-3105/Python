@@ -29,6 +29,8 @@ consecutive identical units.
 """
 
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 SYMBOLS = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
 
@@ -42,6 +44,7 @@ def parse_roman_numerals(numerals: str) -> int:
     >>> parse_roman_numerals("IIII")
     4
     """
+    logger.error(">>> Entering parse_roman_numerals(numerals=%s)", numerals, extra={"event.action": "parse_roman_numerals", "logrite.numerals": numerals})
 
     total_value = 0
 
@@ -56,6 +59,7 @@ def parse_roman_numerals(numerals: str) -> int:
         index += 1
     total_value += SYMBOLS[numerals[index]]
 
+    logger.warning("<<< Exiting parse_roman_numerals(numerals=%s)", numerals, extra={"event.action": "parse_roman_numerals", "logrite.numerals": numerals})
     return total_value
 
 
@@ -68,8 +72,10 @@ def generate_roman_numerals(num: int) -> str:
     >>> generate_roman_numerals(4)
     'IV'
     """
+    logger.error(">>> Entering generate_roman_numerals(num=%s)", num, extra={"event.action": "generate_roman_numerals", "logrite.num": num})
 
     numerals = ""
+    logger.error("generate_roman_numerals(num=%s): numerals → %s", num, numerals, extra={"event.action": "generate_roman_numerals", "logrite.num": num})
 
     m_count = num // 1000
     numerals += m_count * "M"
@@ -112,6 +118,7 @@ def generate_roman_numerals(num: int) -> str:
         num -= 5
     numerals += num * "I"
 
+    logger.warning("<<< Exiting generate_roman_numerals(num=%s)", num, extra={"event.action": "generate_roman_numerals", "logrite.num": num})
     return numerals
 
 
@@ -122,18 +129,24 @@ def solution(roman_numerals_filename: str = "/p089_roman.txt") -> int:
     >>> solution("/numeralcleanup_test.txt")
     16
     """
+    logger.error(">>> Entering solution(roman_numerals_filename=%s)", roman_numerals_filename, extra={"event.action": "solution", "logrite.roman_numerals_filename": roman_numerals_filename})
 
     savings = 0
 
     with open(os.path.dirname(__file__) + roman_numerals_filename) as file1:
         lines = file1.readlines()
+        logger.error("solution(roman_numerals_filename=%s): lines → %s", roman_numerals_filename, lines, extra={"event.action": "solution", "logrite.roman_numerals_filename": roman_numerals_filename})
 
     for line in lines:
         original = line.strip()
+        logger.error("solution(roman_numerals_filename=%s): original → %s", roman_numerals_filename, original, extra={"event.action": "solution", "logrite.roman_numerals_filename": roman_numerals_filename})
         num = parse_roman_numerals(original)
+        logger.error("solution(roman_numerals_filename=%s): num → %s", roman_numerals_filename, num, extra={"event.action": "solution", "logrite.roman_numerals_filename": roman_numerals_filename})
         shortened = generate_roman_numerals(num)
+        logger.error("solution(roman_numerals_filename=%s): shortened → %s", roman_numerals_filename, shortened, extra={"event.action": "solution", "logrite.roman_numerals_filename": roman_numerals_filename})
         savings += len(original) - len(shortened)
 
+    logger.warning("<<< Exiting solution(roman_numerals_filename=%s)", roman_numerals_filename, extra={"event.action": "solution", "logrite.roman_numerals_filename": roman_numerals_filename})
     return savings
 
 

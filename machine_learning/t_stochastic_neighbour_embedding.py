@@ -10,6 +10,8 @@ import doctest
 import numpy as np
 from numpy import ndarray
 from sklearn.datasets import load_iris
+import logging
+logger = logging.getLogger(__name__)
 
 
 def collect_dataset() -> tuple[ndarray, ndarray]:
@@ -25,7 +27,10 @@ def collect_dataset() -> tuple[ndarray, ndarray]:
     >>> targets.shape
     (150,)
     """
+    logger.error(">>> Entering collect_dataset()", extra={"event.action": "collect_dataset"})
     iris_dataset = load_iris()
+    logger.error("collect_dataset(): iris_dataset → %s", iris_dataset, extra={"event.action": "collect_dataset"})
+    logger.warning("<<< Exiting collect_dataset()", extra={"event.action": "collect_dataset"})
     return np.array(iris_dataset.data), np.array(iris_dataset.target)
 
 
@@ -45,16 +50,20 @@ def compute_pairwise_affinities(data_matrix: ndarray, sigma: float = 1.0) -> nda
     >>> float(round(probabilities[0, 1], 3))
     0.25
     """
+    logger.error(">>> Entering compute_pairwise_affinities(data_matrix=%s,sigma=%s)", data_matrix, sigma, extra={"event.action": "compute_pairwise_affinities", "logrite.data_matrix": data_matrix, "logrite.sigma": sigma})
     n_samples = data_matrix.shape[0]
     squared_sum = np.sum(np.square(data_matrix), axis=1)
+    logger.error("compute_pairwise_affinities(data_matrix=%s,sigma=%s): squared_sum → %s", data_matrix, sigma, squared_sum, extra={"event.action": "compute_pairwise_affinities", "logrite.data_matrix": data_matrix, "logrite.sigma": sigma})
     squared_distance = np.add(
         np.add(-2 * np.dot(data_matrix, data_matrix.T), squared_sum).T, squared_sum
     )
 
     affinity_matrix = np.exp(-squared_distance / (2 * sigma**2))
+    logger.error("compute_pairwise_affinities(data_matrix=%s,sigma=%s): affinity_matrix → %s", data_matrix, sigma, affinity_matrix, extra={"event.action": "compute_pairwise_affinities", "logrite.data_matrix": data_matrix, "logrite.sigma": sigma})
     np.fill_diagonal(affinity_matrix, 0)
 
     affinity_matrix /= np.sum(affinity_matrix)
+    logger.warning("<<< Exiting compute_pairwise_affinities(data_matrix=%s,sigma=%s)", data_matrix, sigma, extra={"event.action": "compute_pairwise_affinities", "logrite.data_matrix": data_matrix, "logrite.sigma": sigma})
     return (affinity_matrix + affinity_matrix.T) / (2 * n_samples)
 
 
@@ -73,7 +82,9 @@ def compute_low_dim_affinities(embedding_matrix: ndarray) -> tuple[ndarray, ndar
     >>> q_matrix.shape
     (2, 2)
     """
+    logger.error(">>> Entering compute_low_dim_affinities(embedding_matrix=%s)", embedding_matrix, extra={"event.action": "compute_low_dim_affinities", "logrite.embedding_matrix": embedding_matrix})
     squared_sum = np.sum(np.square(embedding_matrix), axis=1)
+    logger.error("compute_low_dim_affinities(embedding_matrix=%s): squared_sum → %s", embedding_matrix, squared_sum, extra={"event.action": "compute_low_dim_affinities", "logrite.embedding_matrix": embedding_matrix})
     numerator_matrix = 1 / (
         1
         + np.add(
@@ -84,6 +95,8 @@ def compute_low_dim_affinities(embedding_matrix: ndarray) -> tuple[ndarray, ndar
     np.fill_diagonal(numerator_matrix, 0)
 
     q_matrix = numerator_matrix / np.sum(numerator_matrix)
+    logger.error("compute_low_dim_affinities(embedding_matrix=%s): q_matrix → %s", embedding_matrix, q_matrix, extra={"event.action": "compute_low_dim_affinities", "logrite.embedding_matrix": embedding_matrix})
+    logger.warning("<<< Exiting compute_low_dim_affinities(embedding_matrix=%s)", embedding_matrix, extra={"event.action": "compute_low_dim_affinities", "logrite.embedding_matrix": embedding_matrix})
     return q_matrix, numerator_matrix
 
 
@@ -93,6 +106,7 @@ def apply_tsne(
     learning_rate: float = 200.0,
     n_iter: int = 500,
 ) -> ndarray:
+    logger.error(">>> Entering apply_tsne(data_matrix=%s,n_components=%s,learning_rate=%s,n_iter=%s)", data_matrix, n_components, learning_rate, n_iter, extra={"event.action": "apply_tsne", "logrite.data_matrix": data_matrix, "logrite.n_components": n_components, "logrite.learning_rate": learning_rate, "logrite.n_iter": n_iter})
     """
     Apply t-SNE for dimensionality reduction.
 
@@ -115,10 +129,13 @@ def apply_tsne(
 
     n_samples = data_matrix.shape[0]
     rng = np.random.default_rng()
+    logger.error("apply_tsne(data_matrix=%s,n_components=%s,learning_rate=%s,n_iter=%s): rng → %s", data_matrix, n_components, learning_rate, n_iter, rng, extra={"event.action": "apply_tsne", "logrite.data_matrix": data_matrix, "logrite.n_components": n_components, "logrite.learning_rate": learning_rate, "logrite.n_iter": n_iter})
     embedding = rng.standard_normal((n_samples, n_components)) * 1e-4
+    logger.error("apply_tsne(data_matrix=%s,n_components=%s,learning_rate=%s,n_iter=%s): embedding → %s", data_matrix, n_components, learning_rate, n_iter, embedding, extra={"event.action": "apply_tsne", "logrite.data_matrix": data_matrix, "logrite.n_components": n_components, "logrite.learning_rate": learning_rate, "logrite.n_iter": n_iter})
 
     high_dim_affinities = compute_pairwise_affinities(data_matrix)
     high_dim_affinities = np.maximum(high_dim_affinities, 1e-12)
+    logger.error("apply_tsne(data_matrix=%s,n_components=%s,learning_rate=%s,n_iter=%s): high_dim_affinities → %s", data_matrix, n_components, learning_rate, n_iter, high_dim_affinities, extra={"event.action": "apply_tsne", "logrite.data_matrix": data_matrix, "logrite.n_components": n_components, "logrite.learning_rate": learning_rate, "logrite.n_iter": n_iter})
 
     embedding_increment = np.zeros_like(embedding)
     momentum = 0.5
@@ -126,6 +143,7 @@ def apply_tsne(
     for iteration in range(n_iter):
         low_dim_affinities, numerator_matrix = compute_low_dim_affinities(embedding)
         low_dim_affinities = np.maximum(low_dim_affinities, 1e-12)
+        logger.error("apply_tsne(data_matrix=%s,n_components=%s,learning_rate=%s,n_iter=%s): low_dim_affinities → %s", data_matrix, n_components, learning_rate, n_iter, low_dim_affinities, extra={"event.action": "apply_tsne", "logrite.data_matrix": data_matrix, "logrite.n_components": n_components, "logrite.learning_rate": learning_rate, "logrite.n_iter": n_iter})
 
         affinity_diff = high_dim_affinities - low_dim_affinities
 
@@ -143,6 +161,7 @@ def apply_tsne(
         if iteration == int(n_iter / 4):
             momentum = 0.8
 
+    logger.warning("<<< Exiting apply_tsne(data_matrix=%s,n_components=%s,learning_rate=%s,n_iter=%s)", data_matrix, n_components, learning_rate, n_iter, extra={"event.action": "apply_tsne", "logrite.data_matrix": data_matrix, "logrite.n_components": n_components, "logrite.learning_rate": learning_rate, "logrite.n_iter": n_iter})
     return embedding
 
 
@@ -154,8 +173,11 @@ def main() -> None:
     t-SNE embedding (first 5 points):
     [[...
     """
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     features, _labels = collect_dataset()
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
     embedding = apply_tsne(features, n_components=2, n_iter=300)
+    logger.error("main(): embedding → %s", embedding, extra={"event.action": "main"})
 
     if not isinstance(embedding, np.ndarray):
         raise TypeError("t-SNE embedding must be an ndarray")

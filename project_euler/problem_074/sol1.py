@@ -26,6 +26,8 @@ non-repeating chain with a starting number below one million is sixty terms.
 How many chains, with a starting number below one million, contain exactly sixty
 non-repeating terms?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 DIGIT_FACTORIALS = {
     "0": 1,
@@ -63,10 +65,12 @@ def sum_digit_factorials(n: int) -> int:
     >>> sum_digit_factorials(540)
     145
     """
+    logger.error(">>> Entering sum_digit_factorials(n=%s)", n, extra={"event.action": "sum_digit_factorials", "logrite.n": n})
     if n in CACHE_SUM_DIGIT_FACTORIALS:
         return CACHE_SUM_DIGIT_FACTORIALS[n]
     ret = sum(DIGIT_FACTORIALS[let] for let in str(n))
     CACHE_SUM_DIGIT_FACTORIALS[n] = ret
+    logger.warning("<<< Exiting sum_digit_factorials(n=%s)", n, extra={"event.action": "sum_digit_factorials", "logrite.n": n})
     return ret
 
 
@@ -81,7 +85,9 @@ def chain_length(n: int, previous: set | None = None) -> int:
     >>> chain_length(178924)
     39
     """
+    logger.error(">>> Entering chain_length(n=%s,previous=%s)", n, previous, extra={"event.action": "chain_length", "logrite.n": n, "logrite.previous": previous})
     previous = previous or set()
+    logger.error("chain_length(n=%s,previous=%s): previous → %s", n, previous, previous, extra={"event.action": "chain_length", "logrite.n": n, "logrite.previous": previous})
     if n in CHAIN_LENGTH_CACHE:
         return CHAIN_LENGTH_CACHE[n]
     next_number = sum_digit_factorials(n)
@@ -92,6 +98,7 @@ def chain_length(n: int, previous: set | None = None) -> int:
         previous.add(n)
         ret = 1 + chain_length(next_number, previous)
         CHAIN_LENGTH_CACHE[n] = ret
+        logger.warning("<<< Exiting chain_length(n=%s,previous=%s)", n, previous, extra={"event.action": "chain_length", "logrite.n": n, "logrite.previous": previous})
         return ret
 
 
@@ -102,6 +109,8 @@ def solution(num_terms: int = 60, max_start: int = 1000000) -> int:
     >>> solution(10,1000)
     28
     """
+    logger.error(">>> Entering solution(num_terms=%s,max_start=%s)", num_terms, max_start, extra={"event.action": "solution", "logrite.num_terms": num_terms, "logrite.max_start": max_start})
+    logger.warning("<<< Exiting solution(num_terms=%s,max_start=%s)", num_terms, max_start, extra={"event.action": "solution", "logrite.num_terms": num_terms, "logrite.max_start": max_start})
     return sum(1 for i in range(1, max_start) if chain_length(i) == num_terms)
 
 

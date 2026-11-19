@@ -11,6 +11,8 @@ https://www.youtube.com/watch?v=p33CVV29OG8
 from collections.abc import Iterator, MutableMapping
 from dataclasses import dataclass
 from typing import TypeVar
+import logging
+logger = logging.getLogger(__name__)
 
 KEY = TypeVar("KEY")
 VAL = TypeVar("VAL")
@@ -25,8 +27,12 @@ class _Item[KEY, VAL]:
 class _DeletedItem(_Item):
     def __init__(self) -> None:
         super().__init__(None, None)
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
+        logger.warning("<<< Exiting __init__()", extra={"event.action": "__init__"})
 
     def __bool__(self) -> bool:
+        logger.error(">>> Entering __bool__()", extra={"event.action": "__bool__"})
+        logger.warning("<<< Exiting __bool__()", extra={"event.action": "__bool__"})
         return False
 
 
@@ -41,13 +47,20 @@ class HashMap(MutableMapping[KEY, VAL]):
     def __init__(
         self, initial_block_size: int = 8, capacity_factor: float = 0.75
     ) -> None:
+        logger.error(">>> Entering __init__(initial_block_size=%s,capacity_factor=%s)", initial_block_size, capacity_factor, extra={"event.action": "__init__", "logrite.initial_block_size": initial_block_size, "logrite.capacity_factor": capacity_factor})
         self._initial_block_size = initial_block_size
+        logger.debug("__init__(self=%s,initial_block_size=%s,capacity_factor=%s): self._initial_block_size → %s", self, initial_block_size, capacity_factor, self._initial_block_size, extra={"event.action": "__init__", "logrite.initial_block_size": initial_block_size, "logrite.capacity_factor": capacity_factor})
         self._buckets: list[_Item | None] = [None] * initial_block_size
         assert 0.0 < capacity_factor < 1.0
+        logger.warning("<<< Exiting __init__(initial_block_size=%s,capacity_factor=%s)", initial_block_size, capacity_factor, extra={"event.action": "__init__", "logrite.initial_block_size": initial_block_size, "logrite.capacity_factor": capacity_factor})
         self._capacity_factor = capacity_factor
+        logger.debug("__init__(self=%s,initial_block_size=%s,capacity_factor=%s): self._capacity_factor → %s", self, initial_block_size, capacity_factor, self._capacity_factor, extra={"event.action": "__init__", "logrite.initial_block_size": initial_block_size, "logrite.capacity_factor": capacity_factor})
         self._len = 0
+        logger.debug("__init__(self=%s,initial_block_size=%s,capacity_factor=%s): self._len → %s", self, initial_block_size, capacity_factor, self._len, extra={"event.action": "__init__", "logrite.initial_block_size": initial_block_size, "logrite.capacity_factor": capacity_factor})
 
     def _get_bucket_index(self, key: KEY) -> int:
+        logger.error(">>> Entering _get_bucket_index(key=%s)", key, extra={"event.action": "_get_bucket_index", "logrite.key": key})
+        logger.warning("<<< Exiting _get_bucket_index(key=%s)", key, extra={"event.action": "_get_bucket_index", "logrite.key": key})
         return hash(key) % len(self._buckets)
 
     def _get_next_ind(self, ind: int) -> int:
@@ -64,6 +77,8 @@ class HashMap(MutableMapping[KEY, VAL]):
         >>> HashMap(5)._get_next_ind(9)
         0
         """
+        logger.error(">>> Entering _get_next_ind(ind=%s)", ind, extra={"event.action": "_get_next_ind", "logrite.ind": ind})
+        logger.warning("<<< Exiting _get_next_ind(ind=%s)", ind, extra={"event.action": "_get_next_ind", "logrite.ind": ind})
         return (ind + 1) % len(self._buckets)
 
     def _try_set(self, ind: int, key: KEY, val: VAL) -> bool:
@@ -74,6 +89,7 @@ class HashMap(MutableMapping[KEY, VAL]):
 
         If bucket has another key that means that we need to check next bucket.
         """
+        logger.error(">>> Entering _try_set(ind=%s,key=%s,val=%s)", ind, key, val, extra={"event.action": "_try_set", "logrite.ind": ind, "logrite.key": key, "logrite.val": val})
         stored = self._buckets[ind]
         if not stored:
             # A falsy item means that bucket was never used (None)
@@ -83,8 +99,10 @@ class HashMap(MutableMapping[KEY, VAL]):
             return True
         elif stored.key == key:
             stored.val = val
+            logger.debug("_try_set(self=%s,ind=%s,key=%s,val=%s): stored.val → %s", self, ind, key, val, stored.val, extra={"event.action": "_try_set", "logrite.ind": ind, "logrite.key": key, "logrite.val": val})
             return True
         else:
+            logger.warning("<<< Exiting _try_set(ind=%s,key=%s,val=%s)", ind, key, val, extra={"event.action": "_try_set", "logrite.ind": ind, "logrite.key": key, "logrite.val": val})
             return False
 
     def _is_full(self) -> bool:
@@ -101,28 +119,40 @@ class HashMap(MutableMapping[KEY, VAL]):
         >>> HashMap(2)._is_full()
         False
         """
+        logger.error(">>> Entering _is_full()", extra={"event.action": "_is_full"})
         limit = len(self._buckets) * self._capacity_factor
+        logger.error("_is_full(): limit → %s", limit, extra={"event.action": "_is_full"})
+        logger.warning("<<< Exiting _is_full()", extra={"event.action": "_is_full"})
         return len(self) >= int(limit)
 
     def _is_sparse(self) -> bool:
         """Return true if we need twice fewer buckets when we have now."""
+        logger.error(">>> Entering _is_sparse()", extra={"event.action": "_is_sparse"})
         if len(self._buckets) <= self._initial_block_size:
             return False
         limit = len(self._buckets) * self._capacity_factor / 2
+        logger.warning("<<< Exiting _is_sparse()", extra={"event.action": "_is_sparse"})
         return len(self) < limit
 
     def _resize(self, new_size: int) -> None:
+        logger.error(">>> Entering _resize(new_size=%s)", new_size, extra={"event.action": "_resize", "logrite.new_size": new_size})
         old_buckets = self._buckets
         self._buckets = [None] * new_size
+        logger.debug("_resize(self=%s,new_size=%s): self._buckets → %s", self, new_size, self._buckets, extra={"event.action": "_resize", "logrite.new_size": new_size})
         self._len = 0
+        logger.debug("_resize(self=%s,new_size=%s): self._len → %s", self, new_size, self._len, extra={"event.action": "_resize", "logrite.new_size": new_size})
         for item in old_buckets:
             if item:
                 self._add_item(item.key, item.val)
+                logger.warning("<<< Exiting _resize(new_size=%s)", new_size, extra={"event.action": "_resize", "logrite.new_size": new_size})
 
     def _size_up(self) -> None:
+        logger.error(">>> Entering _size_up()", extra={"event.action": "_size_up"})
         self._resize(len(self._buckets) * 2)
+        logger.warning("<<< Exiting _size_up()", extra={"event.action": "_size_up"})
 
     def _size_down(self) -> None:
+        logger.error(">>> Entering _size_down()", extra={"event.action": "_size_down"})
         self._resize(len(self._buckets) // 2)
 
     def _iterate_buckets(self, key: KEY) -> Iterator[int]:

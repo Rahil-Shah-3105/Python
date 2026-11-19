@@ -22,6 +22,8 @@ seen that 1/7 has a 6-digit recurring cycle.
 Find the value of d < 1000 for which 1/d contains the longest recurring cycle
 in its decimal fraction part.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(numerator: int = 1, digit: int = 1000) -> int:
@@ -35,8 +37,10 @@ def solution(numerator: int = 1, digit: int = 1000) -> int:
     >>> solution(10, 1000)
     983
     """
+    logger.error(">>> Entering solution(numerator=%s,digit=%s)", numerator, digit, extra={"event.action": "solution", "logrite.numerator": numerator, "logrite.digit": digit})
     the_digit = 1
     longest_list_length = 0
+    logger.error("solution(numerator=%s,digit=%s): longest_list_length → %s", numerator, digit, longest_list_length, extra={"event.action": "solution", "logrite.numerator": numerator, "logrite.digit": digit})
 
     for divide_by_number in range(numerator, digit + 1):
         has_been_divided: list[int] = []
@@ -50,6 +54,7 @@ def solution(numerator: int = 1, digit: int = 1000) -> int:
                 has_been_divided.append(now_divide)
                 now_divide = now_divide * 10 % divide_by_number
 
+    logger.warning("<<< Exiting solution(numerator=%s,digit=%s)", numerator, digit, extra={"event.action": "solution", "logrite.numerator": numerator, "logrite.digit": digit})
     return the_digit
 
 

@@ -10,6 +10,8 @@ python3 -m doctest -v harmonic_series.py
 For manual testing run:
 python3 harmonic_series.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def harmonic_series(n_term: str) -> list:
@@ -32,11 +34,13 @@ def harmonic_series(n_term: str) -> list:
     >>> harmonic_series(1)
     ['1']
     """
+    logger.error(">>> Entering harmonic_series(n_term=%s)", n_term, extra={"event.action": "harmonic_series", "logrite.n_term": n_term})
     if n_term == "":
         return []
     series: list = []
     for temp in range(int(n_term)):
         series.append(f"1/{temp + 1}" if series else "1")
+    logger.warning("<<< Exiting harmonic_series(n_term=%s)", n_term, extra={"event.action": "harmonic_series", "logrite.n_term": n_term})
     return series
 
 

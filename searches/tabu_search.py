@@ -27,6 +27,8 @@ e.g. python tabu_search.py -f tabudata2.txt -i 4 -s 3
 
 import argparse
 import copy
+import logging
+logger = logging.getLogger(__name__)
 
 
 def generate_neighbours(path):
@@ -46,6 +48,7 @@ def generate_neighbours(path):
     with distance 20, the node 'c' with distance 18, the node 'd' with distance 22 and
     the node 'e' with distance 26.
     """
+    logger.error(">>> Entering generate_neighbours(path=%s)", path, extra={"event.action": "generate_neighbours", "logrite.path": path})
 
     dict_of_neighbours = {}
 
@@ -68,6 +71,7 @@ def generate_neighbours(path):
                     [line.split()[0], line.split()[2]]
                 )
 
+    logger.warning("<<< Exiting generate_neighbours(path=%s)", path, extra={"event.action": "generate_neighbours", "logrite.path": path})
     return dict_of_neighbours
 
 
@@ -87,9 +91,12 @@ def generate_first_solution(path, dict_of_neighbours):
     :return distance_of_first_solution: The total distance that Travelling Salesman
         will travel, if he follows the path in first_solution.
     """
+    logger.error(">>> Entering generate_first_solution(path=%s,dict_of_neighbours=%s)", path, dict_of_neighbours, extra={"event.action": "generate_first_solution", "logrite.path": path, "logrite.dict_of_neighbours": dict_of_neighbours})
 
+    logger.warning("<<< Exiting generate_first_solution(path=%s,dict_of_neighbours=%s)", path, dict_of_neighbours, extra={"event.action": "generate_first_solution", "logrite.path": path, "logrite.dict_of_neighbours": dict_of_neighbours})
     with open(path) as f:
         start_node = f.read(1)
+        logger.error("generate_first_solution(path=%s,dict_of_neighbours=%s): start_node → %s", path, dict_of_neighbours, start_node, extra={"event.action": "generate_first_solution", "logrite.path": path, "logrite.dict_of_neighbours": dict_of_neighbours})
     end_node = start_node
 
     first_solution = []
@@ -153,24 +160,30 @@ def find_neighborhood(solution, dict_of_neighbours):
      ['a', 'c', 'e', 'd', 'b', 'a', 113],
      ['a', 'b', 'c', 'd', 'e', 'a', 119]]
     """
+    logger.error(">>> Entering find_neighborhood(solution=%s,dict_of_neighbours=%s)", solution, dict_of_neighbours, extra={"event.action": "find_neighborhood", "logrite.solution": solution, "logrite.dict_of_neighbours": dict_of_neighbours})
 
     neighborhood_of_solution = []
 
     for n in solution[1:-1]:
         idx1 = solution.index(n)
+        logger.error("find_neighborhood(solution=%s,dict_of_neighbours=%s): idx1 → %s", solution, dict_of_neighbours, idx1, extra={"event.action": "find_neighborhood", "logrite.solution": solution, "logrite.dict_of_neighbours": dict_of_neighbours})
         for kn in solution[1:-1]:
             idx2 = solution.index(kn)
+            logger.error("find_neighborhood(solution=%s,dict_of_neighbours=%s): idx2 → %s", solution, dict_of_neighbours, idx2, extra={"event.action": "find_neighborhood", "logrite.solution": solution, "logrite.dict_of_neighbours": dict_of_neighbours})
             if n == kn:
                 continue
 
             _tmp = copy.deepcopy(solution)
+            logger.error("find_neighborhood(solution=%s,dict_of_neighbours=%s): _tmp → %s", solution, dict_of_neighbours, _tmp, extra={"event.action": "find_neighborhood", "logrite.solution": solution, "logrite.dict_of_neighbours": dict_of_neighbours})
             _tmp[idx1] = kn
             _tmp[idx2] = n
 
             distance = 0
+            logger.error("find_neighborhood(solution=%s,dict_of_neighbours=%s): distance → %s", solution, dict_of_neighbours, distance, extra={"event.action": "find_neighborhood", "logrite.solution": solution, "logrite.dict_of_neighbours": dict_of_neighbours})
 
             for k in _tmp[:-1]:
                 next_node = _tmp[_tmp.index(k) + 1]
+                logger.error("find_neighborhood(solution=%s,dict_of_neighbours=%s): next_node → %s", solution, dict_of_neighbours, next_node, extra={"event.action": "find_neighborhood", "logrite.solution": solution, "logrite.dict_of_neighbours": dict_of_neighbours})
                 for i in dict_of_neighbours[k]:
                     if i[0] == next_node:
                         distance = distance + int(i[1])
@@ -180,14 +193,17 @@ def find_neighborhood(solution, dict_of_neighbours):
                 neighborhood_of_solution.append(_tmp)
 
     index_of_last_item_in_the_list = len(neighborhood_of_solution[0]) - 1
+    logger.error("find_neighborhood(solution=%s,dict_of_neighbours=%s): index_of_last_item_in_the_list → %s", solution, dict_of_neighbours, index_of_last_item_in_the_list, extra={"event.action": "find_neighborhood", "logrite.solution": solution, "logrite.dict_of_neighbours": dict_of_neighbours})
 
     neighborhood_of_solution.sort(key=lambda x: x[index_of_last_item_in_the_list])
+    logger.warning("<<< Exiting find_neighborhood(solution=%s,dict_of_neighbours=%s)", solution, dict_of_neighbours, extra={"event.action": "find_neighborhood", "logrite.solution": solution, "logrite.dict_of_neighbours": dict_of_neighbours})
     return neighborhood_of_solution
 
 
 def tabu_search(
     first_solution, distance_of_first_solution, dict_of_neighbours, iters, size
 ):
+    logger.error(">>> Entering tabu_search(first_solution=%s,distance_of_first_solution=%s,dict_of_neighbours=%s,iters=%s,size=%s)", first_solution, distance_of_first_solution, dict_of_neighbours, iters, size, extra={"event.action": "tabu_search", "logrite.first_solution": first_solution, "logrite.distance_of_first_solution": distance_of_first_solution, "logrite.dict_of_neighbours": dict_of_neighbours, "logrite.iters": iters, "logrite.size": size})
     """
     Pure implementation of Tabu search algorithm for a Travelling Salesman Problem in
     Python.
@@ -206,6 +222,7 @@ def tabu_search(
         follows the path in best_solution ever.
     """
     count = 1
+    logger.error("tabu_search(first_solution=%s,distance_of_first_solution=%s,dict_of_neighbours=%s,iters=%s,size=%s): count → %s", first_solution, distance_of_first_solution, dict_of_neighbours, iters, size, count, extra={"event.action": "tabu_search", "logrite.first_solution": first_solution, "logrite.distance_of_first_solution": distance_of_first_solution, "logrite.dict_of_neighbours": dict_of_neighbours, "logrite.iters": iters, "logrite.size": size})
     solution = first_solution
     tabu_list = []
     best_cost = distance_of_first_solution
@@ -213,9 +230,11 @@ def tabu_search(
 
     while count <= iters:
         neighborhood = find_neighborhood(solution, dict_of_neighbours)
+        logger.error("tabu_search(first_solution=%s,distance_of_first_solution=%s,dict_of_neighbours=%s,iters=%s,size=%s): neighborhood → %s", first_solution, distance_of_first_solution, dict_of_neighbours, iters, size, neighborhood, extra={"event.action": "tabu_search", "logrite.first_solution": first_solution, "logrite.distance_of_first_solution": distance_of_first_solution, "logrite.dict_of_neighbours": dict_of_neighbours, "logrite.iters": iters, "logrite.size": size})
         index_of_best_solution = 0
         best_solution = neighborhood[index_of_best_solution]
         best_cost_index = len(best_solution) - 1
+        logger.error("tabu_search(first_solution=%s,distance_of_first_solution=%s,dict_of_neighbours=%s,iters=%s,size=%s): best_cost_index → %s", first_solution, distance_of_first_solution, dict_of_neighbours, iters, size, best_cost_index, extra={"event.action": "tabu_search", "logrite.first_solution": first_solution, "logrite.distance_of_first_solution": distance_of_first_solution, "logrite.dict_of_neighbours": dict_of_neighbours, "logrite.iters": iters, "logrite.size": size})
 
         found = False
         while not found:
@@ -247,11 +266,14 @@ def tabu_search(
 
         count = count + 1
 
+    logger.warning("<<< Exiting tabu_search(first_solution=%s,distance_of_first_solution=%s,dict_of_neighbours=%s,iters=%s,size=%s)", first_solution, distance_of_first_solution, dict_of_neighbours, iters, size, extra={"event.action": "tabu_search", "logrite.first_solution": first_solution, "logrite.distance_of_first_solution": distance_of_first_solution, "logrite.dict_of_neighbours": dict_of_neighbours, "logrite.iters": iters, "logrite.size": size})
     return best_solution_ever, best_cost
 
 
 def main(args=None):
+    logger.error(">>> Entering main(args=%s)", args, extra={"event.action": "main"})
     dict_of_neighbours = generate_neighbours(args.File)
+    logger.error("main(args=%s): dict_of_neighbours → %s", args, dict_of_neighbours, extra={"event.action": "main"})
 
     first_solution, distance_of_first_solution = generate_first_solution(
         args.File, dict_of_neighbours
@@ -266,6 +288,7 @@ def main(args=None):
     )
 
     print(f"Best solution: {best_sol}, with total distance: {best_cost}.")
+    logger.warning("<<< Exiting main(args=%s)", args, extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

@@ -1,4 +1,6 @@
 from collections.abc import Sequence
+import logging
+logger = logging.getLogger(__name__)
 
 
 def evaluate_poly(poly: Sequence[float], x: float) -> float:
@@ -12,6 +14,8 @@ def evaluate_poly(poly: Sequence[float], x: float) -> float:
     >>> evaluate_poly((0.0, 0.0, 5.0, 9.3, 7.0), 10.0)
     79800.0
     """
+    logger.error(">>> Entering evaluate_poly(poly=%s,x=%s)", poly, x, extra={"event.action": "evaluate_poly", "logrite.poly": poly, "logrite.x": x})
+    logger.warning("<<< Exiting evaluate_poly(poly=%s,x=%s)", poly, x, extra={"event.action": "evaluate_poly", "logrite.poly": poly, "logrite.x": x})
     return sum(c * (x**i) for i, c in enumerate(poly))
 
 
@@ -33,9 +37,12 @@ def horner(poly: Sequence[float], x: float) -> float:
     >>> horner((0.0, 0.0, 5.0, 9.3, 7.0), 10.0)
     79800.0
     """
+    logger.error(">>> Entering horner(poly=%s,x=%s)", poly, x, extra={"event.action": "horner", "logrite.poly": poly, "logrite.x": x})
     result = 0.0
+    logger.error("horner(poly=%s,x=%s): result → %s", poly, x, result, extra={"event.action": "horner", "logrite.poly": poly, "logrite.x": x})
     for coeff in reversed(poly):
         result = result * x + coeff
+    logger.warning("<<< Exiting horner(poly=%s,x=%s)", poly, x, extra={"event.action": "horner", "logrite.poly": poly, "logrite.x": x})
     return result
 
 

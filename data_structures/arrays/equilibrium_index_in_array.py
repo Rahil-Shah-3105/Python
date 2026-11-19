@@ -18,6 +18,8 @@ arr = [-7, 1, 5, 2, -4, 3, 0]
 Output: 3
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def equilibrium_index(arr: list[int]) -> int:
@@ -40,7 +42,9 @@ def equilibrium_index(arr: list[int]) -> int:
         >>> equilibrium_index([2, 4, 6, 8, 10, 3])
         -1
     """
+    logger.error(">>> Entering equilibrium_index(arr=%s)", arr, extra={"event.action": "equilibrium_index", "logrite.arr": arr})
     total_sum = sum(arr)
+    logger.error("equilibrium_index(arr=%s): total_sum → %s", arr, total_sum, extra={"event.action": "equilibrium_index", "logrite.arr": arr})
     left_sum = 0
 
     for i, value in enumerate(arr):
@@ -49,6 +53,7 @@ def equilibrium_index(arr: list[int]) -> int:
             return i
         left_sum += value
 
+    logger.warning("<<< Exiting equilibrium_index(arr=%s)", arr, extra={"event.action": "equilibrium_index", "logrite.arr": arr})
     return -1
 
 

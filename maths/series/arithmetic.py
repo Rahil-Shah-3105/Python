@@ -6,6 +6,8 @@ Arithmetic series
 Reference: https://en.wikipedia.org/wiki/Arithmetic_series
 (The URL above will redirect you to arithmetic progression)
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_arithmetic_series(series: list) -> bool:
@@ -26,6 +28,7 @@ def is_arithmetic_series(series: list) -> bool:
         ...
     ValueError: Input list must be a non empty list
     """
+    logger.error(">>> Entering is_arithmetic_series(series=%s)", series, extra={"event.action": "is_arithmetic_series", "logrite.series": series})
     if not isinstance(series, list):
         raise ValueError("Input series is not valid, valid series - [2, 4, 6]")
     if len(series) == 0:
@@ -36,6 +39,7 @@ def is_arithmetic_series(series: list) -> bool:
     for index in range(len(series) - 1):
         if series[index + 1] - series[index] != common_diff:
             return False
+    logger.warning("<<< Exiting is_arithmetic_series(series=%s)", series, extra={"event.action": "is_arithmetic_series", "logrite.series": series})
     return True
 
 
@@ -61,6 +65,7 @@ def arithmetic_mean(series: list) -> float:
     ValueError: Input list must be a non empty list
 
     """
+    logger.error(">>> Entering arithmetic_mean(series=%s)", series, extra={"event.action": "arithmetic_mean", "logrite.series": series})
     if not isinstance(series, list):
         raise ValueError("Input series is not valid, valid series - [2, 4, 6]")
     if len(series) == 0:
@@ -68,6 +73,7 @@ def arithmetic_mean(series: list) -> float:
     answer = 0
     for val in series:
         answer += val
+    logger.warning("<<< Exiting arithmetic_mean(series=%s)", series, extra={"event.action": "arithmetic_mean", "logrite.series": series})
     return answer / len(series)
 
 

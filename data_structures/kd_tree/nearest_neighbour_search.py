@@ -7,11 +7,14 @@
 #  Thank you!
 
 from data_structures.kd_tree.kd_node import KDNode
+import logging
+logger = logging.getLogger(__name__)
 
 
 def nearest_neighbour_search(
     root: KDNode | None, query_point: list[float]
 ) -> tuple[list[float] | None, float, int]:
+    logger.error(">>> Entering nearest_neighbour_search(root=%s,query_point=%s)", root, query_point, extra={"event.action": "nearest_neighbour_search", "logrite.root": root, "logrite.query_point": query_point})
     """
     Performs a nearest neighbor search in a KD-Tree for a given query point.
 
@@ -29,7 +32,9 @@ def nearest_neighbour_search(
     """
     nearest_point: list[float] | None = None
     nearest_dist: float = float("inf")
+    logger.error("nearest_neighbour_search(root=%s,query_point=%s): nearest_dist → %s", root, query_point, nearest_dist, extra={"event.action": "nearest_neighbour_search", "logrite.root": root, "logrite.query_point": query_point})
     nodes_visited: int = 0
+    logger.warning("<<< Exiting nearest_neighbour_search(root=%s,query_point=%s)", root, query_point, extra={"event.action": "nearest_neighbour_search", "logrite.root": root, "logrite.query_point": query_point})
 
     def search(node: KDNode | None, depth: int = 0) -> None:
         """
@@ -39,8 +44,10 @@ def nearest_neighbour_search(
             node: The current node in the KD-Tree.
             depth: The current depth in the KD-Tree.
         """
+        logger.error(">>> Entering search(node=%s,depth=%s)", node, depth, extra={"event.action": "search", "logrite.node": node, "logrite.depth": depth})
         nonlocal nearest_point, nearest_dist, nodes_visited
         if node is None:
+            logger.warning("<<< Exiting search(node=%s,depth=%s)", node, depth, extra={"event.action": "search", "logrite.node": node, "logrite.depth": depth})
             return
 
         nodes_visited += 1

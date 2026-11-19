@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def mean(nums: list) -> float:
@@ -17,8 +19,10 @@ def mean(nums: list) -> float:
         ...
     ValueError: List is empty
     """
+    logger.error(">>> Entering mean(nums=%s)", nums, extra={"event.action": "mean", "logrite.nums": nums})
     if not nums:
         raise ValueError("List is empty")
+    logger.warning("<<< Exiting mean(nums=%s)", nums, extra={"event.action": "mean", "logrite.nums": nums})
     return sum(nums) / len(nums)
 
 

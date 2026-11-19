@@ -6,6 +6,8 @@ https://en.wikipedia.org/wiki/Miles_per_hour
 https://en.wikipedia.org/wiki/Knot_(unit)
 https://en.wikipedia.org/wiki/Metre_per_second
 """
+import logging
+logger = logging.getLogger(__name__)
 
 speed_chart: dict[str, float] = {
     "km/h": 1.0,
@@ -56,12 +58,14 @@ def convert_speed(speed: float, unit_from: str, unit_to: str) -> float:
     >>> convert_speed(100, "knot", "mph")
     115.078
     """
+    logger.error(">>> Entering convert_speed(speed=%s,unit_from=%s,unit_to=%s)", speed, unit_from, unit_to, extra={"event.action": "convert_speed", "logrite.speed": speed, "logrite.unit_from": unit_from, "logrite.unit_to": unit_to})
     if unit_to not in speed_chart or unit_from not in speed_chart_inverse:
         msg = (
             f"Incorrect 'from_type' or 'to_type' value: {unit_from!r}, {unit_to!r}\n"
             f"Valid values are: {', '.join(speed_chart_inverse)}"
         )
         raise ValueError(msg)
+    logger.warning("<<< Exiting convert_speed(speed=%s,unit_from=%s,unit_to=%s)", speed, unit_from, unit_to, extra={"event.action": "convert_speed", "logrite.speed": speed, "logrite.unit_from": unit_from, "logrite.unit_to": unit_to})
     return round(speed * speed_chart[unit_from] * speed_chart_inverse[unit_to], 3)
 
 

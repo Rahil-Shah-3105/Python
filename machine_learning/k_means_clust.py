@@ -53,6 +53,8 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from sklearn.metrics import pairwise_distances
+import logging
+logger = logging.getLogger(__name__)
 
 warnings.filterwarnings("ignore")
 
@@ -61,55 +63,72 @@ TAG = "K-MEANS-CLUST/ "
 
 def get_initial_centroids(data, k, seed=None):
     """Randomly choose k data points as initial centroids"""
+    logger.error(">>> Entering get_initial_centroids(data=%s,k=%s,seed=%s)", data, k, seed, extra={"event.action": "get_initial_centroids", "logrite.k": k, "logrite.seed": seed})
     # useful for obtaining consistent results
     rng = np.random.default_rng(seed)
+    logger.error("get_initial_centroids(data=%s,k=%s,seed=%s): rng → %s", data, k, seed, rng, extra={"event.action": "get_initial_centroids", "logrite.k": k, "logrite.seed": seed})
     n = data.shape[0]  # number of data points
 
     # Pick K indices from range [0, N).
     rand_indices = rng.integers(0, n, k)
+    logger.error("get_initial_centroids(data=%s,k=%s,seed=%s): rand_indices → %s", data, k, seed, rand_indices, extra={"event.action": "get_initial_centroids", "logrite.k": k, "logrite.seed": seed})
 
     # Keep centroids as dense format, as many entries will be nonzero due to averaging.
     # As long as at least one document in a cluster contains a word,
     # it will carry a nonzero weight in the TF-IDF vector of the centroid.
     centroids = data[rand_indices, :]
 
+    logger.warning("<<< Exiting get_initial_centroids(data=%s,k=%s,seed=%s)", data, k, seed, extra={"event.action": "get_initial_centroids", "logrite.k": k, "logrite.seed": seed})
     return centroids
 
 
 def centroid_pairwise_dist(x, centroids):
+    logger.error(">>> Entering centroid_pairwise_dist(x=%s,centroids=%s)", x, centroids, extra={"event.action": "centroid_pairwise_dist", "logrite.x": x, "logrite.centroids": centroids})
+    logger.warning("<<< Exiting centroid_pairwise_dist(x=%s,centroids=%s)", x, centroids, extra={"event.action": "centroid_pairwise_dist", "logrite.x": x, "logrite.centroids": centroids})
     return pairwise_distances(x, centroids, metric="euclidean")
 
 
 def assign_clusters(data, centroids):
+    logger.error(">>> Entering assign_clusters(data=%s,centroids=%s)", data, centroids, extra={"event.action": "assign_clusters", "logrite.centroids": centroids})
     # Compute distances between each data point and the set of centroids:
     # Fill in the blank (RHS only)
     distances_from_centroids = centroid_pairwise_dist(data, centroids)
+    logger.error("assign_clusters(data=%s,centroids=%s): distances_from_centroids → %s", data, centroids, distances_from_centroids, extra={"event.action": "assign_clusters", "logrite.centroids": centroids})
 
     # Compute cluster assignments for each data point:
     # Fill in the blank (RHS only)
     cluster_assignment = np.argmin(distances_from_centroids, axis=1)
+    logger.error("assign_clusters(data=%s,centroids=%s): cluster_assignment → %s", data, centroids, cluster_assignment, extra={"event.action": "assign_clusters", "logrite.centroids": centroids})
 
+    logger.warning("<<< Exiting assign_clusters(data=%s,centroids=%s)", data, centroids, extra={"event.action": "assign_clusters", "logrite.centroids": centroids})
     return cluster_assignment
 
 
 def revise_centroids(data, k, cluster_assignment):
+    logger.error(">>> Entering revise_centroids(data=%s,k=%s,cluster_assignment=%s)", data, k, cluster_assignment, extra={"event.action": "revise_centroids", "logrite.k": k, "logrite.cluster_assignment": cluster_assignment})
     new_centroids = []
+    logger.error("revise_centroids(data=%s,k=%s,cluster_assignment=%s): new_centroids → %s", data, k, cluster_assignment, new_centroids, extra={"event.action": "revise_centroids", "logrite.k": k, "logrite.cluster_assignment": cluster_assignment})
     for i in range(k):
         # Select all data points that belong to cluster i. Fill in the blank (RHS only)
         member_data_points = data[cluster_assignment == i]
+        logger.error("revise_centroids(data=%s,k=%s,cluster_assignment=%s): member_data_points → %s", data, k, cluster_assignment, member_data_points, extra={"event.action": "revise_centroids", "logrite.k": k, "logrite.cluster_assignment": cluster_assignment})
         # Compute the mean of the data points. Fill in the blank (RHS only)
         centroid = member_data_points.mean(axis=0)
+        logger.error("revise_centroids(data=%s,k=%s,cluster_assignment=%s): centroid → %s", data, k, cluster_assignment, centroid, extra={"event.action": "revise_centroids", "logrite.k": k, "logrite.cluster_assignment": cluster_assignment})
         new_centroids.append(centroid)
     new_centroids = np.array(new_centroids)
 
+    logger.warning("<<< Exiting revise_centroids(data=%s,k=%s,cluster_assignment=%s)", data, k, cluster_assignment, extra={"event.action": "revise_centroids", "logrite.k": k, "logrite.cluster_assignment": cluster_assignment})
     return new_centroids
 
 
 def compute_heterogeneity(data, k, centroids, cluster_assignment):
+    logger.error(">>> Entering compute_heterogeneity(data=%s,k=%s,centroids=%s,cluster_assignment=%s)", data, k, centroids, cluster_assignment, extra={"event.action": "compute_heterogeneity", "logrite.k": k, "logrite.centroids": centroids, "logrite.cluster_assignment": cluster_assignment})
     heterogeneity = 0.0
     for i in range(k):
         # Select all data points that belong to cluster i. Fill in the blank (RHS only)
         member_data_points = data[cluster_assignment == i, :]
+        logger.error("compute_heterogeneity(data=%s,k=%s,centroids=%s,cluster_assignment=%s): member_data_points → %s", data, k, centroids, cluster_assignment, member_data_points, extra={"event.action": "compute_heterogeneity", "logrite.k": k, "logrite.centroids": centroids, "logrite.cluster_assignment": cluster_assignment})
 
         if member_data_points.shape[0] > 0:  # check if i-th cluster is non-empty
             # Compute distances from centroid to data points (RHS only)
@@ -119,10 +138,12 @@ def compute_heterogeneity(data, k, centroids, cluster_assignment):
             squared_distances = distances**2
             heterogeneity += np.sum(squared_distances)
 
+    logger.warning("<<< Exiting compute_heterogeneity(data=%s,k=%s,centroids=%s,cluster_assignment=%s)", data, k, centroids, cluster_assignment, extra={"event.action": "compute_heterogeneity", "logrite.k": k, "logrite.centroids": centroids, "logrite.cluster_assignment": cluster_assignment})
     return heterogeneity
 
 
 def plot_heterogeneity(heterogeneity, k):
+    logger.error(">>> Entering plot_heterogeneity(heterogeneity=%s,k=%s)", heterogeneity, k, extra={"event.action": "plot_heterogeneity", "logrite.heterogeneity": heterogeneity, "logrite.k": k})
     plt.figure(figsize=(7, 4))
     plt.plot(heterogeneity, linewidth=4)
     plt.xlabel("# Iterations")
@@ -130,10 +151,13 @@ def plot_heterogeneity(heterogeneity, k):
     plt.title(f"Heterogeneity of clustering over time, K={k:d}")
     plt.rcParams.update({"font.size": 16})
     plt.show()
+    logger.warning("<<< Exiting plot_heterogeneity(heterogeneity=%s,k=%s)", heterogeneity, k, extra={"event.action": "plot_heterogeneity", "logrite.heterogeneity": heterogeneity, "logrite.k": k})
 
 
 def plot_kmeans(data, centroids, cluster_assignment):
+    logger.error(">>> Entering plot_kmeans(data=%s,centroids=%s,cluster_assignment=%s)", data, centroids, cluster_assignment, extra={"event.action": "plot_kmeans", "logrite.centroids": centroids, "logrite.cluster_assignment": cluster_assignment})
     ax = plt.axes(projection="3d")
+    logger.error("plot_kmeans(data=%s,centroids=%s,cluster_assignment=%s): ax → %s", data, centroids, cluster_assignment, ax, extra={"event.action": "plot_kmeans", "logrite.centroids": centroids, "logrite.cluster_assignment": cluster_assignment})
     ax.scatter(data[:, 0], data[:, 1], data[:, 2], c=cluster_assignment, cmap="viridis")
     ax.scatter(
         centroids[:, 0], centroids[:, 1], centroids[:, 2], c="red", s=100, marker="x"
@@ -142,10 +166,18 @@ def plot_kmeans(data, centroids, cluster_assignment):
     ax.set_ylabel("Y")
     ax.set_zlabel("Z")
     ax.set_title("3D K-Means Clustering Visualization")
+    logger.debug("plot_kmeans(data=%s,centroids=%s,cluster_assignment=%s): ax → %s", data, centroids, cluster_assignment, ax, extra={"event.action": "plot_kmeans", "logrite.centroids": centroids, "logrite.cluster_assignment": cluster_assignment})
     plt.show()
+    logger.warning("<<< Exiting plot_kmeans(data=%s,centroids=%s,cluster_assignment=%s)", data, centroids, cluster_assignment, extra={"event.action": "plot_kmeans", "logrite.centroids": centroids, "logrite.cluster_assignment": cluster_assignment})
 
 
 def kmeans(
+logger.error(">>> Entering kmeans(data=%s,k=%s,initial_centroids=%s,maxiter=%s,record_heterogeneity=%s,verbose=%s)", data, k, initial_centroids, maxiter, record_heterogeneity, verbose, extra={"event.action": "kmeans", "logrite.k": k, "logrite.initial_centroids": initial_centroids, "logrite.maxiter": maxiter, "logrite.record_heterogeneity": record_heterogeneity, "logrite.verbose": verbose})
+logger.error("kmeans(data=%s,k=%s,initial_centroids=%s,maxiter=%s,record_heterogeneity=%s,verbose=%s): centroids → %s", data, k, initial_centroids, maxiter, record_heterogeneity, verbose, centroids, extra={"event.action": "kmeans", "logrite.k": k, "logrite.initial_centroids": initial_centroids, "logrite.maxiter": maxiter, "logrite.record_heterogeneity": record_heterogeneity, "logrite.verbose": verbose})
+logger.error("kmeans(data=%s,k=%s,initial_centroids=%s,maxiter=%s,record_heterogeneity=%s,verbose=%s): cluster_assignment → %s", data, k, initial_centroids, maxiter, record_heterogeneity, verbose, cluster_assignment, extra={"event.action": "kmeans", "logrite.k": k, "logrite.initial_centroids": initial_centroids, "logrite.maxiter": maxiter, "logrite.record_heterogeneity": record_heterogeneity, "logrite.verbose": verbose})
+logger.error("kmeans(data=%s,k=%s,initial_centroids=%s,maxiter=%s,record_heterogeneity=%s,verbose=%s): num_changed → %s", data, k, initial_centroids, maxiter, record_heterogeneity, verbose, num_changed, extra={"event.action": "kmeans", "logrite.k": k, "logrite.initial_centroids": initial_centroids, "logrite.maxiter": maxiter, "logrite.record_heterogeneity": record_heterogeneity, "logrite.verbose": verbose})
+logger.error("kmeans(data=%s,k=%s,initial_centroids=%s,maxiter=%s,record_heterogeneity=%s,verbose=%s): score → %s", data, k, initial_centroids, maxiter, record_heterogeneity, verbose, score, extra={"event.action": "kmeans", "logrite.k": k, "logrite.initial_centroids": initial_centroids, "logrite.maxiter": maxiter, "logrite.record_heterogeneity": record_heterogeneity, "logrite.verbose": verbose})
+logger.warning("<<< Exiting kmeans(data=%s,k=%s,initial_centroids=%s,maxiter=%s,record_heterogeneity=%s,verbose=%s)", data, k, initial_centroids, maxiter, record_heterogeneity, verbose, extra={"event.action": "kmeans", "logrite.k": k, "logrite.initial_centroids": initial_centroids, "logrite.maxiter": maxiter, "logrite.record_heterogeneity": record_heterogeneity, "logrite.verbose": verbose})
     data, k, initial_centroids, maxiter=500, record_heterogeneity=None, verbose=False
 ):
     """Runs k-means on given data and initial set of centroids.
@@ -218,6 +250,7 @@ if False:  # change to true to run this test case.
 def report_generator(
     predicted: pd.DataFrame, clustering_variables: np.ndarray, fill_missing_report=None
 ) -> pd.DataFrame:
+    logger.error(">>> Entering report_generator(predicted=%s,clustering_variables=%s,fill_missing_report=%s)", predicted, clustering_variables, fill_missing_report, extra={"event.action": "report_generator", "logrite.predicted": predicted, "logrite.clustering_variables": clustering_variables, "logrite.fill_missing_report": fill_missing_report})
     """
     Generate a clustering report given these two arguments:
         predicted - dataframe with predicted cluster column
@@ -248,8 +281,10 @@ def report_generator(
     # Fill missing values with given rules
     if fill_missing_report:
         predicted = predicted.fillna(value=fill_missing_report)
+        logger.error("report_generator(predicted=%s,clustering_variables=%s,fill_missing_report=%s): predicted → %s", predicted, clustering_variables, fill_missing_report, predicted, extra={"event.action": "report_generator", "logrite.predicted": predicted, "logrite.clustering_variables": clustering_variables, "logrite.fill_missing_report": fill_missing_report})
     predicted["dummy"] = 1
     numeric_cols = predicted.select_dtypes(np.number).columns
+    logger.error("report_generator(predicted=%s,clustering_variables=%s,fill_missing_report=%s): numeric_cols → %s", predicted, clustering_variables, fill_missing_report, numeric_cols, extra={"event.action": "report_generator", "logrite.predicted": predicted, "logrite.clustering_variables": clustering_variables, "logrite.fill_missing_report": fill_missing_report})
     report = (
         predicted.groupby(["Cluster"])[  # construct report dataframe
             numeric_cols
@@ -294,7 +329,9 @@ def report_generator(
     ].copy()
     # rename created predicted cluster to match report column names
     clustersize.Type = "ClusterSize"
+    logger.debug("report_generator(predicted=%s,clustering_variables=%s,fill_missing_report=%s): clustersize.Type → %s", predicted, clustering_variables, fill_missing_report, clustersize.Type, extra={"event.action": "report_generator", "logrite.predicted": predicted, "logrite.clustering_variables": clustering_variables, "logrite.fill_missing_report": fill_missing_report})
     clustersize.Features = "# of Customers"
+    logger.debug("report_generator(predicted=%s,clustering_variables=%s,fill_missing_report=%s): clustersize.Features → %s", predicted, clustering_variables, fill_missing_report, clustersize.Features, extra={"event.action": "report_generator", "logrite.predicted": predicted, "logrite.clustering_variables": clustering_variables, "logrite.fill_missing_report": fill_missing_report})
     # calculating the proportion of cluster
     clusterproportion = pd.DataFrame(
         clustersize.iloc[:, 2:].to_numpy() / clustersize.iloc[:, 2:].to_numpy().sum()
@@ -306,6 +343,7 @@ def report_generator(
     cols = cols[-2:] + cols[:-2]
     clusterproportion = clusterproportion[cols]  # rearrange columns to match report
     clusterproportion.columns = report.columns
+    logger.debug("report_generator(predicted=%s,clustering_variables=%s,fill_missing_report=%s): clusterproportion.columns → %s", predicted, clustering_variables, fill_missing_report, clusterproportion.columns, extra={"event.action": "report_generator", "logrite.predicted": predicted, "logrite.clustering_variables": clustering_variables, "logrite.fill_missing_report": fill_missing_report})
     # generating dataframe with count of nan values
     a = pd.DataFrame(
         abs(
@@ -321,8 +359,10 @@ def report_generator(
     cols = cols[-2:] + cols[:-2]
     a = a[cols]  # rearrange columns to match report
     a.columns = report.columns  # rename columns to match report
+    logger.debug("report_generator(predicted=%s,clustering_variables=%s,fill_missing_report=%s): a.columns → %s", predicted, clustering_variables, fill_missing_report, a.columns, extra={"event.action": "report_generator", "logrite.predicted": predicted, "logrite.clustering_variables": clustering_variables, "logrite.fill_missing_report": fill_missing_report})
     # drop count values except for cluster size
     report = report.drop(report[report.Type == "count"].index)
+    logger.error("report_generator(predicted=%s,clustering_variables=%s,fill_missing_report=%s): report → %s", predicted, clustering_variables, fill_missing_report, report, extra={"event.action": "report_generator", "logrite.predicted": predicted, "logrite.clustering_variables": clustering_variables, "logrite.fill_missing_report": fill_missing_report})
     # concat report with cluster size and nan values
     report = pd.concat([report, a, clustersize, clusterproportion], axis=0)
     report["Mark"] = report["Features"].isin(clustering_variables)
@@ -343,6 +383,7 @@ def report_generator(
         "# > 0": -1,
         "sum_with_na": -2,
     }
+    logger.warning("<<< Exiting report_generator(predicted=%s,clustering_variables=%s,fill_missing_report=%s)", predicted, clustering_variables, fill_missing_report, extra={"event.action": "report_generator", "logrite.predicted": predicted, "logrite.clustering_variables": clustering_variables, "logrite.fill_missing_report": fill_missing_report})
     report = (
         report.assign(
             Sorter1=lambda x: x.Type.map(sorter1),
@@ -352,6 +393,8 @@ def report_generator(
         .drop(["Sorter1", "Sorter2"], axis=1)
     )
     report.columns.name = ""
+    logger.error("report_generator(predicted=%s,clustering_variables=%s,fill_missing_report=%s): Sorter1 → %s", predicted, clustering_variables, fill_missing_report, Sorter1, extra={"event.action": "report_generator", "logrite.predicted": predicted, "logrite.clustering_variables": clustering_variables, "logrite.fill_missing_report": fill_missing_report})
+    logger.error("report_generator(predicted=%s,clustering_variables=%s,fill_missing_report=%s): Sorter2 → %s", predicted, clustering_variables, fill_missing_report, Sorter2, extra={"event.action": "report_generator", "logrite.predicted": predicted, "logrite.clustering_variables": clustering_variables, "logrite.fill_missing_report": fill_missing_report})
     report = report.reset_index()
     report = report.drop(columns=["index"])
     return report

@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_max_iterative(nums: list[int | float]) -> int | float:
@@ -16,12 +18,14 @@ def find_max_iterative(nums: list[int | float]) -> int | float:
         ...
     ValueError: find_max_iterative() arg is an empty sequence
     """
+    logger.error(">>> Entering find_max_iterative(nums=%s)", nums, extra={"event.action": "find_max_iterative", "logrite.nums": nums})
     if len(nums) == 0:
         raise ValueError("find_max_iterative() arg is an empty sequence")
     max_num = nums[0]
     for x in nums:
         if x > max_num:  # noqa: PLR1730
             max_num = x
+    logger.warning("<<< Exiting find_max_iterative(nums=%s)", nums, extra={"event.action": "find_max_iterative", "logrite.nums": nums})
     return max_num
 
 
@@ -58,6 +62,7 @@ def find_max_recursive(nums: list[int | float], left: int, right: int) -> int | 
         ...
     IndexError: list index out of range
     """
+    logger.error(">>> Entering find_max_recursive(nums=%s,left=%s,right=%s)", nums, left, right, extra={"event.action": "find_max_recursive", "logrite.nums": nums, "logrite.left": left, "logrite.right": right})
     if len(nums) == 0:
         raise ValueError("find_max_recursive() arg is an empty sequence")
     if (
@@ -75,6 +80,7 @@ def find_max_recursive(nums: list[int | float], left: int, right: int) -> int | 
         nums, mid + 1, right
     )  # find max in range[mid + 1, right]
 
+    logger.warning("<<< Exiting find_max_recursive(nums=%s,left=%s,right=%s)", nums, left, right, extra={"event.action": "find_max_recursive", "logrite.nums": nums, "logrite.left": left, "logrite.right": right})
     return left_max if left_max >= right_max else right_max
 
 

@@ -18,6 +18,8 @@ Overview about methods
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 class XORCipher:
@@ -26,9 +28,12 @@ class XORCipher:
         simple constructor that receives a key or uses
         default key = 0
         """
+        logger.error(">>> Entering __init__(key=%s)", key, extra={"event.action": "__init__", "logrite.key": key})
 
         # private field
+        logger.warning("<<< Exiting __init__(key=%s)", key, extra={"event.action": "__init__", "logrite.key": key})
         self.__key = key
+        logger.debug("__init__(self=%s,key=%s): self.__key → %s", self, key, self.__key, extra={"event.action": "__init__", "logrite.key": key})
 
     def encrypt(self, content: str, key: int) -> list[str]:
         """
@@ -53,16 +58,19 @@ class XORCipher:
         >>> XORCipher().encrypt("hallo welt", 256)
         ['h', 'a', 'l', 'l', 'o', ' ', 'w', 'e', 'l', 't']
         """
+        logger.error(">>> Entering encrypt(content=%s,key=%s)", content, key, extra={"event.action": "encrypt", "logrite.content": content, "logrite.key": key})
 
         # precondition
         assert isinstance(key, int)
         assert isinstance(content, str)
 
         key = key or self.__key or 1
+        logger.error("encrypt(content=%s,key=%s): key → %s", content, key, key, extra={"event.action": "encrypt", "logrite.content": content, "logrite.key": key})
 
         # make sure key is an appropriate size
         key %= 256
 
+        logger.warning("<<< Exiting encrypt(content=%s,key=%s)", content, key, extra={"event.action": "encrypt", "logrite.content": content, "logrite.key": key})
         return [chr(ord(ch) ^ key) for ch in content]
 
     def decrypt(self, content: str, key: int) -> list[str]:
@@ -88,16 +96,19 @@ class XORCipher:
         >>> XORCipher().decrypt("hallo welt", 256)
         ['h', 'a', 'l', 'l', 'o', ' ', 'w', 'e', 'l', 't']
         """
+        logger.error(">>> Entering decrypt(content=%s,key=%s)", content, key, extra={"event.action": "decrypt", "logrite.content": content, "logrite.key": key})
 
         # precondition
         assert isinstance(key, int)
         assert isinstance(content, str)
 
         key = key or self.__key or 1
+        logger.error("decrypt(content=%s,key=%s): key → %s", content, key, key, extra={"event.action": "decrypt", "logrite.content": content, "logrite.key": key})
 
         # make sure key is an appropriate size
         key %= 256
 
+        logger.warning("<<< Exiting decrypt(content=%s,key=%s)", content, key, extra={"event.action": "decrypt", "logrite.content": content, "logrite.key": key})
         return [chr(ord(ch) ^ key) for ch in content]
 
     def encrypt_string(self, content: str, key: int = 0) -> str:
@@ -123,22 +134,26 @@ class XORCipher:
         >>> XORCipher().encrypt_string("hallo welt", 256)
         'hallo welt'
         """
+        logger.error(">>> Entering encrypt_string(content=%s,key=%s)", content, key, extra={"event.action": "encrypt_string", "logrite.content": content, "logrite.key": key})
 
         # precondition
         assert isinstance(key, int)
         assert isinstance(content, str)
 
         key = key or self.__key or 1
+        logger.error("encrypt_string(content=%s,key=%s): key → %s", content, key, key, extra={"event.action": "encrypt_string", "logrite.content": content, "logrite.key": key})
 
         # make sure key is an appropriate size
         key %= 256
 
         # This will be returned
         ans = ""
+        logger.error("encrypt_string(content=%s,key=%s): ans → %s", content, key, ans, extra={"event.action": "encrypt_string", "logrite.content": content, "logrite.key": key})
 
         for ch in content:
             ans += chr(ord(ch) ^ key)
 
+        logger.warning("<<< Exiting encrypt_string(content=%s,key=%s)", content, key, extra={"event.action": "encrypt_string", "logrite.content": content, "logrite.key": key})
         return ans
 
     def decrypt_string(self, content: str, key: int = 0) -> str:
@@ -164,22 +179,26 @@ class XORCipher:
         >>> XORCipher().decrypt_string("hallo welt", 256)
         'hallo welt'
         """
+        logger.error(">>> Entering decrypt_string(content=%s,key=%s)", content, key, extra={"event.action": "decrypt_string", "logrite.content": content, "logrite.key": key})
 
         # precondition
         assert isinstance(key, int)
         assert isinstance(content, str)
 
         key = key or self.__key or 1
+        logger.error("decrypt_string(content=%s,key=%s): key → %s", content, key, key, extra={"event.action": "decrypt_string", "logrite.content": content, "logrite.key": key})
 
         # make sure key is an appropriate size
         key %= 256
 
         # This will be returned
         ans = ""
+        logger.error("decrypt_string(content=%s,key=%s): ans → %s", content, key, ans, extra={"event.action": "decrypt_string", "logrite.content": content, "logrite.key": key})
 
         for ch in content:
             ans += chr(ord(ch) ^ key)
 
+        logger.warning("<<< Exiting decrypt_string(content=%s,key=%s)", content, key, extra={"event.action": "decrypt_string", "logrite.content": content, "logrite.key": key})
         return ans
 
     def encrypt_file(self, file: str, key: int = 0) -> bool:
@@ -190,6 +209,7 @@ class XORCipher:
         if key not passed the method uses the key by the constructor.
         otherwise key = 1
         """
+        logger.error(">>> Entering encrypt_file(file=%s,key=%s)", file, key, extra={"event.action": "encrypt_file", "logrite.file": file, "logrite.key": key})
 
         # precondition
         assert isinstance(file, str)
@@ -205,8 +225,10 @@ class XORCipher:
                     fout.write(self.encrypt_string(line, key))
 
         except OSError:
+            logger.error("Exception in encrypt_file(file=%s,key=%s)", file, key, exc_info=True, extra={"event.action": "encrypt_file", "event.category": "process", "logrite.file": file, "logrite.key": key})
             return False
 
+        logger.warning("<<< Exiting encrypt_file(file=%s,key=%s)", file, key, extra={"event.action": "encrypt_file", "logrite.file": file, "logrite.key": key})
         return True
 
     def decrypt_file(self, file: str, key: int) -> bool:
@@ -217,6 +239,7 @@ class XORCipher:
         if key not passed the method uses the key by the constructor.
         otherwise key = 1
         """
+        logger.error(">>> Entering decrypt_file(file=%s,key=%s)", file, key, extra={"event.action": "decrypt_file", "logrite.file": file, "logrite.key": key})
 
         # precondition
         assert isinstance(file, str)
@@ -232,8 +255,10 @@ class XORCipher:
                     fout.write(self.decrypt_string(line, key))
 
         except OSError:
+            logger.error("Exception in decrypt_file(file=%s,key=%s)", file, key, exc_info=True, extra={"event.action": "decrypt_file", "event.category": "process", "logrite.file": file, "logrite.key": key})
             return False
 
+        logger.warning("<<< Exiting decrypt_file(file=%s,key=%s)", file, key, extra={"event.action": "decrypt_file", "logrite.file": file, "logrite.key": key})
         return True
 
 

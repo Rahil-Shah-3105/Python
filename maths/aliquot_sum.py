@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def aliquot_sum(input_num: int) -> int:
     """
     Finds the aliquot sum of an input integer, where the
@@ -33,10 +35,12 @@ def aliquot_sum(input_num: int) -> int:
     >>> aliquot_sum(19)
     1
     """
+    logger.error(">>> Entering aliquot_sum(input_num=%s)", input_num, extra={"event.action": "aliquot_sum", "logrite.input_num": input_num})
     if not isinstance(input_num, int):
         raise ValueError("Input must be an integer")
     if input_num <= 0:
         raise ValueError("Input must be positive")
+        logger.warning("<<< Exiting aliquot_sum(input_num=%s)", input_num, extra={"event.action": "aliquot_sum", "logrite.input_num": input_num})
     return sum(
         divisor for divisor in range(1, input_num // 2 + 1) if input_num % divisor == 0
     )

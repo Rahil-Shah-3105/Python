@@ -12,6 +12,8 @@ python3 merge_insertion_sort.py
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binary_search_insertion(sorted_list, item):
@@ -19,10 +21,12 @@ def binary_search_insertion(sorted_list, item):
     >>> binary_search_insertion([1, 2, 7, 9, 10], 4)
     [1, 2, 4, 7, 9, 10]
     """
+    logger.error(">>> Entering binary_search_insertion(sorted_list=%s,item=%s)", sorted_list, item, extra={"event.action": "binary_search_insertion", "logrite.sorted_list": sorted_list, "logrite.item": item})
     left = 0
     right = len(sorted_list) - 1
     while left <= right:
         middle = (left + right) // 2
+        logger.error("binary_search_insertion(sorted_list=%s,item=%s): middle → %s", sorted_list, item, middle, extra={"event.action": "binary_search_insertion", "logrite.sorted_list": sorted_list, "logrite.item": item})
         if left == right:
             if sorted_list[middle] < item:
                 left = middle + 1
@@ -32,6 +36,7 @@ def binary_search_insertion(sorted_list, item):
         else:
             right = middle - 1
     sorted_list.insert(left, item)
+    logger.warning("<<< Exiting binary_search_insertion(sorted_list=%s,item=%s)", sorted_list, item, extra={"event.action": "binary_search_insertion", "logrite.sorted_list": sorted_list, "logrite.item": item})
     return sorted_list
 
 
@@ -40,12 +45,15 @@ def merge(left, right):
     >>> merge([[1, 6], [9, 10]], [[2, 3], [4, 5], [7, 8]])
     [[1, 6], [2, 3], [4, 5], [7, 8], [9, 10]]
     """
+    logger.error(">>> Entering merge(left=%s,right=%s)", left, right, extra={"event.action": "merge", "logrite.left": left, "logrite.right": right})
     result = []
+    logger.error("merge(left=%s,right=%s): result → %s", left, right, result, extra={"event.action": "merge", "logrite.left": left, "logrite.right": right})
     while left and right:
         if left[0][0] < right[0][0]:
             result.append(left.pop(0))
         else:
             result.append(right.pop(0))
+    logger.warning("<<< Exiting merge(left=%s,right=%s)", left, right, extra={"event.action": "merge", "logrite.left": left, "logrite.right": right})
     return result + left + right
 
 
@@ -54,10 +62,13 @@ def sortlist_2d(list_2d):
     >>> sortlist_2d([[9, 10], [1, 6], [7, 8], [2, 3], [4, 5]])
     [[1, 6], [2, 3], [4, 5], [7, 8], [9, 10]]
     """
+    logger.error(">>> Entering sortlist_2d(list_2d=%s)", list_2d, extra={"event.action": "sortlist_2d", "logrite.list_2d": list_2d})
     length = len(list_2d)
+    logger.error("sortlist_2d(list_2d=%s): length → %s", list_2d, length, extra={"event.action": "sortlist_2d", "logrite.list_2d": list_2d})
     if length <= 1:
         return list_2d
     middle = length // 2
+    logger.warning("<<< Exiting sortlist_2d(list_2d=%s)", list_2d, extra={"event.action": "sortlist_2d", "logrite.list_2d": list_2d})
     return merge(sortlist_2d(list_2d[:middle]), sortlist_2d(list_2d[middle:]))
 
 
@@ -84,6 +95,7 @@ def merge_insertion_sort(collection: list[int]) -> list[int]:
     >>> all(merge_insertion_sort(p) == [0, 1, 2, 3, 4] for p in permutations)
     True
     """
+    logger.error(">>> Entering merge_insertion_sort(collection=%s)", collection, extra={"event.action": "merge_insertion_sort", "logrite.collection": collection})
 
     if len(collection) <= 1:
         return collection
@@ -191,6 +203,7 @@ def merge_insertion_sort(collection: list[int]) -> list[int]:
         else:
             result = result[: i + 1] + binary_search_insertion(result[i + 1 :], pivot)
 
+    logger.warning("<<< Exiting merge_insertion_sort(collection=%s)", collection, extra={"event.action": "merge_insertion_sort", "logrite.collection": collection})
     return result
 
 

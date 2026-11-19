@@ -13,6 +13,8 @@ Examples: https://www.javatpoint.com/fp-growth-algorithm-in-data-mining
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -41,15 +43,21 @@ class TreeNode:
     node_link: TreeNode | None = None
 
     def __repr__(self) -> str:
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"TreeNode({self.name!r}, {self.count!r}, {self.parent!r})"
 
     def inc(self, num_occur: int) -> None:
+        logger.error(">>> Entering inc(num_occur=%s)", num_occur, extra={"event.action": "inc", "logrite.num_occur": num_occur})
         self.count += num_occur
+        logger.warning("<<< Exiting inc(num_occur=%s)", num_occur, extra={"event.action": "inc", "logrite.num_occur": num_occur})
 
     def disp(self, ind: int = 1) -> None:
+        logger.error(">>> Entering disp(ind=%s)", ind, extra={"event.action": "disp", "logrite.ind": ind})
         print(f"{'  ' * ind} {self.name}  {self.count}")
         for child in self.children.values():
             child.disp(ind + 1)
+            logger.warning("<<< Exiting disp(ind=%s)", ind, extra={"event.action": "disp", "logrite.ind": ind})
 
 
 def create_tree(data_set: list, min_sup: int = 1) -> tuple[TreeNode, dict]:
@@ -94,6 +102,7 @@ def create_tree(data_set: list, min_sup: int = 1) -> tuple[TreeNode, dict]:
     >>> sorted(fp_tree.children['A'].children)
     ['B', 'C']
     """
+    logger.error(">>> Entering create_tree(data_set=%s,min_sup=%s)", data_set, min_sup, extra={"event.action": "create_tree", "logrite.data_set": data_set, "logrite.min_sup": min_sup})
     header_table: dict = {}
     for trans in data_set:
         for item in trans:
@@ -111,6 +120,7 @@ def create_tree(data_set: list, min_sup: int = 1) -> tuple[TreeNode, dict]:
         header_table[key] = [value, None]
 
     fp_tree = TreeNode("Null Set", 1, None)  # Parent is None for the root node
+    logger.error("create_tree(data_set=%s,min_sup=%s): fp_tree → %s", data_set, min_sup, fp_tree, extra={"event.action": "create_tree", "logrite.data_set": data_set, "logrite.min_sup": min_sup})
     for tran_set in data_set:
         local_d = {
             item: header_table[item][0] for item in tran_set if item in freq_item_set
@@ -122,6 +132,7 @@ def create_tree(data_set: list, min_sup: int = 1) -> tuple[TreeNode, dict]:
             ordered_items = [item[0] for item in sorted_items]
             update_tree(ordered_items, fp_tree, header_table, 1)
 
+    logger.warning("<<< Exiting create_tree(data_set=%s,min_sup=%s)", data_set, min_sup, extra={"event.action": "create_tree", "logrite.data_set": data_set, "logrite.min_sup": min_sup})
     return fp_tree, header_table
 
 
@@ -158,6 +169,7 @@ def update_tree(items: list, in_tree: TreeNode, header_table: dict, count: int) 
     >>> header_table['E'][1].name
     'E'
     """
+    logger.error(">>> Entering update_tree(items=%s,in_tree=%s,header_table=%s,count=%s)", items, in_tree, header_table, count, extra={"event.action": "update_tree", "logrite.items": items, "logrite.in_tree": in_tree, "logrite.header_table": header_table, "logrite.count": count})
     if items[0] in in_tree.children:
         in_tree.children[items[0]].inc(count)
     else:
@@ -168,6 +180,7 @@ def update_tree(items: list, in_tree: TreeNode, header_table: dict, count: int) 
             update_header(header_table[items[0]][1], in_tree.children[items[0]])
     if len(items) > 1:
         update_tree(items[1:], in_tree.children[items[0]], header_table, count)
+        logger.warning("<<< Exiting update_tree(items=%s,in_tree=%s,header_table=%s,count=%s)", items, in_tree, header_table, count, extra={"event.action": "update_tree", "logrite.items": items, "logrite.in_tree": in_tree, "logrite.header_table": header_table, "logrite.count": count})
 
 
 def update_header(node_to_test: TreeNode, target_node: TreeNode) -> TreeNode:
@@ -202,11 +215,14 @@ def update_header(node_to_test: TreeNode, target_node: TreeNode) -> TreeNode:
     >>> node2.node_link is None
     True
     """
+    logger.error(">>> Entering update_header(node_to_test=%s,target_node=%s)", node_to_test, target_node, extra={"event.action": "update_header", "logrite.node_to_test": node_to_test, "logrite.target_node": target_node})
     while node_to_test.node_link is not None:
         node_to_test = node_to_test.node_link
     if node_to_test.node_link is None:
         node_to_test.node_link = target_node
+        logger.debug("update_header(node_to_test=%s,target_node=%s): node_to_test.node_link → %s", node_to_test, target_node, node_to_test.node_link, extra={"event.action": "update_header", "logrite.node_to_test": node_to_test, "logrite.target_node": target_node})
     # Return the updated node
+    logger.warning("<<< Exiting update_header(node_to_test=%s,target_node=%s)", node_to_test, target_node, extra={"event.action": "update_header", "logrite.node_to_test": node_to_test, "logrite.target_node": target_node})
     return node_to_test
 
 
@@ -235,9 +251,11 @@ def ascend_tree(leaf_node: TreeNode, prefix_path: list[str]) -> None:
     >>> path # ascending from a leaf node 'A'
     ['A']
     """
+    logger.error(">>> Entering ascend_tree(leaf_node=%s,prefix_path=%s)", leaf_node, prefix_path, extra={"event.action": "ascend_tree", "logrite.leaf_node": leaf_node, "logrite.prefix_path": prefix_path})
     if leaf_node.parent is not None:
         prefix_path.append(leaf_node.name)
         ascend_tree(leaf_node.parent, prefix_path)
+        logger.warning("<<< Exiting ascend_tree(leaf_node=%s,prefix_path=%s)", leaf_node, prefix_path, extra={"event.action": "ascend_tree", "logrite.leaf_node": leaf_node, "logrite.prefix_path": prefix_path})
 
 
 def find_prefix_path(base_pat: frozenset, tree_node: TreeNode | None) -> dict:  # noqa: ARG001
@@ -266,6 +284,7 @@ def find_prefix_path(base_pat: frozenset, tree_node: TreeNode | None) -> dict:  
     >>> sorted(find_prefix_path(base_pattern, fp_tree.children['A']))
     []
     """
+    logger.error(">>> Entering find_prefix_path(base_pat=%s,tree_node=%s)", base_pat, tree_node, extra={"event.action": "find_prefix_path", "logrite.base_pat": base_pat, "logrite.tree_node": tree_node})
     cond_pats: dict = {}
     while tree_node is not None:
         prefix_path: list = []
@@ -273,6 +292,7 @@ def find_prefix_path(base_pat: frozenset, tree_node: TreeNode | None) -> dict:  
         if len(prefix_path) > 1:
             cond_pats[frozenset(prefix_path[1:])] = tree_node.count
         tree_node = tree_node.node_link
+    logger.warning("<<< Exiting find_prefix_path(base_pat=%s,tree_node=%s)", base_pat, tree_node, extra={"event.action": "find_prefix_path", "logrite.base_pat": base_pat, "logrite.tree_node": tree_node})
     return cond_pats
 
 
@@ -283,6 +303,7 @@ def mine_tree(
     pre_fix: set,
     freq_item_list: list,
 ) -> None:
+    logger.error(">>> Entering mine_tree(in_tree=%s,dict=%s,min_sup=%s,pre_fix=%s,freq_item_list=%s)", in_tree, dict, min_sup, pre_fix, freq_item_list, extra={"event.action": "mine_tree", "logrite.in_tree": in_tree, "logrite.dict": dict, "logrite.min_sup": min_sup, "logrite.pre_fix": pre_fix, "logrite.freq_item_list": freq_item_list})
     """
     Mine the FP-Tree recursively to discover frequent itemsets.
 
@@ -312,12 +333,15 @@ def mine_tree(
     True
     """
     sorted_items = sorted(header_table.items(), key=lambda item_info: item_info[1][0])
+    logger.error("mine_tree(in_tree=%s,dict=%s,min_sup=%s,pre_fix=%s,freq_item_list=%s): sorted_items → %s", in_tree, dict, min_sup, pre_fix, freq_item_list, sorted_items, extra={"event.action": "mine_tree", "logrite.in_tree": in_tree, "logrite.dict": dict, "logrite.min_sup": min_sup, "logrite.pre_fix": pre_fix, "logrite.freq_item_list": freq_item_list})
     big_l = [item[0] for item in sorted_items]
     for base_pat in big_l:
         new_freq_set = pre_fix.copy()
+        logger.error("mine_tree(in_tree=%s,dict=%s,min_sup=%s,pre_fix=%s,freq_item_list=%s): new_freq_set → %s", in_tree, dict, min_sup, pre_fix, freq_item_list, new_freq_set, extra={"event.action": "mine_tree", "logrite.in_tree": in_tree, "logrite.dict": dict, "logrite.min_sup": min_sup, "logrite.pre_fix": pre_fix, "logrite.freq_item_list": freq_item_list})
         new_freq_set.add(base_pat)
         freq_item_list.append(new_freq_set)
         cond_patt_bases = find_prefix_path(base_pat, header_table[base_pat][1])
+        logger.error("mine_tree(in_tree=%s,dict=%s,min_sup=%s,pre_fix=%s,freq_item_list=%s): cond_patt_bases → %s", in_tree, dict, min_sup, pre_fix, freq_item_list, cond_patt_bases, extra={"event.action": "mine_tree", "logrite.in_tree": in_tree, "logrite.dict": dict, "logrite.min_sup": min_sup, "logrite.pre_fix": pre_fix, "logrite.freq_item_list": freq_item_list})
         my_cond_tree, my_head = create_tree(list(cond_patt_bases), min_sup)
         if my_head is not None:
             # Pass header_table[base_pat][1] as node_to_test to update_header
@@ -325,6 +349,7 @@ def mine_tree(
                 header_table[base_pat][1], my_cond_tree
             )
             mine_tree(my_cond_tree, my_head, min_sup, new_freq_set, freq_item_list)
+            logger.warning("<<< Exiting mine_tree(in_tree=%s,dict=%s,min_sup=%s,pre_fix=%s,freq_item_list=%s)", in_tree, dict, min_sup, pre_fix, freq_item_list, extra={"event.action": "mine_tree", "logrite.in_tree": in_tree, "logrite.dict": dict, "logrite.min_sup": min_sup, "logrite.pre_fix": pre_fix, "logrite.freq_item_list": freq_item_list})
 
 
 if __name__ == "__main__":

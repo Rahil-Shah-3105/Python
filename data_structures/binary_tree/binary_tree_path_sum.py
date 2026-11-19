@@ -8,6 +8,8 @@ Leetcode reference: https://leetcode.com/problems/path-sum-iii/
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
@@ -16,9 +18,12 @@ class Node:
     """
 
     def __init__(self, value: int) -> None:
+        logger.error(">>> Entering __init__(value=%s)", value, extra={"event.action": "__init__", "logrite.value": value})
         self.value = value
+        logger.debug("__init__(self=%s,value=%s): self.value → %s", self, value, self.value, extra={"event.action": "__init__", "logrite.value": value})
         self.left: Node | None = None
         self.right: Node | None = None
+        logger.warning("<<< Exiting __init__(value=%s)", value, extra={"event.action": "__init__", "logrite.value": value})
 
 
 class BinaryTreePathSum:
@@ -75,10 +80,15 @@ class BinaryTreePathSum:
     target: int
 
     def __init__(self) -> None:
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
         self.paths = 0
+        logger.warning("<<< Exiting __init__()", extra={"event.action": "__init__"})
+        logger.debug("__init__(self=%s): self.paths → %s", self, self.paths, extra={"event.action": "__init__"})
 
     def depth_first_search(self, node: Node | None, path_sum: int) -> None:
+        logger.error(">>> Entering depth_first_search(node=%s,path_sum=%s)", node, path_sum, extra={"event.action": "depth_first_search", "logrite.node": node, "logrite.path_sum": path_sum})
         if node is None:
+            logger.warning("<<< Exiting depth_first_search(node=%s,path_sum=%s)", node, path_sum, extra={"event.action": "depth_first_search", "logrite.node": node, "logrite.path_sum": path_sum})
             return
 
         if path_sum == self.target:
@@ -90,15 +100,18 @@ class BinaryTreePathSum:
             self.depth_first_search(node.right, path_sum + node.right.value)
 
     def path_sum(self, node: Node | None, target: int | None = None) -> int:
+        logger.error(">>> Entering path_sum(node=%s,target=%s)", node, target, extra={"event.action": "path_sum", "logrite.node": node, "logrite.target": target})
         if node is None:
             return 0
         if target is not None:
             self.target = target
+            logger.debug("path_sum(self=%s,node=%s,target=%s): self.target → %s", self, node, target, self.target, extra={"event.action": "path_sum", "logrite.node": node, "logrite.target": target})
 
         self.depth_first_search(node, node.value)
         self.path_sum(node.left)
         self.path_sum(node.right)
 
+        logger.warning("<<< Exiting path_sum(node=%s,target=%s)", node, target, extra={"event.action": "path_sum", "logrite.node": node, "logrite.target": target})
         return self.paths
 
 

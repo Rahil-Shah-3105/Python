@@ -6,6 +6,8 @@ Source:
     https://en.wikipedia.org/wiki/Sylvester%27s_sequence
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sylvester(number: int) -> int:
@@ -26,6 +28,7 @@ def sylvester(number: int) -> int:
         ...
     AssertionError: The input value of [n=8.0] is not an integer
     """
+    logger.error(">>> Entering sylvester(number=%s)", number, extra={"event.action": "sylvester", "logrite.number": number})
     assert isinstance(number, int), f"The input value of [n={number}] is not an integer"
 
     if number == 1:
@@ -37,6 +40,7 @@ def sylvester(number: int) -> int:
         num = sylvester(number - 1)
         lower = num - 1
         upper = num
+        logger.warning("<<< Exiting sylvester(number=%s)", number, extra={"event.action": "sylvester", "logrite.number": number})
         return lower * upper + 1
 
 

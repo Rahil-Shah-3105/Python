@@ -31,6 +31,8 @@ last digit of the base is always a 3 or 7.
 The solution does option 2 because the answer happens to be much closer to the
 starting point.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_square_form(num: int) -> bool:
@@ -44,6 +46,7 @@ def is_square_form(num: int) -> bool:
     >>> is_square_form(123456789012345678)
     False
     """
+    logger.error(">>> Entering is_square_form(num=%s)", num, extra={"event.action": "is_square_form", "logrite.num": num})
     digit = 9
 
     while num > 0:
@@ -52,6 +55,7 @@ def is_square_form(num: int) -> bool:
         num //= 100
         digit -= 1
 
+    logger.warning("<<< Exiting is_square_form(num=%s)", num, extra={"event.action": "is_square_form", "logrite.num": num})
     return True
 
 
@@ -59,6 +63,7 @@ def solution() -> int:
     """
     Returns the first integer whose square is of the form 1_2_3_4_5_6_7_8_9_0
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
     num = 138902663
 
     while not is_square_form(num * num):
@@ -67,6 +72,7 @@ def solution() -> int:
         else:
             num -= 4  # (7 - 4) % 10 = 3
 
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return num * 10
 
 

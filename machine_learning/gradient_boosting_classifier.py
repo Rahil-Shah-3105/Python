@@ -3,6 +3,8 @@ from sklearn.datasets import load_iris
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
+import logging
+logger = logging.getLogger(__name__)
 
 
 class GradientBoostingClassifier:
@@ -19,9 +21,13 @@ class GradientBoostingClassifier:
         - learning_rate (float): The learning rate.
         - models (list): A list to store the trained weak learners.
         """
+        logger.error(">>> Entering __init__(n_estimators=%s,learning_rate=%s)", n_estimators, learning_rate, extra={"event.action": "__init__", "logrite.n_estimators": n_estimators, "logrite.learning_rate": learning_rate})
         self.n_estimators = n_estimators
+        logger.debug("__init__(self=%s,n_estimators=%s,learning_rate=%s): self.n_estimators → %s", self, n_estimators, learning_rate, self.n_estimators, extra={"event.action": "__init__", "logrite.n_estimators": n_estimators, "logrite.learning_rate": learning_rate})
         self.learning_rate = learning_rate
+        logger.debug("__init__(self=%s,n_estimators=%s,learning_rate=%s): self.learning_rate → %s", self, n_estimators, learning_rate, self.learning_rate, extra={"event.action": "__init__", "logrite.n_estimators": n_estimators, "logrite.learning_rate": learning_rate})
         self.models: list[tuple[DecisionTreeRegressor, float]] = []
+        logger.warning("<<< Exiting __init__(n_estimators=%s,learning_rate=%s)", n_estimators, learning_rate, extra={"event.action": "__init__", "logrite.n_estimators": n_estimators, "logrite.learning_rate": learning_rate})
 
     def fit(self, features: np.ndarray, target: np.ndarray) -> None:
         """
@@ -44,14 +50,18 @@ class GradientBoostingClassifier:
         >>> len(clf.models) == 100
         True
         """
+        logger.error(">>> Entering fit(features=%s,target=%s)", features, target, extra={"event.action": "fit", "logrite.features": features, "logrite.target": target})
         for _ in range(self.n_estimators):
             # Calculate the pseudo-residuals
             residuals = -self.gradient(target, self.predict(features))
+            logger.error("fit(features=%s,target=%s): residuals → %s", features, target, residuals, extra={"event.action": "fit", "logrite.features": features, "logrite.target": target})
             # Fit a weak learner (e.g., decision tree) to the residuals
             model = DecisionTreeRegressor(max_depth=1)
+            logger.error("fit(features=%s,target=%s): model → %s", features, target, model, extra={"event.action": "fit", "logrite.features": features, "logrite.target": target})
             model.fit(features, residuals)
             # Update the model by adding the weak learner with a learning rate
             self.models.append((model, self.learning_rate))
+            logger.warning("<<< Exiting fit(features=%s,target=%s)", features, target, extra={"event.action": "fit", "logrite.features": features, "logrite.target": target})
 
     def predict(self, features: np.ndarray) -> np.ndarray:
         """
@@ -74,10 +84,13 @@ class GradientBoostingClassifier:
         >>> y_pred.shape == y.shape
         True
         """
+        logger.error(">>> Entering predict(features=%s)", features, extra={"event.action": "predict", "logrite.features": features})
         # Initialize predictions with zeros
         predictions = np.zeros(features.shape[0])
+        logger.error("predict(features=%s): predictions → %s", features, predictions, extra={"event.action": "predict", "logrite.features": features})
         for model, learning_rate in self.models:
             predictions += learning_rate * model.predict(features)
+        logger.warning("<<< Exiting predict(features=%s)", features, extra={"event.action": "predict", "logrite.features": features})
         return np.sign(predictions)  # Convert to binary predictions (-1 or 1)
 
     def gradient(self, target: np.ndarray, y_pred: np.ndarray) -> np.ndarray:
@@ -100,6 +113,8 @@ class GradientBoostingClassifier:
         >>> residuals.shape == target.shape
         True
         """
+        logger.error(">>> Entering gradient(target=%s,y_pred=%s)", target, y_pred, extra={"event.action": "gradient", "logrite.target": target, "logrite.y_pred": y_pred})
+        logger.warning("<<< Exiting gradient(target=%s,y_pred=%s)", target, y_pred, extra={"event.action": "gradient", "logrite.target": target, "logrite.y_pred": y_pred})
         return -target / (1 + np.exp(target * y_pred))
 
 

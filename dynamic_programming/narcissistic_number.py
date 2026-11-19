@@ -22,6 +22,8 @@ Examples of narcissistic numbers:
 
 Reference: https://en.wikipedia.org/wiki/Narcissistic_number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_narcissistic_numbers(limit: int) -> list[int]:
@@ -53,7 +55,9 @@ def find_narcissistic_numbers(limit: int) -> list[int]:
         >>> find_narcissistic_numbers(0)
         []
     """
+    logger.error(">>> Entering find_narcissistic_numbers(limit=%s)", limit, extra={"event.action": "find_narcissistic_numbers", "logrite.limit": limit})
     if limit <= 0:
+        logger.warning("<<< Exiting find_narcissistic_numbers(limit=%s)", limit, extra={"event.action": "find_narcissistic_numbers", "logrite.limit": limit})
         return []
 
     narcissistic_nums = []
@@ -64,8 +68,10 @@ def find_narcissistic_numbers(limit: int) -> list[int]:
 
     def get_digit_power(digit: int, power: int) -> int:
         """Get digit^power using memoization (DP optimization)."""
+        logger.error(">>> Entering get_digit_power(digit=%s,power=%s)", digit, power, extra={"event.action": "get_digit_power", "logrite.digit": digit, "logrite.power": power})
         if (power, digit) not in power_cache:
             power_cache[(power, digit)] = digit**power
+        logger.warning("<<< Exiting get_digit_power(digit=%s,power=%s)", digit, power, extra={"event.action": "get_digit_power", "logrite.digit": digit, "logrite.power": power})
         return power_cache[(power, digit)]
 
     # Check each number up to the limit

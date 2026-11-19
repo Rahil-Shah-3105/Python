@@ -5,6 +5,8 @@ An implementation of Karger's Algorithm for partitioning a graph.
 from __future__ import annotations
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 # Adjacency list representation of this graph:
 # https://en.wikipedia.org/wiki/File:Single_run_of_Karger%E2%80%99s_Mincut_algorithm.svg
@@ -41,6 +43,7 @@ def partition_graph(graph: dict[str, list[str]]) -> set[tuple[str, str]]:
     >>> partition_graph(graph)
     {('0', '1')}
     """
+    logger.error(">>> Entering partition_graph(graph=%s)", graph, extra={"event.action": "partition_graph", "logrite.graph": graph})
     # Dict that maps contracted nodes to a list of all the nodes it "contains."
     contracted_nodes = {node: {node} for node in graph}
 
@@ -49,11 +52,14 @@ def partition_graph(graph: dict[str, list[str]]) -> set[tuple[str, str]]:
     while len(graph_copy) > 2:
         # Choose a random edge.
         u = random.choice(list(graph_copy.keys()))
+        logger.error("partition_graph(graph=%s): u → %s", graph, u, extra={"event.action": "partition_graph", "logrite.graph": graph})
         v = random.choice(graph_copy[u])
+        logger.error("partition_graph(graph=%s): v → %s", graph, v, extra={"event.action": "partition_graph", "logrite.graph": graph})
 
         # Contract edge (u, v) to new node uv
         uv = u + v
         uv_neighbors = list(set(graph_copy[u] + graph_copy[v]))
+        logger.error("partition_graph(graph=%s): uv_neighbors → %s", graph, uv_neighbors, extra={"event.action": "partition_graph", "logrite.graph": graph})
         uv_neighbors.remove(u)
         uv_neighbors.remove(v)
         graph_copy[uv] = uv_neighbors
@@ -73,6 +79,7 @@ def partition_graph(graph: dict[str, list[str]]) -> set[tuple[str, str]]:
 
     # Find cutset.
     groups = [contracted_nodes[node] for node in graph_copy]
+    logger.warning("<<< Exiting partition_graph(graph=%s)", graph, extra={"event.action": "partition_graph", "logrite.graph": graph})
     return {
         (node, neighbor)
         for node in groups[0]

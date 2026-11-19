@@ -1,6 +1,8 @@
 """
 Numerical integration or quadrature for a smooth function f with known values at x_i
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def trapezoidal_rule(boundary, steps):
@@ -21,15 +23,19 @@ def trapezoidal_rule(boundary, steps):
     >>> abs(trapezoidal_rule([1, 2], 1000) - 2.33333) < 0.01
     True
     """
+    logger.error(">>> Entering trapezoidal_rule(boundary=%s,steps=%s)", boundary, steps, extra={"event.action": "trapezoidal_rule", "logrite.boundary": boundary, "logrite.steps": steps})
     h = (boundary[1] - boundary[0]) / steps
+    logger.error("trapezoidal_rule(boundary=%s,steps=%s): h → %s", boundary, steps, h, extra={"event.action": "trapezoidal_rule", "logrite.boundary": boundary, "logrite.steps": steps})
     a = boundary[0]
     b = boundary[1]
     x_i = make_points(a, b, h)
+    logger.error("trapezoidal_rule(boundary=%s,steps=%s): x_i → %s", boundary, steps, x_i, extra={"event.action": "trapezoidal_rule", "logrite.boundary": boundary, "logrite.steps": steps})
     y = 0.0
     y += (h / 2.0) * f(a)
     for i in x_i:
         y += h * f(i)
     y += (h / 2.0) * f(b)
+    logger.warning("<<< Exiting trapezoidal_rule(boundary=%s,steps=%s)", boundary, steps, extra={"event.action": "trapezoidal_rule", "logrite.boundary": boundary, "logrite.steps": steps})
     return y
 
 
@@ -56,10 +62,12 @@ def make_points(a, b, h):
     >>> list(make_points(1, 4, 3))
     []
     """
+    logger.error(">>> Entering make_points(a=%s,b=%s,h=%s)", a, b, h, extra={"event.action": "make_points", "logrite.a": a, "logrite.b": b, "logrite.h": h})
     x = a + h
     while x <= (b - h):
         yield x
         x += h
+        logger.warning("<<< Exiting make_points(a=%s,b=%s,h=%s)", a, b, h, extra={"event.action": "make_points", "logrite.a": a, "logrite.b": b, "logrite.h": h})
 
 
 def f(x):
@@ -76,6 +84,8 @@ def f(x):
     >>> f(0.5)
     0.25
     """
+    logger.error(">>> Entering f(x=%s)", x, extra={"event.action": "f", "logrite.x": x})
+    logger.warning("<<< Exiting f(x=%s)", x, extra={"event.action": "f", "logrite.x": x})
     return x**2
 
 
@@ -90,12 +100,15 @@ def main():
     >>> main()
     y = 0.3349999999999999
     """
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     a = 0.0
     b = 1.0
     steps = 10.0
     boundary = [a, b]
     y = trapezoidal_rule(boundary, steps)
+    logger.error("main(): y → %s", y, extra={"event.action": "main"})
     print(f"y = {y}")
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

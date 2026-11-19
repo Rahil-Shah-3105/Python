@@ -8,6 +8,8 @@ python3 -m doctest -v merge_sort.py
 For manual testing run:
 python merge_sort.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def merge_sort(collection: list) -> list:
@@ -28,7 +30,9 @@ def merge_sort(collection: list) -> list:
     >>> merge_sort([-2, -5, -45])
     [-45, -5, -2]
     """
+    logger.error(">>> Entering merge_sort(collection=%s)", collection, extra={"event.action": "merge_sort", "logrite.collection": collection})
 
+    logger.warning("<<< Exiting merge_sort(collection=%s)", collection, extra={"event.action": "merge_sort", "logrite.collection": collection})
     def merge(left: list, right: list) -> list:
         """
         Merge two sorted lists into a single sorted list.
@@ -37,11 +41,14 @@ def merge_sort(collection: list) -> list:
         :param right: Right collection
         :return: Merged result
         """
+        logger.error(">>> Entering merge(left=%s,right=%s)", left, right, extra={"event.action": "merge", "logrite.left": left, "logrite.right": right})
         result = []
+        logger.error("merge(left=%s,right=%s): result → %s", left, right, result, extra={"event.action": "merge", "logrite.left": left, "logrite.right": right})
         while left and right:
             result.append(left.pop(0) if left[0] <= right[0] else right.pop(0))
         result.extend(left)
         result.extend(right)
+        logger.warning("<<< Exiting merge(left=%s,right=%s)", left, right, extra={"event.action": "merge", "logrite.left": left, "logrite.right": right})
         return result
 
     if len(collection) <= 1:

@@ -11,6 +11,8 @@ from __future__ import annotations
 
 from sys import maxsize
 from typing import TypeVar
+import logging
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
 
@@ -24,6 +26,8 @@ def get_parent_position(position: int) -> int:
     >>> get_parent_position(2)
     0
     """
+    logger.error(">>> Entering get_parent_position(position=%s)", position, extra={"event.action": "get_parent_position", "logrite.position": position})
+    logger.warning("<<< Exiting get_parent_position(position=%s)", position, extra={"event.action": "get_parent_position", "logrite.position": position})
     return (position - 1) // 2
 
 
@@ -34,6 +38,8 @@ def get_child_left_position(position: int) -> int:
     >>> get_child_left_position(0)
     1
     """
+    logger.error(">>> Entering get_child_left_position(position=%s)", position, extra={"event.action": "get_child_left_position", "logrite.position": position})
+    logger.warning("<<< Exiting get_child_left_position(position=%s)", position, extra={"event.action": "get_child_left_position", "logrite.position": position})
     return (2 * position) + 1
 
 
@@ -44,6 +50,8 @@ def get_child_right_position(position: int) -> int:
     >>> get_child_right_position(0)
     2
     """
+    logger.error(">>> Entering get_child_right_position(position=%s)", position, extra={"event.action": "get_child_right_position", "logrite.position": position})
+    logger.warning("<<< Exiting get_child_right_position(position=%s)", position, extra={"event.action": "get_child_right_position", "logrite.position": position})
     return (2 * position) + 2
 
 
@@ -84,28 +92,39 @@ class MinPriorityQueue[T]:
     """
 
     def __init__(self) -> None:
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
         self.heap: list[tuple[T, int]] = []
         self.position_map: dict[T, int] = {}
         self.elements: int = 0
+        logger.warning("<<< Exiting __init__()", extra={"event.action": "__init__"})
 
     def __len__(self) -> int:
+        logger.error(">>> Entering __len__()", extra={"event.action": "__len__"})
+        logger.warning("<<< Exiting __len__()", extra={"event.action": "__len__"})
         return self.elements
 
     def __repr__(self) -> str:
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return str(self.heap)
 
     def is_empty(self) -> bool:
+        logger.error(">>> Entering is_empty()", extra={"event.action": "is_empty"})
         # Check if the priority queue is empty
+        logger.warning("<<< Exiting is_empty()", extra={"event.action": "is_empty"})
         return self.elements == 0
 
     def push(self, elem: T, weight: int) -> None:
+        logger.error(">>> Entering push(elem=%s,weight=%s)", elem, weight, extra={"event.action": "push", "logrite.elem": elem, "logrite.weight": weight})
         # Add an element with given priority to the queue
         self.heap.append((elem, weight))
         self.position_map[elem] = self.elements
         self.elements += 1
         self._bubble_up(elem)
+        logger.warning("<<< Exiting push(elem=%s,weight=%s)", elem, weight, extra={"event.action": "push", "logrite.elem": elem, "logrite.weight": weight})
 
     def extract_min(self) -> T:
+        logger.error(">>> Entering extract_min()", extra={"event.action": "extract_min"})
         # Remove and return the element with lowest weight (highest priority)
         if self.elements > 1:
             self._swap_nodes(0, self.elements - 1)
@@ -115,14 +134,17 @@ class MinPriorityQueue[T]:
         if self.elements > 0:
             bubble_down_elem, _ = self.heap[0]
             self._bubble_down(bubble_down_elem)
+        logger.warning("<<< Exiting extract_min()", extra={"event.action": "extract_min"})
         return elem
 
     def update_key(self, elem: T, weight: int) -> None:
+        logger.error(">>> Entering update_key(elem=%s,weight=%s)", elem, weight, extra={"event.action": "update_key", "logrite.elem": elem, "logrite.weight": weight})
         # Update the weight of the given key
         position = self.position_map[elem]
         self.heap[position] = (elem, weight)
         if position > 0:
             parent_position = get_parent_position(position)
+            logger.error("update_key(elem=%s,weight=%s): parent_position → %s", elem, weight, parent_position, extra={"event.action": "update_key", "logrite.elem": elem, "logrite.weight": weight})
             _, parent_weight = self.heap[parent_position]
             if parent_weight > weight:
                 self._bubble_up(elem)
@@ -130,8 +152,10 @@ class MinPriorityQueue[T]:
                 self._bubble_down(elem)
         else:
             self._bubble_down(elem)
+            logger.warning("<<< Exiting update_key(elem=%s,weight=%s)", elem, weight, extra={"event.action": "update_key", "logrite.elem": elem, "logrite.weight": weight})
 
     def _bubble_up(self, elem: T) -> None:
+        logger.error(">>> Entering _bubble_up(elem=%s)", elem, extra={"event.action": "_bubble_up", "logrite.elem": elem})
         # Place a node at the proper position (upward movement) [to be used internally
         # only]
         curr_pos = self.position_map[elem]
@@ -143,15 +167,19 @@ class MinPriorityQueue[T]:
         if parent_weight > weight:
             self._swap_nodes(parent_position, curr_pos)
             return self._bubble_up(elem)
+        logger.warning("<<< Exiting _bubble_up(elem=%s)", elem, extra={"event.action": "_bubble_up", "logrite.elem": elem})
         return None
 
     def _bubble_down(self, elem: T) -> None:
+        logger.error(">>> Entering _bubble_down(elem=%s)", elem, extra={"event.action": "_bubble_down", "logrite.elem": elem})
         # Place a node at the proper position (downward movement) [to be used
         # internally only]
         curr_pos = self.position_map[elem]
         _, weight = self.heap[curr_pos]
         child_left_position = get_child_left_position(curr_pos)
+        logger.error("_bubble_down(elem=%s): child_left_position → %s", elem, child_left_position, extra={"event.action": "_bubble_down", "logrite.elem": elem})
         child_right_position = get_child_right_position(curr_pos)
+        logger.error("_bubble_down(elem=%s): child_right_position → %s", elem, child_right_position, extra={"event.action": "_bubble_down", "logrite.elem": elem})
         if child_left_position < self.elements and child_right_position < self.elements:
             _, child_left_weight = self.heap[child_left_position]
             _, child_right_weight = self.heap[child_right_position]
@@ -170,9 +198,11 @@ class MinPriorityQueue[T]:
             if child_right_weight < weight:
                 self._swap_nodes(child_right_position, curr_pos)
                 return self._bubble_down(elem)
+        logger.warning("<<< Exiting _bubble_down(elem=%s)", elem, extra={"event.action": "_bubble_down", "logrite.elem": elem})
         return None
 
     def _swap_nodes(self, node1_pos: int, node2_pos: int) -> None:
+        logger.error(">>> Entering _swap_nodes(node1_pos=%s,node2_pos=%s)", node1_pos, node2_pos, extra={"event.action": "_swap_nodes", "logrite.node1_pos": node1_pos, "logrite.node2_pos": node2_pos})
         # Swap the nodes at the given positions
         node1_elem = self.heap[node1_pos][0]
         node2_elem = self.heap[node2_pos][0]
@@ -182,6 +212,7 @@ class MinPriorityQueue[T]:
         )
         self.position_map[node1_elem] = node2_pos
         self.position_map[node2_elem] = node1_pos
+        logger.warning("<<< Exiting _swap_nodes(node1_pos=%s,node2_pos=%s)", node1_pos, node2_pos, extra={"event.action": "_swap_nodes", "logrite.node1_pos": node1_pos, "logrite.node2_pos": node2_pos})
 
 
 class GraphUndirectedWeighted[T]:
@@ -204,17 +235,21 @@ class GraphUndirectedWeighted[T]:
         return self.nodes
 
     def add_node(self, node: T) -> None:
+        logger.error(">>> Entering add_node(node=%s)", node, extra={"event.action": "add_node", "logrite.node": node})
         # Add a node in the graph if it is not in the graph
         if node not in self.connections:
             self.connections[node] = {}
             self.nodes += 1
+            logger.warning("<<< Exiting add_node(node=%s)", node, extra={"event.action": "add_node", "logrite.node": node})
 
     def add_edge(self, node1: T, node2: T, weight: int) -> None:
+        logger.error(">>> Entering add_edge(node1=%s,node2=%s,weight=%s)", node1, node2, weight, extra={"event.action": "add_edge", "logrite.node1": node1, "logrite.node2": node2, "logrite.weight": weight})
         # Add an edge between 2 nodes in the graph
         self.add_node(node1)
         self.add_node(node2)
         self.connections[node1][node2] = weight
         self.connections[node2][node1] = weight
+        logger.warning("<<< Exiting add_edge(node1=%s,node2=%s,weight=%s)", node1, node2, weight, extra={"event.action": "add_edge", "logrite.node1": node1, "logrite.node2": node2, "logrite.weight": weight})
 
 
 def prims_algo[T](

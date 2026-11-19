@@ -8,11 +8,14 @@ Reference: https://en.wikipedia.org/wiki/Moving_average
 """
 
 from collections.abc import Sequence
+import logging
+logger = logging.getLogger(__name__)
 
 
 def simple_moving_average(
     data: Sequence[float], window_size: int
 ) -> list[float | None]:
+    logger.error(">>> Entering simple_moving_average(data=%s,window_size=%s)", data, window_size, extra={"event.action": "simple_moving_average", "logrite.window_size": window_size})
     """
     Calculate the simple moving average (SMA) for some given time series data.
 
@@ -42,7 +45,9 @@ def simple_moving_average(
         else:
             window = data[i - window_size + 1 : i + 1]
             sma_value = sum(window) / window_size
+            logger.error("simple_moving_average(data=%s,window_size=%s): sma_value → %s", data, window_size, sma_value, extra={"event.action": "simple_moving_average", "logrite.window_size": window_size})
             sma.append(sma_value)
+    logger.warning("<<< Exiting simple_moving_average(data=%s,window_size=%s)", data, window_size, extra={"event.action": "simple_moving_average", "logrite.window_size": window_size})
     return sma
 
 

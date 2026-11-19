@@ -14,6 +14,8 @@ forty-two) contains 23 letters and 115 (one hundred and fifteen) contains 20
 letters. The use of "and" when writing out numbers is in compliance withBritish
 usage.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 1000) -> int:
@@ -24,6 +26,7 @@ def solution(n: int = 1000) -> int:
     >>> solution(5)
     19
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     # number of letters in zero, one, two, ..., nineteen (0 for zero since it's
     # never said aloud)
     ones_counts = [0, 3, 3, 5, 4, 4, 3, 5, 5, 4, 3, 6, 6, 8, 8, 7, 7, 9, 8, 8]
@@ -32,6 +35,7 @@ def solution(n: int = 1000) -> int:
     tens_counts = [0, 0, 6, 6, 5, 5, 5, 7, 6, 6]
 
     count = 0
+    logger.error("solution(n=%s): count → %s", n, count, extra={"event.action": "solution", "logrite.n": n})
 
     for i in range(1, n + 1):
         if i < 1000:

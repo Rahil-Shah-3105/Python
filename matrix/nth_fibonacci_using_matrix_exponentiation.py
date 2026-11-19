@@ -14,11 +14,15 @@ Converting to matrix,
 So we just need the n times multiplication of the matrix [1,1],[1,0]].
 We can decrease the n times multiplication by following the divide and conquer approach.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def multiply(matrix_a: list[list[int]], matrix_b: list[list[int]]) -> list[list[int]]:
+    logger.error(">>> Entering multiply(matrix_a=%s,matrix_b=%s)", matrix_a, matrix_b, extra={"event.action": "multiply", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
     matrix_c = []
     n = len(matrix_a)
+    logger.error("multiply(matrix_a=%s,matrix_b=%s): n → %s", matrix_a, matrix_b, n, extra={"event.action": "multiply", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
     for i in range(n):
         list_1 = []
         for j in range(n):
@@ -27,10 +31,13 @@ def multiply(matrix_a: list[list[int]], matrix_b: list[list[int]]) -> list[list[
                 val = val + matrix_a[i][k] * matrix_b[k][j]
             list_1.append(val)
         matrix_c.append(list_1)
+    logger.warning("<<< Exiting multiply(matrix_a=%s,matrix_b=%s)", matrix_a, matrix_b, extra={"event.action": "multiply", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
     return matrix_c
 
 
 def identity(n: int) -> list[list[int]]:
+    logger.error(">>> Entering identity(n=%s)", n, extra={"event.action": "identity", "logrite.n": n})
+    logger.warning("<<< Exiting identity(n=%s)", n, extra={"event.action": "identity", "logrite.n": n})
     return [[int(row == column) for column in range(n)] for row in range(n)]
 
 
@@ -41,6 +48,7 @@ def nth_fibonacci_matrix(n: int) -> int:
     >>> nth_fibonacci_matrix(-100)
     -100
     """
+    logger.error(">>> Entering nth_fibonacci_matrix(n=%s)", n, extra={"event.action": "nth_fibonacci_matrix", "logrite.n": n})
     if n <= 1:
         return n
     res_matrix = identity(2)
@@ -51,6 +59,7 @@ def nth_fibonacci_matrix(n: int) -> int:
             res_matrix = multiply(res_matrix, fibonacci_matrix)
         fibonacci_matrix = multiply(fibonacci_matrix, fibonacci_matrix)
         n = int(n / 2)
+    logger.warning("<<< Exiting nth_fibonacci_matrix(n=%s)", n, extra={"event.action": "nth_fibonacci_matrix", "logrite.n": n})
     return res_matrix[0][0]
 
 
@@ -61,23 +70,28 @@ def nth_fibonacci_bruteforce(n: int) -> int:
     >>> nth_fibonacci_bruteforce(-100)
     -100
     """
+    logger.error(">>> Entering nth_fibonacci_bruteforce(n=%s)", n, extra={"event.action": "nth_fibonacci_bruteforce", "logrite.n": n})
     if n <= 1:
         return n
     fib0 = 0
     fib1 = 1
     for _ in range(2, n + 1):
         fib0, fib1 = fib1, fib0 + fib1
+    logger.warning("<<< Exiting nth_fibonacci_bruteforce(n=%s)", n, extra={"event.action": "nth_fibonacci_bruteforce", "logrite.n": n})
     return fib1
 
 
 def main() -> None:
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     for ordinal in "0th 1st 2nd 3rd 10th 100th 1000th".split():
         n = int("".join(c for c in ordinal if c in "0123456789"))  # 1000th --> 1000
+        logger.error("main(): n → %s", n, extra={"event.action": "main"})
         print(
             f"{ordinal} fibonacci number using matrix exponentiation is "
             f"{nth_fibonacci_matrix(n)} and using bruteforce is "
             f"{nth_fibonacci_bruteforce(n)}\n"
         )
+        logger.warning("<<< Exiting main()", extra={"event.action": "main"})
     # from timeit import timeit
     # print(timeit("nth_fibonacci_matrix(1000000)",
     #              "from main import nth_fibonacci_matrix", number=5))

@@ -22,6 +22,8 @@ python3 -m doctest -v dutch_national_flag_sort.py
 For manual testing run:
 python dnf_sort.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 # Python program to sort a sequence containing only 0, 1 and 2 in a single pass.
 red = 0  # The first color of the flag.
@@ -65,6 +67,7 @@ def dutch_national_flag_sort(sequence: list) -> list:
       ...
     ValueError: The elements inside the sequence must contains only (0, 1, 2) values
     """
+    logger.error(">>> Entering dutch_national_flag_sort(sequence=%s)", sequence, extra={"event.action": "dutch_national_flag_sort", "logrite.sequence": sequence})
     if not sequence:
         return []
     if len(sequence) == 1:
@@ -85,6 +88,7 @@ def dutch_national_flag_sort(sequence: list) -> list:
         else:
             msg = f"The elements inside the sequence must contains only {colors} values"
             raise ValueError(msg)
+    logger.warning("<<< Exiting dutch_national_flag_sort(sequence=%s)", sequence, extra={"event.action": "dutch_national_flag_sort", "logrite.sequence": sequence})
     return sequence
 
 

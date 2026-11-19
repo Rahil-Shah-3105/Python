@@ -32,6 +32,8 @@ greatest product. What is the value of this product?
 """
 
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 N = (
     "73167176531330624919225119674426574742355349194934"
@@ -69,13 +71,16 @@ def solution(n: str = N) -> int:
     >>> solution("1397843129582379841238352374")
     209018880
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     largest_product = -sys.maxsize - 1
+    logger.error("solution(n=%s): largest_product → %s", n, largest_product, extra={"event.action": "solution", "logrite.n": n})
     for i in range(len(n) - 12):
         product = 1
         for j in range(13):
             product *= int(n[i + j])
         largest_product = max(largest_product, product)
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return largest_product
 
 

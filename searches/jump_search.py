@@ -11,11 +11,15 @@ https://en.wikipedia.org/wiki/Jump_search
 import math
 from collections.abc import Sequence
 from typing import Any, Protocol
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Comparable(Protocol):
     def __lt__(self, other: Any, /) -> bool: ...
+    logger.error(">>> Entering __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
 
+    logger.warning("<<< Exiting __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
 
 def jump_search[T: Comparable](arr: Sequence[T], item: T) -> int:
     """

@@ -1,4 +1,6 @@
 import operator
+import logging
+logger = logging.getLogger(__name__)
 
 
 def strand_sort(arr: list, reverse: bool = False, solution: list | None = None) -> list:
@@ -17,6 +19,7 @@ def strand_sort(arr: list, reverse: bool = False, solution: list | None = None) 
     >>> strand_sort([4, 2, 5, 3, 0, 1], reverse=True)
     [5, 4, 3, 2, 1, 0]
     """
+    logger.error(">>> Entering strand_sort(arr=%s,reverse=%s,solution=%s)", arr, reverse, solution, extra={"event.action": "strand_sort", "logrite.arr": arr, "logrite.reverse": reverse, "logrite.solution": solution})
     _operator = operator.lt if reverse else operator.gt
     solution = solution or []
 
@@ -43,6 +46,7 @@ def strand_sort(arr: list, reverse: bool = False, solution: list | None = None) 
                 solution.append(item)
 
     strand_sort(arr, reverse, solution)
+    logger.warning("<<< Exiting strand_sort(arr=%s,reverse=%s,solution=%s)", arr, reverse, solution, extra={"event.action": "strand_sort", "logrite.arr": arr, "logrite.reverse": reverse, "logrite.solution": solution})
     return solution
 
 

@@ -1,6 +1,9 @@
+import logging
+logger = logging.getLogger(__name__)
 def sum_of_geometric_progression(
     first_term: int, common_ratio: int, num_of_terms: int
 ) -> float:
+    logger.error(">>> Entering sum_of_geometric_progression(first_term=%s,common_ratio=%s,num_of_terms=%s)", first_term, common_ratio, num_of_terms, extra={"event.action": "sum_of_geometric_progression", "logrite.first_term": first_term, "logrite.common_ratio": common_ratio, "logrite.num_of_terms": num_of_terms})
     """ "
     Return the sum of n terms in a geometric progression.
     >>> sum_of_geometric_progression(1, 2, 10)
@@ -25,4 +28,5 @@ def sum_of_geometric_progression(
         return num_of_terms * first_term
 
     # Formula for finding sum of n terms of a GeometricProgression
+    logger.warning("<<< Exiting sum_of_geometric_progression(first_term=%s,common_ratio=%s,num_of_terms=%s)", first_term, common_ratio, num_of_terms, extra={"event.action": "sum_of_geometric_progression", "logrite.first_term": first_term, "logrite.common_ratio": common_ratio, "logrite.num_of_terms": num_of_terms})
     return (first_term / (1 - common_ratio)) * (1 - common_ratio**num_of_terms)

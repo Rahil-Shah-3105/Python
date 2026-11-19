@@ -7,6 +7,8 @@ bitmask are set
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def list_of_submasks(mask: int) -> list[int]:
@@ -36,7 +38,9 @@ def list_of_submasks(mask: int) -> list[int]:
     AssertionError: mask needs to be positive integer, your input 0
 
     """
+    logger.error(">>> Entering list_of_submasks(mask=%s)", mask, extra={"event.action": "list_of_submasks", "logrite.mask": mask})
 
+    logger.warning("<<< Exiting list_of_submasks(mask=%s)", mask, extra={"event.action": "list_of_submasks", "logrite.mask": mask})
     assert isinstance(mask, int) and mask > 0, (
         f"mask needs to be positive integer, your input {mask}"
     )
@@ -48,6 +52,7 @@ def list_of_submasks(mask: int) -> list[int]:
     """
     all_submasks = []
     submask = mask
+    logger.error("list_of_submasks(mask=%s): submask → %s", mask, submask, extra={"event.action": "list_of_submasks", "logrite.mask": mask})
 
     while submask:
         all_submasks.append(submask)

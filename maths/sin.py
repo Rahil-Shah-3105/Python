@@ -12,11 +12,14 @@ Source:
 """
 
 from math import factorial, radians
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sin(
     angle_in_degrees: float, accuracy: int = 18, rounded_values_count: int = 10
 ) -> float:
+    logger.error(">>> Entering sin(angle_in_degrees=%s,accuracy=%s,rounded_values_count=%s)", angle_in_degrees, accuracy, rounded_values_count, extra={"event.action": "sin", "logrite.angle_in_degrees": angle_in_degrees, "logrite.accuracy": accuracy, "logrite.rounded_values_count": rounded_values_count})
     """
     Implement sin function.
 

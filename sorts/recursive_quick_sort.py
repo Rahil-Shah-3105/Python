@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def quick_sort(data: list) -> list:
     """
     >>> for data in ([2, 1, 0], [2.2, 1.1, 0], "quick_sort"):
@@ -6,9 +8,11 @@ def quick_sort(data: list) -> list:
     True
     True
     """
+    logger.error(">>> Entering quick_sort(data=%s)", data, extra={"event.action": "quick_sort"})
     if len(data) <= 1:
         return data
     else:
+        logger.warning("<<< Exiting quick_sort(data=%s)", data, extra={"event.action": "quick_sort"})
         return [
             *quick_sort([e for e in data[1:] if e <= data[0]]),
             data[0],

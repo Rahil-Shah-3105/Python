@@ -18,6 +18,8 @@ min(closest_pair_dis, closest_in_strip) would be the final answer.
 
 Time complexity: O(n * log n)
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def euclidean_distance_sqr(point1, point2):
@@ -25,6 +27,8 @@ def euclidean_distance_sqr(point1, point2):
     >>> euclidean_distance_sqr([1,2],[2,4])
     5
     """
+    logger.error(">>> Entering euclidean_distance_sqr(point1=%s,point2=%s)", point1, point2, extra={"event.action": "euclidean_distance_sqr", "logrite.point1": point1, "logrite.point2": point2})
+    logger.warning("<<< Exiting euclidean_distance_sqr(point1=%s,point2=%s)", point1, point2, extra={"event.action": "euclidean_distance_sqr", "logrite.point1": point1, "logrite.point2": point2})
     return (point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2
 
 
@@ -33,6 +37,8 @@ def column_based_sort(array, column=0):
     >>> column_based_sort([(5, 1), (4, 2), (3, 0)], 1)
     [(3, 0), (5, 1), (4, 2)]
     """
+    logger.error(">>> Entering column_based_sort(array=%s,column=%s)", array, column, extra={"event.action": "column_based_sort", "logrite.array": array, "logrite.column": column})
+    logger.warning("<<< Exiting column_based_sort(array=%s,column=%s)", array, column, extra={"event.action": "column_based_sort", "logrite.array": array, "logrite.column": column})
     return sorted(array, key=lambda x: x[column])
 
 
@@ -50,11 +56,15 @@ def dis_between_closest_pair(points, points_counts, min_dis=float("inf")):
     5
 
     """
+    logger.error(">>> Entering dis_between_closest_pair(points=%s,points_counts=%s,min_dis=%s)", points, points_counts, min_dis, extra={"event.action": "dis_between_closest_pair", "logrite.points": points, "logrite.points_counts": points_counts, "logrite.min_dis": min_dis})
 
     for i in range(points_counts - 1):
         for j in range(i + 1, points_counts):
             current_dis = euclidean_distance_sqr(points[i], points[j])
+            logger.error("dis_between_closest_pair(points=%s,points_counts=%s,min_dis=%s): current_dis → %s", points, points_counts, min_dis, current_dis, extra={"event.action": "dis_between_closest_pair", "logrite.points": points, "logrite.points_counts": points_counts, "logrite.min_dis": min_dis})
             min_dis = min(min_dis, current_dis)
+    logger.error("dis_between_closest_pair(points=%s,points_counts=%s,min_dis=%s): min_dis → %s", points, points_counts, min_dis, min_dis, extra={"event.action": "dis_between_closest_pair", "logrite.points": points, "logrite.points_counts": points_counts, "logrite.min_dis": min_dis})
+    logger.warning("<<< Exiting dis_between_closest_pair(points=%s,points_counts=%s,min_dis=%s)", points, points_counts, min_dis, extra={"event.action": "dis_between_closest_pair", "logrite.points": points, "logrite.points_counts": points_counts, "logrite.min_dis": min_dis})
     return min_dis
 
 
@@ -71,11 +81,15 @@ def dis_between_closest_in_strip(points, points_counts, min_dis=float("inf")):
     >>> dis_between_closest_in_strip([[1,2],[2,4],[5,7],[8,9],[11,0]],5)
     85
     """
+    logger.error(">>> Entering dis_between_closest_in_strip(points=%s,points_counts=%s,min_dis=%s)", points, points_counts, min_dis, extra={"event.action": "dis_between_closest_in_strip", "logrite.points": points, "logrite.points_counts": points_counts, "logrite.min_dis": min_dis})
 
     for i in range(min(6, points_counts - 1), points_counts):
         for j in range(max(0, i - 6), i):
             current_dis = euclidean_distance_sqr(points[i], points[j])
+            logger.error("dis_between_closest_in_strip(points=%s,points_counts=%s,min_dis=%s): current_dis → %s", points, points_counts, min_dis, current_dis, extra={"event.action": "dis_between_closest_in_strip", "logrite.points": points, "logrite.points_counts": points_counts, "logrite.min_dis": min_dis})
             min_dis = min(min_dis, current_dis)
+    logger.error("dis_between_closest_in_strip(points=%s,points_counts=%s,min_dis=%s): min_dis → %s", points, points_counts, min_dis, min_dis, extra={"event.action": "dis_between_closest_in_strip", "logrite.points": points, "logrite.points_counts": points_counts, "logrite.min_dis": min_dis})
+    logger.warning("<<< Exiting dis_between_closest_in_strip(points=%s,points_counts=%s,min_dis=%s)", points, points_counts, min_dis, extra={"event.action": "dis_between_closest_in_strip", "logrite.points": points, "logrite.points_counts": points_counts, "logrite.min_dis": min_dis})
     return min_dis
 
 
@@ -91,6 +105,7 @@ def closest_pair_of_points_sqr(points_sorted_on_x, points_sorted_on_y, points_co
     >>> closest_pair_of_points_sqr([(1, 2), (3, 4)], [(5, 6), (7, 8)], 2)
     8
     """
+    logger.error(">>> Entering closest_pair_of_points_sqr(points_sorted_on_x=%s,points_sorted_on_y=%s,points_counts=%s)", points_sorted_on_x, points_sorted_on_y, points_counts, extra={"event.action": "closest_pair_of_points_sqr", "logrite.points_sorted_on_x": points_sorted_on_x, "logrite.points_sorted_on_y": points_sorted_on_y, "logrite.points_counts": points_counts})
 
     # base case
     if points_counts <= 3:
@@ -119,6 +134,7 @@ def closest_pair_of_points_sqr(points_sorted_on_x, points_sorted_on_y, points_co
     closest_in_strip = dis_between_closest_in_strip(
         cross_strip, len(cross_strip), closest_pair_dis
     )
+    logger.warning("<<< Exiting closest_pair_of_points_sqr(points_sorted_on_x=%s,points_sorted_on_y=%s,points_counts=%s)", points_sorted_on_x, points_sorted_on_y, points_counts, extra={"event.action": "closest_pair_of_points_sqr", "logrite.points_sorted_on_x": points_sorted_on_x, "logrite.points_sorted_on_y": points_sorted_on_y, "logrite.points_counts": points_counts})
     return min(closest_pair_dis, closest_in_strip)
 
 
@@ -127,11 +143,15 @@ def closest_pair_of_points(points, points_counts):
     >>> closest_pair_of_points([(2, 3), (12, 30)], len([(2, 3), (12, 30)]))
     28.792360097775937
     """
+    logger.error(">>> Entering closest_pair_of_points(points=%s,points_counts=%s)", points, points_counts, extra={"event.action": "closest_pair_of_points", "logrite.points": points, "logrite.points_counts": points_counts})
     points_sorted_on_x = column_based_sort(points, column=0)
+    logger.warning("<<< Exiting closest_pair_of_points(points=%s,points_counts=%s)", points, points_counts, extra={"event.action": "closest_pair_of_points", "logrite.points": points, "logrite.points_counts": points_counts})
+    logger.error("closest_pair_of_points(points=%s,points_counts=%s): points_sorted_on_x → %s", points, points_counts, points_sorted_on_x, extra={"event.action": "closest_pair_of_points", "logrite.points": points, "logrite.points_counts": points_counts})
     points_sorted_on_y = column_based_sort(points, column=1)
     return (
         closest_pair_of_points_sqr(
             points_sorted_on_x, points_sorted_on_y, points_counts
+    logger.error("closest_pair_of_points(points=%s,points_counts=%s): points_sorted_on_y → %s", points, points_counts, points_sorted_on_y, extra={"event.action": "closest_pair_of_points", "logrite.points": points, "logrite.points_counts": points_counts})
         )
     ) ** 0.5
 

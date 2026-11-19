@@ -7,6 +7,8 @@ Given an integer n, we have to find the nth ugly number.
 For more details, refer this article
 https://www.geeksforgeeks.org/ugly-numbers/
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def ugly_numbers(n: int) -> int:
@@ -25,6 +27,7 @@ def ugly_numbers(n: int) -> int:
         ...
     TypeError: 'float' object cannot be interpreted as an integer
     """
+    logger.error(">>> Entering ugly_numbers(n=%s)", n, extra={"event.action": "ugly_numbers", "logrite.n": n})
     ugly_nums = [1]
 
     i2, i3, i5 = 0, 0, 0
@@ -34,6 +37,7 @@ def ugly_numbers(n: int) -> int:
 
     for _ in range(1, n):
         next_num = min(next_2, next_3, next_5)
+        logger.error("ugly_numbers(n=%s): next_num → %s", n, next_num, extra={"event.action": "ugly_numbers", "logrite.n": n})
         ugly_nums.append(next_num)
         if next_num == next_2:
             i2 += 1
@@ -44,6 +48,7 @@ def ugly_numbers(n: int) -> int:
         if next_num == next_5:
             i5 += 1
             next_5 = ugly_nums[i5] * 5
+    logger.warning("<<< Exiting ugly_numbers(n=%s)", n, extra={"event.action": "ugly_numbers", "logrite.n": n})
     return ugly_nums[-1]
 
 

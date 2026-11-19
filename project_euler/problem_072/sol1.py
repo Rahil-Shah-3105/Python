@@ -22,6 +22,8 @@ Time: 1 sec
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(limit: int = 1_000_000) -> int:
@@ -34,15 +36,19 @@ def solution(limit: int = 1_000_000) -> int:
     >>> solution(1_000)
     304191
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
 
     # generating an array from -1 to limit
     phi = np.arange(-1, limit)
+    logger.error("solution(limit=%s): phi → %s", limit, phi, extra={"event.action": "solution", "logrite.limit": limit})
 
     for i in range(2, limit + 1):
         if phi[i] == i - 1:
             ind = np.arange(2 * i, limit + 1, i)  # indexes for selection
+            logger.error("solution(limit=%s): ind → %s", limit, ind, extra={"event.action": "solution", "logrite.limit": limit})
             phi[ind] -= phi[ind] // i
 
+    logger.warning("<<< Exiting solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     return int(np.sum(phi[2 : limit + 1]))
 
 

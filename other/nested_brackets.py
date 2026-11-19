@@ -12,6 +12,8 @@ For example, the string "()()[()]" is properly nested but "[(()]" is not.
 The function called is_balanced takes as input a string S which is a sequence of
 brackets and returns true if S is nested and false otherwise.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_balanced(s: str) -> bool:
@@ -49,7 +51,9 @@ def is_balanced(s: str) -> bool:
     >>> is_balanced("Life is a bowl of che}{ies.")
     False
     """
+    logger.error(">>> Entering is_balanced(s=%s)", s, extra={"event.action": "is_balanced", "logrite.s": s})
     open_to_closed = {"{": "}", "[": "]", "(": ")"}
+    logger.error("is_balanced(s=%s): open_to_closed → %s", s, open_to_closed, extra={"event.action": "is_balanced", "logrite.s": s})
     stack = []
     for symbol in s:
         if symbol in open_to_closed:
@@ -58,12 +62,16 @@ def is_balanced(s: str) -> bool:
             not stack or open_to_closed[stack.pop()] != symbol
         ):
             return False
+    logger.warning("<<< Exiting is_balanced(s=%s)", s, extra={"event.action": "is_balanced", "logrite.s": s})
     return not stack  # stack should be empty
 
 
 def main():
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     s = input("Enter sequence of brackets: ")
+    logger.error("main(): s → %s", s, extra={"event.action": "main"})
     print(f"'{s}' is {'' if is_balanced(s) else 'not '}balanced.")
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

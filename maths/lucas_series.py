@@ -1,6 +1,8 @@
 """
 https://en.wikipedia.org/wiki/Lucas_number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def recursive_lucas_number(n_th_number: int) -> int:
@@ -19,11 +21,13 @@ def recursive_lucas_number(n_th_number: int) -> int:
         ...
     TypeError: recursive_lucas_number accepts only integer arguments.
     """
+    logger.error(">>> Entering recursive_lucas_number(n_th_number=%s)", n_th_number, extra={"event.action": "recursive_lucas_number", "logrite.n_th_number": n_th_number})
     if not isinstance(n_th_number, int):
         raise TypeError("recursive_lucas_number accepts only integer arguments.")
     if n_th_number == 0:
         return 2
     if n_th_number == 1:
+        logger.warning("<<< Exiting recursive_lucas_number(n_th_number=%s)", n_th_number, extra={"event.action": "recursive_lucas_number", "logrite.n_th_number": n_th_number})
         return 1
 
     return recursive_lucas_number(n_th_number - 1) + recursive_lucas_number(
@@ -47,11 +51,13 @@ def dynamic_lucas_number(n_th_number: int) -> int:
         ...
     TypeError: dynamic_lucas_number accepts only integer arguments.
     """
+    logger.error(">>> Entering dynamic_lucas_number(n_th_number=%s)", n_th_number, extra={"event.action": "dynamic_lucas_number", "logrite.n_th_number": n_th_number})
     if not isinstance(n_th_number, int):
         raise TypeError("dynamic_lucas_number accepts only integer arguments.")
     a, b = 2, 1
     for _ in range(n_th_number):
         a, b = b, a + b
+    logger.warning("<<< Exiting dynamic_lucas_number(n_th_number=%s)", n_th_number, extra={"event.action": "dynamic_lucas_number", "logrite.n_th_number": n_th_number})
     return a
 
 

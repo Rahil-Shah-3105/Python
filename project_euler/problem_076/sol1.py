@@ -14,6 +14,8 @@ It is possible to write five as a sum in exactly six different ways:
 How many different ways can one hundred be written as a sum of at least two
 positive integers?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(m: int = 100) -> int:
@@ -38,7 +40,9 @@ def solution(m: int = 100) -> int:
     >>> solution(1)
     0
     """
+    logger.error(">>> Entering solution(m=%s)", m, extra={"event.action": "solution", "logrite.m": m})
     memo = [[0 for _ in range(m)] for _ in range(m + 1)]
+    logger.error("solution(m=%s): memo → %s", m, memo, extra={"event.action": "solution", "logrite.m": m})
     for i in range(m + 1):
         memo[i][0] = 1
 
@@ -48,6 +52,7 @@ def solution(m: int = 100) -> int:
             if n > k:
                 memo[n][k] += memo[n - k - 1][k]
 
+    logger.warning("<<< Exiting solution(m=%s)", m, extra={"event.action": "solution", "logrite.m": m})
     return memo[m][m - 1] - 1
 
 

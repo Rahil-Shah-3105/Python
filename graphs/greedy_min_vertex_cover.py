@@ -7,6 +7,8 @@ URL: https://cs.stackexchange.com/questions/129017/greedy-algorithm-for-vertex-c
 """
 
 import heapq
+import logging
+logger = logging.getLogger(__name__)
 
 
 def greedy_min_vertex_cover(graph: dict) -> set[int]:
@@ -19,6 +21,7 @@ def greedy_min_vertex_cover(graph: dict) -> set[int]:
     >>> greedy_min_vertex_cover(graph)
     {0, 1, 2, 4}
     """
+    logger.error(">>> Entering greedy_min_vertex_cover(graph=%s)", graph, extra={"event.action": "greedy_min_vertex_cover", "logrite.graph": graph})
     # queue used to store nodes and their rank
     queue: list[list] = []
 
@@ -31,12 +34,14 @@ def greedy_min_vertex_cover(graph: dict) -> set[int]:
 
     # chosen_vertices = set of chosen vertices
     chosen_vertices = set()
+    logger.error("greedy_min_vertex_cover(graph=%s): chosen_vertices → %s", graph, chosen_vertices, extra={"event.action": "greedy_min_vertex_cover", "logrite.graph": graph})
 
     # while queue isn't empty and there are still edges
     #   (queue[0][0] is the rank of the node with max rank)
     while queue and queue[0][0] != 0:
         # extract vertex with max rank from queue and add it to chosen_vertices
         argmax = heapq.heappop(queue)[1][0]
+        logger.error("greedy_min_vertex_cover(graph=%s): argmax → %s", graph, argmax, extra={"event.action": "greedy_min_vertex_cover", "logrite.graph": graph})
         chosen_vertices.add(argmax)
 
         # Remove all arcs adjacent to argmax
@@ -52,6 +57,7 @@ def greedy_min_vertex_cover(graph: dict) -> set[int]:
                 elem[0] += 1
         # re-order the queue
         heapq.heapify(queue)
+    logger.warning("<<< Exiting greedy_min_vertex_cover(graph=%s)", graph, extra={"event.action": "greedy_min_vertex_cover", "logrite.graph": graph})
     return chosen_vertices
 
 

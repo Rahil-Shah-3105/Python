@@ -41,11 +41,14 @@ we update the value of the current element as
 
 dp_array(i,j)=dp_array(dp(i-1,j),dp_array(i-1,j-1),dp_array(i,j-1)) + 1.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def largest_square_area_in_matrix_top_down_approch(
     rows: int, cols: int, mat: list[list[int]]
 ) -> int:
+    logger.error(">>> Entering largest_square_area_in_matrix_top_down_approch(rows=%s,cols=%s,mat=%s)", rows, cols, mat, extra={"event.action": "largest_square_area_in_matrix_top_down_approch", "logrite.rows": rows, "logrite.cols": cols, "logrite.mat": mat})
     """
     Function updates the largest_square_area[0], if recursive call found
     square with maximum area.
@@ -57,8 +60,10 @@ def largest_square_area_in_matrix_top_down_approch(
     >>> largest_square_area_in_matrix_top_down_approch(2, 2, [[0,0], [0,0]])
     0
     """
+    logger.warning("<<< Exiting largest_square_area_in_matrix_top_down_approch(rows=%s,cols=%s,mat=%s)", rows, cols, mat, extra={"event.action": "largest_square_area_in_matrix_top_down_approch", "logrite.rows": rows, "logrite.cols": cols, "logrite.mat": mat})
 
     def update_area_of_max_square(row: int, col: int) -> int:
+        logger.error(">>> Entering update_area_of_max_square(row=%s,col=%s)", row, col, extra={"event.action": "update_area_of_max_square", "logrite.row": row, "logrite.col": col})
         # BASE CASE
         if row >= rows or col >= cols:
             return 0
@@ -72,6 +77,7 @@ def largest_square_area_in_matrix_top_down_approch(
             largest_square_area[0] = max(largest_square_area[0], sub_problem_sol)
             return sub_problem_sol
         else:
+            logger.warning("<<< Exiting update_area_of_max_square(row=%s,col=%s)", row, col, extra={"event.action": "update_area_of_max_square", "logrite.row": row, "logrite.col": col})
             return 0
 
     largest_square_area = [0]
@@ -82,6 +88,7 @@ def largest_square_area_in_matrix_top_down_approch(
 def largest_square_area_in_matrix_top_down_approch_with_dp(
     rows: int, cols: int, mat: list[list[int]]
 ) -> int:
+    logger.error(">>> Entering largest_square_area_in_matrix_top_down_approch_with_dp(rows=%s,cols=%s,mat=%s)", rows, cols, mat, extra={"event.action": "largest_square_area_in_matrix_top_down_approch_with_dp", "logrite.rows": rows, "logrite.cols": cols, "logrite.mat": mat})
     """
     Function updates the largest_square_area[0], if recursive call found
     square with maximum area.
@@ -93,10 +100,12 @@ def largest_square_area_in_matrix_top_down_approch_with_dp(
     >>> largest_square_area_in_matrix_top_down_approch_with_dp(2, 2, [[0,0], [0,0]])
     0
     """
+    logger.warning("<<< Exiting largest_square_area_in_matrix_top_down_approch_with_dp(rows=%s,cols=%s,mat=%s)", rows, cols, mat, extra={"event.action": "largest_square_area_in_matrix_top_down_approch_with_dp", "logrite.rows": rows, "logrite.cols": cols, "logrite.mat": mat})
 
     def update_area_of_max_square_using_dp_array(
         row: int, col: int, dp_array: list[list[int]]
     ) -> int:
+        logger.error(">>> Entering update_area_of_max_square_using_dp_array(row=%s,col=%s,dp_array=%s)", row, col, dp_array, extra={"event.action": "update_area_of_max_square_using_dp_array", "logrite.row": row, "logrite.col": col, "logrite.dp_array": dp_array})
         if row >= rows or col >= cols:
             return 0
         if dp_array[row][col] != -1:
@@ -112,6 +121,7 @@ def largest_square_area_in_matrix_top_down_approch_with_dp(
             dp_array[row][col] = sub_problem_sol
             return sub_problem_sol
         else:
+            logger.warning("<<< Exiting update_area_of_max_square_using_dp_array(row=%s,col=%s,dp_array=%s)", row, col, dp_array, extra={"event.action": "update_area_of_max_square_using_dp_array", "logrite.row": row, "logrite.col": col, "logrite.dp_array": dp_array})
             return 0
 
     largest_square_area = [0]
@@ -124,6 +134,7 @@ def largest_square_area_in_matrix_top_down_approch_with_dp(
 def largest_square_area_in_matrix_bottom_up(
     rows: int, cols: int, mat: list[list[int]]
 ) -> int:
+    logger.error(">>> Entering largest_square_area_in_matrix_bottom_up(rows=%s,cols=%s,mat=%s)", rows, cols, mat, extra={"event.action": "largest_square_area_in_matrix_bottom_up", "logrite.rows": rows, "logrite.cols": cols, "logrite.mat": mat})
     """
     Function updates the largest_square_area, using bottom up approach.
 
@@ -134,7 +145,9 @@ def largest_square_area_in_matrix_bottom_up(
 
     """
     dp_array = [[0] * (cols + 1) for _ in range(rows + 1)]
+    logger.error("largest_square_area_in_matrix_bottom_up(rows=%s,cols=%s,mat=%s): dp_array → %s", rows, cols, mat, dp_array, extra={"event.action": "largest_square_area_in_matrix_bottom_up", "logrite.rows": rows, "logrite.cols": cols, "logrite.mat": mat})
     largest_square_area = 0
+    logger.error("largest_square_area_in_matrix_bottom_up(rows=%s,cols=%s,mat=%s): largest_square_area → %s", rows, cols, mat, largest_square_area, extra={"event.action": "largest_square_area_in_matrix_bottom_up", "logrite.rows": rows, "logrite.cols": cols, "logrite.mat": mat})
     for row in range(rows - 1, -1, -1):
         for col in range(cols - 1, -1, -1):
             right = dp_array[row][col + 1]
@@ -147,12 +160,14 @@ def largest_square_area_in_matrix_bottom_up(
             else:
                 dp_array[row][col] = 0
 
+    logger.warning("<<< Exiting largest_square_area_in_matrix_bottom_up(rows=%s,cols=%s,mat=%s)", rows, cols, mat, extra={"event.action": "largest_square_area_in_matrix_bottom_up", "logrite.rows": rows, "logrite.cols": cols, "logrite.mat": mat})
     return largest_square_area
 
 
 def largest_square_area_in_matrix_bottom_up_space_optimization(
     rows: int, cols: int, mat: list[list[int]]
 ) -> int:
+    logger.error(">>> Entering largest_square_area_in_matrix_bottom_up_space_optimization(rows=%s,cols=%s,mat=%s)", rows, cols, mat, extra={"event.action": "largest_square_area_in_matrix_bottom_up_space_optimization", "logrite.rows": rows, "logrite.cols": cols, "logrite.mat": mat})
     """
     Function updates the largest_square_area, using bottom up
     approach. with space optimization.
@@ -163,8 +178,10 @@ def largest_square_area_in_matrix_bottom_up_space_optimization(
     0
     """
     current_row = [0] * (cols + 1)
+    logger.error("largest_square_area_in_matrix_bottom_up_space_optimization(rows=%s,cols=%s,mat=%s): current_row → %s", rows, cols, mat, current_row, extra={"event.action": "largest_square_area_in_matrix_bottom_up_space_optimization", "logrite.rows": rows, "logrite.cols": cols, "logrite.mat": mat})
     next_row = [0] * (cols + 1)
     largest_square_area = 0
+    logger.error("largest_square_area_in_matrix_bottom_up_space_optimization(rows=%s,cols=%s,mat=%s): largest_square_area → %s", rows, cols, mat, largest_square_area, extra={"event.action": "largest_square_area_in_matrix_bottom_up_space_optimization", "logrite.rows": rows, "logrite.cols": cols, "logrite.mat": mat})
     for row in range(rows - 1, -1, -1):
         for col in range(cols - 1, -1, -1):
             right = current_row[col + 1]
@@ -178,6 +195,7 @@ def largest_square_area_in_matrix_bottom_up_space_optimization(
                 current_row[col] = 0
         next_row = current_row
 
+    logger.warning("<<< Exiting largest_square_area_in_matrix_bottom_up_space_optimization(rows=%s,cols=%s,mat=%s)", rows, cols, mat, extra={"event.action": "largest_square_area_in_matrix_bottom_up_space_optimization", "logrite.rows": rows, "logrite.cols": cols, "logrite.mat": mat})
     return largest_square_area
 
 

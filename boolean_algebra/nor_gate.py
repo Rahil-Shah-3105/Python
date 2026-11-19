@@ -14,6 +14,8 @@ https://www.geeksforgeeks.org/logic-gates-in-python
 """
 
 from collections.abc import Callable
+import logging
+logger = logging.getLogger(__name__)
 
 
 def nor_gate(input_1: int, input_2: int) -> int:
@@ -31,6 +33,8 @@ def nor_gate(input_1: int, input_2: int) -> int:
     >>> nor_gate(0, -7)
     0
     """
+    logger.error(">>> Entering nor_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "nor_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
+    logger.warning("<<< Exiting nor_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "nor_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
     return int(input_1 == input_2 == 0)
 
 
@@ -44,12 +48,16 @@ def truth_table(func: Callable) -> str:
     |    1     |    0     |    0     |
     |    1     |    1     |    0     |
     """
+    logger.error(">>> Entering truth_table(func=%s)", func, extra={"event.action": "truth_table", "logrite.func": func})
 
+    logger.warning("<<< Exiting truth_table(func=%s)", func, extra={"event.action": "truth_table", "logrite.func": func})
     def make_table_row(items: list | tuple) -> str:
         """
         >>> make_table_row(("One", "Two", "Three"))
         '|   One    |   Two    |  Three   |'
         """
+        logger.error(">>> Entering make_table_row(items=%s)", items, extra={"event.action": "make_table_row", "logrite.items": items})
+        logger.warning("<<< Exiting make_table_row(items=%s)", items, extra={"event.action": "make_table_row", "logrite.items": items})
         return f"| {' | '.join(f'{item:^8}' for item in items)} |"
 
     return "\n".join(

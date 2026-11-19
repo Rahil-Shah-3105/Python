@@ -13,6 +13,8 @@ so that they share one vertex.
         reference-->"Hexagonal number" Wikipedia
         <https://en.wikipedia.org/wiki/Hexagonal_number>
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def hexagonal_numbers(length: int) -> list[int]:
@@ -31,9 +33,11 @@ def hexagonal_numbers(length: int) -> list[int]:
       ...
     ValueError: Length must be a positive integer.
     """
+    logger.error(">>> Entering hexagonal_numbers(length=%s)", length, extra={"event.action": "hexagonal_numbers", "logrite.length": length})
 
     if length <= 0 or not isinstance(length, int):
         raise ValueError("Length must be a positive integer.")
+    logger.warning("<<< Exiting hexagonal_numbers(length=%s)", length, extra={"event.action": "hexagonal_numbers", "logrite.length": length})
     return [n * (2 * n - 1) for n in range(length)]
 
 

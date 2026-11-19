@@ -1,21 +1,32 @@
 import sys
 from collections import defaultdict
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Heap:
     def __init__(self):
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
         self.node_position = []
+        logger.warning("<<< Exiting __init__()", extra={"event.action": "__init__"})
+        logger.debug("__init__(self=%s): self.node_position → %s", self, self.node_position, extra={"event.action": "__init__"})
 
     def get_position(self, vertex):
+        logger.error(">>> Entering get_position(vertex=%s)", vertex, extra={"event.action": "get_position", "logrite.vertex": vertex})
+        logger.warning("<<< Exiting get_position(vertex=%s)", vertex, extra={"event.action": "get_position", "logrite.vertex": vertex})
         return self.node_position[vertex]
 
     def set_position(self, vertex, pos):
+        logger.error(">>> Entering set_position(vertex=%s,pos=%s)", vertex, pos, extra={"event.action": "set_position", "logrite.vertex": vertex, "logrite.pos": pos})
         self.node_position[vertex] = pos
+        logger.warning("<<< Exiting set_position(vertex=%s,pos=%s)", vertex, pos, extra={"event.action": "set_position", "logrite.vertex": vertex, "logrite.pos": pos})
 
     def top_to_bottom(self, heap, start, size, positions):
+        logger.error(">>> Entering top_to_bottom(heap=%s,start=%s,size=%s,positions=%s)", heap, start, size, positions, extra={"event.action": "top_to_bottom", "logrite.heap": heap, "logrite.start": start, "logrite.size": size, "logrite.positions": positions})
         if start > size // 2 - 1:
             return
         else:
+            logger.warning("<<< Exiting top_to_bottom(heap=%s,start=%s,size=%s,positions=%s)", heap, start, size, positions, extra={"event.action": "top_to_bottom", "logrite.heap": heap, "logrite.start": start, "logrite.size": size, "logrite.positions": positions})
             if 2 * start + 2 >= size:  # noqa: SIM114
                 smallest_child = 2 * start + 1
             elif heap[2 * start + 1] < heap[2 * start + 2]:
@@ -40,10 +51,12 @@ class Heap:
 
     # Update function if value of any node in min-heap decreases
     def bottom_to_top(self, val, index, heap, position):
+        logger.error(">>> Entering bottom_to_top(val=%s,index=%s,heap=%s,position=%s)", val, index, heap, position, extra={"event.action": "bottom_to_top", "logrite.val": val, "logrite.index": index, "logrite.heap": heap, "logrite.position": position})
         temp = position[index]
 
         while index != 0:
             parent = int((index - 2) / 2) if index % 2 == 0 else int((index - 1) / 2)
+            logger.error("bottom_to_top(val=%s,index=%s,heap=%s,position=%s): parent → %s", val, index, heap, position, parent, extra={"event.action": "bottom_to_top", "logrite.val": val, "logrite.index": index, "logrite.heap": heap, "logrite.position": position})
 
             if val < heap[parent]:
                 heap[index] = heap[parent]
@@ -59,16 +72,21 @@ class Heap:
             heap[0] = val
             position[0] = temp
             self.set_position(temp, 0)
+            logger.warning("<<< Exiting bottom_to_top(val=%s,index=%s,heap=%s,position=%s)", val, index, heap, position, extra={"event.action": "bottom_to_top", "logrite.val": val, "logrite.index": index, "logrite.heap": heap, "logrite.position": position})
 
     def heapify(self, heap, positions):
+        logger.error(">>> Entering heapify(heap=%s,positions=%s)", heap, positions, extra={"event.action": "heapify", "logrite.heap": heap, "logrite.positions": positions})
         start = len(heap) // 2 - 1
         for i in range(start, -1, -1):
             self.top_to_bottom(heap, i, len(heap), positions)
+            logger.warning("<<< Exiting heapify(heap=%s,positions=%s)", heap, positions, extra={"event.action": "heapify", "logrite.heap": heap, "logrite.positions": positions})
 
     def delete_minimum(self, heap, positions):
+        logger.error(">>> Entering delete_minimum(heap=%s,positions=%s)", heap, positions, extra={"event.action": "delete_minimum", "logrite.heap": heap, "logrite.positions": positions})
         temp = positions[0]
         heap[0] = sys.maxsize
         self.top_to_bottom(heap, 0, len(heap), positions)
+        logger.warning("<<< Exiting delete_minimum(heap=%s,positions=%s)", heap, positions, extra={"event.action": "delete_minimum", "logrite.heap": heap, "logrite.positions": positions})
         return temp
 
 
@@ -83,11 +101,15 @@ def prisms_algorithm(adjacency_list):
     >>> prisms_algorithm(adjacency_list)
     [(0, 1), (1, 4), (4, 3), (4, 5), (5, 2)]
     """
+    logger.error(">>> Entering prisms_algorithm(adjacency_list=%s)", adjacency_list, extra={"event.action": "prisms_algorithm", "logrite.adjacency_list": adjacency_list})
 
     heap = Heap()
+    logger.error("prisms_algorithm(adjacency_list=%s): heap → %s", adjacency_list, heap, extra={"event.action": "prisms_algorithm", "logrite.adjacency_list": adjacency_list})
 
     visited = [0] * len(adjacency_list)
+    logger.error("prisms_algorithm(adjacency_list=%s): visited → %s", adjacency_list, visited, extra={"event.action": "prisms_algorithm", "logrite.adjacency_list": adjacency_list})
     nbr_tv = [-1] * len(adjacency_list)  # Neighboring Tree Vertex of selected vertex
+    logger.error("prisms_algorithm(adjacency_list=%s): nbr_tv → %s", adjacency_list, nbr_tv, extra={"event.action": "prisms_algorithm", "logrite.adjacency_list": adjacency_list})
     # Minimum Distance of explored vertex with neighboring vertex of partial tree
     # formed in graph
     distance_tv = []  # Heap of Distance of vertices from their neighboring vertex
@@ -108,6 +130,7 @@ def prisms_algorithm(adjacency_list):
 
     for _ in range(1, len(adjacency_list)):
         vertex = heap.delete_minimum(distance_tv, positions)
+        logger.error("prisms_algorithm(adjacency_list=%s): vertex → %s", adjacency_list, vertex, extra={"event.action": "prisms_algorithm", "logrite.adjacency_list": adjacency_list})
         if visited[vertex] == 0:
             tree_edges.append((nbr_tv[vertex], vertex))
             visited[vertex] = 1
@@ -121,6 +144,7 @@ def prisms_algorithm(adjacency_list):
                         distance, heap.get_position(neighbor), distance_tv, positions
                     )
                     nbr_tv[neighbor] = vertex
+    logger.warning("<<< Exiting prisms_algorithm(adjacency_list=%s)", adjacency_list, extra={"event.action": "prisms_algorithm", "logrite.adjacency_list": adjacency_list})
     return tree_edges
 
 

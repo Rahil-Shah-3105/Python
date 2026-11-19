@@ -3,6 +3,8 @@
 # http://www.ece.utep.edu/courses/ee3329/ee3329/Studyguide/ToC/Fundamentals/Carriers/concentrations.html
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def carrier_concentration(
@@ -10,6 +12,7 @@ def carrier_concentration(
     hole_conc: float,
     intrinsic_conc: float,
 ) -> tuple:
+    logger.error(">>> Entering carrier_concentration(electron_conc=%s,hole_conc=%s,intrinsic_conc=%s)", electron_conc, hole_conc, intrinsic_conc, extra={"event.action": "carrier_concentration", "logrite.electron_conc": electron_conc, "logrite.hole_conc": hole_conc, "logrite.intrinsic_conc": intrinsic_conc})
     """
     This function can calculate any one of the three -
     1. Electron Concentration
@@ -66,6 +69,7 @@ def carrier_concentration(
             (electron_conc * hole_conc) ** 0.5,
         )
     else:
+        logger.warning("<<< Exiting carrier_concentration(electron_conc=%s,hole_conc=%s,intrinsic_conc=%s)", electron_conc, hole_conc, intrinsic_conc, extra={"event.action": "carrier_concentration", "logrite.electron_conc": electron_conc, "logrite.hole_conc": hole_conc, "logrite.intrinsic_conc": intrinsic_conc})
         return (-1, -1)
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def selection_sort(collection: list[int]) -> list[int]:
     """
     Sorts a list in ascending order using the selection sort algorithm.
@@ -15,8 +17,10 @@ def selection_sort(collection: list[int]) -> list[int]:
     >>> selection_sort([-2, -5, -45])
     [-45, -5, -2]
     """
+    logger.error(">>> Entering selection_sort(collection=%s)", collection, extra={"event.action": "selection_sort", "logrite.collection": collection})
 
     length = len(collection)
+    logger.error("selection_sort(collection=%s): length → %s", collection, length, extra={"event.action": "selection_sort", "logrite.collection": collection})
     for i in range(length - 1):
         min_index = i
         for k in range(i + 1, length):
@@ -24,6 +28,7 @@ def selection_sort(collection: list[int]) -> list[int]:
                 min_index = k
         if min_index != i:
             collection[i], collection[min_index] = collection[min_index], collection[i]
+    logger.warning("<<< Exiting selection_sort(collection=%s)", collection, extra={"event.action": "selection_sort", "logrite.collection": collection})
     return collection
 
 

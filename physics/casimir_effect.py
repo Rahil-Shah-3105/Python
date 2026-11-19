@@ -38,6 +38,8 @@ Source :
 from __future__ import annotations
 
 from math import pi
+import logging
+logger = logging.getLogger(__name__)
 
 # Define the Reduced Planck Constant ℏ (H bar), speed of light C, value of
 # Pi and the function
@@ -86,6 +88,7 @@ def casimir_force(force: float, area: float, distance: float) -> dict[str, float
         ...
     ValueError: Magnitude of force can not be negative
     """
+    logger.error(">>> Entering casimir_force(force=%s,area=%s,distance=%s)", force, area, distance, extra={"event.action": "casimir_force", "logrite.force": force, "logrite.area": area, "logrite.distance": distance})
 
     if (force, area, distance).count(0) != 1:
         raise ValueError("One and only one argument must be 0")
@@ -99,17 +102,20 @@ def casimir_force(force: float, area: float, distance: float) -> dict[str, float
         force = (REDUCED_PLANCK_CONSTANT * SPEED_OF_LIGHT * pi**2 * area) / (
             240 * (distance) ** 4
         )
+        logger.error("casimir_force(force=%s,area=%s,distance=%s): force → %s", force, area, distance, force, extra={"event.action": "casimir_force", "logrite.force": force, "logrite.area": area, "logrite.distance": distance})
         return {"force": force}
     elif area == 0:
         area = (240 * force * (distance) ** 4) / (
             REDUCED_PLANCK_CONSTANT * SPEED_OF_LIGHT * pi**2
         )
+        logger.error("casimir_force(force=%s,area=%s,distance=%s): area → %s", force, area, distance, area, extra={"event.action": "casimir_force", "logrite.force": force, "logrite.area": area, "logrite.distance": distance})
         return {"area": area}
     elif distance == 0:
         distance = (
             (REDUCED_PLANCK_CONSTANT * SPEED_OF_LIGHT * pi**2 * area) / (240 * force)
         ) ** (1 / 4)
         return {"distance": distance}
+    logger.warning("<<< Exiting casimir_force(force=%s,area=%s,distance=%s)", force, area, distance, extra={"event.action": "casimir_force", "logrite.force": force, "logrite.area": area, "logrite.distance": distance})
     raise ValueError("One and only one argument must be 0")
 
 

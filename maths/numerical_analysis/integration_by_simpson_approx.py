@@ -12,6 +12,8 @@ integration.
 simpson_integration() takes function,lower_limit=a,upper_limit=b,precision and
 returns the integration of function in given limit.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 # constants
 # the more the number of steps the more accurate
@@ -19,6 +21,8 @@ N_STEPS = 1000
 
 
 def f(x: float) -> float:
+    logger.error(">>> Entering f(x=%s)", x, extra={"event.action": "f", "logrite.x": x})
+    logger.warning("<<< Exiting f(x=%s)", x, extra={"event.action": "f", "logrite.x": x})
     return x * x
 
 
@@ -88,6 +92,7 @@ def simpson_integration(function, a: float, b: float, precision: int = 4) -> flo
     AssertionError: precision should be positive integer your input : -1
 
     """
+    logger.error(">>> Entering simpson_integration(function=%s,a=%s,b=%s,precision=%s)", function, a, b, precision, extra={"event.action": "simpson_integration", "logrite.function": function, "logrite.a": a, "logrite.b": b, "logrite.precision": precision})
     assert callable(function), (
         f"the function(object) passed should be callable your input : {function}"
     )
@@ -105,13 +110,16 @@ def simpson_integration(function, a: float, b: float, precision: int = 4) -> flo
     # mentioned article in first comment of this file and above this function
 
     h = (b - a) / N_STEPS
+    logger.error("simpson_integration(function=%s,a=%s,b=%s,precision=%s): h → %s", function, a, b, precision, h, extra={"event.action": "simpson_integration", "logrite.function": function, "logrite.a": a, "logrite.b": b, "logrite.precision": precision})
     result = function(a) + function(b)
+    logger.error("simpson_integration(function=%s,a=%s,b=%s,precision=%s): result → %s", function, a, b, precision, result, extra={"event.action": "simpson_integration", "logrite.function": function, "logrite.a": a, "logrite.b": b, "logrite.precision": precision})
 
     for i in range(1, N_STEPS):
         a1 = a + h * i
         result += function(a1) * (4 if i % 2 else 2)
 
     result *= h / 3
+    logger.warning("<<< Exiting simpson_integration(function=%s,a=%s,b=%s,precision=%s)", function, a, b, precision, extra={"event.action": "simpson_integration", "logrite.function": function, "logrite.a": a, "logrite.b": b, "logrite.precision": precision})
     return round(result, precision)
 
 

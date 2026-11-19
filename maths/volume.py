@@ -8,6 +8,8 @@ Find the volume of various shapes.
 from __future__ import annotations
 
 from math import pi, pow  # noqa: A004
+import logging
+logger = logging.getLogger(__name__)
 
 
 def vol_cube(side_length: float) -> float:
@@ -27,8 +29,10 @@ def vol_cube(side_length: float) -> float:
         ...
     ValueError: vol_cube() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_cube(side_length=%s)", side_length, extra={"event.action": "vol_cube", "logrite.side_length": side_length})
     if side_length < 0:
         raise ValueError("vol_cube() only accepts non-negative values")
+    logger.warning("<<< Exiting vol_cube(side_length=%s)", side_length, extra={"event.action": "vol_cube", "logrite.side_length": side_length})
     return pow(side_length, 3)
 
 
@@ -51,15 +55,18 @@ def vol_spherical_cap(height: float, radius: float) -> float:
         ...
     ValueError: vol_spherical_cap() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_spherical_cap(height=%s,radius=%s)", height, radius, extra={"event.action": "vol_spherical_cap", "logrite.height": height, "logrite.radius": radius})
     if height < 0 or radius < 0:
         raise ValueError("vol_spherical_cap() only accepts non-negative values")
     # Volume is 1/3 pi * height squared * (3 * radius - height)
+    logger.warning("<<< Exiting vol_spherical_cap(height=%s,radius=%s)", height, radius, extra={"event.action": "vol_spherical_cap", "logrite.height": height, "logrite.radius": radius})
     return 1 / 3 * pi * pow(height, 2) * (3 * radius - height)
 
 
 def vol_spheres_intersect(
     radius_1: float, radius_2: float, centers_distance: float
 ) -> float:
+    logger.error(">>> Entering vol_spheres_intersect(radius_1=%s,radius_2=%s,centers_distance=%s)", radius_1, radius_2, centers_distance, extra={"event.action": "vol_spheres_intersect", "logrite.radius_1": radius_1, "logrite.radius_2": radius_2, "logrite.centers_distance": centers_distance})
     r"""
     Calculate the volume of the intersection of two spheres.
 
@@ -118,12 +125,14 @@ def vol_spheres_intersect(
         / (2 * centers_distance)
     )
 
+    logger.warning("<<< Exiting vol_spheres_intersect(radius_1=%s,radius_2=%s,centers_distance=%s)", radius_1, radius_2, centers_distance, extra={"event.action": "vol_spheres_intersect", "logrite.radius_1": radius_1, "logrite.radius_2": radius_2, "logrite.centers_distance": centers_distance})
     return vol_spherical_cap(h1, radius_2) + vol_spherical_cap(h2, radius_1)
 
 
 def vol_spheres_union(
     radius_1: float, radius_2: float, centers_distance: float
 ) -> float:
+    logger.error(">>> Entering vol_spheres_union(radius_1=%s,radius_2=%s,centers_distance=%s)", radius_1, radius_2, centers_distance, extra={"event.action": "vol_spheres_union", "logrite.radius_1": radius_1, "logrite.radius_2": radius_2, "logrite.centers_distance": centers_distance})
     r"""
     Calculate the volume of the union of two spheres that possibly intersect.
 
@@ -161,6 +170,7 @@ def vol_spheres_union(
         )
 
     if centers_distance == 0:
+        logger.warning("<<< Exiting vol_spheres_union(radius_1=%s,radius_2=%s,centers_distance=%s)", radius_1, radius_2, centers_distance, extra={"event.action": "vol_spheres_union", "logrite.radius_1": radius_1, "logrite.radius_2": radius_2, "logrite.centers_distance": centers_distance})
         return vol_sphere(max(radius_1, radius_2))
 
     return (
@@ -197,8 +207,10 @@ def vol_cuboid(width: float, height: float, length: float) -> float:
         ...
     ValueError: vol_cuboid() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_cuboid(width=%s,height=%s,length=%s)", width, height, length, extra={"event.action": "vol_cuboid", "logrite.width": width, "logrite.height": height, "logrite.length": length})
     if width < 0 or height < 0 or length < 0:
         raise ValueError("vol_cuboid() only accepts non-negative values")
+    logger.warning("<<< Exiting vol_cuboid(width=%s,height=%s,length=%s)", width, height, length, extra={"event.action": "vol_cuboid", "logrite.width": width, "logrite.height": height, "logrite.length": length})
     return float(width * height * length)
 
 
@@ -226,8 +238,10 @@ def vol_cone(area_of_base: float, height: float) -> float:
         ...
     ValueError: vol_cone() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_cone(area_of_base=%s,height=%s)", area_of_base, height, extra={"event.action": "vol_cone", "logrite.area_of_base": area_of_base, "logrite.height": height})
     if height < 0 or area_of_base < 0:
         raise ValueError("vol_cone() only accepts non-negative values")
+    logger.warning("<<< Exiting vol_cone(area_of_base=%s,height=%s)", area_of_base, height, extra={"event.action": "vol_cone", "logrite.area_of_base": area_of_base, "logrite.height": height})
     return area_of_base * height / 3.0
 
 
@@ -253,8 +267,10 @@ def vol_right_circ_cone(radius: float, height: float) -> float:
         ...
     ValueError: vol_right_circ_cone() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_right_circ_cone(radius=%s,height=%s)", radius, height, extra={"event.action": "vol_right_circ_cone", "logrite.radius": radius, "logrite.height": height})
     if height < 0 or radius < 0:
         raise ValueError("vol_right_circ_cone() only accepts non-negative values")
+    logger.warning("<<< Exiting vol_right_circ_cone(radius=%s,height=%s)", radius, height, extra={"event.action": "vol_right_circ_cone", "logrite.radius": radius, "logrite.height": height})
     return pi * pow(radius, 2) * height / 3.0
 
 
@@ -282,8 +298,10 @@ def vol_prism(area_of_base: float, height: float) -> float:
         ...
     ValueError: vol_prism() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_prism(area_of_base=%s,height=%s)", area_of_base, height, extra={"event.action": "vol_prism", "logrite.area_of_base": area_of_base, "logrite.height": height})
     if height < 0 or area_of_base < 0:
         raise ValueError("vol_prism() only accepts non-negative values")
+    logger.warning("<<< Exiting vol_prism(area_of_base=%s,height=%s)", area_of_base, height, extra={"event.action": "vol_prism", "logrite.area_of_base": area_of_base, "logrite.height": height})
     return float(area_of_base * height)
 
 
@@ -311,8 +329,10 @@ def vol_pyramid(area_of_base: float, height: float) -> float:
         ...
     ValueError: vol_pyramid() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_pyramid(area_of_base=%s,height=%s)", area_of_base, height, extra={"event.action": "vol_pyramid", "logrite.area_of_base": area_of_base, "logrite.height": height})
     if height < 0 or area_of_base < 0:
         raise ValueError("vol_pyramid() only accepts non-negative values")
+    logger.warning("<<< Exiting vol_pyramid(area_of_base=%s,height=%s)", area_of_base, height, extra={"event.action": "vol_pyramid", "logrite.area_of_base": area_of_base, "logrite.height": height})
     return area_of_base * height / 3.0
 
 
@@ -336,9 +356,11 @@ def vol_sphere(radius: float) -> float:
         ...
     ValueError: vol_sphere() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_sphere(radius=%s)", radius, extra={"event.action": "vol_sphere", "logrite.radius": radius})
     if radius < 0:
         raise ValueError("vol_sphere() only accepts non-negative values")
     # Volume is 4/3 * pi * radius cubed
+    logger.warning("<<< Exiting vol_sphere(radius=%s)", radius, extra={"event.action": "vol_sphere", "logrite.radius": radius})
     return 4 / 3 * pi * pow(radius, 3)
 
 
@@ -363,9 +385,11 @@ def vol_hemisphere(radius: float) -> float:
         ...
     ValueError: vol_hemisphere() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_hemisphere(radius=%s)", radius, extra={"event.action": "vol_hemisphere", "logrite.radius": radius})
     if radius < 0:
         raise ValueError("vol_hemisphere() only accepts non-negative values")
     # Volume is radius cubed * pi * 2/3
+    logger.warning("<<< Exiting vol_hemisphere(radius=%s)", radius, extra={"event.action": "vol_hemisphere", "logrite.radius": radius})
     return pow(radius, 3) * pi * 2 / 3
 
 
@@ -393,15 +417,18 @@ def vol_circular_cylinder(radius: float, height: float) -> float:
         ...
     ValueError: vol_circular_cylinder() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_circular_cylinder(radius=%s,height=%s)", radius, height, extra={"event.action": "vol_circular_cylinder", "logrite.radius": radius, "logrite.height": height})
     if height < 0 or radius < 0:
         raise ValueError("vol_circular_cylinder() only accepts non-negative values")
     # Volume is radius squared * height * pi
+    logger.warning("<<< Exiting vol_circular_cylinder(radius=%s,height=%s)", radius, height, extra={"event.action": "vol_circular_cylinder", "logrite.radius": radius, "logrite.height": height})
     return pow(radius, 2) * height * pi
 
 
 def vol_hollow_circular_cylinder(
     inner_radius: float, outer_radius: float, height: float
 ) -> float:
+    logger.error(">>> Entering vol_hollow_circular_cylinder(inner_radius=%s,outer_radius=%s,height=%s)", inner_radius, outer_radius, height, extra={"event.action": "vol_hollow_circular_cylinder", "logrite.inner_radius": inner_radius, "logrite.outer_radius": outer_radius, "logrite.height": height})
     """
     Calculate the Volume of a Hollow Circular Cylinder.
 
@@ -437,6 +464,7 @@ def vol_hollow_circular_cylinder(
         )
     if outer_radius <= inner_radius:
         raise ValueError("outer_radius must be greater than inner_radius")
+    logger.warning("<<< Exiting vol_hollow_circular_cylinder(inner_radius=%s,outer_radius=%s,height=%s)", inner_radius, outer_radius, height, extra={"event.action": "vol_hollow_circular_cylinder", "logrite.inner_radius": inner_radius, "logrite.outer_radius": outer_radius, "logrite.height": height})
     return pi * (pow(outer_radius, 2) - pow(inner_radius, 2)) * height
 
 
@@ -466,10 +494,12 @@ def vol_conical_frustum(height: float, radius_1: float, radius_2: float) -> floa
         ...
     ValueError: vol_conical_frustum() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_conical_frustum(height=%s,radius_1=%s,radius_2=%s)", height, radius_1, radius_2, extra={"event.action": "vol_conical_frustum", "logrite.height": height, "logrite.radius_1": radius_1, "logrite.radius_2": radius_2})
     # Volume is 1/3 * pi * height *
     #           (radius_1 squared + radius_2 squared + radius_1 * radius_2)
     if radius_1 < 0 or radius_2 < 0 or height < 0:
         raise ValueError("vol_conical_frustum() only accepts non-negative values")
+        logger.warning("<<< Exiting vol_conical_frustum(height=%s,radius_1=%s,radius_2=%s)", height, radius_1, radius_2, extra={"event.action": "vol_conical_frustum", "logrite.height": height, "logrite.radius_1": radius_1, "logrite.radius_2": radius_2})
     return (
         1
         / 3
@@ -505,8 +535,10 @@ def vol_torus(torus_radius: float, tube_radius: float) -> float:
         ...
     ValueError: vol_torus() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_torus(torus_radius=%s,tube_radius=%s)", torus_radius, tube_radius, extra={"event.action": "vol_torus", "logrite.torus_radius": torus_radius, "logrite.tube_radius": tube_radius})
     if torus_radius < 0 or tube_radius < 0:
         raise ValueError("vol_torus() only accepts non-negative values")
+    logger.warning("<<< Exiting vol_torus(torus_radius=%s,tube_radius=%s)", torus_radius, tube_radius, extra={"event.action": "vol_torus", "logrite.torus_radius": torus_radius, "logrite.tube_radius": tube_radius})
     return 2 * pow(pi, 2) * torus_radius * pow(tube_radius, 2)
 
 
@@ -535,13 +567,16 @@ def vol_icosahedron(tri_side: float) -> float:
         ...
     ValueError: vol_icosahedron() only accepts non-negative values
     """
+    logger.error(">>> Entering vol_icosahedron(tri_side=%s)", tri_side, extra={"event.action": "vol_icosahedron", "logrite.tri_side": tri_side})
     if tri_side < 0:
         raise ValueError("vol_icosahedron() only accepts non-negative values")
+    logger.warning("<<< Exiting vol_icosahedron(tri_side=%s)", tri_side, extra={"event.action": "vol_icosahedron", "logrite.tri_side": tri_side})
     return tri_side**3 * (3 + 5**0.5) * 5 / 12
 
 
 def main():
     """Print the Results of Various Volume Calculations."""
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     print("Volumes:")
     print(f"Cube: {vol_cube(2) = }")  # = 8
     print(f"Cuboid: {vol_cuboid(2, 2, 2) = }")  # = 8
@@ -561,6 +596,7 @@ def main():
         f"Hollow Circular Cylinder: {vol_hollow_circular_cylinder(1, 2, 3) = }"
     )  # ~= 28.3
     print(f"Icosahedron: {vol_icosahedron(2.5) = }")  # ~=34.09
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

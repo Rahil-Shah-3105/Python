@@ -9,11 +9,14 @@ https://en.wikipedia.org/wiki/Soboleva_modified_hyperbolic_tangent
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def soboleva_modified_hyperbolic_tangent(
     vector: np.ndarray, a_value: float, b_value: float, c_value: float, d_value: float
 ) -> np.ndarray:
+    logger.error(">>> Entering soboleva_modified_hyperbolic_tangent(vector=%s,a_value=%s,b_value=%s,c_value=%s,d_value=%s)", vector, a_value, b_value, c_value, d_value, extra={"event.action": "soboleva_modified_hyperbolic_tangent", "logrite.vector": vector, "logrite.a_value": a_value, "logrite.b_value": b_value, "logrite.c_value": c_value, "logrite.d_value": d_value})
     """
     Implements the Soboleva Modified Hyperbolic Tangent function
 
@@ -36,9 +39,12 @@ def soboleva_modified_hyperbolic_tangent(
     # Separate the numerator and denominator for simplicity
     # Calculate the numerator and denominator element-wise
     numerator = np.exp(a_value * vector) - np.exp(-b_value * vector)
+    logger.error("soboleva_modified_hyperbolic_tangent(vector=%s,a_value=%s,b_value=%s,c_value=%s,d_value=%s): numerator → %s", vector, a_value, b_value, c_value, d_value, numerator, extra={"event.action": "soboleva_modified_hyperbolic_tangent", "logrite.vector": vector, "logrite.a_value": a_value, "logrite.b_value": b_value, "logrite.c_value": c_value, "logrite.d_value": d_value})
     denominator = np.exp(c_value * vector) + np.exp(-d_value * vector)
+    logger.error("soboleva_modified_hyperbolic_tangent(vector=%s,a_value=%s,b_value=%s,c_value=%s,d_value=%s): denominator → %s", vector, a_value, b_value, c_value, d_value, denominator, extra={"event.action": "soboleva_modified_hyperbolic_tangent", "logrite.vector": vector, "logrite.a_value": a_value, "logrite.b_value": b_value, "logrite.c_value": c_value, "logrite.d_value": d_value})
 
     # Calculate and return the final result element-wise
+    logger.warning("<<< Exiting soboleva_modified_hyperbolic_tangent(vector=%s,a_value=%s,b_value=%s,c_value=%s,d_value=%s)", vector, a_value, b_value, c_value, d_value, extra={"event.action": "soboleva_modified_hyperbolic_tangent", "logrite.vector": vector, "logrite.a_value": a_value, "logrite.b_value": b_value, "logrite.c_value": c_value, "logrite.d_value": d_value})
     return numerator / denominator
 
 

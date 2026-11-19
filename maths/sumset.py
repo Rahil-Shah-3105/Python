@@ -6,6 +6,8 @@ Source:
     https://en.wikipedia.org/wiki/Sumset
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sumset(set_a: set, set_b: set) -> set:
@@ -25,9 +27,11 @@ def sumset(set_a: set, set_b: set) -> set:
     ...
     AssertionError: The input value of [set_b=3] is not a set
     """
+    logger.error(">>> Entering sumset(set_a=%s,set_b=%s)", set_a, set_b, extra={"event.action": "sumset", "logrite.set_a": set_a, "logrite.set_b": set_b})
     assert isinstance(set_a, set), f"The input value of [set_a={set_a}] is not a set"
     assert isinstance(set_b, set), f"The input value of [set_b={set_b}] is not a set"
 
+    logger.warning("<<< Exiting sumset(set_a=%s,set_b=%s)", set_a, set_b, extra={"event.action": "sumset", "logrite.set_a": set_a, "logrite.set_b": set_b})
     return {a + b for a in set_a for b in set_b}
 
 

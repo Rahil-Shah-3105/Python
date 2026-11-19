@@ -6,6 +6,8 @@ The span Si of the stock's price on a given day i is defined as the maximum
 number of consecutive days just before the given day, for which the price of the stock
 on the current day is less than or equal to its price on the given day.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def calculate_span(price: list[int]) -> list[int]:
@@ -29,7 +31,9 @@ def calculate_span(price: list[int]) -> list[int]:
     >>> calculate_span([100, 80, 60, 70, 60, 75, 85])
     [1, 1, 1, 2, 1, 4, 6]
     """
+    logger.error(">>> Entering calculate_span(price=%s)", price, extra={"event.action": "calculate_span", "logrite.price": price})
     n = len(price)
+    logger.error("calculate_span(price=%s): n → %s", price, n, extra={"event.action": "calculate_span", "logrite.price": price})
     s = [0] * n
     # Create a stack and push index of fist element to it
     st = []
@@ -54,13 +58,16 @@ def calculate_span(price: list[int]) -> list[int]:
         # Push this element to stack
         st.append(i)
 
+    logger.warning("<<< Exiting calculate_span(price=%s)", price, extra={"event.action": "calculate_span", "logrite.price": price})
     return s
 
 
 # A utility function to print elements of array
 def print_array(arr, n):
+    logger.error(">>> Entering print_array(arr=%s,n=%s)", arr, n, extra={"event.action": "print_array", "logrite.arr": arr, "logrite.n": n})
     for i in range(n):
         print(arr[i], end=" ")
+        logger.warning("<<< Exiting print_array(arr=%s,n=%s)", arr, n, extra={"event.action": "print_array", "logrite.arr": arr, "logrite.n": n})
 
 
 # Driver program to test above function

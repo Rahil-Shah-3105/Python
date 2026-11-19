@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def octal_to_hex(octal: str) -> str:
     """
     Convert an Octal number to Hexadecimal number.
@@ -20,6 +22,7 @@ def octal_to_hex(octal: str) -> str:
         ...
     ValueError: Empty string was passed to the function
     """
+    logger.error(">>> Entering octal_to_hex(octal=%s)", octal, extra={"event.action": "octal_to_hex", "logrite.octal": octal})
 
     if not isinstance(octal, str):
         raise TypeError("Expected a string as input")
@@ -36,12 +39,15 @@ def octal_to_hex(octal: str) -> str:
         decimal |= int(char)
 
     hex_char = "0123456789ABCDEF"
+    logger.error("octal_to_hex(octal=%s): hex_char → %s", octal, hex_char, extra={"event.action": "octal_to_hex", "logrite.octal": octal})
 
     revhex = ""
+    logger.error("octal_to_hex(octal=%s): revhex → %s", octal, revhex, extra={"event.action": "octal_to_hex", "logrite.octal": octal})
     while decimal:
         revhex += hex_char[decimal & 15]
         decimal >>= 4
 
+    logger.warning("<<< Exiting octal_to_hex(octal=%s)", octal, extra={"event.action": "octal_to_hex", "logrite.octal": octal})
     return "0x" + revhex[::-1]
 
 

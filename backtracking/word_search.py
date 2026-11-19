@@ -31,6 +31,8 @@ At each point, check all neighbors to try to find the next letter of the word.
 leetcode: https://leetcode.com/problems/word-search/
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_point_key(len_board: int, len_board_column: int, row: int, column: int) -> int:
@@ -40,7 +42,9 @@ def get_point_key(len_board: int, len_board_column: int, row: int, column: int) 
     >>> get_point_key(10, 20, 1, 0)
     200
     """
+    logger.error(">>> Entering get_point_key(len_board=%s,len_board_column=%s,row=%s,column=%s)", len_board, len_board_column, row, column, extra={"event.action": "get_point_key", "logrite.len_board": len_board, "logrite.len_board_column": len_board_column, "logrite.row": row, "logrite.column": column})
 
+    logger.warning("<<< Exiting get_point_key(len_board=%s,len_board_column=%s,row=%s,column=%s)", len_board, len_board_column, row, column, extra={"event.action": "get_point_key", "logrite.len_board": len_board, "logrite.len_board_column": len_board_column, "logrite.row": row, "logrite.column": column})
     return len_board * len_board_column * row + column
 
 
@@ -52,6 +56,7 @@ def exits_word(
     word_index: int,
     visited_points_set: set[int],
 ) -> bool:
+    logger.error(">>> Entering exits_word(board=%s,word=%s,row=%s,column=%s,word_index=%s,visited_points_set=%s)", board, word, row, column, word_index, visited_points_set, extra={"event.action": "exits_word", "logrite.board": board, "logrite.word": word, "logrite.row": row, "logrite.column": column, "logrite.word_index": word_index, "logrite.visited_points_set": visited_points_set})
     """
     Return True if it's possible to search the word suffix
     starting from the word_index.
@@ -85,6 +90,7 @@ def exits_word(
 
         visited_points_set.remove(key)
 
+    logger.warning("<<< Exiting exits_word(board=%s,word=%s,row=%s,column=%s,word_index=%s,visited_points_set=%s)", board, word, row, column, word_index, visited_points_set, extra={"event.action": "exits_word", "logrite.board": board, "logrite.word": word, "logrite.row": row, "logrite.column": column, "logrite.word_index": word_index, "logrite.visited_points_set": visited_points_set})
     return False
 
 
@@ -121,6 +127,7 @@ def word_exists(board: list[list[str]], word: str) -> bool:
         ...
     ValueError: The board should be a non empty matrix of single chars strings.
     """
+    logger.error(">>> Entering word_exists(board=%s,word=%s)", board, word, extra={"event.action": "word_exists", "logrite.board": board, "logrite.word": word})
 
     # Validate board
     board_error_message = (
@@ -128,6 +135,7 @@ def word_exists(board: list[list[str]], word: str) -> bool:
     )
 
     len_board = len(board)
+    logger.error("word_exists(board=%s,word=%s): len_board → %s", board, word, len_board, extra={"event.action": "word_exists", "logrite.board": board, "logrite.word": word})
     if not isinstance(board, list) or len(board) == 0:
         raise ValueError(board_error_message)
 
@@ -146,6 +154,7 @@ def word_exists(board: list[list[str]], word: str) -> bool:
         )
 
     len_board_column = len(board[0])
+    logger.error("word_exists(board=%s,word=%s): len_board_column → %s", board, word, len_board_column, extra={"event.action": "word_exists", "logrite.board": board, "logrite.word": word})
     for i in range(len_board):
         for j in range(len_board_column):
             if exits_word(
@@ -153,6 +162,7 @@ def word_exists(board: list[list[str]], word: str) -> bool:
             ):
                 return True
 
+    logger.warning("<<< Exiting word_exists(board=%s,word=%s)", board, word, extra={"event.action": "word_exists", "logrite.board": board, "logrite.word": word})
     return False
 
 

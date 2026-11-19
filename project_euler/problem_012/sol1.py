@@ -21,9 +21,12 @@ We can see that 28 is the first triangle number to have over five divisors.
 What is the value of the first triangle number to have over five hundred
 divisors?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def count_divisors(n):
+    logger.error(">>> Entering count_divisors(n=%s)", n, extra={"event.action": "count_divisors", "logrite.n": n})
     n_divisors = 1
     i = 2
     while i * i <= n:
@@ -35,6 +38,7 @@ def count_divisors(n):
         i += 1
     if n > 1:
         n_divisors *= 2
+    logger.warning("<<< Exiting count_divisors(n=%s)", n, extra={"event.action": "count_divisors", "logrite.n": n})
     return n_divisors
 
 
@@ -45,6 +49,7 @@ def solution():
     >>> solution()
     76576500
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
     t_num = 1
     i = 1
 
@@ -55,6 +60,7 @@ def solution():
         if count_divisors(t_num) > 500:
             break
 
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return t_num
 
 

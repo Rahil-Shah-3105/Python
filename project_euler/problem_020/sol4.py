@@ -8,6 +8,8 @@ and the sum of the digits in the number 10! is 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
 
 Find the sum of the digits in the number 100!
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(num: int = 100) -> int:
@@ -27,14 +29,17 @@ def solution(num: int = 100) -> int:
     >>> solution(1)
     1
     """
+    logger.error(">>> Entering solution(num=%s)", num, extra={"event.action": "solution", "logrite.num": num})
     fact = 1
     result = 0
+    logger.error("solution(num=%s): result → %s", num, result, extra={"event.action": "solution", "logrite.num": num})
     for i in range(1, num + 1):
         fact *= i
 
     for j in str(fact):
         result += int(j)
 
+    logger.warning("<<< Exiting solution(num=%s)", num, extra={"event.action": "solution", "logrite.num": num})
     return result
 
 

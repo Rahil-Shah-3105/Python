@@ -11,6 +11,8 @@ This script is inspired by a corresponding research paper.
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sigmoid(vector: np.ndarray) -> np.ndarray:
@@ -22,6 +24,8 @@ def sigmoid(vector: np.ndarray) -> np.ndarray:
     >>> sigmoid(np.array([-1.0, 1.0, 2.0]))
     array([0.26894142, 0.73105858, 0.88079708])
     """
+    logger.error(">>> Entering sigmoid(vector=%s)", vector, extra={"event.action": "sigmoid", "logrite.vector": vector})
+    logger.warning("<<< Exiting sigmoid(vector=%s)", vector, extra={"event.action": "sigmoid", "logrite.vector": vector})
     return 1 / (1 + np.exp(-vector))
 
 
@@ -42,6 +46,8 @@ def gaussian_error_linear_unit(vector: np.ndarray) -> np.ndarray:
     >>> gaussian_error_linear_unit(np.array([-3]))
     array([-0.01807131])
     """
+    logger.error(">>> Entering gaussian_error_linear_unit(vector=%s)", vector, extra={"event.action": "gaussian_error_linear_unit", "logrite.vector": vector})
+    logger.warning("<<< Exiting gaussian_error_linear_unit(vector=%s)", vector, extra={"event.action": "gaussian_error_linear_unit", "logrite.vector": vector})
     return vector * sigmoid(1.702 * vector)
 
 

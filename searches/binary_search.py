@@ -12,11 +12,14 @@ python3 binary_search.py
 
 import bisect
 from itertools import pairwise
+import logging
+logger = logging.getLogger(__name__)
 
 
 def bisect_left(
     sorted_collection: list[int], item: int, lo: int = 0, hi: int = -1
 ) -> int:
+    logger.error(">>> Entering bisect_left(sorted_collection=%s,item=%s,lo=%s,hi=%s)", sorted_collection, item, lo, hi, extra={"event.action": "bisect_left", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.lo": lo, "logrite.hi": hi})
     """
     Locates the first element in a sorted array that is larger or equal to a given
     value.
@@ -48,17 +51,20 @@ def bisect_left(
 
     while lo < hi:
         mid = lo + (hi - lo) // 2
+        logger.error("bisect_left(sorted_collection=%s,item=%s,lo=%s,hi=%s): mid → %s", sorted_collection, item, lo, hi, mid, extra={"event.action": "bisect_left", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.lo": lo, "logrite.hi": hi})
         if sorted_collection[mid] < item:
             lo = mid + 1
         else:
             hi = mid
 
+    logger.warning("<<< Exiting bisect_left(sorted_collection=%s,item=%s,lo=%s,hi=%s)", sorted_collection, item, lo, hi, extra={"event.action": "bisect_left", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.lo": lo, "logrite.hi": hi})
     return lo
 
 
 def bisect_right(
     sorted_collection: list[int], item: int, lo: int = 0, hi: int = -1
 ) -> int:
+    logger.error(">>> Entering bisect_right(sorted_collection=%s,item=%s,lo=%s,hi=%s)", sorted_collection, item, lo, hi, extra={"event.action": "bisect_right", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.lo": lo, "logrite.hi": hi})
     """
     Locates the first element in a sorted array that is larger than a given value.
 
@@ -89,17 +95,20 @@ def bisect_right(
 
     while lo < hi:
         mid = lo + (hi - lo) // 2
+        logger.error("bisect_right(sorted_collection=%s,item=%s,lo=%s,hi=%s): mid → %s", sorted_collection, item, lo, hi, mid, extra={"event.action": "bisect_right", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.lo": lo, "logrite.hi": hi})
         if sorted_collection[mid] <= item:
             lo = mid + 1
         else:
             hi = mid
 
+    logger.warning("<<< Exiting bisect_right(sorted_collection=%s,item=%s,lo=%s,hi=%s)", sorted_collection, item, lo, hi, extra={"event.action": "bisect_right", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.lo": lo, "logrite.hi": hi})
     return lo
 
 
 def insort_left(
     sorted_collection: list[int], item: int, lo: int = 0, hi: int = -1
 ) -> None:
+    logger.error(">>> Entering insort_left(sorted_collection=%s,item=%s,lo=%s,hi=%s)", sorted_collection, item, lo, hi, extra={"event.action": "insort_left", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.lo": lo, "logrite.hi": hi})
     """
     Inserts a given value into a sorted array before other values with the same value.
 
@@ -135,11 +144,13 @@ def insort_left(
     [0, 5, 7, 15, 10, 15]
     """
     sorted_collection.insert(bisect_left(sorted_collection, item, lo, hi), item)
+    logger.warning("<<< Exiting insort_left(sorted_collection=%s,item=%s,lo=%s,hi=%s)", sorted_collection, item, lo, hi, extra={"event.action": "insort_left", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.lo": lo, "logrite.hi": hi})
 
 
 def insort_right(
     sorted_collection: list[int], item: int, lo: int = 0, hi: int = -1
 ) -> None:
+    logger.error(">>> Entering insort_right(sorted_collection=%s,item=%s,lo=%s,hi=%s)", sorted_collection, item, lo, hi, extra={"event.action": "insort_right", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.lo": lo, "logrite.hi": hi})
     """
     Inserts a given value into a sorted array after other values with the same value.
 
@@ -175,6 +186,7 @@ def insort_right(
     [0, 5, 7, 15, 10, 15]
     """
     sorted_collection.insert(bisect_right(sorted_collection, item, lo, hi), item)
+    logger.warning("<<< Exiting insort_right(sorted_collection=%s,item=%s,lo=%s,hi=%s)", sorted_collection, item, lo, hi, extra={"event.action": "insort_right", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.lo": lo, "logrite.hi": hi})
 
 
 def binary_search(sorted_collection: list[int], item: int) -> int:
@@ -197,6 +209,7 @@ def binary_search(sorted_collection: list[int], item: int) -> int:
     >>> binary_search([0, 5, 7, 10, 15], 6)
     -1
     """
+    logger.error(">>> Entering binary_search(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "binary_search", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     if any(a > b for a, b in pairwise(sorted_collection)):
         raise ValueError("sorted_collection must be sorted in ascending order")
     left = 0
@@ -204,6 +217,7 @@ def binary_search(sorted_collection: list[int], item: int) -> int:
 
     while left <= right:
         midpoint = left + (right - left) // 2
+        logger.error("binary_search(sorted_collection=%s,item=%s): midpoint → %s", sorted_collection, item, midpoint, extra={"event.action": "binary_search", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
         current_item = sorted_collection[midpoint]
         if current_item == item:
             return midpoint
@@ -211,6 +225,7 @@ def binary_search(sorted_collection: list[int], item: int) -> int:
             right = midpoint - 1
         else:
             left = midpoint + 1
+    logger.warning("<<< Exiting binary_search(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "binary_search", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     return -1
 
 
@@ -234,11 +249,13 @@ def binary_search_std_lib(sorted_collection: list[int], item: int) -> int:
     >>> binary_search_std_lib([0, 5, 7, 10, 15], 6)
     -1
     """
+    logger.error(">>> Entering binary_search_std_lib(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "binary_search_std_lib", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     if list(sorted_collection) != sorted(sorted_collection):
         raise ValueError("sorted_collection must be sorted in ascending order")
     index = bisect.bisect_left(sorted_collection, item)
     if index != len(sorted_collection) and sorted_collection[index] == item:
         return index
+    logger.warning("<<< Exiting binary_search_std_lib(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "binary_search_std_lib", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     return -1
 
 
@@ -268,8 +285,10 @@ def binary_search_with_duplicates(sorted_collection: list[int], item: int) -> li
     >>> binary_search_with_duplicates([1, 2, 2, 2, 3], 4)
     []
     """
+    logger.error(">>> Entering binary_search_with_duplicates(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "binary_search_with_duplicates", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     if list(sorted_collection) != sorted(sorted_collection):
         raise ValueError("sorted_collection must be sorted in ascending order")
+        logger.warning("<<< Exiting binary_search_with_duplicates(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "binary_search_with_duplicates", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
 
     def lower_bound(sorted_collection: list[int], item: int) -> int:
         """
@@ -279,15 +298,18 @@ def binary_search_with_duplicates(sorted_collection: list[int], item: int) -> li
         :param item: The item to find the lower bound for.
         :return: The index where the item can be inserted while maintaining order.
         """
+        logger.error(">>> Entering lower_bound(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "lower_bound", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
         left = 0
         right = len(sorted_collection)
         while left < right:
             midpoint = left + (right - left) // 2
+            logger.error("lower_bound(sorted_collection=%s,item=%s): midpoint → %s", sorted_collection, item, midpoint, extra={"event.action": "lower_bound", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
             current_item = sorted_collection[midpoint]
             if current_item < item:
                 left = midpoint + 1
             else:
                 right = midpoint
+        logger.warning("<<< Exiting lower_bound(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "lower_bound", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
         return left
 
     def upper_bound(sorted_collection: list[int], item: int) -> int:
@@ -298,15 +320,18 @@ def binary_search_with_duplicates(sorted_collection: list[int], item: int) -> li
         :param item: The item to find the upper bound for.
         :return: The index where the item can be inserted after all existing instances.
         """
+        logger.error(">>> Entering upper_bound(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "upper_bound", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
         left = 0
         right = len(sorted_collection)
         while left < right:
             midpoint = left + (right - left) // 2
+            logger.error("upper_bound(sorted_collection=%s,item=%s): midpoint → %s", sorted_collection, item, midpoint, extra={"event.action": "upper_bound", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
             current_item = sorted_collection[midpoint]
             if current_item <= item:
                 left = midpoint + 1
             else:
                 right = midpoint
+        logger.warning("<<< Exiting upper_bound(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "upper_bound", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
         return left
 
     left = lower_bound(sorted_collection, item)
@@ -354,6 +379,7 @@ def binary_search_by_recursion(
     elif sorted_collection[midpoint] > item:
         return binary_search_by_recursion(sorted_collection, item, left, midpoint - 1)
     else:
+        logger.warning("<<< Exiting binary_search_by_recursion(sorted_collection=%s,item=%s,left=%s,right=%s)", sorted_collection, item, left, right, extra={"event.action": "binary_search_by_recursion", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.left": left, "logrite.right": right})
         return binary_search_by_recursion(sorted_collection, item, midpoint + 1, right)
 
 
@@ -381,6 +407,7 @@ def exponential_search(sorted_collection: list[int], item: int) -> int:
     >>> exponential_search([0, 5, 7, 10, 15], 6)
     -1
     """
+    logger.error(">>> Entering exponential_search(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "exponential_search", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     if list(sorted_collection) != sorted(sorted_collection):
         raise ValueError("sorted_collection must be sorted in ascending order")
     bound = 1
@@ -388,11 +415,14 @@ def exponential_search(sorted_collection: list[int], item: int) -> int:
         bound *= 2
     left = bound // 2
     right = min(bound, len(sorted_collection) - 1)
+    logger.error("exponential_search(sorted_collection=%s,item=%s): right → %s", sorted_collection, item, right, extra={"event.action": "exponential_search", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     last_result = binary_search_by_recursion(
         sorted_collection=sorted_collection, item=item, left=left, right=right
     )
+    logger.error("exponential_search(sorted_collection=%s,item=%s): last_result → %s", sorted_collection, item, last_result, extra={"event.action": "exponential_search", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     if last_result is None:
         return -1
+    logger.warning("<<< Exiting exponential_search(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "exponential_search", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     return last_result
 
 

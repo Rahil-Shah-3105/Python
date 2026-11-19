@@ -3,15 +3,21 @@ Illustrate how to implement inorder traversal in binary search tree.
 Author: Gurneet Singh
 https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 class BinaryTreeNode:
     """Defining the structure of BinaryTreeNode"""
 
     def __init__(self, data: int) -> None:
+        logger.error(">>> Entering __init__(data=%s)", data, extra={"event.action": "__init__"})
         self.data = data
+        logger.debug("__init__(self=%s,data=%s): self.data → %s", self, data, self.data, extra={"event.action": "__init__"})
+        logger.error("__init__(data=%s): self.data → %s", data, self.data, extra={"event.action": "__init__"})
         self.left_child: BinaryTreeNode | None = None
         self.right_child: BinaryTreeNode | None = None
+        logger.warning("<<< Exiting __init__(data=%s)", data, extra={"event.action": "__init__"})
 
 
 def insert(node: BinaryTreeNode | None, new_value: int) -> BinaryTreeNode | None:
@@ -26,8 +32,10 @@ def insert(node: BinaryTreeNode | None, new_value: int) -> BinaryTreeNode | None
     >>> node_a.data == node_b.data
     True
     """
+    logger.error(">>> Entering insert(node=%s,new_value=%s)", node, new_value, extra={"event.action": "insert", "logrite.node": node, "logrite.new_value": new_value})
     if node is None:
         node = BinaryTreeNode(new_value)
+        logger.error("insert(node=%s,new_value=%s): node → %s", node, new_value, node, extra={"event.action": "insert", "logrite.node": node, "logrite.new_value": new_value})
         return node
 
     # binary search tree is not empty,
@@ -40,6 +48,7 @@ def insert(node: BinaryTreeNode | None, new_value: int) -> BinaryTreeNode | None
         # if new_value is greater than value of data in node,
         #  add it to right subtree and proceed recursively
         node.right_child = insert(node.right_child, new_value)
+    logger.warning("<<< Exiting insert(node=%s,new_value=%s)", node, new_value, extra={"event.action": "insert", "logrite.node": node, "logrite.new_value": new_value})
     return node
 
 
@@ -48,31 +57,39 @@ def inorder(node: BinaryTreeNode | None) -> list[int]:  # if node is None,return
     >>> inorder(make_tree())
     [6, 10, 14, 15, 20, 25, 60]
     """
+    logger.error(">>> Entering inorder(node=%s)", node, extra={"event.action": "inorder", "logrite.node": node})
     if node:
         inorder_array = inorder(node.left_child)
         inorder_array = [*inorder_array, node.data]
         inorder_array = inorder_array + inorder(node.right_child)
     else:
         inorder_array = []
+    logger.warning("<<< Exiting inorder(node=%s)", node, extra={"event.action": "inorder", "logrite.node": node})
     return inorder_array
 
 
 def make_tree() -> BinaryTreeNode | None:
+    logger.error(">>> Entering make_tree()", extra={"event.action": "make_tree"})
     root = insert(None, 15)
+    logger.error("make_tree(): root → %s", root, extra={"event.action": "make_tree"})
     insert(root, 10)
     insert(root, 25)
     insert(root, 6)
     insert(root, 14)
     insert(root, 20)
     insert(root, 60)
+    logger.warning("<<< Exiting make_tree()", extra={"event.action": "make_tree"})
     return root
 
 
 def main() -> None:
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     # main function
     root = make_tree()
+    logger.error("main(): root → %s", root, extra={"event.action": "main"})
     print("Printing values of binary search tree in Inorder Traversal.")
     inorder(root)
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

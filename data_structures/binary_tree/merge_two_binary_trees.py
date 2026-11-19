@@ -7,6 +7,8 @@ will be used as the node of new tree.
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
@@ -15,9 +17,12 @@ class Node:
     """
 
     def __init__(self, value: int = 0) -> None:
+        logger.error(">>> Entering __init__(value=%s)", value, extra={"event.action": "__init__", "logrite.value": value})
         self.value = value
+        logger.debug("__init__(self=%s,value=%s): self.value → %s", self, value, self.value, extra={"event.action": "__init__", "logrite.value": value})
         self.left: Node | None = None
         self.right: Node | None = None
+        logger.warning("<<< Exiting __init__(value=%s)", value, extra={"event.action": "__init__", "logrite.value": value})
 
 
 def merge_two_binary_trees(tree1: Node | None, tree2: Node | None) -> Node | None:
@@ -42,14 +47,17 @@ def merge_two_binary_trees(tree1: Node | None, tree2: Node | None) -> Node | Non
     15
     4
     """
+    logger.error(">>> Entering merge_two_binary_trees(tree1=%s,tree2=%s)", tree1, tree2, extra={"event.action": "merge_two_binary_trees", "logrite.tree1": tree1, "logrite.tree2": tree2})
     if tree1 is None:
         return tree2
     if tree2 is None:
         return tree1
 
     tree1.value = tree1.value + tree2.value
+    logger.debug("merge_two_binary_trees(tree1=%s,tree2=%s): tree1.value → %s", tree1, tree2, tree1.value, extra={"event.action": "merge_two_binary_trees", "logrite.tree1": tree1, "logrite.tree2": tree2})
     tree1.left = merge_two_binary_trees(tree1.left, tree2.left)
     tree1.right = merge_two_binary_trees(tree1.right, tree2.right)
+    logger.warning("<<< Exiting merge_two_binary_trees(tree1=%s,tree2=%s)", tree1, tree2, extra={"event.action": "merge_two_binary_trees", "logrite.tree1": tree1, "logrite.tree2": tree2})
     return tree1
 
 
@@ -67,10 +75,12 @@ def print_preorder(root: Node | None) -> None:
     >>> print_preorder(root.right)
     3
     """
+    logger.error(">>> Entering print_preorder(root=%s)", root, extra={"event.action": "print_preorder", "logrite.root": root})
     if root:
         print(root.value)
         print_preorder(root.left)
         print_preorder(root.right)
+        logger.warning("<<< Exiting print_preorder(root=%s)", root, extra={"event.action": "print_preorder", "logrite.root": root})
 
 
 if __name__ == "__main__":

@@ -8,6 +8,8 @@ we get 3, 5, 6 and 9. The sum of these multiples is 23.
 
 Find the sum of all the multiples of 3 or 5 below 1000.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 1000) -> int:
@@ -25,8 +27,10 @@ def solution(n: int = 1000) -> int:
     >>> solution(600)
     83700
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     total = 0
+    logger.error("solution(n=%s): total → %s", n, total, extra={"event.action": "solution", "logrite.n": n})
     num = 0
     while 1:
         num += 3
@@ -57,6 +61,7 @@ def solution(n: int = 1000) -> int:
         if num >= n:
             break
         total += num
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return total
 
 

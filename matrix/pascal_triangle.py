@@ -6,6 +6,8 @@ triangle[r][c] = triangle[r-1][c-1]+triangle[r-1][c]
 A Pascal's triangle is a triangular array containing binomial coefficients.
 https://en.wikipedia.org/wiki/Pascal%27s_triangle
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def print_pascal_triangle(num_rows: int) -> None:
@@ -18,7 +20,9 @@ def print_pascal_triangle(num_rows: int) -> None:
      1 3 3 1
     1 4 6 4 1
     """
+    logger.error(">>> Entering print_pascal_triangle(num_rows=%s)", num_rows, extra={"event.action": "print_pascal_triangle", "logrite.num_rows": num_rows})
     triangle = generate_pascal_triangle(num_rows)
+    logger.error("print_pascal_triangle(num_rows=%s): triangle → %s", num_rows, triangle, extra={"event.action": "print_pascal_triangle", "logrite.num_rows": num_rows})
     for row_idx in range(num_rows):
         # Print left spaces
         for _ in range(num_rows - row_idx - 1):
@@ -30,6 +34,7 @@ def print_pascal_triangle(num_rows: int) -> None:
             else:
                 print(triangle[row_idx][col_idx], end="")
         print()
+        logger.warning("<<< Exiting print_pascal_triangle(num_rows=%s)", num_rows, extra={"event.action": "print_pascal_triangle", "logrite.num_rows": num_rows})
 
 
 def generate_pascal_triangle(num_rows: int) -> list[list[int]]:
@@ -56,6 +61,7 @@ def generate_pascal_triangle(num_rows: int) -> list[list[int]]:
         ...
     TypeError: The input value of 'num_rows' should be 'int'
     """
+    logger.error(">>> Entering generate_pascal_triangle(num_rows=%s)", num_rows, extra={"event.action": "generate_pascal_triangle", "logrite.num_rows": num_rows})
 
     if not isinstance(num_rows, int):
         raise TypeError("The input value of 'num_rows' should be 'int'")
@@ -71,6 +77,7 @@ def generate_pascal_triangle(num_rows: int) -> list[list[int]]:
     for current_row_idx in range(num_rows):
         current_row = populate_current_row(triangle, current_row_idx)
         triangle.append(current_row)
+    logger.warning("<<< Exiting generate_pascal_triangle(num_rows=%s)", num_rows, extra={"event.action": "generate_pascal_triangle", "logrite.num_rows": num_rows})
     return triangle
 
 
@@ -80,13 +87,16 @@ def populate_current_row(triangle: list[list[int]], current_row_idx: int) -> lis
     >>> populate_current_row(triangle, 1)
     [1, 1]
     """
+    logger.error(">>> Entering populate_current_row(triangle=%s,current_row_idx=%s)", triangle, current_row_idx, extra={"event.action": "populate_current_row", "logrite.triangle": triangle, "logrite.current_row_idx": current_row_idx})
     current_row = [-1] * (current_row_idx + 1)
+    logger.error("populate_current_row(triangle=%s,current_row_idx=%s): current_row → %s", triangle, current_row_idx, current_row, extra={"event.action": "populate_current_row", "logrite.triangle": triangle, "logrite.current_row_idx": current_row_idx})
     # first and last elements of current row are equal to 1
     current_row[0], current_row[-1] = 1, 1
     for current_col_idx in range(1, current_row_idx):
         calculate_current_element(
             triangle, current_row, current_row_idx, current_col_idx
         )
+    logger.warning("<<< Exiting populate_current_row(triangle=%s,current_row_idx=%s)", triangle, current_row_idx, extra={"event.action": "populate_current_row", "logrite.triangle": triangle, "logrite.current_row_idx": current_row_idx})
     return current_row
 
 
@@ -96,6 +106,7 @@ def calculate_current_element(
     current_row_idx: int,
     current_col_idx: int,
 ) -> None:
+    logger.error(">>> Entering calculate_current_element(triangle=%s,current_row=%s,current_row_idx=%s,current_col_idx=%s)", triangle, current_row, current_row_idx, current_col_idx, extra={"event.action": "calculate_current_element", "logrite.triangle": triangle, "logrite.current_row": current_row, "logrite.current_row_idx": current_row_idx, "logrite.current_col_idx": current_col_idx})
     """
     >>> triangle = [[1], [1, 1]]
     >>> current_row = [1, -1, 1]
@@ -106,6 +117,7 @@ def calculate_current_element(
     above_to_left_elt = triangle[current_row_idx - 1][current_col_idx - 1]
     above_to_right_elt = triangle[current_row_idx - 1][current_col_idx]
     current_row[current_col_idx] = above_to_left_elt + above_to_right_elt
+    logger.warning("<<< Exiting calculate_current_element(triangle=%s,current_row=%s,current_row_idx=%s,current_col_idx=%s)", triangle, current_row, current_row_idx, current_col_idx, extra={"event.action": "calculate_current_element", "logrite.triangle": triangle, "logrite.current_row": current_row, "logrite.current_row_idx": current_row_idx, "logrite.current_col_idx": current_col_idx})
 
 
 def generate_pascal_triangle_optimized(num_rows: int) -> list[list[int]]:
@@ -134,6 +146,7 @@ def generate_pascal_triangle_optimized(num_rows: int) -> list[list[int]]:
         ...
     TypeError: The input value of 'num_rows' should be 'int'
     """
+    logger.error(">>> Entering generate_pascal_triangle_optimized(num_rows=%s)", num_rows, extra={"event.action": "generate_pascal_triangle_optimized", "logrite.num_rows": num_rows})
 
     if not isinstance(num_rows, int):
         raise TypeError("The input value of 'num_rows' should be 'int'")

@@ -8,6 +8,8 @@ Time complexity: O(C(n,k)) which is O(n choose k) = O((n!/(k! * (n - k)!))),
 from __future__ import annotations
 
 from itertools import combinations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def combination_lists(n: int, k: int) -> list[list[int]]:
@@ -17,6 +19,8 @@ def combination_lists(n: int, k: int) -> list[list[int]]:
     >>> combination_lists(n=4, k=2)
     [[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]
     """
+    logger.error(">>> Entering combination_lists(n=%s,k=%s)", n, k, extra={"event.action": "combination_lists", "logrite.n": n, "logrite.k": k})
+    logger.warning("<<< Exiting combination_lists(n=%s,k=%s)", n, k, extra={"event.action": "combination_lists", "logrite.n": n, "logrite.k": k})
     return [list(x) for x in combinations(range(1, n + 1), k)]
 
 
@@ -51,6 +55,7 @@ def generate_all_combinations(n: int, k: int) -> list[list[int]]:
     ...     for n in range(1, 6) for k in range(1, 6))
     True
     """
+    logger.error(">>> Entering generate_all_combinations(n=%s,k=%s)", n, k, extra={"event.action": "generate_all_combinations", "logrite.n": n, "logrite.k": k})
     if k < 0:
         raise ValueError("k must not be negative")
     if n < 0:
@@ -58,6 +63,7 @@ def generate_all_combinations(n: int, k: int) -> list[list[int]]:
 
     result: list[list[int]] = []
     create_all_state(1, n, k, [], result)
+    logger.warning("<<< Exiting generate_all_combinations(n=%s,k=%s)", n, k, extra={"event.action": "generate_all_combinations", "logrite.n": n, "logrite.k": k})
     return result
 
 
@@ -68,6 +74,7 @@ def create_all_state(
     current_list: list[int],
     total_list: list[list[int]],
 ) -> None:
+    logger.error(">>> Entering create_all_state(increment=%s,total_number=%s,level=%s,current_list=%s,total_list=%s)", increment, total_number, level, current_list, total_list, extra={"event.action": "create_all_state", "logrite.increment": increment, "logrite.total_number": total_number, "logrite.level": level, "logrite.current_list": current_list, "logrite.total_list": total_list})
     """
     Helper function to recursively build all combinations.
 
@@ -92,6 +99,7 @@ def create_all_state(
     """
     if level == 0:
         total_list.append(current_list[:])
+        logger.warning("<<< Exiting create_all_state(increment=%s,total_number=%s,level=%s,current_list=%s,total_list=%s)", increment, total_number, level, current_list, total_list, extra={"event.action": "create_all_state", "logrite.increment": increment, "logrite.total_number": total_number, "logrite.level": level, "logrite.current_list": current_list, "logrite.total_list": total_list})
         return
 
     for i in range(increment, total_number - level + 2):

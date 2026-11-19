@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def points_to_polynomial(coordinates: list[list[int]]) -> str:
     """
     coordinates is a two dimensional matrix: [[x, y], [x, y], ...]
@@ -34,6 +36,7 @@ def points_to_polynomial(coordinates: list[list[int]]) -> str:
         ...
     ValueError: The program cannot work out a fitting polynomial.
     """
+    logger.error(">>> Entering points_to_polynomial(coordinates=%s)", coordinates, extra={"event.action": "points_to_polynomial", "logrite.coordinates": coordinates})
     if len(coordinates) == 0 or not all(len(pair) == 2 for pair in coordinates):
         raise ValueError("The program cannot work out a fitting polynomial.")
 
@@ -48,6 +51,7 @@ def points_to_polynomial(coordinates: list[list[int]]) -> str:
         raise ValueError("The program cannot work out a fitting polynomial.")
 
     x = len(coordinates)
+    logger.error("points_to_polynomial(coordinates=%s): x → %s", coordinates, x, extra={"event.action": "points_to_polynomial", "logrite.coordinates": coordinates})
 
     # put the x and x to the power values in a matrix
     matrix: list[list[float]] = [
@@ -78,6 +82,7 @@ def points_to_polynomial(coordinates: list[list[int]]) -> str:
     ]
 
     solved = "f(x)="
+    logger.error("points_to_polynomial(coordinates=%s): solved → %s", coordinates, solved, extra={"event.action": "points_to_polynomial", "logrite.coordinates": coordinates})
 
     for count in range(x):
         remove_e: list[str] = solution[count].split("E")
@@ -87,6 +92,7 @@ def points_to_polynomial(coordinates: list[list[int]]) -> str:
         if count + 1 != x:
             solved += "+"
 
+    logger.warning("<<< Exiting points_to_polynomial(coordinates=%s)", coordinates, extra={"event.action": "points_to_polynomial", "logrite.coordinates": coordinates})
     return solved
 
 

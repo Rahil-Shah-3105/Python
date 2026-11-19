@@ -11,6 +11,8 @@ equal and the third differs by no more than one unit.
 Find the sum of the perimeters of all almost equilateral triangles with integral side
 lengths and area and whose perimeters do not exceed one billion (1,000,000,000).
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(max_perimeter: int = 10**9) -> int:
@@ -21,6 +23,7 @@ def solution(max_perimeter: int = 10**9) -> int:
     >>> solution(20)
     16
     """
+    logger.error(">>> Entering solution(max_perimeter=%s)", max_perimeter, extra={"event.action": "solution", "logrite.max_perimeter": max_perimeter})
 
     prev_value = 1
     value = 2
@@ -37,6 +40,7 @@ def solution(max_perimeter: int = 10**9) -> int:
         perimeter = 2 * value + 2 if i % 2 == 0 else 2 * value - 2
         i += 1
 
+    logger.warning("<<< Exiting solution(max_perimeter=%s)", max_perimeter, extra={"event.action": "solution", "logrite.max_perimeter": max_perimeter})
     return perimeters_sum
 
 

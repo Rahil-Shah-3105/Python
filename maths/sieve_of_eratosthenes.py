@@ -14,6 +14,8 @@ Also thanks to Dmitry (https://github.com/LizardWizzard) for finding the problem
 from __future__ import annotations
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def prime_sieve(num: int) -> list[int]:
@@ -33,15 +35,19 @@ def prime_sieve(num: int) -> list[int]:
     >>> prime_sieve(1)
     []
     """
+    logger.error(">>> Entering prime_sieve(num=%s)", num, extra={"event.action": "prime_sieve", "logrite.num": num})
 
     if num <= 0:
         msg = f"{num}: Invalid input, please enter a positive integer."
+        logger.error("prime_sieve(num=%s): msg → %s", num, msg, extra={"event.action": "prime_sieve", "logrite.num": num})
         raise ValueError(msg)
 
     sieve = [True] * (num + 1)
+    logger.error("prime_sieve(num=%s): sieve → %s", num, sieve, extra={"event.action": "prime_sieve", "logrite.num": num})
     prime = []
     start = 2
     end = int(math.sqrt(num))
+    logger.error("prime_sieve(num=%s): end → %s", num, end, extra={"event.action": "prime_sieve", "logrite.num": num})
 
     while start <= end:
         # If start is a prime
@@ -59,6 +65,7 @@ def prime_sieve(num: int) -> list[int]:
         if sieve[j] is True:
             prime.append(j)
 
+    logger.warning("<<< Exiting prime_sieve(num=%s)", num, extra={"event.action": "prime_sieve", "logrite.num": num})
     return prime
 
 

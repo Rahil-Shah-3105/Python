@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def largest_divisible_subset(items: list[int]) -> list[int]:
@@ -24,15 +26,19 @@ def largest_divisible_subset(items: list[int]) -> list[int]:
     >>> largest_divisible_subset([])
     []
     """
+    logger.error(">>> Entering largest_divisible_subset(items=%s)", items, extra={"event.action": "largest_divisible_subset", "logrite.items": items})
     # Sort the array in ascending order as the sequence does not matter we only have to
     # pick up a subset.
     items = sorted(items)
+    logger.error("largest_divisible_subset(items=%s): items → %s", items, items, extra={"event.action": "largest_divisible_subset", "logrite.items": items})
 
     number_of_items = len(items)
+    logger.error("largest_divisible_subset(items=%s): number_of_items → %s", items, number_of_items, extra={"event.action": "largest_divisible_subset", "logrite.items": items})
 
     # Initialize memo with 1s and hash with increasing numbers
     memo = [1] * number_of_items
     hash_array = list(range(number_of_items))
+    logger.error("largest_divisible_subset(items=%s): hash_array → <redacted>", items, extra={"event.action": "largest_divisible_subset", "logrite.items": items})
 
     # Iterate through the array
     for i, item in enumerate(items):
@@ -60,6 +66,7 @@ def largest_divisible_subset(items: list[int]) -> list[int]:
         last_index = hash_array[last_index]
         result.append(items[last_index])
 
+    logger.warning("<<< Exiting largest_divisible_subset(items=%s)", items, extra={"event.action": "largest_divisible_subset", "logrite.items": items})
     return result
 
 

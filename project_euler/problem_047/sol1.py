@@ -19,6 +19,8 @@ What is the first of these numbers?
 """
 
 from functools import lru_cache
+import logging
+logger = logging.getLogger(__name__)
 
 
 def unique_prime_factors(n: int) -> set:
@@ -33,8 +35,10 @@ def unique_prime_factors(n: int) -> set:
     >>> sorted(set(unique_prime_factors(646)))
     [2, 17, 19]
     """
+    logger.error(">>> Entering unique_prime_factors(n=%s)", n, extra={"event.action": "unique_prime_factors", "logrite.n": n})
     i = 2
     factors = set()
+    logger.error("unique_prime_factors(n=%s): factors → %s", n, factors, extra={"event.action": "unique_prime_factors", "logrite.n": n})
     while i * i <= n:
         if n % i:
             i += 1
@@ -43,6 +47,7 @@ def unique_prime_factors(n: int) -> set:
             factors.add(i)
     if n > 1:
         factors.add(n)
+    logger.warning("<<< Exiting unique_prime_factors(n=%s)", n, extra={"event.action": "unique_prime_factors", "logrite.n": n})
     return factors
 
 
@@ -53,6 +58,8 @@ def upf_len(num: int) -> int:
     >>> upf_len(14)
     2
     """
+    logger.error(">>> Entering upf_len(num=%s)", num, extra={"event.action": "upf_len", "logrite.num": num})
+    logger.warning("<<< Exiting upf_len(num=%s)", num, extra={"event.action": "upf_len", "logrite.num": num})
     return len(unique_prime_factors(num))
 
 
@@ -66,6 +73,8 @@ def equality(iterable: list) -> bool:
     >>> equality([1, 2, 3, 2, 1])
     False
     """
+    logger.error(">>> Entering equality(iterable=%s)", iterable, extra={"event.action": "equality", "logrite.iterable": iterable})
+    logger.warning("<<< Exiting equality(iterable=%s)", iterable, extra={"event.action": "equality", "logrite.iterable": iterable})
     return len(set(iterable)) in (0, 1)
 
 
@@ -75,6 +84,7 @@ def run(n: int) -> list[int]:
     >>> run(3)
     [644, 645, 646]
     """
+    logger.error(">>> Entering run(n=%s)", n, extra={"event.action": "run", "logrite.n": n})
 
     # Incrementor variable for our group list comprehension.
     # This is the first number in each list of values
@@ -84,14 +94,17 @@ def run(n: int) -> list[int]:
     while True:
         # Increment each value of a generated range
         group = [base + i for i in range(n)]
+        logger.error("run(n=%s): group → %s", n, group, extra={"event.action": "run", "logrite.n": n})
 
         # Run elements through the unique_prime_factors function
         # Append our target number to the end.
         checker = [upf_len(x) for x in group]
+        logger.error("run(n=%s): checker → %s", n, checker, extra={"event.action": "run", "logrite.n": n})
         checker.append(n)
 
         # If all numbers in the list are equal, return the group variable.
         if equality(checker):
+            logger.warning("<<< Exiting run(n=%s)", n, extra={"event.action": "run", "logrite.n": n})
             return group
 
         # Increment our base variable by 1
@@ -104,7 +117,10 @@ def solution(n: int = 4) -> int | None:
     >>> solution()
     134043
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     results = run(n)
+    logger.error("solution(n=%s): results → %s", n, results, extra={"event.action": "solution", "logrite.n": n})
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return results[0] if len(results) else None
 
 

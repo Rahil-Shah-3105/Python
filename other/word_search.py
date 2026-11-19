@@ -6,6 +6,8 @@ that are best described as compass locations.
 """
 
 from random import choice, randint, shuffle
+import logging
+logger = logging.getLogger(__name__)
 
 # The words to display on the word search -
 # can be made dynamic by randonly selecting a certain number of
@@ -26,12 +28,17 @@ class WordSearch:
     """
 
     def __init__(self, words: list[str], width: int, height: int) -> None:
+        logger.error(">>> Entering __init__(words=%s,width=%s,height=%s)", words, width, height, extra={"event.action": "__init__", "logrite.words": words, "logrite.width": width, "logrite.height": height})
         self.words = words
+        logger.debug("__init__(self=%s,words=%s,width=%s,height=%s): self.words → %s", self, words, width, height, self.words, extra={"event.action": "__init__", "logrite.words": words, "logrite.width": width, "logrite.height": height})
         self.width = width
+        logger.debug("__init__(self=%s,words=%s,width=%s,height=%s): self.width → %s", self, words, width, height, self.width, extra={"event.action": "__init__", "logrite.words": words, "logrite.width": width, "logrite.height": height})
         self.height = height
+        logger.debug("__init__(self=%s,words=%s,width=%s,height=%s): self.height → %s", self, words, width, height, self.height, extra={"event.action": "__init__", "logrite.words": words, "logrite.width": width, "logrite.height": height})
 
         # Board matrix holding each letter
         self.board: list[list[str | None]] = [[None] * width for _ in range(height)]
+        logger.warning("<<< Exiting __init__(words=%s,width=%s,height=%s)", words, width, height, extra={"event.action": "__init__", "logrite.words": words, "logrite.width": width, "logrite.height": height})
 
     def insert_north(self, word: str, rows: list[int], cols: list[int]) -> None:
         """
@@ -47,7 +54,9 @@ class WordSearch:
         [None, 'a', 'a'],
         [None, None, 'c']]
         """
+        logger.error(">>> Entering insert_north(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_north", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         word_length = len(word)
+        logger.error("insert_north(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length, extra={"event.action": "insert_north", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Check if there is space above the row to fit in the word
@@ -59,10 +68,12 @@ class WordSearch:
                 # Only check to be made here is if there are existing letters
                 # above the column that will be overwritten
                 letters_above = [self.board[row - i][col] for i in range(word_length)]
+                logger.error("insert_north(word=%s,rows=%s,cols=%s): letters_above → %s", word, rows, cols, letters_above, extra={"event.action": "insert_north", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
                 if all(letter is None for letter in letters_above):
                     # Successful, insert the word north
                     for i in range(word_length):
                         self.board[row - i][col] = word[i]
+                    logger.warning("<<< Exiting insert_north(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_north", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
                     return
 
     def insert_northeast(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -79,7 +90,9 @@ class WordSearch:
         ['a', 'a', None],
         ['c', None, None]]
         """
+        logger.error(">>> Entering insert_northeast(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_northeast", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         word_length = len(word)
+        logger.error("insert_northeast(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length, extra={"event.action": "insert_northeast", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Check if there is space for the word above the row
@@ -101,6 +114,7 @@ class WordSearch:
                     # Successful, insert the word northeast
                     for i in range(word_length):
                         self.board[row - i][col + i] = word[i]
+                    logger.warning("<<< Exiting insert_northeast(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_northeast", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
                     return
 
     def insert_east(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -117,7 +131,9 @@ class WordSearch:
         ['c', 'a', 't'],
         [None, None, None]]
         """
+        logger.error(">>> Entering insert_east(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_east", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         word_length = len(word)
+        logger.error("insert_east(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length, extra={"event.action": "insert_east", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Attempt to insert the word into each column
@@ -129,10 +145,12 @@ class WordSearch:
                 # Check if there are existing letters
                 # to the right of the column that will be overwritten
                 letters_left = [self.board[row][col + i] for i in range(word_length)]
+                logger.error("insert_east(word=%s,rows=%s,cols=%s): letters_left → %s", word, rows, cols, letters_left, extra={"event.action": "insert_east", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
                 if all(letter is None for letter in letters_left):
                     # Successful, insert the word east
                     for i in range(word_length):
                         self.board[row][col + i] = word[i]
+                    logger.warning("<<< Exiting insert_east(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_east", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
                     return
 
     def insert_southeast(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -149,7 +167,9 @@ class WordSearch:
         ['a', 'a', None],
         [None, 't', 't']]
         """
+        logger.error(">>> Entering insert_southeast(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_southeast", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         word_length = len(word)
+        logger.error("insert_southeast(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length, extra={"event.action": "insert_southeast", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Check if there is space for the word below the row
@@ -171,6 +191,7 @@ class WordSearch:
                     # Successful, insert the word southeast
                     for i in range(word_length):
                         self.board[row + i][col + i] = word[i]
+                    logger.warning("<<< Exiting insert_southeast(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_southeast", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
                     return
 
     def insert_south(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -187,7 +208,9 @@ class WordSearch:
         ['a', 'a', None],
         ['t', 't', None]]
         """
+        logger.error(">>> Entering insert_south(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_south", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         word_length = len(word)
+        logger.error("insert_south(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length, extra={"event.action": "insert_south", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Check if there is space below the row to fit in the word
@@ -199,10 +222,12 @@ class WordSearch:
                 # Only check to be made here is if there are existing letters
                 # below the column that will be overwritten
                 letters_below = [self.board[row + i][col] for i in range(word_length)]
+                logger.error("insert_south(word=%s,rows=%s,cols=%s): letters_below → %s", word, rows, cols, letters_below, extra={"event.action": "insert_south", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
                 if all(letter is None for letter in letters_below):
                     # Successful, insert the word south
                     for i in range(word_length):
                         self.board[row + i][col] = word[i]
+                    logger.warning("<<< Exiting insert_south(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_south", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
                     return
 
     def insert_southwest(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -219,7 +244,9 @@ class WordSearch:
         [None, 'a', 'a'],
         ['t', 't', None]]
         """
+        logger.error(">>> Entering insert_southwest(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_southwest", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         word_length = len(word)
+        logger.error("insert_southwest(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length, extra={"event.action": "insert_southwest", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Check if there is space for the word below the row
@@ -241,6 +268,7 @@ class WordSearch:
                     # Successful, insert the word southwest
                     for i in range(word_length):
                         self.board[row + i][col - i] = word[i]
+                    logger.warning("<<< Exiting insert_southwest(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_southwest", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
                     return
 
     def insert_west(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -257,7 +285,9 @@ class WordSearch:
         ['t', 'a', 'c'],
         [None, None, None]]
         """
+        logger.error(">>> Entering insert_west(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_west", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         word_length = len(word)
+        logger.error("insert_west(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length, extra={"event.action": "insert_west", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Attempt to insert the word into each column
@@ -269,10 +299,12 @@ class WordSearch:
                 # Check if there are existing letters
                 # to the left of the column that will be overwritten
                 letters_left = [self.board[row][col - i] for i in range(word_length)]
+                logger.error("insert_west(word=%s,rows=%s,cols=%s): letters_left → %s", word, rows, cols, letters_left, extra={"event.action": "insert_west", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
                 if all(letter is None for letter in letters_left):
                     # Successful, insert the word west
                     for i in range(word_length):
                         self.board[row][col - i] = word[i]
+                    logger.warning("<<< Exiting insert_west(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_west", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
                     return
 
     def insert_northwest(self, word: str, rows: list[int], cols: list[int]) -> None:
@@ -289,7 +321,9 @@ class WordSearch:
         ['t', 'a', None],
         [None, 'a', 'c']]
         """
+        logger.error(">>> Entering insert_northwest(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_northwest", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         word_length = len(word)
+        logger.error("insert_northwest(word=%s,rows=%s,cols=%s): word_length → %s", word, rows, cols, word_length, extra={"event.action": "insert_northwest", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
         # Attempt to insert the word into each row and when successful, exit
         for row in rows:
             # Check if there is space for the word above the row
@@ -311,6 +345,7 @@ class WordSearch:
                     # Successful, insert the word northwest
                     for i in range(word_length):
                         self.board[row - i][col - i] = word[i]
+                    logger.warning("<<< Exiting insert_northwest(word=%s,rows=%s,cols=%s)", word, rows, cols, extra={"event.action": "insert_northwest", "logrite.word": word, "logrite.rows": rows, "logrite.cols": cols})
                     return
 
     def generate_board(self) -> None:
@@ -323,6 +358,7 @@ class WordSearch:
         ... ) == sum(map(lambda word: len(word), WORDS))
         True
         """
+        logger.error(">>> Entering generate_board()", extra={"event.action": "generate_board"})
         directions = (
             self.insert_north,
             self.insert_northeast,
@@ -342,11 +378,13 @@ class WordSearch:
 
             # Insert the word via the direction
             choice(directions)(word, rows, cols)
+            logger.warning("<<< Exiting generate_board()", extra={"event.action": "generate_board"})
 
 
 def visualise_word_search(
     board: list[list[str | None]] | None = None, *, add_fake_chars: bool = True
 ) -> None:
+    logger.error(">>> Entering visualise_word_search(board=%s,add_fake_chars=%s)", board, add_fake_chars, extra={"event.action": "visualise_word_search", "logrite.board": board, "logrite.add_fake_chars": add_fake_chars})
     """
     Graphically displays the word search in the terminal.
 
@@ -370,13 +408,16 @@ def visualise_word_search(
     """
     if board is None:
         word_search = WordSearch(WORDS, WIDTH, HEIGHT)
+        logger.error("visualise_word_search(board=%s,add_fake_chars=%s): word_search → %s", board, add_fake_chars, word_search, extra={"event.action": "visualise_word_search", "logrite.board": board, "logrite.add_fake_chars": add_fake_chars})
         word_search.generate_board()
         board = word_search.board
 
     result = ""
+    logger.error("visualise_word_search(board=%s,add_fake_chars=%s): result → %s", board, add_fake_chars, result, extra={"event.action": "visualise_word_search", "logrite.board": board, "logrite.add_fake_chars": add_fake_chars})
     for row in range(len(board)):
         for col in range(len(board[0])):
             character = "#"
+            logger.error("visualise_word_search(board=%s,add_fake_chars=%s): character → %s", board, add_fake_chars, character, extra={"event.action": "visualise_word_search", "logrite.board": board, "logrite.add_fake_chars": add_fake_chars})
             if (letter := board[row][col]) is not None:
                 character = letter
             # Empty char, so add a fake char
@@ -385,6 +426,7 @@ def visualise_word_search(
             result += f"{character} "
         result += "\n"
     print(result, end="")
+    logger.warning("<<< Exiting visualise_word_search(board=%s,add_fake_chars=%s)", board, add_fake_chars, extra={"event.action": "visualise_word_search", "logrite.board": board, "logrite.add_fake_chars": add_fake_chars})
 
 
 if __name__ == "__main__":

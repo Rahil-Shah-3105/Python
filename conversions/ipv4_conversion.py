@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # https://www.geeksforgeeks.org/convert-ip-address-to-integer-and-vice-versa/
 
 
@@ -24,17 +26,21 @@ def ipv4_to_decimal(ipv4_address: str) -> int:
         ...
     ValueError: Invalid IPv4 octet 256
     """
+    logger.error(">>> Entering ipv4_to_decimal(ipv4_address=%s)", ipv4_address, extra={"event.action": "ipv4_to_decimal", "logrite.ipv4_address": ipv4_address})
 
     octets = [int(octet) for octet in ipv4_address.split(".")]
+    logger.error("ipv4_to_decimal(ipv4_address=%s): octets → %s", ipv4_address, octets, extra={"event.action": "ipv4_to_decimal", "logrite.ipv4_address": ipv4_address})
     if len(octets) != 4:
         raise ValueError("Invalid IPv4 address format")
 
     decimal_ipv4 = 0
+    logger.error("ipv4_to_decimal(ipv4_address=%s): decimal_ipv4 → %s", ipv4_address, decimal_ipv4, extra={"event.action": "ipv4_to_decimal", "logrite.ipv4_address": ipv4_address})
     for octet in octets:
         if not 0 <= octet <= 255:
             raise ValueError(f"Invalid IPv4 octet {octet}")  # noqa: EM102
         decimal_ipv4 = (decimal_ipv4 << 8) + int(octet)
 
+    logger.warning("<<< Exiting ipv4_to_decimal(ipv4_address=%s)", ipv4_address, extra={"event.action": "ipv4_to_decimal", "logrite.ipv4_address": ipv4_address})
     return decimal_ipv4
 
 
@@ -45,6 +51,8 @@ def alt_ipv4_to_decimal(ipv4_address: str) -> int:
     >>> alt_ipv4_to_decimal("10.0.0.255")
     167772415
     """
+    logger.error(">>> Entering alt_ipv4_to_decimal(ipv4_address=%s)", ipv4_address, extra={"event.action": "alt_ipv4_to_decimal", "logrite.ipv4_address": ipv4_address})
+    logger.warning("<<< Exiting alt_ipv4_to_decimal(ipv4_address=%s)", ipv4_address, extra={"event.action": "alt_ipv4_to_decimal", "logrite.ipv4_address": ipv4_address})
     return int("0x" + "".join(f"{int(i):02x}" for i in ipv4_address.split(".")), 16)
 
 
@@ -67,6 +75,7 @@ def decimal_to_ipv4(decimal_ipv4: int) -> str:
         ...
     ValueError: Invalid decimal IPv4 address
     """
+    logger.error(">>> Entering decimal_to_ipv4(decimal_ipv4=%s)", decimal_ipv4, extra={"event.action": "decimal_to_ipv4", "logrite.decimal_ipv4": decimal_ipv4})
 
     if not (0 <= decimal_ipv4 <= 4294967295):
         raise ValueError("Invalid decimal IPv4 address")
@@ -76,6 +85,7 @@ def decimal_to_ipv4(decimal_ipv4: int) -> str:
         ip_parts.append(str(decimal_ipv4 & 255))
         decimal_ipv4 >>= 8
 
+    logger.warning("<<< Exiting decimal_to_ipv4(decimal_ipv4=%s)", decimal_ipv4, extra={"event.action": "decimal_to_ipv4", "logrite.decimal_ipv4": decimal_ipv4})
     return ".".join(reversed(ip_parts))
 
 

@@ -25,6 +25,8 @@ References:
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 BALLS_PER_COLOUR = 10
 NUM_COLOURS = 7
@@ -41,11 +43,16 @@ def solution(num_picks: int = 20) -> str:
     >>> solution(30)
     '6.985042712'
     """
+    logger.error(">>> Entering solution(num_picks=%s)", num_picks, extra={"event.action": "solution", "logrite.num_picks": num_picks})
     total = math.comb(NUM_BALLS, num_picks)
+    logger.error("solution(num_picks=%s): total → %s", num_picks, total, extra={"event.action": "solution", "logrite.num_picks": num_picks})
     missing_colour = math.comb(NUM_BALLS - BALLS_PER_COLOUR, num_picks)
+    logger.error("solution(num_picks=%s): missing_colour → %s", num_picks, missing_colour, extra={"event.action": "solution", "logrite.num_picks": num_picks})
 
     result = NUM_COLOURS * (1 - missing_colour / total)
+    logger.error("solution(num_picks=%s): result → %s", num_picks, result, extra={"event.action": "solution", "logrite.num_picks": num_picks})
 
+    logger.warning("<<< Exiting solution(num_picks=%s)", num_picks, extra={"event.action": "solution", "logrite.num_picks": num_picks})
     return f"{result:.9f}"
 
 

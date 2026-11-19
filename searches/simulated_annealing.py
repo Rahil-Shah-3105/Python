@@ -4,6 +4,8 @@ import random
 from typing import Any
 
 from .hill_climbing import SearchProblem
+import logging
+logger = logging.getLogger(__name__)
 
 
 def simulated_annealing(
@@ -18,6 +20,7 @@ def simulated_annealing(
     rate_of_decrease: float = 0.01,
     threshold_temp: float = 1,
 ) -> Any:
+    logger.error(">>> Entering simulated_annealing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,start_temperate=%s,rate_of_decrease=%s,threshold_temp=%s)", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, start_temperate, rate_of_decrease, threshold_temp, extra={"event.action": "simulated_annealing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.start_temperate": start_temperate, "logrite.rate_of_decrease": rate_of_decrease, "logrite.threshold_temp": threshold_temp})
     """
     Implementation of the simulated annealing algorithm. We start with a given state,
     find all its neighbors. Pick a random neighbor, if that neighbor improves the
@@ -39,23 +42,27 @@ def simulated_annealing(
     search_end = False
     current_state = search_prob
     current_temp = start_temperate
+    logger.error("simulated_annealing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,start_temperate=%s,rate_of_decrease=%s,threshold_temp=%s): current_temp → %s", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, start_temperate, rate_of_decrease, threshold_temp, current_temp, extra={"event.action": "simulated_annealing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.start_temperate": start_temperate, "logrite.rate_of_decrease": rate_of_decrease, "logrite.threshold_temp": threshold_temp})
     scores = []
     iterations = 0
     best_state = None
 
     while not search_end:
         current_score = current_state.score()
+        logger.error("simulated_annealing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,start_temperate=%s,rate_of_decrease=%s,threshold_temp=%s): current_score → %s", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, start_temperate, rate_of_decrease, threshold_temp, current_score, extra={"event.action": "simulated_annealing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.start_temperate": start_temperate, "logrite.rate_of_decrease": rate_of_decrease, "logrite.threshold_temp": threshold_temp})
         if best_state is None or current_score > best_state.score():
             best_state = current_state
         scores.append(current_score)
         iterations += 1
         next_state = None
         neighbors = current_state.get_neighbors()
+        logger.error("simulated_annealing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,start_temperate=%s,rate_of_decrease=%s,threshold_temp=%s): neighbors → %s", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, start_temperate, rate_of_decrease, threshold_temp, neighbors, extra={"event.action": "simulated_annealing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.start_temperate": start_temperate, "logrite.rate_of_decrease": rate_of_decrease, "logrite.threshold_temp": threshold_temp})
         while (
             next_state is None and neighbors
         ):  # till we do not find a neighbor that we can move to
             index = random.randint(0, len(neighbors) - 1)  # picking a random neighbor
             picked_neighbor = neighbors.pop(index)
+            logger.error("simulated_annealing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,start_temperate=%s,rate_of_decrease=%s,threshold_temp=%s): picked_neighbor → %s", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, start_temperate, rate_of_decrease, threshold_temp, picked_neighbor, extra={"event.action": "simulated_annealing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.start_temperate": start_temperate, "logrite.rate_of_decrease": rate_of_decrease, "logrite.threshold_temp": threshold_temp})
             change = picked_neighbor.score() - current_score
 
             if (
@@ -74,6 +81,7 @@ def simulated_annealing(
                 probability = (math.e) ** (
                     change / current_temp
                 )  # probability generation function
+                logger.error("simulated_annealing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,start_temperate=%s,rate_of_decrease=%s,threshold_temp=%s): probability → %s", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, start_temperate, rate_of_decrease, threshold_temp, probability, extra={"event.action": "simulated_annealing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.start_temperate": start_temperate, "logrite.rate_of_decrease": rate_of_decrease, "logrite.threshold_temp": threshold_temp})
                 if random.random() < probability:  # random number within probability
                     next_state = picked_neighbor
         current_temp = current_temp - (current_temp * rate_of_decrease)
@@ -91,12 +99,15 @@ def simulated_annealing(
         plt.xlabel("Iterations")
         plt.ylabel("Function values")
         plt.show()
+    logger.warning("<<< Exiting simulated_annealing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,start_temperate=%s,rate_of_decrease=%s,threshold_temp=%s)", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, start_temperate, rate_of_decrease, threshold_temp, extra={"event.action": "simulated_annealing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.start_temperate": start_temperate, "logrite.rate_of_decrease": rate_of_decrease, "logrite.threshold_temp": threshold_temp})
     return best_state
 
 
 if __name__ == "__main__":
 
     def test_f1(x, y):
+        logger.error(">>> Entering test_f1(x=%s,y=%s)", x, y, extra={"event.action": "test_f1", "logrite.x": x, "logrite.y": y})
+        logger.warning("<<< Exiting test_f1(x=%s,y=%s)", x, y, extra={"event.action": "test_f1", "logrite.x": x, "logrite.y": y})
         return (x**2) + (y**2)
 
     # starting the problem with initial coordinates (12, 47)
@@ -120,6 +131,8 @@ if __name__ == "__main__":
     )
 
     def test_f2(x, y):
+        logger.error(">>> Entering test_f2(x=%s,y=%s)", x, y, extra={"event.action": "test_f2", "logrite.x": x, "logrite.y": y})
+        logger.warning("<<< Exiting test_f2(x=%s,y=%s)", x, y, extra={"event.action": "test_f2", "logrite.x": x, "logrite.y": y})
         return (3 * x**2) - (6 * y)
 
     prob = SearchProblem(x=3, y=4, step_size=1, function_to_optimize=test_f1)

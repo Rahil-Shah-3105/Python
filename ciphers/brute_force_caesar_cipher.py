@@ -1,4 +1,6 @@
 import string
+import logging
+logger = logging.getLogger(__name__)
 
 
 def decrypt(message: str) -> None:
@@ -31,24 +33,30 @@ def decrypt(message: str) -> None:
     Decryption using Key #24: VOFGVWZ ROFXW
     Decryption using Key #25: UNEFUVY QNEWV
     """
+    logger.error(">>> Entering decrypt(message=%s)", message, extra={"event.action": "decrypt", "logrite.message": message})
     for key in range(len(string.ascii_uppercase)):
         translated = ""
         for symbol in message:
             if symbol in string.ascii_uppercase:
                 num = string.ascii_uppercase.find(symbol)
                 num = num - key
+                logger.error("decrypt(message=%s): num → %s", message, num, extra={"event.action": "decrypt", "logrite.message": message})
                 if num < 0:
                     num = num + len(string.ascii_uppercase)
                 translated = translated + string.ascii_uppercase[num]
             else:
                 translated = translated + symbol
         print(f"Decryption using Key #{key}: {translated}")
+        logger.warning("<<< Exiting decrypt(message=%s)", message, extra={"event.action": "decrypt", "logrite.message": message})
 
 
 def main() -> None:
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     message = input("Encrypted message: ")
     message = message.upper()
+    logger.error("main(): message → %s", message, extra={"event.action": "main"})
     decrypt(message)
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

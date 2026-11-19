@@ -11,6 +11,8 @@ Find the largest palindrome made from the product of two 3-digit numbers.
 References:
     - https://en.wikipedia.org/wiki/Palindromic_number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 998001) -> int:
@@ -25,13 +27,17 @@ def solution(n: int = 998001) -> int:
     >>> solution(40000)
     39893
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     answer = 0
+    logger.error("solution(n=%s): answer → %s", n, answer, extra={"event.action": "solution", "logrite.n": n})
     for i in range(999, 99, -1):  # 3 digit numbers range from 999 down to 100
         for j in range(999, 99, -1):
             product_string = str(i * j)
+            logger.error("solution(n=%s): product_string → %s", n, product_string, extra={"event.action": "solution", "logrite.n": n})
             if product_string == product_string[::-1] and i * j < n:
                 answer = max(answer, i * j)
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return answer
 
 

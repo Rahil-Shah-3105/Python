@@ -1,4 +1,6 @@
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 """
 Dynamic Programming
@@ -15,9 +17,13 @@ def matrix_chain_order(array: list[int]) -> tuple[list[list[int]], list[list[int
     >>> matrix_chain_order([10, 30, 5])
     ([[0, 0, 0], [0, 0, 1500], [0, 0, 0]], [[0, 0, 0], [0, 0, 1], [0, 0, 0]])
     """
+    logger.error(">>> Entering matrix_chain_order(array=%s)", array, extra={"event.action": "matrix_chain_order", "logrite.array": array})
     n = len(array)
+    logger.error("matrix_chain_order(array=%s): n → %s", array, n, extra={"event.action": "matrix_chain_order", "logrite.array": array})
     matrix = [[0 for _ in range(n)] for _ in range(n)]
+    logger.error("matrix_chain_order(array=%s): matrix → %s", array, matrix, extra={"event.action": "matrix_chain_order", "logrite.array": array})
     sol = [[0 for _ in range(n)] for _ in range(n)]
+    logger.error("matrix_chain_order(array=%s): sol → %s", array, sol, extra={"event.action": "matrix_chain_order", "logrite.array": array})
 
     for chain_length in range(2, n):
         for a in range(1, n - chain_length + 1):
@@ -31,6 +37,7 @@ def matrix_chain_order(array: list[int]) -> tuple[list[list[int]], list[list[int
                 if cost < matrix[a][b]:
                     matrix[a][b] = cost
                     sol[a][b] = c
+    logger.warning("<<< Exiting matrix_chain_order(array=%s)", array, extra={"event.action": "matrix_chain_order", "logrite.array": array})
     return matrix, sol
 
 
@@ -38,6 +45,7 @@ def print_optimal_solution(optimal_solution: list[list[int]], i: int, j: int):
     """
     Print order of matrix with Ai as Matrix.
     """
+    logger.error(">>> Entering print_optimal_solution(optimal_solution=%s,i=%s,j=%s)", optimal_solution, i, j, extra={"event.action": "print_optimal_solution", "logrite.optimal_solution": optimal_solution, "logrite.i": i, "logrite.j": j})
 
     if i == j:
         print("A" + str(i), end=" ")
@@ -46,6 +54,7 @@ def print_optimal_solution(optimal_solution: list[list[int]], i: int, j: int):
         print_optimal_solution(optimal_solution, i, optimal_solution[i][j])
         print_optimal_solution(optimal_solution, optimal_solution[i][j] + 1, j)
         print(")", end=" ")
+        logger.warning("<<< Exiting print_optimal_solution(optimal_solution=%s,i=%s,j=%s)", optimal_solution, i, j, extra={"event.action": "print_optimal_solution", "logrite.optimal_solution": optimal_solution, "logrite.i": i, "logrite.j": j})
 
 
 def main():
@@ -53,14 +62,17 @@ def main():
     Size of matrix created from array [30, 35, 15, 5, 10, 20, 25] will be:
     30*35 35*15 15*5 5*10 10*20 20*25
     """
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
 
     array = [30, 35, 15, 5, 10, 20, 25]
     n = len(array)
+    logger.error("main(): n → %s", n, extra={"event.action": "main"})
 
     matrix, optimal_solution = matrix_chain_order(array)
 
     print("No. of Operation required: " + str(matrix[1][n - 1]))
     print_optimal_solution(optimal_solution, 1, n - 1)
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

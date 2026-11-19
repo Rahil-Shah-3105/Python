@@ -18,6 +18,8 @@ What is the sum of all semidivisible numbers not exceeding 999966663333 ?
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def prime_sieve(n: int) -> list:
@@ -30,6 +32,7 @@ def prime_sieve(n: int) -> list:
     >>> prime_sieve(50)
     [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
     """
+    logger.error(">>> Entering prime_sieve(n=%s)", n, extra={"event.action": "prime_sieve", "logrite.n": n})
     is_prime = [True] * n
     is_prime[0] = False
     is_prime[1] = False
@@ -47,6 +50,7 @@ def prime_sieve(n: int) -> list:
         if is_prime[i]:
             primes.append(i)
 
+    logger.warning("<<< Exiting prime_sieve(n=%s)", n, extra={"event.action": "prime_sieve", "logrite.n": n})
     return primes
 
 
@@ -62,8 +66,11 @@ def solution(limit: int = 999_966_663_333) -> int:
     >>> solution(100_000)
     36393008
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     primes_upper_bound = math.floor(math.sqrt(limit)) + 100
+    logger.error("solution(limit=%s): primes_upper_bound → %s", limit, primes_upper_bound, extra={"event.action": "solution", "logrite.limit": limit})
     primes = prime_sieve(primes_upper_bound)
+    logger.error("solution(limit=%s): primes → %s", limit, primes, extra={"event.action": "solution", "logrite.limit": limit})
 
     matches_sum = 0
     prime_index = 0
@@ -112,6 +119,7 @@ def solution(limit: int = 999_966_663_333) -> int:
         last_prime = next_prime
         prime_index += 1
 
+    logger.warning("<<< Exiting solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     return matches_sum
 
 

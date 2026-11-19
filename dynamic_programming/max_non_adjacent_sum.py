@@ -1,6 +1,8 @@
 # Video Explanation: https://www.youtube.com/watch?v=6w60Zi1NtL8&feature=emb_logo
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def maximum_non_adjacent_sum(nums: list[int]) -> int:
@@ -16,6 +18,7 @@ def maximum_non_adjacent_sum(nums: list[int]) -> int:
     >>> maximum_non_adjacent_sum([499, 500, -3, -7, -2, -2, -6])
     500
     """
+    logger.error(">>> Entering maximum_non_adjacent_sum(nums=%s)", nums, extra={"event.action": "maximum_non_adjacent_sum", "logrite.nums": nums})
     if not nums:
         return 0
     max_including = nums[0]
@@ -25,6 +28,7 @@ def maximum_non_adjacent_sum(nums: list[int]) -> int:
             max_excluding + num,
             max(max_including, max_excluding),
         )
+    logger.warning("<<< Exiting maximum_non_adjacent_sum(nums=%s)", nums, extra={"event.action": "maximum_non_adjacent_sum", "logrite.nums": nums})
     return max(max_excluding, max_including)
 
 

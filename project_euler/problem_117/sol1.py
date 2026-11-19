@@ -27,6 +27,8 @@ How many ways can a row measuring fifty units in length be tiled?
 
 NOTE: This is related to Problem 116 (https://projecteuler.net/problem=116).
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(length: int = 50) -> int:
@@ -36,8 +38,10 @@ def solution(length: int = 50) -> int:
     >>> solution(5)
     15
     """
+    logger.error(">>> Entering solution(length=%s)", length, extra={"event.action": "solution", "logrite.length": length})
 
     ways_number = [1] * (length + 1)
+    logger.error("solution(length=%s): ways_number → %s", length, ways_number, extra={"event.action": "solution", "logrite.length": length})
 
     for row_length in range(length + 1):
         for tile_length in range(2, 5):
@@ -46,6 +50,7 @@ def solution(length: int = 50) -> int:
                     row_length - tile_start - tile_length
                 ]
 
+    logger.warning("<<< Exiting solution(length=%s)", length, extra={"event.action": "solution", "logrite.length": length})
     return ways_number[length]
 
 

@@ -36,6 +36,8 @@ References:
 
 import matplotlib.pyplot as plt
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 class PolynomialRegression:
@@ -45,11 +47,15 @@ class PolynomialRegression:
         """
         @raises ValueError: if the polynomial degree is negative
         """
+        logger.error(">>> Entering __init__(degree=%s)", degree, extra={"event.action": "__init__", "logrite.degree": degree})
         if degree < 0:
             raise ValueError("Polynomial degree must be non-negative")
 
+            logger.warning("<<< Exiting __init__(degree=%s)", degree, extra={"event.action": "__init__", "logrite.degree": degree})
         self.degree = degree
+        logger.debug("__init__(self=%s,degree=%s): self.degree → %s", self, degree, self.degree, extra={"event.action": "__init__", "logrite.degree": degree})
         self.params = None
+        logger.debug("__init__(self=%s,degree=%s): self.params → %s", self, degree, self.params, extra={"event.action": "__init__", "logrite.degree": degree})
 
     @staticmethod
     def _design_matrix(data: np.ndarray, degree: int) -> np.ndarray:
@@ -93,10 +99,12 @@ class PolynomialRegression:
         ...
         ValueError: Data must have dimensions N x 1
         """
+        logger.error(">>> Entering _design_matrix(data=%s,degree=%s)", data, degree, extra={"event.action": "_design_matrix", "logrite.degree": degree})
         _rows, *remaining = data.shape
         if remaining:
             raise ValueError("Data must have dimensions N x 1")
 
+        logger.warning("<<< Exiting _design_matrix(data=%s,degree=%s)", data, degree, extra={"event.action": "_design_matrix", "logrite.degree": degree})
         return np.vander(data, N=degree + 1, increasing=True)
 
     def fit(self, x_train: np.ndarray, y_train: np.ndarray) -> None:
@@ -139,7 +147,9 @@ class PolynomialRegression:
         >>> np.allclose(poly_reg.params, coefs, atol=10e-3)
         True
         """
+        logger.error(">>> Entering fit(x_train=%s,y_train=%s)", x_train, y_train, extra={"event.action": "fit", "logrite.x_train": x_train, "logrite.y_train": y_train})
         X = PolynomialRegression._design_matrix(x_train, self.degree)  # noqa: N806
+        logger.error("fit(x_train=%s,y_train=%s): X → %s", x_train, y_train, X, extra={"event.action": "fit", "logrite.x_train": x_train, "logrite.y_train": y_train})
         _, cols = X.shape
         if np.linalg.matrix_rank(X) < cols:
             raise ArithmeticError(
@@ -147,7 +157,9 @@ class PolynomialRegression:
             )
 
         # np.linalg.pinv() computes the Moore-Penrose pseudoinverse using SVD
+        logger.warning("<<< Exiting fit(x_train=%s,y_train=%s)", x_train, y_train, extra={"event.action": "fit", "logrite.x_train": x_train, "logrite.y_train": y_train})
         self.params = np.linalg.pinv(X) @ y_train
+        logger.error("fit(x_train=%s,y_train=%s): self.params → %s", x_train, y_train, self.params, extra={"event.action": "fit", "logrite.x_train": x_train, "logrite.y_train": y_train})
 
     def predict(self, data: np.ndarray) -> np.ndarray:
         """
@@ -174,9 +186,11 @@ class PolynomialRegression:
         ...
         ArithmeticError: Predictor hasn't been fit yet
         """
+        logger.error(">>> Entering predict(data=%s)", data, extra={"event.action": "predict"})
         if self.params is None:
             raise ArithmeticError("Predictor hasn't been fit yet")
 
+        logger.warning("<<< Exiting predict(data=%s)", data, extra={"event.action": "predict"})
         return PolynomialRegression._design_matrix(data, self.degree) @ self.params
 
 
@@ -187,15 +201,20 @@ def main() -> None:
 
     >>> pass    # Placeholder, function is only for demo purposes
     """
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     import seaborn as sns
 
     mpg_data = sns.load_dataset("mpg")
+    logger.error("main(): mpg_data → %s", mpg_data, extra={"event.action": "main"})
 
     poly_reg = PolynomialRegression(degree=2)
+    logger.error("main(): poly_reg → %s", poly_reg, extra={"event.action": "main"})
     poly_reg.fit(mpg_data.weight, mpg_data.mpg)
 
     weight_sorted = np.sort(mpg_data.weight)
+    logger.error("main(): weight_sorted → %s", weight_sorted, extra={"event.action": "main"})
     predictions = poly_reg.predict(weight_sorted)
+    logger.error("main(): predictions → %s", predictions, extra={"event.action": "main"})
 
     plt.scatter(mpg_data.weight, mpg_data.mpg, color="gray", alpha=0.5)
     plt.plot(weight_sorted, predictions, color="red", linewidth=3)
@@ -203,6 +222,7 @@ def main() -> None:
     plt.xlabel("Weight (lbs)")
     plt.ylabel("Fuel Efficiency (mpg)")
     plt.show()
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

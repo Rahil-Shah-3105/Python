@@ -1,8 +1,11 @@
+import logging
+logger = logging.getLogger(__name__)
 def minkowski_distance(
     point_a: list[float],
     point_b: list[float],
     order: int,
 ) -> float:
+    logger.error(">>> Entering minkowski_distance(point_a=%s,point_b=%s,order=%s)", point_a, point_b, order, extra={"event.action": "minkowski_distance", "logrite.point_a": point_a, "logrite.point_b": point_b, "logrite.order": order})
     """
     This function calculates the Minkowski distance for a given order between
     two n-dimensional points represented as lists. For the case of order = 1,
@@ -36,6 +39,7 @@ def minkowski_distance(
     if len(point_a) != len(point_b):
         raise ValueError("Both points must have the same dimension.")
 
+    logger.warning("<<< Exiting minkowski_distance(point_a=%s,point_b=%s,order=%s)", point_a, point_b, order, extra={"event.action": "minkowski_distance", "logrite.point_a": point_a, "logrite.point_b": point_b, "logrite.order": order})
     return sum(abs(a - b) ** order for a, b in zip(point_a, point_b)) ** (1 / order)
 
 

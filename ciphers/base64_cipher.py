@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 B64_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
 
@@ -32,17 +34,22 @@ def base64_encode(data: bytes) -> bytes:
       ...
     TypeError: a bytes-like object is required, not 'str'
     """
+    logger.error(">>> Entering base64_encode(data=%s)", data, extra={"event.action": "base64_encode"})
     # Make sure the supplied data is a bytes-like object
     if not isinstance(data, bytes):
         msg = f"a bytes-like object is required, not '{data.__class__.__name__}'"
+        logger.error("base64_encode(data=%s): msg → %s", data, msg, extra={"event.action": "base64_encode"})
         raise TypeError(msg)
 
     binary_stream = "".join(bin(byte)[2:].zfill(8) for byte in data)
+    logger.error("base64_encode(data=%s): binary_stream → %s", data, binary_stream, extra={"event.action": "base64_encode"})
 
     padding_needed = len(binary_stream) % 6 != 0
+    logger.error("base64_encode(data=%s): padding_needed → %s", data, padding_needed, extra={"event.action": "base64_encode"})
 
     if padding_needed:
         # The padding that will be added later
+        logger.error("base64_encode(data=%s): padding → %s", data, padding, extra={"event.action": "base64_encode"})
         padding = b"=" * ((6 - len(binary_stream) % 6) // 2)
 
         # Append binary_stream with arbitrary binary digits (0's by default) to make its

@@ -3,17 +3,24 @@ A Radix Tree is a data structure that represents a space-optimized
 trie (prefix tree) in whicheach node that is the only child is merged
 with its parent [https://en.wikipedia.org/wiki/Radix_tree]
 """
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 
 class RadixNode:
     def __init__(self, prefix: str = "", is_leaf: bool = False) -> None:
+        logger.error(">>> Entering __init__(prefix=%s,is_leaf=%s)", prefix, is_leaf, extra={"event.action": "__init__", "logrite.prefix": prefix, "logrite.is_leaf": is_leaf})
         # Mapping from the first character of the prefix of the node
         self.nodes: dict[str, RadixNode] = {}
 
         # A node will be a leaf if the tree contains its word
         self.is_leaf = is_leaf
+        logger.debug("__init__(self=%s,prefix=%s,is_leaf=%s): self.is_leaf → %s", self, prefix, is_leaf, self.is_leaf, extra={"event.action": "__init__", "logrite.prefix": prefix, "logrite.is_leaf": is_leaf})
 
+        logger.warning("<<< Exiting __init__(prefix=%s,is_leaf=%s)", prefix, is_leaf, extra={"event.action": "__init__", "logrite.prefix": prefix, "logrite.is_leaf": is_leaf})
         self.prefix = prefix
+        logger.debug("__init__(self=%s,prefix=%s,is_leaf=%s): self.prefix → %s", self, prefix, is_leaf, self.prefix, extra={"event.action": "__init__", "logrite.prefix": prefix, "logrite.is_leaf": is_leaf})
 
     def match(self, word: str) -> tuple[str, str, str]:
         """Compute the common substring of the prefix of the node and a word
@@ -27,6 +34,7 @@ class RadixNode:
         >>> RadixNode("myprefix").match("mystring")
         ('my', 'prefix', 'string')
         """
+        logger.error(">>> Entering match(word=%s)", word, extra={"event.action": "match", "logrite.word": word})
         x = 0
         for q, w in zip(self.prefix, word):
             if q != w:
@@ -34,9 +42,11 @@ class RadixNode:
 
             x += 1
 
+        logger.warning("<<< Exiting match(word=%s)", word, extra={"event.action": "match", "logrite.word": word})
         return self.prefix[:x], self.prefix[x:], word[x:]
 
     def insert_many(self, words: list[str]) -> None:
+        __log_start = time.time()
         """Insert many words in the tree
 
         Args:
@@ -44,8 +54,11 @@ class RadixNode:
 
         >>> RadixNode("myprefix").insert_many(["mystring", "hello"])
         """
+        logger.error(">>> Entering insert_many(words=%s)", words, extra={"event.action": "insert_many", "logrite.words": words})
         for word in words:
+            logger.error("insert_many(words)=%s: save operation took %s ms", words, int((time.time() - __log_start) * 1000), extra={"event.action": "insert_many", "event.category": "database", "logrite.words": words})
             self.insert(word)
+            logger.warning("<<< Exiting insert_many(words=%s)", words, extra={"event.action": "insert_many", "logrite.words": words})
 
     def insert(self, word: str) -> None:
         """Insert a word into the tree
@@ -62,10 +75,14 @@ class RadixNode:
         -- A   (leaf)
         --- A   (leaf)
         """
+        logger.error(">>> Entering insert(word=%s)", word, extra={"event.action": "insert", "logrite.word": word})
+        import time; __log_start = time.time()
         # Case 1: If the word is the prefix of the node
+        logger.error("insert(word)=%s: save operation took %s ms", word, int((time.time() - __log_start) * 1000), extra={"event.action": "insert", "event.category": "database", "logrite.word": word})
         # Solution: We set the current node as leaf
         if self.prefix == word and not self.is_leaf:
             self.is_leaf = True
+            logger.debug("insert(self=%s,word=%s): self.is_leaf → %s", self, word, self.is_leaf, extra={"event.action": "insert", "logrite.word": word})
 
         # Case 2: The node has no edges that have a prefix to the word
         # Solution: We create an edge from the current node to a new one
@@ -89,6 +106,7 @@ class RadixNode:
             # prefixes and add the new node for the remaining word
             else:
                 incoming_node.prefix = remaining_prefix
+                logger.debug("insert(self=%s,word=%s): incoming_node.prefix → %s", self, word, incoming_node.prefix, extra={"event.action": "insert", "logrite.word": word})
 
                 aux_node = self.nodes[matching_string[0]]
                 self.nodes[matching_string[0]] = RadixNode(matching_string, False)
@@ -98,6 +116,7 @@ class RadixNode:
                     self.nodes[matching_string[0]].is_leaf = True
                 else:
                     self.nodes[matching_string[0]].insert(remaining_word)
+                    logger.warning("<<< Exiting insert(word=%s)", word, extra={"event.action": "insert", "logrite.word": word})
 
     def find(self, word: str) -> bool:
         """Returns if the word is on the tree
@@ -111,7 +130,9 @@ class RadixNode:
         >>> RadixNode("myprefix").find("mystring")
         False
         """
+        logger.error(">>> Entering find(word=%s)", word, extra={"event.action": "find", "logrite.word": word})
         incoming_node = self.nodes.get(word[0], None)
+        logger.error("find(word=%s): incoming_node → %s", word, incoming_node, extra={"event.action": "find", "logrite.word": word})
         if not incoming_node:
             return False
         else:
@@ -126,6 +147,7 @@ class RadixNode:
                 return incoming_node.is_leaf
             # We have word remaining so we check the next node
             else:
+                logger.warning("<<< Exiting find(word=%s)", word, extra={"event.action": "find", "logrite.word": word})
                 return incoming_node.find(remaining_word)
 
     def delete(self, word: str) -> bool:
@@ -140,7 +162,9 @@ class RadixNode:
         >>> RadixNode("myprefix").delete("mystring")
         False
         """
+        logger.error(">>> Entering delete(word=%s)", word, extra={"event.action": "delete", "logrite.word": word})
         incoming_node = self.nodes.get(word[0], None)
+        logger.error("delete(word=%s): incoming_node → %s", word, incoming_node, extra={"event.action": "delete", "logrite.word": word})
         if not incoming_node:
             return False
         else:
@@ -152,6 +176,7 @@ class RadixNode:
                 return False
             # We have word remaining so we check the next node
             elif remaining_word != "":
+                logger.error("delete(word)=%s: delete operation executing", word, extra={"event.action": "delete", "event.category": "database", "logrite.word": word})
                 return incoming_node.delete(remaining_word)
             # If it is not a leaf, we don't have to delete
             elif not incoming_node.is_leaf:
@@ -164,18 +189,23 @@ class RadixNode:
                     if len(self.nodes) == 1 and not self.is_leaf:
                         merging_node = next(iter(self.nodes.values()))
                         self.is_leaf = merging_node.is_leaf
+                        logger.debug("delete(self=%s,word=%s): self.is_leaf → %s", self, word, self.is_leaf, extra={"event.action": "delete", "logrite.word": word})
                         self.prefix += merging_node.prefix
                         self.nodes = merging_node.nodes
+                        logger.debug("delete(self=%s,word=%s): self.nodes → %s", self, word, self.nodes, extra={"event.action": "delete", "logrite.word": word})
                 # If there is more than 1 edge, we just mark it as non-leaf
                 elif len(incoming_node.nodes) > 1:
                     incoming_node.is_leaf = False
+                    logger.debug("delete(self=%s,word=%s): incoming_node.is_leaf → %s", self, word, incoming_node.is_leaf, extra={"event.action": "delete", "logrite.word": word})
                 # If there is 1 edge, we merge it with its child
                 else:
                     merging_node = next(iter(incoming_node.nodes.values()))
                     incoming_node.is_leaf = merging_node.is_leaf
                     incoming_node.prefix += merging_node.prefix
                     incoming_node.nodes = merging_node.nodes
+                logger.debug("delete(self=%s,word=%s): incoming_node.nodes → %s", self, word, incoming_node.nodes, extra={"event.action": "delete", "logrite.word": word})
 
+                logger.warning("<<< Exiting delete(word=%s)", word, extra={"event.action": "delete", "logrite.word": word})
                 return True
 
     def print_tree(self, height: int = 0) -> None:
@@ -184,16 +214,21 @@ class RadixNode:
         Args:
             height (int, optional): Height of the printed node
         """
+        logger.error(">>> Entering print_tree(height=%s)", height, extra={"event.action": "print_tree", "logrite.height": height})
         if self.prefix != "":
             print("-" * height, self.prefix, "  (leaf)" if self.is_leaf else "")
 
         for value in self.nodes.values():
             value.print_tree(height + 1)
+            logger.warning("<<< Exiting print_tree(height=%s)", height, extra={"event.action": "print_tree", "logrite.height": height})
 
 
 def test_trie() -> bool:
+    logger.error(">>> Entering test_trie()", extra={"event.action": "test_trie"})
     words = "banana bananas bandana band apple all beast".split()
     root = RadixNode()
+    logger.error("test_trie(): words → %s", words, extra={"event.action": "test_trie"})
+    logger.error("test_trie(): root → %s", root, extra={"event.action": "test_trie"})
     root.insert_many(words)
 
     assert all(root.find(word) for word in words)
@@ -205,24 +240,31 @@ def test_trie() -> bool:
     assert not root.find("banana")
     assert root.find("bananas")
 
+    logger.warning("<<< Exiting test_trie()", extra={"event.action": "test_trie"})
     return True
 
 
 def pytests() -> None:
+    logger.error(">>> Entering pytests()", extra={"event.action": "pytests"})
     assert test_trie()
+    logger.warning("<<< Exiting pytests()", extra={"event.action": "pytests"})
 
 
 def main() -> None:
     """
     >>> pytests()
     """
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     root = RadixNode()
     words = "banana bananas bandanas bandana band apple all beast".split()
+    logger.error("main(): root → %s", root, extra={"event.action": "main"})
+    logger.error("main(): words → %s", words, extra={"event.action": "main"})
     root.insert_many(words)
 
     print("Words:", words)
     print("Tree:")
     root.print_tree()
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

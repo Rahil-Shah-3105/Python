@@ -1,6 +1,8 @@
 # Factorial of a number using memoization
 
 from functools import lru_cache
+import logging
+logger = logging.getLogger(__name__)
 
 
 @lru_cache
@@ -15,9 +17,11 @@ def factorial(num: int) -> int:
     >>> [factorial(i) for i in range(10)]
     [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880]
     """
+    logger.error(">>> Entering factorial(num=%s)", num, extra={"event.action": "factorial", "logrite.num": num})
     if num < 0:
         raise ValueError("Number should not be negative.")
 
+    logger.warning("<<< Exiting factorial(num=%s)", num, extra={"event.action": "factorial", "logrite.num": num})
     return 1 if num in (0, 1) else num * factorial(num - 1)
 
 

@@ -13,6 +13,8 @@ Author: Clark
 
 import copy
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 cities = {
     0: [0, 0],
@@ -35,6 +37,7 @@ def main(
     beta: float,
     q: float,  # Pheromone system parameters Q, which is a constant
 ) -> tuple[list[int], float]:
+    logger.error(">>> Entering main(cities=%s,ants_num=%s,iterations_num=%s,pheromone_evaporation=%s,alpha=%s,beta=%s,q=%s,Q=%s,constant=%s)", cities, ants_num, iterations_num, pheromone_evaporation, alpha, beta, q, Q, constant, extra={"event.action": "main", "logrite.cities": cities, "logrite.ants_num": ants_num, "logrite.iterations_num": iterations_num, "logrite.pheromone_evaporation": pheromone_evaporation, "logrite.alpha": alpha, "logrite.beta": beta, "logrite.q": q, "logrite.Q": Q, "logrite.constant": constant})
     """
     Ant colony algorithm main function
     >>> main(cities=cities, ants_num=10, iterations_num=20,
@@ -68,17 +71,22 @@ def main(
     """
     # Initialize the pheromone matrix
     cities_num = len(cities)
+    logger.error("main(cities=%s,ants_num=%s,iterations_num=%s,pheromone_evaporation=%s,alpha=%s,beta=%s,q=%s,Q=%s,constant=%s): cities_num → %s", cities, ants_num, iterations_num, pheromone_evaporation, alpha, beta, q, Q, constant, cities_num, extra={"event.action": "main", "logrite.cities": cities, "logrite.ants_num": ants_num, "logrite.iterations_num": iterations_num, "logrite.pheromone_evaporation": pheromone_evaporation, "logrite.alpha": alpha, "logrite.beta": beta, "logrite.q": q, "logrite.Q": Q, "logrite.constant": constant})
     pheromone = [[1.0] * cities_num] * cities_num
 
     best_path: list[int] = []
     best_distance = float("inf")
+    logger.error("main(cities=%s,ants_num=%s,iterations_num=%s,pheromone_evaporation=%s,alpha=%s,beta=%s,q=%s,Q=%s,constant=%s): best_distance → %s", cities, ants_num, iterations_num, pheromone_evaporation, alpha, beta, q, Q, constant, best_distance, extra={"event.action": "main", "logrite.cities": cities, "logrite.ants_num": ants_num, "logrite.iterations_num": iterations_num, "logrite.pheromone_evaporation": pheromone_evaporation, "logrite.alpha": alpha, "logrite.beta": beta, "logrite.q": q, "logrite.Q": Q, "logrite.constant": constant})
     for _ in range(iterations_num):
         ants_route = []
         for _ in range(ants_num):
             unvisited_cities = copy.deepcopy(cities)
+            logger.error("main(cities=%s,ants_num=%s,iterations_num=%s,pheromone_evaporation=%s,alpha=%s,beta=%s,q=%s,Q=%s,constant=%s): unvisited_cities → %s", cities, ants_num, iterations_num, pheromone_evaporation, alpha, beta, q, Q, constant, unvisited_cities, extra={"event.action": "main", "logrite.cities": cities, "logrite.ants_num": ants_num, "logrite.iterations_num": iterations_num, "logrite.pheromone_evaporation": pheromone_evaporation, "logrite.alpha": alpha, "logrite.beta": beta, "logrite.q": q, "logrite.Q": Q, "logrite.constant": constant})
             current_city = {next(iter(cities.keys())): next(iter(cities.values()))}
+            logger.error("main(cities=%s,ants_num=%s,iterations_num=%s,pheromone_evaporation=%s,alpha=%s,beta=%s,q=%s,Q=%s,constant=%s): current_city → %s", cities, ants_num, iterations_num, pheromone_evaporation, alpha, beta, q, Q, constant, current_city, extra={"event.action": "main", "logrite.cities": cities, "logrite.ants_num": ants_num, "logrite.iterations_num": iterations_num, "logrite.pheromone_evaporation": pheromone_evaporation, "logrite.alpha": alpha, "logrite.beta": beta, "logrite.q": q, "logrite.Q": Q, "logrite.constant": constant})
             del unvisited_cities[next(iter(current_city.keys()))]
             ant_route = [next(iter(current_city.keys()))]
+            logger.error("main(cities=%s,ants_num=%s,iterations_num=%s,pheromone_evaporation=%s,alpha=%s,beta=%s,q=%s,Q=%s,constant=%s): ant_route → %s", cities, ants_num, iterations_num, pheromone_evaporation, alpha, beta, q, Q, constant, ant_route, extra={"event.action": "main", "logrite.cities": cities, "logrite.ants_num": ants_num, "logrite.iterations_num": iterations_num, "logrite.pheromone_evaporation": pheromone_evaporation, "logrite.alpha": alpha, "logrite.beta": beta, "logrite.q": q, "logrite.Q": Q, "logrite.constant": constant})
             while unvisited_cities:
                 current_city, unvisited_cities = city_select(
                     pheromone, current_city, unvisited_cities, alpha, beta
@@ -96,6 +104,7 @@ def main(
             best_path,
             best_distance,
         )
+    logger.warning("<<< Exiting main(cities=%s,ants_num=%s,iterations_num=%s,pheromone_evaporation=%s,alpha=%s,beta=%s,q=%s,Q=%s,constant=%s)", cities, ants_num, iterations_num, pheromone_evaporation, alpha, beta, q, Q, constant, extra={"event.action": "main", "logrite.cities": cities, "logrite.ants_num": ants_num, "logrite.iterations_num": iterations_num, "logrite.pheromone_evaporation": pheromone_evaporation, "logrite.alpha": alpha, "logrite.beta": beta, "logrite.q": q, "logrite.Q": Q, "logrite.constant": constant})
     return best_path, best_distance
 
 
@@ -109,6 +118,8 @@ def distance(city1: list[int], city2: list[int]) -> float:
     >>> distance([0, 0], [-3, -4] )
     5.0
     """
+    logger.error(">>> Entering distance(city1=%s,city2=%s)", city1, city2, extra={"event.action": "distance", "logrite.city1": city1, "logrite.city2": city2})
+    logger.warning("<<< Exiting distance(city1=%s,city2=%s)", city1, city2, extra={"event.action": "distance", "logrite.city1": city1, "logrite.city2": city2})
     return (((city1[0] - city2[0]) ** 2) + ((city1[1] - city2[1]) ** 2)) ** 0.5
 
 
@@ -162,6 +173,7 @@ def pheromone_update(
             best_path = ant_route
             best_distance = total_distance
 
+    logger.warning("<<< Exiting pheromone_update(pheromone=%s,cities=%s,pheromone_evaporation=%s,ants_route=%s,q=%s,Q=%s,best_distance=%s)", pheromone, cities, pheromone_evaporation, ants_route, q, Q, best_distance, extra={"event.action": "pheromone_update", "logrite.pheromone": pheromone, "logrite.cities": cities, "logrite.pheromone_evaporation": pheromone_evaporation, "logrite.ants_route": ants_route, "logrite.q": q, "logrite.Q": Q, "logrite.best_distance": best_distance})
     return pheromone, best_path, best_distance
 
 
@@ -196,9 +208,11 @@ def city_select(
     probabilities = []
     for city, value in unvisited_cities.items():
         city_distance = distance(value, next(iter(current_city.values())))
+        logger.error("city_select(pheromone=%s,current_city=%s,unvisited_cities=%s,alpha=%s,beta=%s): city_distance → %s", pheromone, current_city, unvisited_cities, alpha, beta, city_distance, extra={"event.action": "city_select", "logrite.pheromone": pheromone, "logrite.current_city": current_city, "logrite.unvisited_cities": unvisited_cities, "logrite.alpha": alpha, "logrite.beta": beta})
         probability = (pheromone[city][next(iter(current_city.keys()))] ** alpha) * (
             (1 / city_distance) ** beta
         )
+        logger.error("city_select(pheromone=%s,current_city=%s,unvisited_cities=%s,alpha=%s,beta=%s): probability → %s", pheromone, current_city, unvisited_cities, alpha, beta, probability, extra={"event.action": "city_select", "logrite.pheromone": pheromone, "logrite.current_city": current_city, "logrite.unvisited_cities": unvisited_cities, "logrite.alpha": alpha, "logrite.beta": beta})
         probabilities.append(probability)
 
     chosen_city_i = random.choices(
@@ -206,6 +220,7 @@ def city_select(
     )[0]
     chosen_city = {chosen_city_i: unvisited_cities[chosen_city_i]}
     del unvisited_cities[next(iter(chosen_city.keys()))]
+    logger.warning("<<< Exiting city_select(pheromone=%s,current_city=%s,unvisited_cities=%s,alpha=%s,beta=%s)", pheromone, current_city, unvisited_cities, alpha, beta, extra={"event.action": "city_select", "logrite.pheromone": pheromone, "logrite.current_city": current_city, "logrite.unvisited_cities": unvisited_cities, "logrite.alpha": alpha, "logrite.beta": beta})
     return chosen_city, unvisited_cities
 
 

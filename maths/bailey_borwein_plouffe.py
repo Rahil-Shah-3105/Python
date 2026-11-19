@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def bailey_borwein_plouffe(digit_position: int, precision: int = 1000) -> str:
     """
     Implement a popular pi-digit-extraction algorithm known as the
@@ -37,6 +39,7 @@ def bailey_borwein_plouffe(digit_position: int, precision: int = 1000) -> str:
       ...
     ValueError: Precision must be a nonnegative integer
     """
+    logger.error(">>> Entering bailey_borwein_plouffe(digit_position=%s,precision=%s)", digit_position, precision, extra={"event.action": "bailey_borwein_plouffe", "logrite.digit_position": digit_position, "logrite.precision": precision})
     if (not isinstance(digit_position, int)) or (digit_position <= 0):
         raise ValueError("Digit position must be a positive integer")
     elif (not isinstance(precision, int)) or (precision < 0):
@@ -50,14 +53,17 @@ def bailey_borwein_plouffe(digit_position: int, precision: int = 1000) -> str:
         - _subsum(digit_position, 5, precision)
         - _subsum(digit_position, 6, precision)
     )
+    logger.error("bailey_borwein_plouffe(digit_position=%s,precision=%s): sum_result → %s", digit_position, precision, sum_result, extra={"event.action": "bailey_borwein_plouffe", "logrite.digit_position": digit_position, "logrite.precision": precision})
 
     # return the first hex digit of the fractional part of the result
+    logger.warning("<<< Exiting bailey_borwein_plouffe(digit_position=%s,precision=%s)", digit_position, precision, extra={"event.action": "bailey_borwein_plouffe", "logrite.digit_position": digit_position, "logrite.precision": precision})
     return hex(int((sum_result % 1) * 16))[2:]
 
 
 def _subsum(
     digit_pos_to_extract: int, denominator_addend: int, precision: int
 ) -> float:
+    logger.error(">>> Entering _subsum(digit_pos_to_extract=%s,denominator_addend=%s,precision=%s)", digit_pos_to_extract, denominator_addend, precision, extra={"event.action": "_subsum", "logrite.digit_pos_to_extract": digit_pos_to_extract, "logrite.denominator_addend": denominator_addend, "logrite.precision": precision})
     # only care about first digit of fractional part; don't need decimal
     """
     Private helper function to implement the summation
@@ -68,6 +74,7 @@ def _subsum(
     @return: floating-point number whose integer part is not important
     """
     total = 0.0
+    logger.error("_subsum(digit_pos_to_extract=%s,denominator_addend=%s,precision=%s): total → %s", digit_pos_to_extract, denominator_addend, precision, total, extra={"event.action": "_subsum", "logrite.digit_pos_to_extract": digit_pos_to_extract, "logrite.denominator_addend": denominator_addend, "logrite.precision": precision})
     for sum_index in range(digit_pos_to_extract + precision):
         denominator = 8 * sum_index + denominator_addend
         if sum_index < digit_pos_to_extract:
@@ -79,7 +86,9 @@ def _subsum(
             )
         else:
             exponential_term = pow(16, digit_pos_to_extract - 1 - sum_index)
+            logger.error("_subsum(digit_pos_to_extract=%s,denominator_addend=%s,precision=%s): exponential_term → %s", digit_pos_to_extract, denominator_addend, precision, exponential_term, extra={"event.action": "_subsum", "logrite.digit_pos_to_extract": digit_pos_to_extract, "logrite.denominator_addend": denominator_addend, "logrite.precision": precision})
         total += exponential_term / denominator
+    logger.warning("<<< Exiting _subsum(digit_pos_to_extract=%s,denominator_addend=%s,precision=%s)", digit_pos_to_extract, denominator_addend, precision, extra={"event.action": "_subsum", "logrite.digit_pos_to_extract": digit_pos_to_extract, "logrite.denominator_addend": denominator_addend, "logrite.precision": precision})
     return total
 
 

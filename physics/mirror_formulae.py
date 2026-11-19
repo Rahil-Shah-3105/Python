@@ -56,6 +56,8 @@ https://www.toppr.com/ask/content/concept/sign-convention-for-mirrors-210189/)
 
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def focal_length(distance_of_object: float, distance_of_image: float) -> float:
@@ -72,12 +74,15 @@ def focal_length(distance_of_object: float, distance_of_image: float) -> float:
     ValueError: Invalid inputs. Enter non zero values with respect
     to the sign convention.
     """
+    logger.error(">>> Entering focal_length(distance_of_object=%s,distance_of_image=%s)", distance_of_object, distance_of_image, extra={"event.action": "focal_length", "logrite.distance_of_object": distance_of_object, "logrite.distance_of_image": distance_of_image})
 
     if distance_of_object == 0 or distance_of_image == 0:
         raise ValueError(
             "Invalid inputs. Enter non zero values with respect to the sign convention."
         )
     focal_length = 1 / ((1 / distance_of_object) + (1 / distance_of_image))
+    logger.error("focal_length(distance_of_object=%s,distance_of_image=%s): focal_length → %s", distance_of_object, distance_of_image, focal_length, extra={"event.action": "focal_length", "logrite.distance_of_object": distance_of_object, "logrite.distance_of_image": distance_of_image})
+    logger.warning("<<< Exiting focal_length(distance_of_object=%s,distance_of_image=%s)", distance_of_object, distance_of_image, extra={"event.action": "focal_length", "logrite.distance_of_object": distance_of_object, "logrite.distance_of_image": distance_of_image})
     return focal_length
 
 
@@ -95,12 +100,15 @@ def object_distance(focal_length: float, distance_of_image: float) -> float:
     ValueError: Invalid inputs. Enter non zero values with respect
     to the sign convention.
     """
+    logger.error(">>> Entering object_distance(focal_length=%s,distance_of_image=%s)", focal_length, distance_of_image, extra={"event.action": "object_distance", "logrite.focal_length": focal_length, "logrite.distance_of_image": distance_of_image})
 
     if distance_of_image == 0 or focal_length == 0:
         raise ValueError(
             "Invalid inputs. Enter non zero values with respect to the sign convention."
         )
     object_distance = 1 / ((1 / focal_length) - (1 / distance_of_image))
+    logger.error("object_distance(focal_length=%s,distance_of_image=%s): object_distance → %s", focal_length, distance_of_image, object_distance, extra={"event.action": "object_distance", "logrite.focal_length": focal_length, "logrite.distance_of_image": distance_of_image})
+    logger.warning("<<< Exiting object_distance(focal_length=%s,distance_of_image=%s)", focal_length, distance_of_image, extra={"event.action": "object_distance", "logrite.focal_length": focal_length, "logrite.distance_of_image": distance_of_image})
     return object_distance
 
 
@@ -118,10 +126,13 @@ def image_distance(focal_length: float, distance_of_object: float) -> float:
     ValueError: Invalid inputs. Enter non zero values with respect
     to the sign convention.
     """
+    logger.error(">>> Entering image_distance(focal_length=%s,distance_of_object=%s)", focal_length, distance_of_object, extra={"event.action": "image_distance", "logrite.focal_length": focal_length, "logrite.distance_of_object": distance_of_object})
 
     if distance_of_object == 0 or focal_length == 0:
         raise ValueError(
             "Invalid inputs. Enter non zero values with respect to the sign convention."
         )
     image_distance = 1 / ((1 / focal_length) - (1 / distance_of_object))
+    logger.error("image_distance(focal_length=%s,distance_of_object=%s): image_distance → %s", focal_length, distance_of_object, image_distance, extra={"event.action": "image_distance", "logrite.focal_length": focal_length, "logrite.distance_of_object": distance_of_object})
+    logger.warning("<<< Exiting image_distance(focal_length=%s,distance_of_object=%s)", focal_length, distance_of_object, extra={"event.action": "image_distance", "logrite.focal_length": focal_length, "logrite.distance_of_object": distance_of_object})
     return image_distance

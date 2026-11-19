@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def lower(word: str) -> str:
     """
     Will convert the entire string to lowercase letters
@@ -13,10 +15,12 @@ def lower(word: str) -> str:
     >>> lower("whAT")
     'what'
     """
+    logger.error(">>> Entering lower(word=%s)", word, extra={"event.action": "lower", "logrite.word": word})
 
     # Converting to ASCII value, obtaining the integer representation
     # and checking to see if the character is a capital letter.
     # If it is a capital letter, it is shifted by 32, making it a lowercase letter.
+    logger.warning("<<< Exiting lower(word=%s)", word, extra={"event.action": "lower", "logrite.word": word})
     return "".join(chr(ord(char) + 32) if "A" <= char <= "Z" else char for char in word)
 
 

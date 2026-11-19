@@ -27,6 +27,8 @@ analyze graph centrality.
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def validate_adjacency_list(graph: list[list[int | None]]) -> None:
@@ -46,6 +48,7 @@ def validate_adjacency_list(graph: list[list[int | None]]) -> None:
         ...
     ValueError: Invalid neighbor -1 in node 2 adjacency list.
     """
+    logger.error(">>> Entering validate_adjacency_list(graph=%s)", graph, extra={"event.action": "validate_adjacency_list", "logrite.graph": graph})
     if not isinstance(graph, list):
         raise ValueError("Graph should be a list of lists.")
 
@@ -65,12 +68,14 @@ def validate_adjacency_list(graph: list[list[int | None]]) -> None:
                     f"Invalid neighbor {neighbor_index} in node {node_index} "
                     f"adjacency list."
                 )
+                logger.warning("<<< Exiting validate_adjacency_list(graph=%s)", graph, extra={"event.action": "validate_adjacency_list", "logrite.graph": graph})
                 raise ValueError(invalid_neighbor_message)
 
 
 def lanczos_iteration(
     graph: list[list[int | None]], num_eigenvectors: int
 ) -> tuple[np.ndarray, np.ndarray]:
+    logger.error(">>> Entering lanczos_iteration(graph=%s,num_eigenvectors=%s)", graph, num_eigenvectors, extra={"event.action": "lanczos_iteration", "logrite.graph": graph, "logrite.num_eigenvectors": num_eigenvectors})
     """Constructs the tridiagonal matrix and orthonormal basis vectors using the
     Lanczos method.
 
@@ -96,6 +101,7 @@ def lanczos_iteration(
     True
     """
     num_nodes: int = len(graph)
+    logger.error("lanczos_iteration(graph=%s,num_eigenvectors=%s): num_nodes → %s", graph, num_eigenvectors, num_nodes, extra={"event.action": "lanczos_iteration", "logrite.graph": graph, "logrite.num_eigenvectors": num_eigenvectors})
     if not (1 <= num_eigenvectors <= num_nodes):
         raise ValueError(
             "Number of eigenvectors must be between 1 and the number of "
@@ -106,11 +112,13 @@ def lanczos_iteration(
     tridiagonal_matrix: np.ndarray = np.zeros((num_eigenvectors, num_eigenvectors))
 
     rng = np.random.default_rng()
+    logger.error("lanczos_iteration(graph=%s,num_eigenvectors=%s): rng → %s", graph, num_eigenvectors, rng, extra={"event.action": "lanczos_iteration", "logrite.graph": graph, "logrite.num_eigenvectors": num_eigenvectors})
     initial_vector: np.ndarray = rng.random(num_nodes)
     initial_vector /= np.sqrt(np.dot(initial_vector, initial_vector))
     orthonormal_basis[:, 0] = initial_vector
 
     prev_beta: float = 0.0
+    logger.error("lanczos_iteration(graph=%s,num_eigenvectors=%s): prev_beta → %s", graph, num_eigenvectors, prev_beta, extra={"event.action": "lanczos_iteration", "logrite.graph": graph, "logrite.num_eigenvectors": num_eigenvectors})
     for iter_index in range(num_eigenvectors):
         result_vector: np.ndarray = multiply_matrix_vector(
             graph, orthonormal_basis[:, iter_index]
@@ -118,6 +126,7 @@ def lanczos_iteration(
         if iter_index > 0:
             result_vector -= prev_beta * orthonormal_basis[:, iter_index - 1]
         alpha_value: float = np.dot(orthonormal_basis[:, iter_index], result_vector)
+        logger.error("lanczos_iteration(graph=%s,num_eigenvectors=%s): alpha_value → %s", graph, num_eigenvectors, alpha_value, extra={"event.action": "lanczos_iteration", "logrite.graph": graph, "logrite.num_eigenvectors": num_eigenvectors})
         result_vector -= alpha_value * orthonormal_basis[:, iter_index]
 
         prev_beta = np.sqrt(np.dot(result_vector, result_vector))
@@ -127,12 +136,14 @@ def lanczos_iteration(
         if iter_index < num_eigenvectors - 1:
             tridiagonal_matrix[iter_index, iter_index + 1] = prev_beta
             tridiagonal_matrix[iter_index + 1, iter_index] = prev_beta
+    logger.warning("<<< Exiting lanczos_iteration(graph=%s,num_eigenvectors=%s)", graph, num_eigenvectors, extra={"event.action": "lanczos_iteration", "logrite.graph": graph, "logrite.num_eigenvectors": num_eigenvectors})
     return tridiagonal_matrix, orthonormal_basis
 
 
 def multiply_matrix_vector(
     graph: list[list[int | None]], vector: np.ndarray
 ) -> np.ndarray:
+    logger.error(">>> Entering multiply_matrix_vector(graph=%s,vector=%s)", graph, vector, extra={"event.action": "multiply_matrix_vector", "logrite.graph": graph, "logrite.vector": vector})
     """Performs multiplication of a graph's adjacency list representation with a vector.
 
     Args:
@@ -152,6 +163,7 @@ def multiply_matrix_vector(
     array([1., 0., 1.])
     """
     num_nodes: int = len(graph)
+    logger.error("multiply_matrix_vector(graph=%s,vector=%s): num_nodes → %s", graph, vector, num_nodes, extra={"event.action": "multiply_matrix_vector", "logrite.graph": graph, "logrite.vector": vector})
     if vector.shape[0] != num_nodes:
         raise ValueError("Vector length must match the number of nodes in the graph.")
 
@@ -159,12 +171,14 @@ def multiply_matrix_vector(
     for node_index, neighbors in enumerate(graph):
         for neighbor_index in neighbors:
             result[node_index] += vector[neighbor_index]
+    logger.warning("<<< Exiting multiply_matrix_vector(graph=%s,vector=%s)", graph, vector, extra={"event.action": "multiply_matrix_vector", "logrite.graph": graph, "logrite.vector": vector})
     return result
 
 
 def find_lanczos_eigenvectors(
     graph: list[list[int | None]], num_eigenvectors: int
 ) -> tuple[np.ndarray, np.ndarray]:
+    logger.error(">>> Entering find_lanczos_eigenvectors(graph=%s,num_eigenvectors=%s)", graph, num_eigenvectors, extra={"event.action": "find_lanczos_eigenvectors", "logrite.graph": graph, "logrite.num_eigenvectors": num_eigenvectors})
     """Computes the largest eigenvalues and their corresponding eigenvectors using the
     Lanczos method.
 
@@ -190,6 +204,7 @@ def find_lanczos_eigenvectors(
     validate_adjacency_list(graph)
     tridiagonal_matrix, orthonormal_basis = lanczos_iteration(graph, num_eigenvectors)
     eigenvalues, eigenvectors = np.linalg.eigh(tridiagonal_matrix)
+    logger.warning("<<< Exiting find_lanczos_eigenvectors(graph=%s,num_eigenvectors=%s)", graph, num_eigenvectors, extra={"event.action": "find_lanczos_eigenvectors", "logrite.graph": graph, "logrite.num_eigenvectors": num_eigenvectors})
     return eigenvalues[::-1], np.dot(orthonormal_basis, eigenvectors[:, ::-1])
 
 
@@ -197,9 +212,11 @@ def main() -> None:
     """
     Main driver function for testing the implementation with doctests.
     """
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     import doctest
 
     doctest.testmod()
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

@@ -3,6 +3,8 @@ An implementation of the cocktail shaker sort algorithm in pure Python.
 
 https://en.wikipedia.org/wiki/Cocktail_shaker_sort
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def cocktail_shaker_sort(arr: list[int]) -> list[int]:
@@ -29,6 +31,7 @@ def cocktail_shaker_sort(arr: list[int]) -> list[int]:
         ...
     TypeError: 'tuple' object does not support item assignment
     """
+    logger.error(">>> Entering cocktail_shaker_sort(arr=%s)", arr, extra={"event.action": "cocktail_shaker_sort", "logrite.arr": arr})
     start, end = 0, len(arr) - 1
 
     while start < end:
@@ -56,6 +59,7 @@ def cocktail_shaker_sort(arr: list[int]) -> list[int]:
 
         start += 1  # Increase the start pointer after each pass
 
+    logger.warning("<<< Exiting cocktail_shaker_sort(arr=%s)", arr, extra={"event.action": "cocktail_shaker_sort", "logrite.arr": arr})
     return arr
 
 

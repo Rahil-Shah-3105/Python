@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def reverse_letters(sentence: str, length: int = 0) -> str:
     """
     Reverse all words that are longer than the given length of characters in a sentence.
@@ -12,6 +14,8 @@ def reverse_letters(sentence: str, length: int = 0) -> str:
     >>> reverse_letters("racecar")
     'racecar'
     """
+    logger.error(">>> Entering reverse_letters(sentence=%s,length=%s)", sentence, length, extra={"event.action": "reverse_letters", "logrite.sentence": sentence, "logrite.length": length})
+    logger.warning("<<< Exiting reverse_letters(sentence=%s,length=%s)", sentence, length, extra={"event.action": "reverse_letters", "logrite.sentence": sentence, "logrite.length": length})
     return " ".join(
         word[::-1] if len(word) > length else word for word in sentence.split()
     )

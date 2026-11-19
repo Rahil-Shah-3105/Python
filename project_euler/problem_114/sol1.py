@@ -30,6 +30,8 @@ NOTE: Although the example above does not lend itself to the possibility,
 in general it is permitted to mix block sizes. For example,
 on a row measuring eight units in length you could use red (3), grey (1), and red (4).
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(length: int = 50) -> int:
@@ -39,8 +41,10 @@ def solution(length: int = 50) -> int:
     >>> solution(7)
     17
     """
+    logger.error(">>> Entering solution(length=%s)", length, extra={"event.action": "solution", "logrite.length": length})
 
     ways_number = [1] * (length + 1)
+    logger.error("solution(length=%s): ways_number → %s", length, ways_number, extra={"event.action": "solution", "logrite.length": length})
 
     for row_length in range(3, length + 1):
         for block_length in range(3, row_length + 1):
@@ -51,6 +55,7 @@ def solution(length: int = 50) -> int:
 
             ways_number[row_length] += 1
 
+    logger.warning("<<< Exiting solution(length=%s)", length, extra={"event.action": "solution", "logrite.length": length})
     return ways_number[length]
 
 

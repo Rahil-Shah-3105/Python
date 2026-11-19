@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def split(string: str, separator: str = " ") -> list:
     """
     Will split the string up into all the values separated by the separator
@@ -18,6 +20,7 @@ def split(string: str, separator: str = " ") -> list:
     >>> split(";abbb;;c;", separator=';')
     ['', 'abbb', '', 'c', '']
     """
+    logger.error(">>> Entering split(string=%s,separator=%s)", string, separator, extra={"event.action": "split", "logrite.string": string, "logrite.separator": separator})
 
     split_words = []
 
@@ -28,6 +31,7 @@ def split(string: str, separator: str = " ") -> list:
             last_index = index + 1
         if index + 1 == len(string):
             split_words.append(string[last_index : index + 1])
+    logger.warning("<<< Exiting split(string=%s,separator=%s)", string, separator, extra={"event.action": "split", "logrite.string": string, "logrite.separator": separator})
     return split_words
 
 

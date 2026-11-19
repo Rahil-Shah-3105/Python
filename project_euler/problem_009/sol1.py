@@ -15,6 +15,8 @@ Find the product a*b*c.
 References:
     - https://en.wikipedia.org/wiki/Pythagorean_triple
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution() -> int:
@@ -28,6 +30,7 @@ def solution() -> int:
     >>> solution()
     31875000
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
 
     for a in range(300):
         for b in range(a + 1, 400):
@@ -35,6 +38,7 @@ def solution() -> int:
                 if (a + b + c) == 1000 and (a**2) + (b**2) == (c**2):
                     return a * b * c
 
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return -1
 
 
@@ -49,6 +53,7 @@ def solution_fast() -> int:
     >>> solution_fast()
     31875000
     """
+    logger.error(">>> Entering solution_fast()", extra={"event.action": "solution_fast"})
 
     for a in range(300):
         for b in range(400):
@@ -56,6 +61,7 @@ def solution_fast() -> int:
             if a < b < c and (a**2) + (b**2) == (c**2):
                 return a * b * c
 
+    logger.warning("<<< Exiting solution_fast()", extra={"event.action": "solution_fast"})
     return -1
 
 
@@ -63,6 +69,7 @@ def benchmark() -> None:
     """
     Benchmark code comparing two different version function.
     """
+    logger.error(">>> Entering benchmark()", extra={"event.action": "benchmark"})
     import timeit
 
     print(
@@ -73,6 +80,7 @@ def benchmark() -> None:
             "solution_fast()", setup="from __main__ import solution_fast", number=1000
         )
     )
+    logger.warning("<<< Exiting benchmark()", extra={"event.action": "benchmark"})
 
 
 if __name__ == "__main__":

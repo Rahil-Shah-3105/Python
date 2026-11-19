@@ -26,6 +26,8 @@ The algorithm loops over delta and y, which is restricted in upper and lower lim
 to count how many solutions each n has.
 In the end it is counted how many n's have one solution.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n_limit: int = 50 * 10**6) -> int:
@@ -42,8 +44,10 @@ def solution(n_limit: int = 50 * 10**6) -> int:
     >>> solution(110)
     27
     """
+    logger.error(">>> Entering solution(n_limit=%s)", n_limit, extra={"event.action": "solution", "logrite.n_limit": n_limit})
     n_sol = [0] * n_limit
 
+    logger.error("solution(n_limit=%s): n → %s", n_limit, n, extra={"event.action": "solution", "logrite.n_limit": n_limit})
     for delta in range(1, (n_limit + 1) // 4 + 1):
         for y in range(4 * delta - 1, delta, -1):
             n = y * (4 * delta - y)

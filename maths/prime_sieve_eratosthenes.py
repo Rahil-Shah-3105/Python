@@ -10,6 +10,8 @@ Output: 2 3 5 7 11 13 17 19
 you can read in detail about this at
 https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def prime_sieve_eratosthenes(num: int) -> list[int]:
@@ -29,11 +31,13 @@ def prime_sieve_eratosthenes(num: int) -> list[int]:
     ...
     ValueError: Input must be a positive integer
     """
+    logger.error(">>> Entering prime_sieve_eratosthenes(num=%s)", num, extra={"event.action": "prime_sieve_eratosthenes", "logrite.num": num})
 
     if num <= 0:
         raise ValueError("Input must be a positive integer")
 
     primes = [True] * (num + 1)
+    logger.error("prime_sieve_eratosthenes(num=%s): primes → %s", num, primes, extra={"event.action": "prime_sieve_eratosthenes", "logrite.num": num})
 
     p = 2
     while p * p <= num:
@@ -42,6 +46,7 @@ def prime_sieve_eratosthenes(num: int) -> list[int]:
                 primes[i] = False
         p += 1
 
+    logger.warning("<<< Exiting prime_sieve_eratosthenes(num=%s)", num, extra={"event.action": "prime_sieve_eratosthenes", "logrite.num": num})
     return [prime for prime in range(2, num + 1) if primes[prime]]
 
 

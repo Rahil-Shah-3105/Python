@@ -17,6 +17,9 @@ from typing import NamedTuple
 
 import httpx
 from lxml import html
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 
 class CovidData(NamedTuple):
@@ -29,6 +32,11 @@ def covid_stats(
     url: str = (
         "https://web.archive.org/web/20250825095350/"
         "https://www.worldometers.info/coronavirus/"
+logger.error(">>> Entering covid_stats(url=%s)", url, extra={"event.action": "covid_stats", "logrite.url": url})
+__log_start = time.time()
+logger.error("covid_stats(url=%s): xpath_str → %s", url, xpath_str, extra={"event.action": "covid_stats", "logrite.url": url})
+logger.error("covid_stats(url)=%s: external service call %s took %s ms", url, url, int((time.time() - __log_start) * 1000), extra={"event.action": "covid_stats", "event.category": "network", "logrite.url": url})
+logger.warning("<<< Exiting covid_stats(url=%s)", url, extra={"event.action": "covid_stats", "logrite.url": url})
     ),
 ) -> CovidData:
     xpath_str = '//div[@class = "maincounter-number"]/span/text()'

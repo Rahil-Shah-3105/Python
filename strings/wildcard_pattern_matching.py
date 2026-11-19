@@ -5,6 +5,8 @@ Implementation of regular expression matching with support for '.' and '*'.
 The matching should cover the entire input string (not partial).
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def match_pattern(input_string: str, pattern: str) -> bool:
@@ -53,15 +55,19 @@ def match_pattern(input_string: str, pattern: str) -> bool:
     >>> match_pattern("", "")
     True
     """
+    logger.error(">>> Entering match_pattern(input_string=%s,pattern=%s)", input_string, pattern, extra={"event.action": "match_pattern", "logrite.input_string": input_string, "logrite.pattern": pattern})
 
     len_string = len(input_string) + 1
+    logger.error("match_pattern(input_string=%s,pattern=%s): len_string → %s", input_string, pattern, len_string, extra={"event.action": "match_pattern", "logrite.input_string": input_string, "logrite.pattern": pattern})
     len_pattern = len(pattern) + 1
+    logger.error("match_pattern(input_string=%s,pattern=%s): len_pattern → %s", input_string, pattern, len_pattern, extra={"event.action": "match_pattern", "logrite.input_string": input_string, "logrite.pattern": pattern})
 
     # dp is a 2d matrix where dp[i][j] denotes whether prefix string of
     # length i of input_string matches with prefix string of length j of
     # given pattern.
     # "dp" stands for dynamic programming.
     dp = [[0 for i in range(len_pattern)] for j in range(len_string)]
+    logger.error("match_pattern(input_string=%s,pattern=%s): dp → %s", input_string, pattern, dp, extra={"event.action": "match_pattern", "logrite.input_string": input_string, "logrite.pattern": pattern})
 
     # since string of zero length match pattern of zero length
     dp[0][0] = 1
@@ -91,6 +97,7 @@ def match_pattern(input_string: str, pattern: str) -> bool:
             else:
                 dp[i][j] = 0
 
+    logger.warning("<<< Exiting match_pattern(input_string=%s,pattern=%s)", input_string, pattern, extra={"event.action": "match_pattern", "logrite.input_string": input_string, "logrite.pattern": pattern})
     return bool(dp[-1][-1])
 
 

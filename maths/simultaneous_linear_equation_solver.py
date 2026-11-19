@@ -7,6 +7,8 @@ Where λ & y are individual coefficients, the no. of equations = no. of coeffici
 
 Note in order to work there must exist 1 equation where all instances of λ and y != 0
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def simplify(current_set: list[list]) -> list[list]:
@@ -16,8 +18,10 @@ def simplify(current_set: list[list]) -> list[list]:
     >>> simplify([[5, 2, 5], [5, 1, 10]])
     [[1.0, 0.4, 1.0], [0.0, 0.2, -1.0]]
     """
+    logger.error(">>> Entering simplify(current_set=%s)", current_set, extra={"event.action": "simplify", "logrite.current_set": current_set})
     # Divide each row by magnitude of first term --> creates 'unit' matrix
     duplicate_set = current_set.copy()
+    logger.error("simplify(current_set=%s): duplicate_set → %s", current_set, duplicate_set, extra={"event.action": "simplify", "logrite.current_set": current_set})
     for row_index, row in enumerate(duplicate_set):
         magnitude = row[0]
         for column_index, column in enumerate(row):
@@ -47,10 +51,12 @@ def simplify(current_set: list[list]) -> list[list]:
             current_first_column.append(row[0])
             next_iteration.append(row[1::])
         resultant = simplify(next_iteration)
+        logger.error("simplify(current_set=%s): resultant → %s", current_set, resultant, extra={"event.action": "simplify", "logrite.current_set": current_set})
         for i in range(len(resultant)):
             resultant[i].insert(0, current_first_column[i])
         resultant.insert(0, current_first_row)
         final_set = resultant
+    logger.warning("<<< Exiting simplify(current_set=%s)", current_set, extra={"event.action": "simplify", "logrite.current_set": current_set})
     return final_set
 
 
@@ -77,9 +83,11 @@ def solve_simultaneous(equations: list[list]) -> list:
         ...
     ValueError: solve_simultaneous() requires at least 1 full equation
     """
+    logger.error(">>> Entering solve_simultaneous(equations=%s)", equations, extra={"event.action": "solve_simultaneous", "logrite.equations": equations})
     if len(equations) == 0:
         raise IndexError("solve_simultaneous() requires n lists of length n+1")
     _length = len(equations) + 1
+    logger.error("solve_simultaneous(equations=%s): _length → %s", equations, _length, extra={"event.action": "solve_simultaneous", "logrite.equations": equations})
     if any(len(item) != _length for item in equations):
         raise IndexError("solve_simultaneous() requires n lists of length n+1")
     for row in equations:
@@ -124,6 +132,7 @@ def solve_simultaneous(equations: list[list]) -> list:
     final = []
     for item in solutions:
         final.append(float(round(item, 5)))
+    logger.warning("<<< Exiting solve_simultaneous(equations=%s)", equations, extra={"event.action": "solve_simultaneous", "logrite.equations": equations})
     return final[::-1]
 
 

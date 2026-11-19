@@ -20,6 +20,8 @@ prime and twice a square?
 from __future__ import annotations
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -46,6 +48,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(67483)
     False
     """
+    logger.error(">>> Entering is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -58,6 +61,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.warning("<<< Exiting is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
     return True
 
 
@@ -86,6 +90,7 @@ def compute_nums(n: int) -> list[int]:
     ValueError: n must be an integer
 
     """
+    logger.error(">>> Entering compute_nums(n=%s)", n, extra={"event.action": "compute_nums", "logrite.n": n})
     if not isinstance(n, int):
         raise ValueError("n must be an integer")
     if n <= 0:
@@ -104,11 +109,14 @@ def compute_nums(n: int) -> list[int]:
             if len(list_nums) == n:
                 return list_nums
 
+    logger.warning("<<< Exiting compute_nums(n=%s)", n, extra={"event.action": "compute_nums", "logrite.n": n})
     return []
 
 
 def solution() -> int:
     """Return the solution to the problem"""
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return compute_nums(1)[0]
 
 

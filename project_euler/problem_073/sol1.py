@@ -17,6 +17,8 @@ of reduced proper fractions for d ≤ 12,000?
 """
 
 from math import gcd
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(max_d: int = 12_000) -> int:
@@ -33,6 +35,7 @@ def solution(max_d: int = 12_000) -> int:
     >>> solution(8)
     3
     """
+    logger.error(">>> Entering solution(max_d=%s)", max_d, extra={"event.action": "solution", "logrite.max_d": max_d})
 
     fractions_number = 0
     for d in range(max_d + 1):

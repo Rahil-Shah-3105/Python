@@ -11,6 +11,8 @@ the waiting time for each query by multiplying its position in the list with the
 sum of all remaining query times, and returns the total waiting time. A doctest
 ensures that the function produces the correct output.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def minimum_waiting_time(queries: list[int]) -> int:
@@ -36,9 +38,12 @@ def minimum_waiting_time(queries: list[int]) -> int:
     >>> minimum_waiting_time([])
     0
     """
+    logger.error(">>> Entering minimum_waiting_time(queries=%s)", queries, extra={"event.action": "minimum_waiting_time", "logrite.queries": queries})
     n = len(queries)
+    logger.error("minimum_waiting_time(queries=%s): n → %s", queries, n, extra={"event.action": "minimum_waiting_time", "logrite.queries": queries})
     if n in (0, 1):
         return 0
+    logger.warning("<<< Exiting minimum_waiting_time(queries=%s)", queries, extra={"event.action": "minimum_waiting_time", "logrite.queries": queries})
     return sum(query * (n - i - 1) for i, query in enumerate(sorted(queries)))
 
 

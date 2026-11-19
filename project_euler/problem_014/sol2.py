@@ -27,17 +27,21 @@ Which starting number, under one million, produces the longest chain?
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 COLLATZ_SEQUENCE_LENGTHS = {1: 1}
 
 
 def collatz_sequence_length(n: int) -> int:
     """Returns the Collatz sequence length for n."""
+    logger.error(">>> Entering collatz_sequence_length(n=%s)", n, extra={"event.action": "collatz_sequence_length", "logrite.n": n})
     if n in COLLATZ_SEQUENCE_LENGTHS:
         return COLLATZ_SEQUENCE_LENGTHS[n]
     next_n = n // 2 if n % 2 == 0 else 3 * n + 1
     sequence_length = collatz_sequence_length(next_n) + 1
     COLLATZ_SEQUENCE_LENGTHS[n] = sequence_length
+    logger.warning("<<< Exiting collatz_sequence_length(n=%s)", n, extra={"event.action": "collatz_sequence_length", "logrite.n": n})
     return sequence_length
 
 
@@ -53,8 +57,11 @@ def solution(n: int = 1000000) -> int:
     >>> solution(15000)
     13255
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     result = max((collatz_sequence_length(i), i) for i in range(1, n))
+    logger.error("solution(n=%s): result → %s", n, result, extra={"event.action": "solution", "logrite.n": n})
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return result[1]
 
 

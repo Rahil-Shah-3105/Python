@@ -41,6 +41,8 @@ So it could be simplified as,
 from __future__ import annotations
 
 from collections.abc import Generator
+import logging
+logger = logging.getLogger(__name__)
 
 
 def sieve() -> Generator[int]:
@@ -62,10 +64,12 @@ def sieve() -> Generator[int]:
     >>> next(primes)
     13
     """
+    logger.error(">>> Entering sieve()", extra={"event.action": "sieve"})
     factor_map: dict[int, int] = {}
     prime = 2
     while True:
         factor = factor_map.pop(prime, None)
+        logger.error("sieve(): factor → %s", factor, extra={"event.action": "sieve"})
         if factor:
             x = factor + prime
             while x in factor_map:
@@ -75,6 +79,7 @@ def sieve() -> Generator[int]:
             factor_map[prime * prime] = prime
             yield prime
         prime += 1
+        logger.warning("<<< Exiting sieve()", extra={"event.action": "sieve"})
 
 
 def solution(limit: float = 1e10) -> int:
@@ -85,12 +90,16 @@ def solution(limit: float = 1e10) -> int:
     >>> solution(1e9)
     7037
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     primes = sieve()
+    logger.error("solution(limit=%s): primes → %s", limit, primes, extra={"event.action": "solution", "logrite.limit": limit})
 
     n = 1
     while True:
         prime = next(primes)
+        logger.error("solution(limit=%s): prime → %s", limit, prime, extra={"event.action": "solution", "logrite.limit": limit})
         if (2 * prime * n) > limit:
+            logger.warning("<<< Exiting solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
             return n
         # Ignore the next prime as the reminder will be 2.
         next(primes)

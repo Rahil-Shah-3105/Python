@@ -1,11 +1,14 @@
 # https://www.investopedia.com
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def simple_interest(
     principal: float, daily_interest_rate: float, days_between_payments: float
 ) -> float:
+    logger.error(">>> Entering simple_interest(principal=%s,daily_interest_rate=%s,days_between_payments=%s)", principal, daily_interest_rate, days_between_payments, extra={"event.action": "simple_interest", "user.name": str(principal), "logrite.daily_interest_rate": daily_interest_rate, "logrite.days_between_payments": days_between_payments})
     """
     >>> simple_interest(18000.0, 0.06, 3)
     3240.0
@@ -36,6 +39,7 @@ def simple_interest(
         raise ValueError("daily_interest_rate must be >= 0")
     if principal <= 0:
         raise ValueError("principal must be > 0")
+    logger.warning("<<< Exiting simple_interest(principal=%s,daily_interest_rate=%s,days_between_payments=%s)", principal, daily_interest_rate, days_between_payments, extra={"event.action": "simple_interest", "user.name": str(principal), "logrite.daily_interest_rate": daily_interest_rate, "logrite.days_between_payments": days_between_payments})
     return principal * daily_interest_rate * days_between_payments
 
 
@@ -44,6 +48,7 @@ def compound_interest(
     nominal_annual_interest_rate_percentage: float,
     number_of_compounding_periods: float,
 ) -> float:
+    logger.error(">>> Entering compound_interest(principal=%s,nominal_annual_interest_rate_percentage=%s,number_of_compounding_periods=%s)", principal, nominal_annual_interest_rate_percentage, number_of_compounding_periods, extra={"event.action": "compound_interest", "user.name": str(principal), "logrite.nominal_annual_interest_rate_percentage": nominal_annual_interest_rate_percentage, "logrite.number_of_compounding_periods": number_of_compounding_periods})
     """
     >>> compound_interest(10000.0, 0.05, 3)
     1576.2500000000014
@@ -71,6 +76,7 @@ def compound_interest(
     if principal <= 0:
         raise ValueError("principal must be > 0")
 
+        logger.warning("<<< Exiting compound_interest(principal=%s,nominal_annual_interest_rate_percentage=%s,number_of_compounding_periods=%s)", principal, nominal_annual_interest_rate_percentage, number_of_compounding_periods, extra={"event.action": "compound_interest", "user.name": str(principal), "logrite.nominal_annual_interest_rate_percentage": nominal_annual_interest_rate_percentage, "logrite.number_of_compounding_periods": number_of_compounding_periods})
     return principal * (
         (1 + nominal_annual_interest_rate_percentage) ** number_of_compounding_periods
         - 1
@@ -82,6 +88,7 @@ def apr_interest(
     nominal_annual_percentage_rate: float,
     number_of_years: float,
 ) -> float:
+    logger.error(">>> Entering apr_interest(principal=%s,nominal_annual_percentage_rate=%s,number_of_years=%s)", principal, nominal_annual_percentage_rate, number_of_years, extra={"event.action": "apr_interest", "user.name": str(principal), "logrite.nominal_annual_percentage_rate": nominal_annual_percentage_rate, "logrite.number_of_years": number_of_years})
     """
     >>> apr_interest(10000.0, 0.05, 3)
     1618.223072263547
@@ -109,6 +116,7 @@ def apr_interest(
     if principal <= 0:
         raise ValueError("principal must be > 0")
 
+        logger.warning("<<< Exiting apr_interest(principal=%s,nominal_annual_percentage_rate=%s,number_of_years=%s)", principal, nominal_annual_percentage_rate, number_of_years, extra={"event.action": "apr_interest", "user.name": str(principal), "logrite.nominal_annual_percentage_rate": nominal_annual_percentage_rate, "logrite.number_of_years": number_of_years})
     return compound_interest(
         principal, nominal_annual_percentage_rate / 365, number_of_years * 365
     )

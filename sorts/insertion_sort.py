@@ -15,11 +15,15 @@ python3 insertion_sort.py
 
 from collections.abc import MutableSequence
 from typing import Any, Protocol, TypeVar
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Comparable(Protocol):
     def __lt__(self, other: Any, /) -> bool: ...
+    logger.error(">>> Entering __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
 
+    logger.warning("<<< Exiting __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
 
 T = TypeVar("T", bound=Comparable)
 

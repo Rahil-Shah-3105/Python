@@ -1,6 +1,8 @@
 """
 This is pure Python implementation of interpolation search algorithm
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def interpolation_search(sorted_collection: list[int], item: int) -> int | None:
@@ -39,6 +41,7 @@ def interpolation_search(sorted_collection: list[int], item: int) -> int | None:
     >>> interpolation_search([5, 5, 5, 5, 5], 3) is None
     True
     """
+    logger.error(">>> Entering interpolation_search(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "interpolation_search", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     left = 0
     right = len(sorted_collection) - 1
 
@@ -70,12 +73,14 @@ def interpolation_search(sorted_collection: list[int], item: int) -> int | None:
             right = point - 1
         else:
             left = point + 1
+    logger.warning("<<< Exiting interpolation_search(sorted_collection=%s,item=%s)", sorted_collection, item, extra={"event.action": "interpolation_search", "logrite.sorted_collection": sorted_collection, "logrite.item": item})
     return None
 
 
 def interpolation_search_by_recursion(
     sorted_collection: list[int], item: int, left: int = 0, right: int | None = None
 ) -> int | None:
+    logger.error(">>> Entering interpolation_search_by_recursion(sorted_collection=%s,item=%s,left=%s,right=%s)", sorted_collection, item, left, right, extra={"event.action": "interpolation_search_by_recursion", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.left": left, "logrite.right": right})
     """Pure implementation of interpolation search algorithm in Python by recursion
     Be careful collection must be ascending sorted, otherwise result will be
     unpredictable
@@ -104,6 +109,7 @@ def interpolation_search_by_recursion(
     """
     if right is None:
         right = len(sorted_collection) - 1
+        logger.error("interpolation_search_by_recursion(sorted_collection=%s,item=%s,left=%s,right=%s): right → %s", sorted_collection, item, left, right, right, extra={"event.action": "interpolation_search_by_recursion", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.left": left, "logrite.right": right})
     # avoid divided by 0 during interpolation
     if sorted_collection[left] == sorted_collection[right]:
         if sorted_collection[left] == item:
@@ -128,6 +134,7 @@ def interpolation_search_by_recursion(
         return interpolation_search_by_recursion(
             sorted_collection, item, left, point - 1
         )
+    logger.warning("<<< Exiting interpolation_search_by_recursion(sorted_collection=%s,item=%s,left=%s,right=%s)", sorted_collection, item, left, right, extra={"event.action": "interpolation_search_by_recursion", "logrite.sorted_collection": sorted_collection, "logrite.item": item, "logrite.left": left, "logrite.right": right})
     return interpolation_search_by_recursion(sorted_collection, item, point + 1, right)
 
 

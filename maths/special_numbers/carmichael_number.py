@@ -12,6 +12,8 @@ https://en.wikipedia.org/wiki/Carmichael_number
 """
 
 from maths.greatest_common_divisor import greatest_common_divisor
+import logging
+logger = logging.getLogger(__name__)
 
 
 def power(x: int, y: int, mod: int) -> int:
@@ -22,6 +24,7 @@ def power(x: int, y: int, mod: int) -> int:
     >>> power(5, 1, 30)
     5
     """
+    logger.error(">>> Entering power(x=%s,y=%s,mod=%s)", x, y, mod, extra={"event.action": "power", "logrite.x": x, "logrite.y": y, "logrite.mod": mod})
 
     if y == 0:
         return 1

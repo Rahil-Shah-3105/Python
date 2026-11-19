@@ -5,6 +5,8 @@
 
 # Imports
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 # Class implemented to calculus the index
@@ -105,24 +107,34 @@ class IndexCalculation:
     """
 
     def __init__(self, red=None, green=None, blue=None, red_edge=None, nir=None):
+        logger.error(">>> Entering __init__(red=%s,green=%s,blue=%s,red_edge=%s,nir=%s)", red, green, blue, red_edge, nir, extra={"event.action": "__init__", "logrite.red": red, "logrite.green": green, "logrite.blue": blue, "logrite.red_edge": red_edge, "logrite.nir": nir})
         self.set_matricies(red=red, green=green, blue=blue, red_edge=red_edge, nir=nir)
+        logger.warning("<<< Exiting __init__(red=%s,green=%s,blue=%s,red_edge=%s,nir=%s)", red, green, blue, red_edge, nir, extra={"event.action": "__init__", "logrite.red": red, "logrite.green": green, "logrite.blue": blue, "logrite.red_edge": red_edge, "logrite.nir": nir})
 
     def set_matricies(self, red=None, green=None, blue=None, red_edge=None, nir=None):
+        logger.error(">>> Entering set_matricies(red=%s,green=%s,blue=%s,red_edge=%s,nir=%s)", red, green, blue, red_edge, nir, extra={"event.action": "set_matricies", "logrite.red": red, "logrite.green": green, "logrite.blue": blue, "logrite.red_edge": red_edge, "logrite.nir": nir})
         if red is not None:
             self.red = red
+            logger.debug("set_matricies(self=%s,red=%s,green=%s,blue=%s,red_edge=%s,nir=%s): self.red → %s", self, red, green, blue, red_edge, nir, self.red, extra={"event.action": "set_matricies", "logrite.red": red, "logrite.green": green, "logrite.blue": blue, "logrite.red_edge": red_edge, "logrite.nir": nir})
         if green is not None:
             self.green = green
+            logger.debug("set_matricies(self=%s,red=%s,green=%s,blue=%s,red_edge=%s,nir=%s): self.green → %s", self, red, green, blue, red_edge, nir, self.green, extra={"event.action": "set_matricies", "logrite.red": red, "logrite.green": green, "logrite.blue": blue, "logrite.red_edge": red_edge, "logrite.nir": nir})
         if blue is not None:
             self.blue = blue
+            logger.debug("set_matricies(self=%s,red=%s,green=%s,blue=%s,red_edge=%s,nir=%s): self.blue → %s", self, red, green, blue, red_edge, nir, self.blue, extra={"event.action": "set_matricies", "logrite.red": red, "logrite.green": green, "logrite.blue": blue, "logrite.red_edge": red_edge, "logrite.nir": nir})
         if red_edge is not None:
             self.redEdge = red_edge
+            logger.debug("set_matricies(self=%s,red=%s,green=%s,blue=%s,red_edge=%s,nir=%s): self.redEdge → %s", self, red, green, blue, red_edge, nir, self.redEdge, extra={"event.action": "set_matricies", "logrite.red": red, "logrite.green": green, "logrite.blue": blue, "logrite.red_edge": red_edge, "logrite.nir": nir})
         if nir is not None:
             self.nir = nir
+        logger.debug("set_matricies(self=%s,red=%s,green=%s,blue=%s,red_edge=%s,nir=%s): self.nir → %s", self, red, green, blue, red_edge, nir, self.nir, extra={"event.action": "set_matricies", "logrite.red": red, "logrite.green": green, "logrite.blue": blue, "logrite.red_edge": red_edge, "logrite.nir": nir})
+        logger.warning("<<< Exiting set_matricies(red=%s,green=%s,blue=%s,red_edge=%s,nir=%s)", red, green, blue, red_edge, nir, extra={"event.action": "set_matricies", "logrite.red": red, "logrite.green": green, "logrite.blue": blue, "logrite.red_edge": red_edge, "logrite.nir": nir})
         return True
 
     def calculation(
         self, index="", red=None, green=None, blue=None, red_edge=None, nir=None
     ):
+        logger.error(">>> Entering calculation(index=%s,red=%s,green=%s,blue=%s,red_edge=%s,nir=%s)", index, red, green, blue, red_edge, nir, extra={"event.action": "calculation", "logrite.index": index, "logrite.red": red, "logrite.green": green, "logrite.blue": blue, "logrite.red_edge": red_edge, "logrite.nir": nir})
         """
         performs the calculation of the index with the values instantiated in the class
         :str index: abbreviation of index name to perform
@@ -175,6 +187,7 @@ class IndexCalculation:
             return funcs[index]()
         except KeyError:
             print("Index not in the list!")
+            logger.warning("<<< Exiting calculation(index=%s,red=%s,green=%s,blue=%s,red_edge=%s,nir=%s)", index, red, green, blue, red_edge, nir, extra={"event.action": "calculation", "logrite.index": index, "logrite.red": red, "logrite.green": green, "logrite.blue": blue, "logrite.red_edge": red_edge, "logrite.nir": nir})
             return False
 
     def arv12(self):
@@ -184,6 +197,8 @@ class IndexCalculation:
         :return: index
             -0.18+1.17*(self.nir-self.red)/(self.nir+self.red)
         """
+        logger.error(">>> Entering arv12()", extra={"event.action": "arv12"})
+        logger.warning("<<< Exiting arv12()", extra={"event.action": "arv12"})
         return -0.18 + (1.17 * ((self.nir - self.red) / (self.nir + self.red)))
 
     def ccci(self):
@@ -192,6 +207,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=224
         :return: index
         """
+        logger.error(">>> Entering ccci()", extra={"event.action": "ccci"})
+        logger.warning("<<< Exiting ccci()", extra={"event.action": "ccci"})
         return ((self.nir - self.redEdge) / (self.nir + self.redEdge)) / (
             (self.nir - self.red) / (self.nir + self.red)
         )
@@ -202,6 +219,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=391
         :return: index
         """
+        logger.error(">>> Entering cvi()", extra={"event.action": "cvi"})
+        logger.warning("<<< Exiting cvi()", extra={"event.action": "cvi"})
         return self.nir * (self.red / (self.green**2))
 
     def gli(self):
@@ -210,6 +229,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=375
         :return: index
         """
+        logger.error(">>> Entering gli()", extra={"event.action": "gli"})
+        logger.warning("<<< Exiting gli()", extra={"event.action": "gli"})
         return (2 * self.green - self.red - self.blue) / (
             2 * self.green + self.red + self.blue
         )
@@ -221,6 +242,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=58
         :return: index
         """
+        logger.error(">>> Entering ndvi()", extra={"event.action": "ndvi"})
+        logger.warning("<<< Exiting ndvi()", extra={"event.action": "ndvi"})
         return (self.nir - self.red) / (self.nir + self.red)
 
     def bndvi(self):
@@ -230,6 +253,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=135
         :return: index
         """
+        logger.error(">>> Entering bndvi()", extra={"event.action": "bndvi"})
+        logger.warning("<<< Exiting bndvi()", extra={"event.action": "bndvi"})
         return (self.nir - self.blue) / (self.nir + self.blue)
 
     def red_edge_ndvi(self):
@@ -238,6 +263,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=235
         :return: index
         """
+        logger.error(">>> Entering red_edge_ndvi()", extra={"event.action": "red_edge_ndvi"})
+        logger.warning("<<< Exiting red_edge_ndvi()", extra={"event.action": "red_edge_ndvi"})
         return (self.redEdge - self.red) / (self.redEdge + self.red)
 
     def gndvi(self):
@@ -246,6 +273,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=401
         :return: index
         """
+        logger.error(">>> Entering gndvi()", extra={"event.action": "gndvi"})
+        logger.warning("<<< Exiting gndvi()", extra={"event.action": "gndvi"})
         return (self.nir - self.green) / (self.nir + self.green)
 
     def gbndvi(self):
@@ -254,6 +283,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=186
         :return: index
         """
+        logger.error(">>> Entering gbndvi()", extra={"event.action": "gbndvi"})
+        logger.warning("<<< Exiting gbndvi()", extra={"event.action": "gbndvi"})
         return (self.nir - (self.green + self.blue)) / (
             self.nir + (self.green + self.blue)
         )
@@ -264,6 +295,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=185
         :return: index
         """
+        logger.error(">>> Entering grndvi()", extra={"event.action": "grndvi"})
+        logger.warning("<<< Exiting grndvi()", extra={"event.action": "grndvi"})
         return (self.nir - (self.green + self.red)) / (
             self.nir + (self.green + self.red)
         )
@@ -274,6 +307,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=187
         :return: index
         """
+        logger.error(">>> Entering rbndvi()", extra={"event.action": "rbndvi"})
+        logger.warning("<<< Exiting rbndvi()", extra={"event.action": "rbndvi"})
         return (self.nir - (self.blue + self.red)) / (self.nir + (self.blue + self.red))
 
     def pndvi(self):
@@ -282,6 +317,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=188
         :return: index
         """
+        logger.error(">>> Entering pndvi()", extra={"event.action": "pndvi"})
+        logger.warning("<<< Exiting pndvi()", extra={"event.action": "pndvi"})
         return (self.nir - (self.green + self.red + self.blue)) / (
             self.nir + (self.green + self.red + self.blue)
         )
@@ -292,6 +329,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=209
         :return: index
         """
+        logger.error(">>> Entering atsavi(x=%s,a=%s,b=%s)", x, a, b, extra={"event.action": "atsavi", "logrite.x": x, "logrite.a": a, "logrite.b": b})
+        logger.warning("<<< Exiting atsavi(x=%s,a=%s,b=%s)", x, a, b, extra={"event.action": "atsavi", "logrite.x": x, "logrite.a": a, "logrite.b": b})
         return a * (
             (self.nir - a * self.red - b)
             / (a * self.nir + self.red - a * b + x * (1 + a**2))
@@ -303,6 +342,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=136
         :return: index
         """
+        logger.error(">>> Entering bwdrvi()", extra={"event.action": "bwdrvi"})
+        logger.warning("<<< Exiting bwdrvi()", extra={"event.action": "bwdrvi"})
         return (0.1 * self.nir - self.blue) / (0.1 * self.nir + self.blue)
 
     def ci_green(self):
@@ -311,6 +352,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=128
         :return: index
         """
+        logger.error(">>> Entering ci_green()", extra={"event.action": "ci_green"})
+        logger.warning("<<< Exiting ci_green()", extra={"event.action": "ci_green"})
         return (self.nir / self.green) - 1
 
     def ci_rededge(self):
@@ -319,6 +362,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=131
         :return: index
         """
+        logger.error(">>> Entering ci_rededge()", extra={"event.action": "ci_rededge"})
+        logger.warning("<<< Exiting ci_rededge()", extra={"event.action": "ci_rededge"})
         return (self.nir / self.redEdge) - 1
 
     def ci(self):
@@ -327,6 +372,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=11
         :return: index
         """
+        logger.error(">>> Entering ci()", extra={"event.action": "ci"})
+        logger.warning("<<< Exiting ci()", extra={"event.action": "ci"})
         return (self.red - self.blue) / self.red
 
     def ctvi(self):
@@ -335,7 +382,10 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=244
         :return: index
         """
+        logger.error(">>> Entering ctvi()", extra={"event.action": "ctvi"})
         ndvi = self.ndvi()
+        logger.error("ctvi(): ndvi → %s", ndvi, extra={"event.action": "ctvi"})
+        logger.warning("<<< Exiting ctvi()", extra={"event.action": "ctvi"})
         return ((ndvi + 0.5) / (abs(ndvi + 0.5))) * (abs(ndvi + 0.5) ** (1 / 2))
 
     def gdvi(self):
@@ -344,6 +394,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=27
         :return: index
         """
+        logger.error(">>> Entering gdvi()", extra={"event.action": "gdvi"})
+        logger.warning("<<< Exiting gdvi()", extra={"event.action": "gdvi"})
         return self.nir - self.green
 
     def evi(self):
@@ -352,6 +404,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=16
         :return: index
         """
+        logger.error(">>> Entering evi()", extra={"event.action": "evi"})
+        logger.warning("<<< Exiting evi()", extra={"event.action": "evi"})
         return 2.5 * (
             (self.nir - self.red) / (self.nir + 6 * self.red - 7.5 * self.blue + 1)
         )
@@ -362,9 +416,12 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=25
         :return: index
         """
+        logger.error(">>> Entering gemi()", extra={"event.action": "gemi"})
         n = (2 * (self.nir**2 - self.red**2) + 1.5 * self.nir + 0.5 * self.red) / (
             self.nir + self.red + 0.5
         )
+        logger.error("gemi(): n → %s", n, extra={"event.action": "gemi"})
+        logger.warning("<<< Exiting gemi()", extra={"event.action": "gemi"})
         return n * (1 - 0.25 * n) - (self.red - 0.125) / (1 - self.red)
 
     def gosavi(self, y=0.16):
@@ -374,6 +431,8 @@ class IndexCalculation:
         mit Y = 0,16
         :return: index
         """
+        logger.error(">>> Entering gosavi(y=%s)", y, extra={"event.action": "gosavi", "logrite.y": y})
+        logger.warning("<<< Exiting gosavi(y=%s)", y, extra={"event.action": "gosavi", "logrite.y": y})
         return (self.nir - self.green) / (self.nir + self.green + y)
 
     def gsavi(self, n=0.5):
@@ -383,6 +442,8 @@ class IndexCalculation:
         mit N = 0,5
         :return: index
         """
+        logger.error(">>> Entering gsavi(n=%s)", n, extra={"event.action": "gsavi", "logrite.n": n})
+        logger.warning("<<< Exiting gsavi(n=%s)", n, extra={"event.action": "gsavi", "logrite.n": n})
         return ((self.nir - self.green) / (self.nir + self.green + n)) * (1 + n)
 
     def hue(self):
@@ -391,6 +452,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=34
         :return: index
         """
+        logger.error(">>> Entering hue()", extra={"event.action": "hue"})
+        logger.warning("<<< Exiting hue()", extra={"event.action": "hue"})
         return np.arctan(
             ((2 * self.red - self.green - self.blue) / 30.5) * (self.green - self.blue)
         )
@@ -403,6 +466,8 @@ class IndexCalculation:
         a=soil line slope
         :return: index
         """
+        logger.error(">>> Entering ivi(a=%s,b=%s)", a, b, extra={"event.action": "ivi", "logrite.a": a, "logrite.b": b})
+        logger.warning("<<< Exiting ivi(a=%s,b=%s)", a, b, extra={"event.action": "ivi", "logrite.a": a, "logrite.b": b})
         return (self.nir - b) / (a * self.red)
 
     def ipvi(self):
@@ -411,6 +476,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=35
         :return: index
         """
+        logger.error(">>> Entering ipvi()", extra={"event.action": "ipvi"})
+        logger.warning("<<< Exiting ipvi()", extra={"event.action": "ipvi"})
         return (self.nir / ((self.nir + self.red) / 2)) * (self.ndvi() + 1)
 
     def i(self):
@@ -419,6 +486,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=36
         :return: index
         """
+        logger.error(">>> Entering i()", extra={"event.action": "i"})
+        logger.warning("<<< Exiting i()", extra={"event.action": "i"})
         return (self.red + self.green + self.blue) / 30.5
 
     def rvi(self):
@@ -427,6 +496,8 @@ class IndexCalculation:
         http://www.seos-project.eu/modules/remotesensing/remotesensing-c03-s01-p01.html
         :return: index
         """
+        logger.error(">>> Entering rvi()", extra={"event.action": "rvi"})
+        logger.warning("<<< Exiting rvi()", extra={"event.action": "rvi"})
         return self.nir / self.red
 
     def mrvi(self):
@@ -435,6 +506,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=275
         :return: index
         """
+        logger.error(">>> Entering mrvi()", extra={"event.action": "mrvi"})
+        logger.warning("<<< Exiting mrvi()", extra={"event.action": "mrvi"})
         return (self.rvi() - 1) / (self.rvi() + 1)
 
     def m_savi(self):
@@ -443,6 +516,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=44
         :return: index
         """
+        logger.error(">>> Entering m_savi()", extra={"event.action": "m_savi"})
+        logger.warning("<<< Exiting m_savi()", extra={"event.action": "m_savi"})
         return (
             (2 * self.nir + 1)
             - ((2 * self.nir + 1) ** 2 - 8 * (self.nir - self.red)) ** (1 / 2)
@@ -454,6 +529,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=50
         :return: index
         """
+        logger.error(">>> Entering norm_g()", extra={"event.action": "norm_g"})
+        logger.warning("<<< Exiting norm_g()", extra={"event.action": "norm_g"})
         return self.green / (self.nir + self.red + self.green)
 
     def norm_nir(self):
@@ -462,6 +539,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=51
         :return: index
         """
+        logger.error(">>> Entering norm_nir()", extra={"event.action": "norm_nir"})
+        logger.warning("<<< Exiting norm_nir()", extra={"event.action": "norm_nir"})
         return self.nir / (self.nir + self.red + self.green)
 
     def norm_r(self):
@@ -470,6 +549,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=52
         :return: index
         """
+        logger.error(">>> Entering norm_r()", extra={"event.action": "norm_r"})
+        logger.warning("<<< Exiting norm_r()", extra={"event.action": "norm_r"})
         return self.red / (self.nir + self.red + self.green)
 
     def ngrdi(self):
@@ -480,6 +561,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=390
         :return: index
         """
+        logger.error(">>> Entering ngrdi()", extra={"event.action": "ngrdi"})
+        logger.warning("<<< Exiting ngrdi()", extra={"event.action": "ngrdi"})
         return (self.green - self.red) / (self.green + self.red)
 
     def ri(self):
@@ -488,6 +571,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=74
         :return: index
         """
+        logger.error(">>> Entering ri()", extra={"event.action": "ri"})
+        logger.warning("<<< Exiting ri()", extra={"event.action": "ri"})
         return (self.red - self.green) / (self.red + self.green)
 
     def s(self):
@@ -496,8 +581,12 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=77
         :return: index
         """
+        logger.error(">>> Entering s()", extra={"event.action": "s"})
         max_value = np.max([np.max(self.red), np.max(self.green), np.max(self.blue)])
+        logger.error("s(): max_value → %s", max_value, extra={"event.action": "s"})
         min_value = np.min([np.min(self.red), np.min(self.green), np.min(self.blue)])
+        logger.error("s(): min_value → %s", min_value, extra={"event.action": "s"})
+        logger.warning("<<< Exiting s()", extra={"event.action": "s"})
         return (max_value - min_value) / max_value
 
     def _if(self):
@@ -506,6 +595,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=79
         :return: index
         """
+        logger.error(">>> Entering _if()", extra={"event.action": "_if"})
+        logger.warning("<<< Exiting _if()", extra={"event.action": "_if"})
         return (2 * self.red - self.green - self.blue) / (self.green - self.blue)
 
     def dvi(self):
@@ -515,6 +606,8 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=12
         :return: index
         """
+        logger.error(">>> Entering dvi()", extra={"event.action": "dvi"})
+        logger.warning("<<< Exiting dvi()", extra={"event.action": "dvi"})
         return self.nir / self.red
 
     def tvi(self):
@@ -523,9 +616,13 @@ class IndexCalculation:
         https://www.indexdatabase.de/db/i-single.php?id=98
         :return: index
         """
+        logger.error(">>> Entering tvi()", extra={"event.action": "tvi"})
+        logger.warning("<<< Exiting tvi()", extra={"event.action": "tvi"})
         return (self.ndvi() + 0.5) ** (1 / 2)
 
     def ndre(self):
+        logger.error(">>> Entering ndre()", extra={"event.action": "ndre"})
+        logger.warning("<<< Exiting ndre()", extra={"event.action": "ndre"})
         return (self.nir - self.redEdge) / (self.nir + self.redEdge)
 
 

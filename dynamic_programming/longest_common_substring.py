@@ -8,6 +8,8 @@ Example:
     ``abcdef`` and ``xabded`` have two longest common substrings, ``ab`` or ``de``.
     Therefore, algorithm should return any one of them.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def longest_common_substring(text1: str, text2: str) -> str:
@@ -39,6 +41,7 @@ def longest_common_substring(text1: str, text2: str) -> str:
         ...
     ValueError: longest_common_substring() takes two strings for inputs
     """
+    logger.error(">>> Entering longest_common_substring(text1=%s,text2=%s)", text1, text2, extra={"event.action": "longest_common_substring", "logrite.text1": text1, "logrite.text2": text2})
 
     if not (isinstance(text1, str) and isinstance(text2, str)):
         raise ValueError("longest_common_substring() takes two strings for inputs")
@@ -61,6 +64,7 @@ def longest_common_substring(text1: str, text2: str) -> str:
                     end_pos = i
                     max_length = dp[i][j]
 
+    logger.warning("<<< Exiting longest_common_substring(text1=%s,text2=%s)", text1, text2, extra={"event.action": "longest_common_substring", "logrite.text1": text1, "logrite.text2": text2})
     return text1[end_pos - max_length : end_pos]
 
 

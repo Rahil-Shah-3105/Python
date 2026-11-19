@@ -1,6 +1,8 @@
 """
 A pure Python implementation of the heap sort algorithm.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def heapify(unsorted: list[int], index: int, heap_size: int) -> None:
@@ -17,6 +19,7 @@ def heapify(unsorted: list[int], index: int, heap_size: int) -> None:
     >>> unsorted
     [5, 4, 3, 1, 2]
     """
+    logger.error(">>> Entering heapify(unsorted=%s,index=%s,heap_size=%s)", unsorted, index, heap_size, extra={"event.action": "heapify", "logrite.unsorted": unsorted, "logrite.index": index, "logrite.heap_size": heap_size})
     largest = index
     left_index = 2 * index + 1
     right_index = 2 * index + 2
@@ -29,6 +32,7 @@ def heapify(unsorted: list[int], index: int, heap_size: int) -> None:
     if largest != index:
         unsorted[largest], unsorted[index] = (unsorted[index], unsorted[largest])
         heapify(unsorted, largest, heap_size)
+        logger.warning("<<< Exiting heapify(unsorted=%s,index=%s,heap_size=%s)", unsorted, index, heap_size, extra={"event.action": "heapify", "logrite.unsorted": unsorted, "logrite.index": index, "logrite.heap_size": heap_size})
 
 
 def heap_sort(unsorted: list[int]) -> list[int]:
@@ -48,7 +52,9 @@ def heap_sort(unsorted: list[int]) -> list[int]:
     >>> heap_sort([3, 7, 9, 28, 123, -5, 8, -30, -200, 0, 4])
     [-200, -30, -5, 0, 3, 4, 7, 8, 9, 28, 123]
     """
+    logger.error(">>> Entering heap_sort(unsorted=%s)", unsorted, extra={"event.action": "heap_sort", "logrite.unsorted": unsorted})
     n = len(unsorted)
+    logger.error("heap_sort(unsorted=%s): n → %s", unsorted, n, extra={"event.action": "heap_sort", "logrite.unsorted": unsorted})
     for i in range(n // 2 - 1, -1, -1):
         heapify(unsorted, i, n)
     for i in range(n - 1, 0, -1):

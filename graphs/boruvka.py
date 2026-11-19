@@ -28,6 +28,8 @@ Details: https://en.wikipedia.org/wiki/Bor%C5%AFvka%27s_algorithm
 from __future__ import annotations
 
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Graph:
@@ -41,34 +43,44 @@ class Graph:
             m_component - the dictionary which stores the index of the component which
             a node belongs to.
         """
+        logger.error(">>> Entering __init__(num_of_nodes=%s)", num_of_nodes, extra={"event.action": "__init__", "logrite.num_of_nodes": num_of_nodes})
 
         self.m_num_of_nodes = num_of_nodes
+        logger.debug("__init__(self=%s,num_of_nodes=%s): self.m_num_of_nodes → %s", self, num_of_nodes, self.m_num_of_nodes, extra={"event.action": "__init__", "logrite.num_of_nodes": num_of_nodes})
         self.m_edges: list[list[int]] = []
         self.m_component: dict[int, int] = {}
+        logger.warning("<<< Exiting __init__(num_of_nodes=%s)", num_of_nodes, extra={"event.action": "__init__", "logrite.num_of_nodes": num_of_nodes})
 
     def add_edge(self, u_node: int, v_node: int, weight: int) -> None:
         """Adds an edge in the format [first, second, edge weight] to graph."""
+        logger.error(">>> Entering add_edge(u_node=%s,v_node=%s,weight=%s)", u_node, v_node, weight, extra={"event.action": "add_edge", "logrite.u_node": u_node, "logrite.v_node": v_node, "logrite.weight": weight})
 
         self.m_edges.append([u_node, v_node, weight])
+        logger.warning("<<< Exiting add_edge(u_node=%s,v_node=%s,weight=%s)", u_node, v_node, weight, extra={"event.action": "add_edge", "logrite.u_node": u_node, "logrite.v_node": v_node, "logrite.weight": weight})
 
     def find_component(self, u_node: int) -> int:
         """Propagates a new component throughout a given component."""
+        logger.error(">>> Entering find_component(u_node=%s)", u_node, extra={"event.action": "find_component", "logrite.u_node": u_node})
 
         if self.m_component[u_node] == u_node:
             return u_node
+        logger.warning("<<< Exiting find_component(u_node=%s)", u_node, extra={"event.action": "find_component", "logrite.u_node": u_node})
         return self.find_component(self.m_component[u_node])
 
     def set_component(self, u_node: int) -> None:
         """Finds the component index of a given node"""
+        logger.error(">>> Entering set_component(u_node=%s)", u_node, extra={"event.action": "set_component", "logrite.u_node": u_node})
 
         if self.m_component[u_node] != u_node:
             for k in self.m_component:
                 self.m_component[k] = self.find_component(k)
+                logger.warning("<<< Exiting set_component(u_node=%s)", u_node, extra={"event.action": "set_component", "logrite.u_node": u_node})
 
     def union(self, component_size: list[int], u_node: int, v_node: int) -> None:
         """Union finds the roots of components for two nodes, compares the components
         in terms of size, and attaches the smaller one to the larger one to form
         single component"""
+        logger.error(">>> Entering union(component_size=%s,u_node=%s,v_node=%s)", component_size, u_node, v_node, extra={"event.action": "union", "logrite.component_size": component_size, "logrite.u_node": u_node, "logrite.v_node": v_node})
 
         if component_size[u_node] <= component_size[v_node]:
             self.m_component[u_node] = v_node
@@ -79,9 +91,11 @@ class Graph:
             self.m_component[v_node] = self.find_component(u_node)
             component_size[u_node] += component_size[v_node]
             self.set_component(v_node)
+            logger.warning("<<< Exiting union(component_size=%s,u_node=%s,v_node=%s)", component_size, u_node, v_node, extra={"event.action": "union", "logrite.component_size": component_size, "logrite.u_node": u_node, "logrite.v_node": v_node})
 
     def boruvka(self) -> None:
         """Performs Borůvka's algorithm to find MST."""
+        logger.error(">>> Entering boruvka()", extra={"event.action": "boruvka"})
 
         # Initialize additional lists required to algorithm.
         component_size = []
@@ -136,6 +150,7 @@ class Graph:
 
             minimum_weight_edge = [-1] * self.m_num_of_nodes
         print(f"The total weight of the minimal spanning tree is: {mst_weight}")
+        logger.warning("<<< Exiting boruvka()", extra={"event.action": "boruvka"})
 
 
 def test_vector() -> None:
@@ -168,7 +183,9 @@ def test_vector() -> None:
     <BLANKLINE>
     The total weight of the minimal spanning tree is: 46
     """
+    logger.error(">>> Entering test_vector()", extra={"event.action": "test_vector"})
 
+    logger.warning("<<< Exiting test_vector()", extra={"event.action": "test_vector"})
 
 if __name__ == "__main__":
     import doctest

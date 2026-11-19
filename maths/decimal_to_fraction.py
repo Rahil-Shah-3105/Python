@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def decimal_to_fraction(decimal: float | str) -> tuple[int, int]:
     """
     Return a decimal number in its simplest fraction form
@@ -31,11 +33,14 @@ def decimal_to_fraction(decimal: float | str) -> tuple[int, int]:
     >>> decimal_to_fraction("0.500")
     (1, 2)
     """
+    logger.error(">>> Entering decimal_to_fraction(decimal=%s)", decimal, extra={"event.action": "decimal_to_fraction", "logrite.decimal": decimal})
     try:
         decimal = float(decimal)
     except ValueError:
+        logger.error("Exception in decimal_to_fraction(decimal=%s)", decimal, exc_info=True, extra={"event.action": "decimal_to_fraction", "event.category": "process", "logrite.decimal": decimal})
         raise ValueError("Please enter a valid number")
     fractional_part = decimal - int(decimal)
+    logger.error("decimal_to_fraction(decimal=%s): fractional_part → %s", decimal, fractional_part, extra={"event.action": "decimal_to_fraction", "logrite.decimal": decimal})
     if fractional_part == 0:
         return int(decimal), 1
     else:
@@ -49,6 +54,7 @@ def decimal_to_fraction(decimal: float | str) -> tuple[int, int]:
                 break
             dividend, divisor = divisor, remainder
         numerator, denominator = numerator // divisor, denominator // divisor
+        logger.warning("<<< Exiting decimal_to_fraction(decimal=%s)", decimal, extra={"event.action": "decimal_to_fraction", "logrite.decimal": decimal})
         return numerator, denominator
 
 

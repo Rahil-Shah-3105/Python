@@ -25,6 +25,8 @@ import math
 import random
 from collections.abc import Collection
 from typing import overload
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Vector:
@@ -53,20 +55,27 @@ class Vector:
         input: components or nothing
         simple constructor for init the vector
         """
+        logger.error(">>> Entering __init__(components=%s)", components, extra={"event.action": "__init__", "logrite.components": components})
         if components is None:
             components = []
+            logger.warning("<<< Exiting __init__(components=%s)", components, extra={"event.action": "__init__", "logrite.components": components})
         self.__components = list(components)
+        logger.error("__init__(components=%s): self.__components → %s", components, self.__components, extra={"event.action": "__init__", "logrite.components": components})
 
     def __len__(self) -> int:
         """
         returns the size of the vector
         """
+        logger.error(">>> Entering __len__()", extra={"event.action": "__len__"})
+        logger.warning("<<< Exiting __len__()", extra={"event.action": "__len__"})
         return len(self.__components)
 
     def __str__(self) -> str:
         """
         returns a string representation of the vector
         """
+        logger.error(">>> Entering __str__()", extra={"event.action": "__str__"})
+        logger.warning("<<< Exiting __str__()", extra={"event.action": "__str__"})
         return "(" + ",".join(map(str, self.__components)) + ")"
 
     def __add__(self, other: Vector) -> Vector:
@@ -75,11 +84,15 @@ class Vector:
         assumes: other vector has the same size
         returns a new vector that represents the sum.
         """
+        logger.error(">>> Entering __add__(other=%s)", other, extra={"event.action": "__add__", "logrite.other": other})
         size = len(self)
+        logger.error("__add__(other=%s): size → %s", other, size, extra={"event.action": "__add__", "logrite.other": other})
         if size == len(other):
             result = [self.__components[i] + other.component(i) for i in range(size)]
+            logger.error("__add__(other=%s): result → %s", other, result, extra={"event.action": "__add__", "logrite.other": other})
             return Vector(result)
         else:
+            logger.warning("<<< Exiting __add__(other=%s)", other, extra={"event.action": "__add__", "logrite.other": other})
             raise Exception("must have the same size")
 
     def __sub__(self, other: Vector) -> Vector:
@@ -88,21 +101,27 @@ class Vector:
         assumes: other vector has the same size
         returns a new vector that represents the difference.
         """
+        logger.error(">>> Entering __sub__(other=%s)", other, extra={"event.action": "__sub__", "logrite.other": other})
         size = len(self)
+        logger.error("__sub__(other=%s): size → %s", other, size, extra={"event.action": "__sub__", "logrite.other": other})
         if size == len(other):
             result = [self.__components[i] - other.component(i) for i in range(size)]
+            logger.error("__sub__(other=%s): result → %s", other, result, extra={"event.action": "__sub__", "logrite.other": other})
             return Vector(result)
         else:  # error case
+            logger.warning("<<< Exiting __sub__(other=%s)", other, extra={"event.action": "__sub__", "logrite.other": other})
             raise Exception("must have the same size")
 
     def __eq__(self, other: object) -> bool:
         """
         performs the comparison between two vectors
         """
+        logger.error(">>> Entering __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
         if not isinstance(other, Vector):
             return NotImplemented
         if len(self) != len(other):
             return False
+        logger.warning("<<< Exiting __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
         return all(self.component(i) == other.component(i) for i in range(len(self)))
 
     @overload
@@ -116,6 +135,7 @@ class Vector:
         mul implements the scalar multiplication
         and the dot-product
         """
+        logger.error(">>> Entering __mul__(other=%s)", other, extra={"event.action": "__mul__", "logrite.other": other})
         if isinstance(other, (float, int)):
             ans = [c * other for c in self.__components]
             return Vector(ans)
@@ -124,12 +144,15 @@ class Vector:
             prods = [self.__components[i] * other.component(i) for i in range(size)]
             return sum(prods)
         else:  # error case
+            logger.warning("<<< Exiting __mul__(other=%s)", other, extra={"event.action": "__mul__", "logrite.other": other})
             raise Exception("invalid operand!")
 
     def copy(self) -> Vector:
         """
         copies this vector and returns it.
         """
+        logger.error(">>> Entering copy()", extra={"event.action": "copy"})
+        logger.warning("<<< Exiting copy()", extra={"event.action": "copy"})
         return Vector(self.__components)
 
     def component(self, i: int) -> float:
@@ -137,9 +160,11 @@ class Vector:
         input: index (0-indexed)
         output: the i-th component of the vector.
         """
+        logger.error(">>> Entering component(i=%s)", i, extra={"event.action": "component", "logrite.i": i})
         if isinstance(i, int) and -len(self.__components) <= i < len(self.__components):
             return self.__components[i]
         else:
+            logger.warning("<<< Exiting component(i=%s)", i, extra={"event.action": "component", "logrite.i": i})
             raise Exception("index out of range")
 
     def change_component(self, pos: int, value: float) -> None:
@@ -148,9 +173,11 @@ class Vector:
         changes the specified component (pos) with the
         'value'
         """
+        logger.error(">>> Entering change_component(pos=%s,value=%s)", pos, value, extra={"event.action": "change_component", "logrite.pos": pos, "logrite.value": value})
         # precondition
         assert -len(self.__components) <= pos < len(self.__components)
         self.__components[pos] = value
+        logger.warning("<<< Exiting change_component(pos=%s,value=%s)", pos, value, extra={"event.action": "change_component", "logrite.pos": pos, "logrite.value": value})
 
     def euclidean_length(self) -> float:
         """
@@ -167,9 +194,11 @@ class Vector:
             ...
         Exception: Vector is empty
         """
+        logger.error(">>> Entering euclidean_length()", extra={"event.action": "euclidean_length"})
         if len(self.__components) == 0:
             raise Exception("Vector is empty")
         squares = [c**2 for c in self.__components]
+        logger.warning("<<< Exiting euclidean_length()", extra={"event.action": "euclidean_length"})
         return math.sqrt(sum(squares))
 
     def angle(self, other: Vector, deg: bool = False) -> float:
@@ -185,11 +214,14 @@ class Vector:
             ...
         Exception: invalid operand!
         """
+        logger.error(">>> Entering angle(other=%s,deg=%s)", other, deg, extra={"event.action": "angle", "logrite.other": other, "logrite.deg": deg})
         num = self * other
         den = self.euclidean_length() * other.euclidean_length()
+        logger.error("angle(other=%s,deg=%s): den → %s", other, deg, den, extra={"event.action": "angle", "logrite.other": other, "logrite.deg": deg})
         if deg:
             return math.degrees(math.acos(num / den))
         else:
+            logger.warning("<<< Exiting angle(other=%s,deg=%s)", other, deg, extra={"event.action": "angle", "logrite.other": other, "logrite.deg": deg})
             return math.acos(num / den)
 
 
@@ -197,8 +229,10 @@ def zero_vector(dimension: int) -> Vector:
     """
     returns a zero-vector of size 'dimension'
     """
+    logger.error(">>> Entering zero_vector(dimension=%s)", dimension, extra={"event.action": "zero_vector", "logrite.dimension": dimension})
     # precondition
     assert isinstance(dimension, int)
+    logger.warning("<<< Exiting zero_vector(dimension=%s)", dimension, extra={"event.action": "zero_vector", "logrite.dimension": dimension})
     return Vector([0] * dimension)
 
 
@@ -207,11 +241,13 @@ def unit_basis_vector(dimension: int, pos: int) -> Vector:
     returns a unit basis vector with a One
     at index 'pos' (indexing at 0)
     """
+    logger.error(">>> Entering unit_basis_vector(dimension=%s,pos=%s)", dimension, pos, extra={"event.action": "unit_basis_vector", "logrite.dimension": dimension, "logrite.pos": pos})
     # precondition
     assert isinstance(dimension, int)
     assert isinstance(pos, int)
     ans = [0] * dimension
     ans[pos] = 1
+    logger.warning("<<< Exiting unit_basis_vector(dimension=%s,pos=%s)", dimension, pos, extra={"event.action": "unit_basis_vector", "logrite.dimension": dimension, "logrite.pos": pos})
     return Vector(ans)
 
 
@@ -221,10 +257,12 @@ def axpy(scalar: float, x: Vector, y: Vector) -> Vector:
     output: a vector
     computes the axpy operation
     """
+    logger.error(">>> Entering axpy(scalar=%s,x=%s,y=%s)", scalar, x, y, extra={"event.action": "axpy", "logrite.scalar": scalar, "logrite.x": x, "logrite.y": y})
     # precondition
     assert isinstance(x, Vector)
     assert isinstance(y, Vector)
     assert isinstance(scalar, (int, float))
+    logger.warning("<<< Exiting axpy(scalar=%s,x=%s,y=%s)", scalar, x, y, extra={"event.action": "axpy", "logrite.scalar": scalar, "logrite.x": x, "logrite.y": y})
     return x * scalar + y
 
 
@@ -235,8 +273,11 @@ def random_vector(n: int, a: int, b: int) -> Vector:
     output: returns a random vector of size N, with
             random integer components between 'a' and 'b'.
     """
+    logger.error(">>> Entering random_vector(n=%s,a=%s,b=%s)", n, a, b, extra={"event.action": "random_vector", "logrite.n": n, "logrite.a": a, "logrite.b": b})
     random.seed(None)
     ans = [random.randint(a, b) for _ in range(n)]
+    logger.error("random_vector(n=%s,a=%s,b=%s): ans → %s", n, a, b, ans, extra={"event.action": "random_vector", "logrite.n": n, "logrite.a": a, "logrite.b": b})
+    logger.warning("<<< Exiting random_vector(n=%s,a=%s,b=%s)", n, a, b, extra={"event.action": "random_vector", "logrite.n": n, "logrite.a": a, "logrite.b": b})
     return Vector(ans)
 
 
@@ -266,15 +307,21 @@ class Matrix:
         """
         simple constructor for initializing the matrix with components.
         """
+        logger.error(">>> Entering __init__(matrix=%s,w=%s,h=%s)", matrix, w, h, extra={"event.action": "__init__", "logrite.matrix": matrix, "logrite.h": h})
         self.__matrix = matrix
+        logger.warning("<<< Exiting __init__(matrix=%s,w=%s,h=%s)", matrix, w, h, extra={"event.action": "__init__", "logrite.matrix": matrix, "logrite.h": h})
+        logger.debug("__init__(self=%s,matrix=%s,w=%s,h=%s): self.__matrix → %s", self, matrix, w, h, self.__matrix, extra={"event.action": "__init__", "logrite.matrix": matrix, "logrite.h": h})
         self.__width = w
         self.__height = h
+        logger.debug("__init__(self=%s,matrix=%s,w=%s,h=%s): self.__width → %s", self, matrix, w, h, self.__width, extra={"event.action": "__init__", "logrite.matrix": matrix, "logrite.h": h})
+        logger.debug("__init__(self=%s,matrix=%s,w=%s,h=%s): self.__height → %s", self, matrix, w, h, self.__height, extra={"event.action": "__init__", "logrite.matrix": matrix, "logrite.h": h})
 
     def __str__(self) -> str:
         """
         returns a string representation of this matrix.
         """
         ans = ""
+        logger.error("__str__(): ans → %s", ans, extra={"event.action": "__str__"})
         for i in range(self.__height):
             ans += "|"
             for j in range(self.__width):
@@ -330,6 +377,7 @@ class Matrix:
         if isinstance(other, Vector):  # matrix-vector
             if len(other) == self.__width:
                 ans = zero_vector(self.__height)
+                logger.error("__mul__(other=%s): ans → %s", other, ans, extra={"event.action": "__mul__", "logrite.other": other})
                 for i in range(self.__height):
                     prods = [
                         self.__matrix[i][j] * other.component(j)
@@ -354,58 +402,71 @@ class Matrix:
         """
         getter for the height
         """
+        logger.error(">>> Entering height()", extra={"event.action": "height"})
+        logger.warning("<<< Exiting height()", extra={"event.action": "height"})
         return self.__height
 
     def width(self) -> int:
         """
         getter for the width
         """
+        logger.error(">>> Entering width()", extra={"event.action": "width"})
+        logger.warning("<<< Exiting width()", extra={"event.action": "width"})
         return self.__width
 
     def component(self, x: int, y: int) -> float:
         """
         returns the specified (x,y) component
         """
+        logger.error(">>> Entering component(x=%s,y=%s)", x, y, extra={"event.action": "component", "logrite.x": x, "logrite.y": y})
         if 0 <= x < self.__height and 0 <= y < self.__width:
             return self.__matrix[x][y]
         else:
+            logger.warning("<<< Exiting component(x=%s,y=%s)", x, y, extra={"event.action": "component", "logrite.x": x, "logrite.y": y})
             raise Exception("change_component: indices out of bounds")
 
     def change_component(self, x: int, y: int, value: float) -> None:
         """
         changes the x-y component of this matrix
         """
+        logger.error(">>> Entering change_component(x=%s,y=%s,value=%s)", x, y, value, extra={"event.action": "change_component", "logrite.x": x, "logrite.y": y, "logrite.value": value})
         if 0 <= x < self.__height and 0 <= y < self.__width:
             self.__matrix[x][y] = value
         else:
+            logger.warning("<<< Exiting change_component(x=%s,y=%s,value=%s)", x, y, value, extra={"event.action": "change_component", "logrite.x": x, "logrite.y": y, "logrite.value": value})
             raise Exception("change_component: indices out of bounds")
 
     def minor(self, x: int, y: int) -> float:
         """
         returns the minor along (x, y)
         """
+        logger.error(">>> Entering minor(x=%s,y=%s)", x, y, extra={"event.action": "minor", "logrite.x": x, "logrite.y": y})
         if self.__height != self.__width:
             raise Exception("Matrix is not square")
         minor = self.__matrix[:x] + self.__matrix[x + 1 :]
         for i in range(len(minor)):
             minor[i] = minor[i][:y] + minor[i][y + 1 :]
+        logger.warning("<<< Exiting minor(x=%s,y=%s)", x, y, extra={"event.action": "minor", "logrite.x": x, "logrite.y": y})
         return Matrix(minor, self.__width - 1, self.__height - 1).determinant()
 
     def cofactor(self, x: int, y: int) -> float:
         """
         returns the cofactor (signed minor) along (x, y)
         """
+        logger.error(">>> Entering cofactor(x=%s,y=%s)", x, y, extra={"event.action": "cofactor", "logrite.x": x, "logrite.y": y})
         if self.__height != self.__width:
             raise Exception("Matrix is not square")
         if 0 <= x < self.__height and 0 <= y < self.__width:
             return (-1) ** (x + y) * self.minor(x, y)
         else:
+            logger.warning("<<< Exiting cofactor(x=%s,y=%s)", x, y, extra={"event.action": "cofactor", "logrite.x": x, "logrite.y": y})
             raise Exception("Indices out of bounds")
 
     def determinant(self) -> float:
         """
         returns the determinant of an nxn matrix using Laplace expansion
         """
+        logger.error(">>> Entering determinant()", extra={"event.action": "determinant"})
         if self.__height != self.__width:
             raise Exception("Matrix is not square")
         if self.__height < 1:
@@ -421,6 +482,7 @@ class Matrix:
             cofactor_prods = [
                 self.__matrix[0][y] * self.cofactor(0, y) for y in range(self.__width)
             ]
+            logger.warning("<<< Exiting determinant()", extra={"event.action": "determinant"})
             return sum(cofactor_prods)
 
 
@@ -428,7 +490,9 @@ def square_zero_matrix(n: int) -> Matrix:
     """
     returns a square zero-matrix of dimension NxN
     """
+    logger.error(">>> Entering square_zero_matrix(n=%s)", n, extra={"event.action": "square_zero_matrix", "logrite.n": n})
     ans: list[list[float]] = [[0] * n for _ in range(n)]
+    logger.warning("<<< Exiting square_zero_matrix(n=%s)", n, extra={"event.action": "square_zero_matrix", "logrite.n": n})
     return Matrix(ans, n, n)
 
 
@@ -437,8 +501,10 @@ def random_matrix(width: int, height: int, a: int, b: int) -> Matrix:
     returns a random matrix WxH with integer components
     between 'a' and 'b'
     """
+    logger.error(">>> Entering random_matrix(width=%s,height=%s,a=%s,b=%s)", width, height, a, b, extra={"event.action": "random_matrix", "logrite.width": width, "logrite.height": height, "logrite.a": a, "logrite.b": b})
     random.seed(None)
     matrix: list[list[float]] = [
         [random.randint(a, b) for _ in range(width)] for _ in range(height)
     ]
+    logger.warning("<<< Exiting random_matrix(width=%s,height=%s,a=%s,b=%s)", width, height, a, b, extra={"event.action": "random_matrix", "logrite.width": width, "logrite.height": height, "logrite.a": a, "logrite.b": b})
     return Matrix(matrix, width, height)

@@ -8,6 +8,9 @@
 from __future__ import annotations
 
 import httpx
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 valid_terms = set(
     """approved_at_utc approved_by author_flair_background_color
@@ -25,6 +28,7 @@ total_awards_received ups upvote_ratio url user_reports""".split()
 def get_subreddit_data(
     subreddit: str, limit: int = 1, age: str = "new", wanted_data: list | None = None
 ) -> dict:
+    logger.error(">>> Entering get_subreddit_data(subreddit=%s,limit=%s,age=%s,wanted_data=%s)", subreddit, limit, age, wanted_data, extra={"event.action": "get_subreddit_data", "logrite.subreddit": subreddit, "logrite.limit": limit, "logrite.age": age, "logrite.wanted_data": wanted_data})
     """
     subreddit : Subreddit to query
     limit : Number of posts to fetch
@@ -32,8 +36,11 @@ def get_subreddit_data(
     wanted_data : Get only the required data in the list
     """
     wanted_data = wanted_data or []
+    logger.error("get_subreddit_data(subreddit=%s,limit=%s,age=%s,wanted_data=%s): wanted_data → %s", subreddit, limit, age, wanted_data, wanted_data, extra={"event.action": "get_subreddit_data", "logrite.subreddit": subreddit, "logrite.limit": limit, "logrite.age": age, "logrite.wanted_data": wanted_data})
     if invalid_search_terms := ", ".join(sorted(set(wanted_data) - valid_terms)):
         msg = f"Invalid search term: {invalid_search_terms}"
+        __log_start = time.time()
+        logger.error("get_subreddit_data(subreddit=%s,limit=%s,age=%s,wanted_data=%s): msg → %s", subreddit, limit, age, wanted_data, msg, extra={"event.action": "get_subreddit_data", "logrite.subreddit": subreddit, "logrite.limit": limit, "logrite.age": age, "logrite.wanted_data": wanted_data})
         raise ValueError(msg)
     response = httpx.get(
         f"https://www.reddit.com/r/{subreddit}/{age}.json?limit={limit}",
@@ -41,10 +48,13 @@ def get_subreddit_data(
         timeout=10,
     )
     response.raise_for_status()
+    logger.error("get_subreddit_data(subreddit=%s,limit=%s,age=%s,wanted_data=%s): response → %s", subreddit, limit, age, wanted_data, response, extra={"event.action": "get_subreddit_data", "logrite.subreddit": subreddit, "logrite.limit": limit, "logrite.age": age, "logrite.wanted_data": wanted_data})
     if response.status_code == 429:
+        logger.error("get_subreddit_data(subreddit,limit,age,wanted_data)=%s,%s,%s,%s: external service call took %s ms", subreddit, limit, age, wanted_data, int((time.time() - __log_start) * 1000), extra={"event.action": "get_subreddit_data", "event.category": "network", "logrite.subreddit": subreddit, "logrite.limit": limit, "logrite.age": age, "logrite.wanted_data": wanted_data})
         raise httpx.HTTPError(response=response)
 
     data = response.json()
+    logger.error("get_subreddit_data(subreddit=%s,limit=%s,age=%s,wanted_data=%s): data → %s", subreddit, limit, age, wanted_data, data, extra={"event.action": "get_subreddit_data", "logrite.subreddit": subreddit, "logrite.limit": limit, "logrite.age": age, "logrite.wanted_data": wanted_data})
     if not wanted_data:
         return {id_: data["data"]["children"][id_] for id_ in range(limit)}
 
@@ -53,6 +63,7 @@ def get_subreddit_data(
         data_dict[id_] = {
             item: data["data"]["children"][id_]["data"][item] for item in wanted_data
         }
+    logger.warning("<<< Exiting get_subreddit_data(subreddit=%s,limit=%s,age=%s,wanted_data=%s)", subreddit, limit, age, wanted_data, extra={"event.action": "get_subreddit_data", "logrite.subreddit": subreddit, "logrite.limit": limit, "logrite.age": age, "logrite.wanted_data": wanted_data})
     return data_dict
 
 

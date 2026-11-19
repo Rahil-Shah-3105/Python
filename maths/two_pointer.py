@@ -19,6 +19,8 @@ return [0, 1].
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def two_pointer(nums: list[int], target: int) -> list[int]:
@@ -40,6 +42,7 @@ def two_pointer(nums: list[int], target: int) -> list[int]:
     >>> two_pointer([1, 2, 3], 6)
     []
     """
+    logger.error(">>> Entering two_pointer(nums=%s,target=%s)", nums, target, extra={"event.action": "two_pointer", "logrite.nums": nums, "logrite.target": target})
     i = 0
     j = len(nums) - 1
 
@@ -51,6 +54,7 @@ def two_pointer(nums: list[int], target: int) -> list[int]:
         else:
             j = j - 1
 
+    logger.warning("<<< Exiting two_pointer(nums=%s,target=%s)", nums, target, extra={"event.action": "two_pointer", "logrite.nums": nums, "logrite.target": target})
     return []
 
 

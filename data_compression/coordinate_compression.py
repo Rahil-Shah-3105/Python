@@ -3,6 +3,8 @@ Assumption:
     - The values to compress are assumed to be comparable,
       values can be sorted and compared with '<' and '>' operators.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 class CoordinateCompressor:
@@ -46,6 +48,7 @@ class CoordinateCompressor:
         >>> cc.decompress(1)
         52
         """
+        logger.error(">>> Entering __init__(arr=%s)", arr, extra={"event.action": "__init__", "logrite.arr": arr})
 
         # A dictionary to store compressed coordinates
         self.coordinate_map: dict[int | float | str, int] = {}
@@ -54,8 +57,11 @@ class CoordinateCompressor:
         self.reverse_map: list[int | float | str] = [-1] * len(arr)
 
         self.arr = sorted(arr)  # The input list
+        logger.error("__init__(arr=%s): arr → %s", arr, arr, extra={"event.action": "__init__", "logrite.arr": arr})
         self.n = len(arr)  # The length of the input list
+        logger.error("__init__(arr=%s): self.n → %s", arr, self.n, extra={"event.action": "__init__", "logrite.arr": arr})
         self.compress_coordinates()
+        logger.warning("<<< Exiting __init__(arr=%s)", arr, extra={"event.action": "__init__", "logrite.arr": arr})
 
     def compress_coordinates(self) -> None:
         """
@@ -72,12 +78,15 @@ class CoordinateCompressor:
         >>> cc.reverse_map[2]
         83
         """
+        logger.error(">>> Entering compress_coordinates()", extra={"event.action": "compress_coordinates"})
         key = 0
+        logger.error("compress_coordinates(): key → %s", key, extra={"event.action": "compress_coordinates"})
         for val in self.arr:
             if val not in self.coordinate_map:
                 self.coordinate_map[val] = key
                 self.reverse_map[key] = val
                 key += 1
+                logger.warning("<<< Exiting compress_coordinates()", extra={"event.action": "compress_coordinates"})
 
     def compress(self, original: float | str) -> int:
         """
@@ -96,6 +105,8 @@ class CoordinateCompressor:
         >>> cc.compress(7)  # Value not in the original list
         -1
         """
+        logger.error(">>> Entering compress(original=%s)", original, extra={"event.action": "compress", "logrite.original": original})
+        logger.warning("<<< Exiting compress(original=%s)", original, extra={"event.action": "compress", "logrite.original": original})
         return self.coordinate_map.get(original, -1)
 
     def decompress(self, num: int) -> int | float | str:
@@ -115,6 +126,8 @@ class CoordinateCompressor:
         >>> cc.decompress(5)  # Compressed coordinate out of range
         -1
         """
+        logger.error(">>> Entering decompress(num=%s)", num, extra={"event.action": "decompress", "logrite.num": num})
+        logger.warning("<<< Exiting decompress(num=%s)", num, extra={"event.action": "decompress", "logrite.num": num})
         return self.reverse_map[num] if 0 <= num < len(self.reverse_map) else -1
 
 

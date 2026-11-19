@@ -7,6 +7,8 @@ Newton polynomial form.
 Reference:
     https://rpubs.com/aaronsc32/nevilles-method-polynomial-interpolation
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def neville_interpolate(x_points: list, y_points: list, x0: int) -> list:
@@ -34,8 +36,11 @@ def neville_interpolate(x_points: list, y_points: list, x0: int) -> list:
         ...
     TypeError: unsupported operand type(s) for -: 'str' and 'int'
     """
+    logger.error(">>> Entering neville_interpolate(x_points=%s,y_points=%s,x0=%s)", x_points, y_points, x0, extra={"event.action": "neville_interpolate", "logrite.x_points": x_points, "logrite.y_points": y_points, "logrite.x0": x0})
     n = len(x_points)
+    logger.error("neville_interpolate(x_points=%s,y_points=%s,x0=%s): n → %s", x_points, y_points, x0, n, extra={"event.action": "neville_interpolate", "logrite.x_points": x_points, "logrite.y_points": y_points, "logrite.x0": x0})
     q = [[0] * n for i in range(n)]
+    logger.error("neville_interpolate(x_points=%s,y_points=%s,x0=%s): q → %s", x_points, y_points, x0, q, extra={"event.action": "neville_interpolate", "logrite.x_points": x_points, "logrite.y_points": y_points, "logrite.x0": x0})
     for i in range(n):
         q[i][1] = y_points[i]
 
@@ -46,6 +51,7 @@ def neville_interpolate(x_points: list, y_points: list, x0: int) -> list:
                 - (x0 - x_points[j]) * q[j - 1][i - 1]
             ) / (x_points[j] - x_points[j - i + 1])
 
+    logger.warning("<<< Exiting neville_interpolate(x_points=%s,y_points=%s,x0=%s)", x_points, y_points, x0, extra={"event.action": "neville_interpolate", "logrite.x_points": x_points, "logrite.y_points": y_points, "logrite.x0": x0})
     return [q[n - 1][n - 1], q]
 
 

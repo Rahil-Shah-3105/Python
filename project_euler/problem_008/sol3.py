@@ -32,6 +32,8 @@ greatest product. What is the value of this product?
 """
 
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 N = (
     "73167176531330624919225119674426574742355349194934"
@@ -66,10 +68,12 @@ def str_eval(s: str) -> int:
     >>> str_eval("22222222")
     256
     """
+    logger.error(">>> Entering str_eval(s=%s)", s, extra={"event.action": "str_eval", "logrite.s": s})
 
     product = 1
     for digit in s:
         product *= int(digit)
+    logger.warning("<<< Exiting str_eval(s=%s)", s, extra={"event.action": "str_eval", "logrite.s": s})
     return product
 
 
@@ -78,8 +82,10 @@ def solution(n: str = N) -> int:
     Find the thirteen adjacent digits in the 1000-digit number n that have
     the greatest product and returns it.
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     largest_product = -sys.maxsize - 1
+    logger.error("solution(n=%s): largest_product → %s", n, largest_product, extra={"event.action": "solution", "logrite.n": n})
     substr = n[:13]
     cur_index = 13
     while cur_index < len(n) - 13:
@@ -90,6 +96,7 @@ def solution(n: str = N) -> int:
             largest_product = max(largest_product, str_eval(substr))
             substr = n[cur_index : cur_index + 13]
             cur_index += 13
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return largest_product
 
 

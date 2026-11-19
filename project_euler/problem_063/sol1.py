@@ -3,6 +3,8 @@ The 5-digit number, 16807=75, is also a fifth power. Similarly, the 9-digit numb
 134217728=89, is a ninth power.
 How many n-digit positive integers exist which are also an nth power?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 """
 The maximum base can be 9 because all n-digit numbers < 10^n.
@@ -23,8 +25,12 @@ def solution(max_base: int = 10, max_power: int = 22) -> int:
     >>> solution(-1, -1)
     0
     """
+    logger.error(">>> Entering solution(max_base=%s,max_power=%s)", max_base, max_power, extra={"event.action": "solution", "logrite.max_base": max_base, "logrite.max_power": max_power})
     bases = range(1, max_base)
+    logger.warning("<<< Exiting solution(max_base=%s,max_power=%s)", max_base, max_power, extra={"event.action": "solution", "logrite.max_base": max_base, "logrite.max_power": max_power})
+    logger.error("solution(max_base=%s,max_power=%s): bases → %s", max_base, max_power, bases, extra={"event.action": "solution", "logrite.max_base": max_base, "logrite.max_power": max_power})
     powers = range(1, max_power)
+    logger.error("solution(max_base=%s,max_power=%s): powers → %s", max_base, max_power, powers, extra={"event.action": "solution", "logrite.max_base": max_base, "logrite.max_power": max_power})
     return sum(
         1 for power in powers for base in bases if len(str(base**power)) == power
     )

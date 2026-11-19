@@ -11,6 +11,8 @@
     Output -->
         2 to the power of 0 is 1
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def power(base: int, exponent: int) -> float:
@@ -47,6 +49,8 @@ def power(base: int, exponent: int) -> float:
     >>> power(23, 12)
     21914624432020321
     """
+    logger.error(">>> Entering power(base=%s,exponent=%s)", base, exponent, extra={"event.action": "power", "logrite.base": base, "logrite.exponent": exponent})
+    logger.warning("<<< Exiting power(base=%s,exponent=%s)", base, exponent, extra={"event.action": "power", "logrite.base": base, "logrite.exponent": exponent})
     return base * power(base, (exponent - 1)) if exponent else 1
 
 

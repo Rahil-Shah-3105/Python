@@ -17,6 +17,8 @@ that all starting numbers finish at 1.
 
 Which starting number, under one million, produces the longest chain?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 1000000) -> int:
@@ -34,6 +36,7 @@ def solution(n: int = 1000000) -> int:
     >>> solution(15000)
     13255
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     largest_number = 1
     pre_counter = 1
     counters = {1: 1}
@@ -41,6 +44,7 @@ def solution(n: int = 1000000) -> int:
     for input1 in range(2, n):
         counter = 0
         number = input1
+        logger.error("solution(n=%s): number → %s", n, number, extra={"event.action": "solution", "logrite.n": n})
 
         while True:
             if number in counters:
@@ -59,6 +63,7 @@ def solution(n: int = 1000000) -> int:
         if counter > pre_counter:
             largest_number = input1
             pre_counter = counter
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return largest_number
 
 

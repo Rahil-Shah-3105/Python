@@ -13,6 +13,8 @@ For more information: https://en.wikipedia.org/wiki/Cycle_detection#Floyd's_tort
 from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any, Self
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -48,11 +50,13 @@ class LinkedList:
         >>> tuple(linked_list)
         (1,)
         """
+        logger.error(">>> Entering __iter__()", extra={"event.action": "__iter__"})
         visited = []
         node = self.head
         while node:
             # Avoid infinite loop in there's a cycle
             if node in visited:
+                logger.warning("<<< Exiting __iter__()", extra={"event.action": "__iter__"})
                 return
             visited.append(node)
             yield node.data
@@ -74,10 +78,14 @@ class LinkedList:
         >>> tuple(linked_list)
         (1, 2, 3, 4)
         """
+        logger.error(">>> Entering add_node(data=%s)", data, extra={"event.action": "add_node"})
         new_node = Node(data)
+        logger.error("add_node(data=%s): new_node → %s", data, new_node, extra={"event.action": "add_node"})
 
         if self.head is None:
             self.head = new_node
+            logger.debug("add_node(self=%s,data=%s): self.head → %s", self, data, self.head, extra={"event.action": "add_node"})
+            logger.warning("<<< Exiting add_node(data=%s)", data, extra={"event.action": "add_node"})
             return
 
         current_node = self.head
@@ -85,6 +93,7 @@ class LinkedList:
             current_node = current_node.next_node
 
         current_node.next_node = new_node
+        logger.debug("add_node(self=%s,data=%s): current_node.next_node → %s", self, data, current_node.next_node, extra={"event.action": "add_node"})
 
     def detect_cycle(self) -> bool:
         """
@@ -110,6 +119,7 @@ class LinkedList:
         >>> linked_list.detect_cycle()
         True
         """
+        logger.error(">>> Entering detect_cycle()", extra={"event.action": "detect_cycle"})
         if self.head is None:
             return False
 
@@ -122,6 +132,7 @@ class LinkedList:
             if slow_pointer == fast_pointer:
                 return True
 
+        logger.warning("<<< Exiting detect_cycle()", extra={"event.action": "detect_cycle"})
         return False
 
 

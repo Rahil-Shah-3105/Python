@@ -14,6 +14,8 @@ four million, find the sum of the even-valued terms.
 References:
     - https://en.wikipedia.org/wiki/Fibonacci_number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 4000000) -> int:
@@ -32,6 +34,7 @@ def solution(n: int = 4000000) -> int:
     >>> solution(34)
     44
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     even_fibs = []
     a, b = 0, 1
@@ -39,6 +42,7 @@ def solution(n: int = 4000000) -> int:
         if b % 2 == 0:
             even_fibs.append(b)
         a, b = b, a + b
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return sum(even_fibs)
 
 

@@ -15,6 +15,8 @@ Find the product a*b*c.
 References:
     - https://en.wikipedia.org/wiki/Pythagorean_triple
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution() -> int:
@@ -27,7 +29,9 @@ def solution() -> int:
     >>> solution()
     31875000
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
 
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return next(
         iter(
             [

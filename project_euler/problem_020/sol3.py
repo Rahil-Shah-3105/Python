@@ -10,6 +10,8 @@ Find the sum of the digits in the number 100!
 """
 
 from math import factorial
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(num: int = 100) -> int:
@@ -35,6 +37,8 @@ def solution(num: int = 100) -> int:
     >>> solution(0)
     1
     """
+    logger.error(">>> Entering solution(num=%s)", num, extra={"event.action": "solution", "logrite.num": num})
+    logger.warning("<<< Exiting solution(num=%s)", num, extra={"event.action": "solution", "logrite.num": num})
     return sum(map(int, str(factorial(num))))
 
 

@@ -7,6 +7,8 @@ The key is generated from the message in some automated fashion,
 sometimes by selecting certain letters from the text or, more commonly,
 by adding a short primer key to the front of the message.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def encrypt(plaintext: str, key: str) -> str:
@@ -35,6 +37,7 @@ def encrypt(plaintext: str, key: str) -> str:
         ...
     TypeError: plaintext must be a string
     """
+    logger.error(">>> Entering encrypt(plaintext=%s,key=%s)", plaintext, key, extra={"event.action": "encrypt", "logrite.plaintext": plaintext, "logrite.key": key})
     if not isinstance(plaintext, str):
         raise TypeError("plaintext must be a string")
     if not isinstance(key, str):
@@ -47,10 +50,13 @@ def encrypt(plaintext: str, key: str) -> str:
 
     key += plaintext
     plaintext = plaintext.lower()
+    logger.error("encrypt(plaintext=%s,key=%s): plaintext → %s", plaintext, key, plaintext, extra={"event.action": "encrypt", "logrite.plaintext": plaintext, "logrite.key": key})
     key = key.lower()
+    logger.error("encrypt(plaintext=%s,key=%s): key → %s", plaintext, key, key, extra={"event.action": "encrypt", "logrite.plaintext": plaintext, "logrite.key": key})
     plaintext_iterator = 0
     key_iterator = 0
     ciphertext = ""
+    logger.error("encrypt(plaintext=%s,key=%s): ciphertext → %s", plaintext, key, ciphertext, extra={"event.action": "encrypt", "logrite.plaintext": plaintext, "logrite.key": key})
     while plaintext_iterator < len(plaintext):
         if (
             ord(plaintext[plaintext_iterator]) < 97
@@ -71,6 +77,7 @@ def encrypt(plaintext: str, key: str) -> str:
             )
             key_iterator += 1
             plaintext_iterator += 1
+    logger.warning("<<< Exiting encrypt(plaintext=%s,key=%s)", plaintext, key, extra={"event.action": "encrypt", "logrite.plaintext": plaintext, "logrite.key": key})
     return ciphertext
 
 
@@ -100,6 +107,7 @@ def decrypt(ciphertext: str, key: str) -> str:
         ...
     TypeError: key must be a string
     """
+    logger.error(">>> Entering decrypt(ciphertext=%s,key=%s)", ciphertext, key, extra={"event.action": "decrypt", "logrite.ciphertext": ciphertext, "logrite.key": key})
     if not isinstance(ciphertext, str):
         raise TypeError("ciphertext must be a string")
     if not isinstance(key, str):
@@ -111,9 +119,11 @@ def decrypt(ciphertext: str, key: str) -> str:
         raise ValueError("key is empty")
 
     key = key.lower()
+    logger.error("decrypt(ciphertext=%s,key=%s): key → %s", ciphertext, key, key, extra={"event.action": "decrypt", "logrite.ciphertext": ciphertext, "logrite.key": key})
     ciphertext_iterator = 0
     key_iterator = 0
     plaintext = ""
+    logger.error("decrypt(ciphertext=%s,key=%s): plaintext → %s", ciphertext, key, plaintext, extra={"event.action": "decrypt", "logrite.ciphertext": ciphertext, "logrite.key": key})
     while ciphertext_iterator < len(ciphertext):
         if (
             ord(ciphertext[ciphertext_iterator]) < 97
@@ -131,6 +141,7 @@ def decrypt(ciphertext: str, key: str) -> str:
             )
             key_iterator += 1
         ciphertext_iterator += 1
+    logger.warning("<<< Exiting decrypt(ciphertext=%s,key=%s)", ciphertext, key, extra={"event.action": "decrypt", "logrite.ciphertext": ciphertext, "logrite.key": key})
     return plaintext
 
 

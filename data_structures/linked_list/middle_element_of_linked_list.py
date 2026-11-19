@@ -1,20 +1,35 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
     def __init__(self, data: int) -> None:
+        logger.error(">>> Entering __init__(data=%s)", data, extra={"event.action": "__init__"})
         self.data = data
+        logger.debug("__init__(self=%s,data=%s): self.data → %s", self, data, self.data, extra={"event.action": "__init__"})
+        logger.error("__init__(data=%s): self.data → %s", data, self.data, extra={"event.action": "__init__"})
         self.next = None
+        logger.debug("__init__(self=%s,data=%s): self.next → %s", self, data, self.next, extra={"event.action": "__init__"})
 
+        logger.warning("<<< Exiting __init__(data=%s)", data, extra={"event.action": "__init__"})
 
 class LinkedList:
     def __init__(self):
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
         self.head = None
+        logger.warning("<<< Exiting __init__()", extra={"event.action": "__init__"})
+        logger.debug("__init__(self=%s): self.head → %s", self, self.head, extra={"event.action": "__init__"})
 
     def push(self, new_data: int) -> int:
+        logger.error(">>> Entering push(new_data=%s)", new_data, extra={"event.action": "push", "logrite.new_data": new_data})
         new_node = Node(new_data)
+        logger.error("push(new_data=%s): new_node → %s", new_data, new_node, extra={"event.action": "push", "logrite.new_data": new_data})
         new_node.next = self.head
+        logger.debug("push(self=%s,new_data=%s): new_node.next → %s", self, new_data, new_node.next, extra={"event.action": "push", "logrite.new_data": new_data})
         self.head = new_node
+        logger.debug("push(self=%s,new_data=%s): self.head → %s", self, new_data, self.head, extra={"event.action": "push", "logrite.new_data": new_data})
+        logger.warning("<<< Exiting push(new_data=%s)", new_data, extra={"event.action": "push", "logrite.new_data": new_data})
         return self.head.data
 
     def middle_element(self) -> int | None:
@@ -48,6 +63,7 @@ class LinkedList:
         12
         >>>
         """
+        logger.error(">>> Entering middle_element()", extra={"event.action": "middle_element"})
         slow_pointer = self.head
         fast_pointer = self.head
         if self.head:
@@ -57,6 +73,7 @@ class LinkedList:
             return slow_pointer.data
         else:
             print("No element found.")
+            logger.warning("<<< Exiting middle_element()", extra={"event.action": "middle_element"})
             return None
 
 

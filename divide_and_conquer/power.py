@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def actual_power(a: int, b: int) -> int:
     """
     Function using divide and conquer to calculate a^b.
@@ -17,6 +19,7 @@ def actual_power(a: int, b: int) -> int:
     >>> actual_power(7, 0)
     1
     """
+    logger.error(">>> Entering actual_power(a=%s,b=%s)", a, b, extra={"event.action": "actual_power", "logrite.a": a, "logrite.b": b})
     if b == 0:
         return 1
     half = actual_power(a, b // 2)

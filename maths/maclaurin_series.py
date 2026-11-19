@@ -3,6 +3,8 @@ https://en.wikipedia.org/wiki/Taylor_series#Trigonometric_functions
 """
 
 from math import factorial, pi
+import logging
+logger = logging.getLogger(__name__)
 
 
 def maclaurin_sin(theta: float, accuracy: int = 30) -> float:
@@ -42,6 +44,7 @@ def maclaurin_sin(theta: float, accuracy: int = 30) -> float:
         ...
     ValueError: maclaurin_sin() requires a positive int for accuracy
     """
+    logger.error(">>> Entering maclaurin_sin(theta=%s,accuracy=%s)", theta, accuracy, extra={"event.action": "maclaurin_sin", "logrite.theta": theta, "logrite.accuracy": accuracy})
 
     if not isinstance(theta, (int, float)):
         raise ValueError("maclaurin_sin() requires either an int or float for theta")
@@ -50,8 +53,11 @@ def maclaurin_sin(theta: float, accuracy: int = 30) -> float:
         raise ValueError("maclaurin_sin() requires a positive int for accuracy")
 
     theta = float(theta)
+    logger.error("maclaurin_sin(theta=%s,accuracy=%s): theta → %s", theta, accuracy, theta, extra={"event.action": "maclaurin_sin", "logrite.theta": theta, "logrite.accuracy": accuracy})
     div = theta // (2 * pi)
+    logger.error("maclaurin_sin(theta=%s,accuracy=%s): div → %s", theta, accuracy, div, extra={"event.action": "maclaurin_sin", "logrite.theta": theta, "logrite.accuracy": accuracy})
     theta -= 2 * div * pi
+    logger.warning("<<< Exiting maclaurin_sin(theta=%s,accuracy=%s)", theta, accuracy, extra={"event.action": "maclaurin_sin", "logrite.theta": theta, "logrite.accuracy": accuracy})
     return sum(
         (-1) ** r * theta ** (2 * r + 1) / factorial(2 * r + 1) for r in range(accuracy)
     )
@@ -94,6 +100,7 @@ def maclaurin_cos(theta: float, accuracy: int = 30) -> float:
         ...
     ValueError: maclaurin_cos() requires a positive int for accuracy
     """
+    logger.error(">>> Entering maclaurin_cos(theta=%s,accuracy=%s)", theta, accuracy, extra={"event.action": "maclaurin_cos", "logrite.theta": theta, "logrite.accuracy": accuracy})
 
     if not isinstance(theta, (int, float)):
         raise ValueError("maclaurin_cos() requires either an int or float for theta")
@@ -102,8 +109,11 @@ def maclaurin_cos(theta: float, accuracy: int = 30) -> float:
         raise ValueError("maclaurin_cos() requires a positive int for accuracy")
 
     theta = float(theta)
+    logger.error("maclaurin_cos(theta=%s,accuracy=%s): theta → %s", theta, accuracy, theta, extra={"event.action": "maclaurin_cos", "logrite.theta": theta, "logrite.accuracy": accuracy})
     div = theta // (2 * pi)
+    logger.error("maclaurin_cos(theta=%s,accuracy=%s): div → %s", theta, accuracy, div, extra={"event.action": "maclaurin_cos", "logrite.theta": theta, "logrite.accuracy": accuracy})
     theta -= 2 * div * pi
+    logger.warning("<<< Exiting maclaurin_cos(theta=%s,accuracy=%s)", theta, accuracy, extra={"event.action": "maclaurin_cos", "logrite.theta": theta, "logrite.accuracy": accuracy})
     return sum((-1) ** r * theta ** (2 * r) / factorial(2 * r) for r in range(accuracy))
 
 

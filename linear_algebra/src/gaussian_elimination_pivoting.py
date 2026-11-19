@@ -1,4 +1,6 @@
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solve_linear_system(matrix: np.ndarray) -> np.ndarray:
@@ -32,7 +34,9 @@ def solve_linear_system(matrix: np.ndarray) -> np.ndarray:
         ...
     ValueError: Matrix is singular
     """
+    logger.error(">>> Entering solve_linear_system(matrix=%s)", matrix, extra={"event.action": "solve_linear_system", "logrite.matrix": matrix})
     ab = np.copy(matrix)
+    logger.error("solve_linear_system(matrix=%s): ab → %s", matrix, ab, extra={"event.action": "solve_linear_system", "logrite.matrix": matrix})
     num_of_rows = ab.shape[0]
     num_of_columns = ab.shape[1] - 1
     x_lst: list[float] = []
@@ -66,6 +70,7 @@ def solve_linear_system(matrix: np.ndarray) -> np.ndarray:
             ab[i, -1] -= ab[i, column_num] * x
 
     # Return the solution vector
+    logger.warning("<<< Exiting solve_linear_system(matrix=%s)", matrix, extra={"event.action": "solve_linear_system", "logrite.matrix": matrix})
     return np.asarray(x_lst)
 
 

@@ -12,6 +12,8 @@ References:
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -33,6 +35,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(1)
     False
     """
+    logger.error(">>> Entering is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -45,6 +48,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.warning("<<< Exiting is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
     return True
 
 
@@ -77,10 +81,12 @@ def solution(n: int = 600851475143) -> int:
         ...
     TypeError: Parameter n must be int or castable to int.
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     try:
         n = int(n)
     except TypeError, ValueError:
+        logger.error("Exception in solution(n=%s)", n, exc_info=True, extra={"event.action": "solution", "event.category": "process", "logrite.n": n})
         raise TypeError("Parameter n must be int or castable to int.")
     if n <= 0:
         raise ValueError("Parameter n must be greater than or equal to one.")

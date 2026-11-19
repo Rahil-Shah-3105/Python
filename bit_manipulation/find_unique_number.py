@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def find_unique_number(arr: list[int]) -> int:
     """
     Given a list of integers where every element appears twice except for one,
@@ -20,14 +22,17 @@ def find_unique_number(arr: list[int]) -> int:
         ...
     TypeError: all elements must be integers
     """
+    logger.error(">>> Entering find_unique_number(arr=%s)", arr, extra={"event.action": "find_unique_number", "logrite.arr": arr})
     if not arr:
         raise ValueError("input list must not be empty")
     if not all(isinstance(x, int) for x in arr):
         raise TypeError("all elements must be integers")
 
     result = 0
+    logger.error("find_unique_number(arr=%s): result → %s", arr, result, extra={"event.action": "find_unique_number", "logrite.arr": arr})
     for num in arr:
         result ^= num
+    logger.warning("<<< Exiting find_unique_number(arr=%s)", arr, extra={"event.action": "find_unique_number", "logrite.arr": arr})
     return result
 
 

@@ -17,6 +17,8 @@ Find the last 8 digits of 1777↑↑1855.
 References:
     - https://en.wikipedia.org/wiki/Tetration
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 # small helper function for modular exponentiation (fast exponentiation algorithm)
@@ -32,6 +34,7 @@ def _modexpt(base: int, exponent: int, modulo_value: int) -> int:
     >>> _modexpt(13, 65535, 7)
     6
     """
+    logger.error(">>> Entering _modexpt(base=%s,exponent=%s,modulo_value=%s)", base, exponent, modulo_value, extra={"event.action": "_modexpt", "logrite.base": base, "logrite.exponent": exponent, "logrite.modulo_value": modulo_value})
 
     if exponent == 1:
         return base

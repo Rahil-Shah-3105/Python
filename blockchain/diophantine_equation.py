@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from maths.greatest_common_divisor import greatest_common_divisor
+import logging
+logger = logging.getLogger(__name__)
 
 
 def diophantine(a: int, b: int, c: int) -> tuple[float, float]:
@@ -21,12 +23,14 @@ def diophantine(a: int, b: int, c: int) -> tuple[float, float]:
     That's why we need diophantine all solution function.
 
     """
+    logger.error(">>> Entering diophantine(a=%s,b=%s,c=%s)", a, b, c, extra={"event.action": "diophantine", "logrite.a": a, "logrite.b": b, "logrite.c": c})
 
     assert (
         c % greatest_common_divisor(a, b) == 0
     )  # greatest_common_divisor(a,b) is in maths directory
     (d, x, y) = extended_gcd(a, b)  # extended_gcd(a,b) function implemented below
     r = c / d
+    logger.warning("<<< Exiting diophantine(a=%s,b=%s,c=%s)", a, b, c, extra={"event.action": "diophantine", "logrite.a": a, "logrite.b": b, "logrite.c": c})
     return (r * x, r * y)
 
 
@@ -60,8 +64,10 @@ def diophantine_all_soln(a: int, b: int, c: int, n: int = 2) -> None:
     48.0 -63.0
 
     """
+    logger.error(">>> Entering diophantine_all_soln(a=%s,b=%s,c=%s,n=%s)", a, b, c, n, extra={"event.action": "diophantine_all_soln", "logrite.a": a, "logrite.b": b, "logrite.c": c, "logrite.n": n})
     (x0, y0) = diophantine(a, b, c)  # Initial value
     d = greatest_common_divisor(a, b)
+    logger.error("diophantine_all_soln(a=%s,b=%s,c=%s,n=%s): d → %s", a, b, c, n, d, extra={"event.action": "diophantine_all_soln", "logrite.a": a, "logrite.b": b, "logrite.c": c, "logrite.n": n})
     p = a // d
     q = b // d
 
@@ -69,6 +75,7 @@ def diophantine_all_soln(a: int, b: int, c: int, n: int = 2) -> None:
         x = x0 + i * q
         y = y0 - i * p
         print(x, y)
+        logger.warning("<<< Exiting diophantine_all_soln(a=%s,b=%s,c=%s,n=%s)", a, b, c, n, extra={"event.action": "diophantine_all_soln", "logrite.a": a, "logrite.b": b, "logrite.c": c, "logrite.n": n})
 
 
 def extended_gcd(a: int, b: int) -> tuple[int, int, int]:
@@ -83,6 +90,7 @@ def extended_gcd(a: int, b: int) -> tuple[int, int, int]:
     (1, -2, 3)
 
     """
+    logger.error(">>> Entering extended_gcd(a=%s,b=%s)", a, b, extra={"event.action": "extended_gcd", "logrite.a": a, "logrite.b": b})
     assert a >= 0
     assert b >= 0
 

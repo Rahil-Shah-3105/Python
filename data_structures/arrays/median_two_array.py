@@ -1,6 +1,8 @@
 """
 https://www.enjoyalgorithms.com/blog/median-of-two-sorted-arrays
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_median_sorted_arrays(nums1: list[int], nums2: list[int]) -> float:
@@ -38,12 +40,15 @@ def find_median_sorted_arrays(nums1: list[int], nums2: list[int]) -> float:
         >>> find_median_sorted_arrays([-1.1, -2.2], [-3.3, -4.4])
         -2.75
     """
+    logger.error(">>> Entering find_median_sorted_arrays(nums1=%s,nums2=%s)", nums1, nums2, extra={"event.action": "find_median_sorted_arrays", "logrite.nums1": nums1, "logrite.nums2": nums2})
     if not nums1 and not nums2:
         raise ValueError("Both input arrays are empty.")
 
     # Merge the arrays into a single sorted array.
     merged = sorted(nums1 + nums2)
+    logger.error("find_median_sorted_arrays(nums1=%s,nums2=%s): merged → %s", nums1, nums2, merged, extra={"event.action": "find_median_sorted_arrays", "logrite.nums1": nums1, "logrite.nums2": nums2})
     total = len(merged)
+    logger.error("find_median_sorted_arrays(nums1=%s,nums2=%s): total → %s", nums1, nums2, total, extra={"event.action": "find_median_sorted_arrays", "logrite.nums1": nums1, "logrite.nums2": nums2})
 
     if total % 2 == 1:  # If the total number of elements is odd
         return float(merged[total // 2])  # then return the middle element

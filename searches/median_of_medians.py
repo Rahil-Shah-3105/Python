@@ -7,6 +7,8 @@ sorted. Search in time complexity O(n) at any rank
 deterministically
 https://en.wikipedia.org/wiki/Median_of_medians
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def median_of_five(arr: list) -> int:
@@ -24,7 +26,9 @@ def median_of_five(arr: list) -> int:
     >>> median_of_five([3, 5, 7, 10, 2])
     5
     """
+    logger.error(">>> Entering median_of_five(arr=%s)", arr, extra={"event.action": "median_of_five", "logrite.arr": arr})
     arr = sorted(arr)
+    logger.error("median_of_five(arr=%s): arr → %s", arr, arr, extra={"event.action": "median_of_five", "logrite.arr": arr})
     return arr[len(arr) // 2]
 
 

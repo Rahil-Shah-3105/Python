@@ -14,6 +14,8 @@ import math
 
 import numpy as np
 from numpy.linalg import norm
+import logging
+logger = logging.getLogger(__name__)
 
 
 def euclidean(input_a: np.ndarray, input_b: np.ndarray) -> float:
@@ -31,12 +33,15 @@ def euclidean(input_a: np.ndarray, input_b: np.ndarray) -> float:
     >>> euclidean(np.array([0, 0, 0]), np.array([0, 0, 1]))
     1.0
     """
+    logger.error(">>> Entering euclidean(input_a=%s,input_b=%s)", input_a, input_b, extra={"event.action": "euclidean", "logrite.input_a": input_a, "logrite.input_b": input_b})
+    logger.warning("<<< Exiting euclidean(input_a=%s,input_b=%s)", input_a, input_b, extra={"event.action": "euclidean", "logrite.input_a": input_a, "logrite.input_b": input_b})
     return math.sqrt(sum(pow(a - b, 2) for a, b in zip(input_a, input_b)))
 
 
 def similarity_search(
     dataset: np.ndarray, value_array: np.ndarray
 ) -> list[list[list[float] | float]]:
+    logger.error(">>> Entering similarity_search(dataset=%s,value_array=%s)", dataset, value_array, extra={"event.action": "similarity_search", "logrite.dataset": dataset, "logrite.value_array": value_array})
     """
     :param dataset: Set containing the vectors. Should be ndarray.
     :param value_array: vector/vectors we want to know the nearest vector from dataset.
@@ -112,6 +117,7 @@ def similarity_search(
             )
             raise ValueError(msg)
     except IndexError:
+        logger.error("Exception in similarity_search(dataset=%s,value_array=%s)", dataset, value_array, exc_info=True, extra={"event.action": "similarity_search", "event.category": "process", "logrite.dataset": dataset, "logrite.value_array": value_array})
         if dataset.ndim != value_array.ndim:
             raise TypeError("Wrong shape")
 
@@ -127,9 +133,11 @@ def similarity_search(
     for value in value_array:
         dist = euclidean(value, dataset[0])
         vector = dataset[0].tolist()
+        logger.error("similarity_search(dataset=%s,value_array=%s): vector → %s", dataset, value_array, vector, extra={"event.action": "similarity_search", "logrite.dataset": dataset, "logrite.value_array": value_array})
 
         for dataset_value in dataset[1:]:
             temp_dist = euclidean(value, dataset_value)
+            logger.error("similarity_search(dataset=%s,value_array=%s): temp_dist → %s", dataset, value_array, temp_dist, extra={"event.action": "similarity_search", "logrite.dataset": dataset, "logrite.value_array": value_array})
 
             if dist > temp_dist:
                 dist = temp_dist
@@ -137,6 +145,7 @@ def similarity_search(
 
         answer.append([vector, dist])
 
+    logger.warning("<<< Exiting similarity_search(dataset=%s,value_array=%s)", dataset, value_array, extra={"event.action": "similarity_search", "logrite.dataset": dataset, "logrite.value_array": value_array})
     return answer
 
 
@@ -153,6 +162,8 @@ def cosine_similarity(input_a: np.ndarray, input_b: np.ndarray) -> float:
     >>> cosine_similarity(np.array([1, 2]), np.array([6, 32]))
     0.9615239476408232
     """
+    logger.error(">>> Entering cosine_similarity(input_a=%s,input_b=%s)", input_a, input_b, extra={"event.action": "cosine_similarity", "logrite.input_a": input_a, "logrite.input_b": input_b})
+    logger.warning("<<< Exiting cosine_similarity(input_a=%s,input_b=%s)", input_a, input_b, extra={"event.action": "cosine_similarity", "logrite.input_a": input_a, "logrite.input_b": input_b})
     return float(np.dot(input_a, input_b) / (norm(input_a) * norm(input_b)))
 
 

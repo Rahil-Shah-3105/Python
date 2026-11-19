@@ -8,6 +8,9 @@ from __future__ import annotations
 from itertools import pairwise
 from random import random
 from typing import TypeVar
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 KT = TypeVar("KT")
 VT = TypeVar("VT")
@@ -15,9 +18,14 @@ VT = TypeVar("VT")
 
 class Node[KT, VT]:
     def __init__(self, key: KT | str = "root", value: VT | None = None):
+        logger.error(">>> Entering __init__(key=%s,value=%s)", key, value, extra={"event.action": "__init__", "logrite.key": key, "logrite.value": value})
+        logger.error("__init__(key=%s,value=%s): key → %s", key, value, key, extra={"event.action": "__init__", "logrite.key": key, "logrite.value": value})
         self.key = key
+        logger.debug("__init__(self=%s,key=%s,value=%s): self.key → %s", self, key, value, self.key, extra={"event.action": "__init__", "logrite.key": key, "logrite.value": value})
         self.value = value
         self.forward: list[Node[KT, VT]] = []
+        logger.warning("<<< Exiting __init__(key=%s,value=%s)", key, value, extra={"event.action": "__init__", "logrite.key": key, "logrite.value": value})
+        logger.debug("__init__(self=%s,key=%s,value=%s): self.value → %s", self, key, value, self.value, extra={"event.action": "__init__", "logrite.key": key, "logrite.value": value})
 
     def __repr__(self) -> str:
         """
@@ -27,7 +35,9 @@ class Node[KT, VT]:
         >>> repr(node)
         'Node(Key: 2)'
         """
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
 
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"Node({self.key}: {self.value})"
 
     @property
@@ -45,16 +55,23 @@ class Node[KT, VT]:
         >>> node.level
         2
         """
+        logger.error(">>> Entering level()", extra={"event.action": "level"})
 
+        logger.warning("<<< Exiting level()", extra={"event.action": "level"})
         return len(self.forward)
 
 
 class SkipList[KT, VT]:
     def __init__(self, p: float = 0.5, max_level: int = 16):
+        logger.error(">>> Entering __init__(p=%s,max_level=%s)", p, max_level, extra={"event.action": "__init__", "logrite.p": p, "logrite.max_level": max_level})
         self.head: Node[KT, VT] = Node[KT, VT]()
+        logger.warning("<<< Exiting __init__(p=%s,max_level=%s)", p, max_level, extra={"event.action": "__init__", "logrite.p": p, "logrite.max_level": max_level})
         self.level = 0
+        logger.debug("__init__(self=%s,p=%s,max_level=%s): self.level → %s", self, p, max_level, self.level, extra={"event.action": "__init__", "logrite.p": p, "logrite.max_level": max_level})
         self.p = p
+        logger.debug("__init__(self=%s,p=%s,max_level=%s): self.p → %s", self, p, max_level, self.p, extra={"event.action": "__init__", "logrite.p": p, "logrite.max_level": max_level})
         self.max_level = max_level
+        logger.debug("__init__(self=%s,p=%s,max_level=%s): self.max_level → %s", self, p, max_level, self.max_level, extra={"event.action": "__init__", "logrite.p": p, "logrite.max_level": max_level})
 
     def __str__(self) -> str:
         """
@@ -77,19 +94,24 @@ class SkipList[KT, VT]:
         [Key2]--Key2...
         None    *...
         """
+        logger.error(">>> Entering __str__()", extra={"event.action": "__str__"})
 
+        logger.warning("<<< Exiting __str__()", extra={"event.action": "__str__"})
         items = list(self)
+        logger.error("__str__(): items → %s", items, extra={"event.action": "__str__"})
 
         if len(items) == 0:
             return f"SkipList(level={self.level})"
 
         label_size = max((len(str(item)) for item in items), default=4)
         label_size = max(label_size, 4) + 4
+        logger.error("__str__(): label_size → %s", label_size, extra={"event.action": "__str__"})
 
         node = self.head
         lines = []
 
         forwards = node.forward.copy()
+        logger.error("__str__(): forwards → %s", forwards, extra={"event.action": "__str__"})
         lines.append(f"[{node.key}]".ljust(label_size, "-") + "* " * len(forwards))
         lines.append(" " * label_size + "| " * len(forwards))
 
@@ -107,22 +129,26 @@ class SkipList[KT, VT]:
         return f"SkipList(level={self.level})\n" + "\n".join(lines)
 
     def __iter__(self):
+        logger.error(">>> Entering __iter__()", extra={"event.action": "__iter__"})
         node = self.head
 
         while len(node.forward) != 0:
             yield node.forward[0].key
             node = node.forward[0]
+            logger.warning("<<< Exiting __iter__()", extra={"event.action": "__iter__"})
 
     def random_level(self) -> int:
         """
         :return: Random level from [1, self.max_level] interval.
                  Higher values are less likely.
         """
+        logger.error(">>> Entering random_level()", extra={"event.action": "random_level"})
 
         level = 1
         while random() < self.p and level < self.max_level:
             level += 1
 
+        logger.warning("<<< Exiting random_level()", extra={"event.action": "random_level"})
         return level
 
     def _locate_node(self, key) -> tuple[Node[KT, VT] | None, list[Node[KT, VT]]]:
@@ -132,6 +158,7 @@ class SkipList[KT, VT]:
                  and list of nodes that refer (if key is present) of should refer to
                  given node.
         """
+        logger.error(">>> Entering _locate_node(key=%s)", key, extra={"event.action": "_locate_node", "logrite.key": key})
 
         # Nodes with refer or should refer to output node
         update_vector = []
@@ -158,6 +185,7 @@ class SkipList[KT, VT]:
         if len(node.forward) != 0 and node.forward[0].key == key:
             return node.forward[0], update_vector
         else:
+            logger.warning("<<< Exiting _locate_node(key=%s)", key, extra={"event.action": "_locate_node", "logrite.key": key})
             return None, update_vector
 
     def delete(self, key: KT):
@@ -174,6 +202,7 @@ class SkipList[KT, VT]:
         >>> list(skip_list)
         [1, 3]
         """
+        logger.error(">>> Entering delete(key=%s)", key, extra={"event.action": "delete", "logrite.key": key})
 
         node, update_vector = self._locate_node(key)
 
@@ -184,7 +213,9 @@ class SkipList[KT, VT]:
                     if node.level > i:
                         update_node.forward[i] = node.forward[i]
                     else:
+                        logger.warning("<<< Exiting delete(key=%s)", key, extra={"event.action": "delete", "logrite.key": key})
                         update_node.forward = update_node.forward[:i]
+                        logger.debug("delete(self=%s,key=%s): update_node.forward → %s", self, key, update_node.forward, extra={"event.action": "delete", "logrite.key": key})
 
     def insert(self, key: KT, value: VT):
         """
@@ -198,6 +229,7 @@ class SkipList[KT, VT]:
         >>> list(skip_list)
         [2]
         """
+        logger.error(">>> Entering insert(key=%s,value=%s)", key, value, extra={"event.action": "insert", "logrite.key": key, "logrite.value": value})
 
         node, update_vector = self._locate_node(key)
         if node is not None:
@@ -210,8 +242,10 @@ class SkipList[KT, VT]:
                 for _ in range(self.level - 1, level):
                     update_vector.append(self.head)
                 self.level = level
+                logger.debug("insert(self=%s,key=%s,value=%s): self.level → %s", self, key, value, self.level, extra={"event.action": "insert", "logrite.key": key, "logrite.value": value})
 
             new_node = Node(key, value)
+            logger.error("insert(key=%s,value=%s): new_node → %s", key, value, new_node, extra={"event.action": "insert", "logrite.key": key, "logrite.value": value})
 
             for i, update_node in enumerate(update_vector[:level]):
                 # Change references to pass through new node.
@@ -222,6 +256,7 @@ class SkipList[KT, VT]:
                     update_node.forward.append(new_node)
                 else:
                     update_node.forward[i] = new_node
+                    logger.warning("<<< Exiting insert(key=%s,value=%s)", key, value, extra={"event.action": "insert", "logrite.key": key, "logrite.value": value})
 
     def find(self, key: VT) -> VT | None:
         """
@@ -237,17 +272,21 @@ class SkipList[KT, VT]:
         >>> skip_list.find(2)
         'Three'
         """
+        logger.error(">>> Entering find(key=%s)", key, extra={"event.action": "find", "logrite.key": key})
 
         node, _ = self._locate_node(key)
 
         if node is not None:
             return node.value
 
+        logger.warning("<<< Exiting find(key=%s)", key, extra={"event.action": "find", "logrite.key": key})
         return None
 
 
 def test_insert():
+    logger.error(">>> Entering test_insert()", extra={"event.action": "test_insert"})
     skip_list = SkipList()
+    logger.error("test_insert(): skip_list → %s", skip_list, extra={"event.action": "test_insert"})
     skip_list.insert("Key1", 3)
     skip_list.insert("Key2", 12)
     skip_list.insert("Key3", 41)
@@ -264,10 +303,13 @@ def test_insert():
     assert all_values["Key2"] == 12
     assert all_values["Key3"] == 41
     assert all_values["Key4"] == -19
+    logger.warning("<<< Exiting test_insert()", extra={"event.action": "test_insert"})
 
 
 def test_insert_overrides_existing_value():
+    logger.error(">>> Entering test_insert_overrides_existing_value()", extra={"event.action": "test_insert_overrides_existing_value"})
     skip_list = SkipList()
+    logger.error("test_insert_overrides_existing_value(): skip_list → %s", skip_list, extra={"event.action": "test_insert_overrides_existing_value"})
     skip_list.insert("Key1", 10)
     skip_list.insert("Key1", 12)
 
@@ -292,15 +334,21 @@ def test_insert_overrides_existing_value():
     assert all_values["Key7"] == 7
     assert all_values["Key5"] == 5
     assert all_values["Key10"] == 10
+    logger.warning("<<< Exiting test_insert_overrides_existing_value()", extra={"event.action": "test_insert_overrides_existing_value"})
 
 
 def test_searching_empty_list_returns_none():
+    logger.error(">>> Entering test_searching_empty_list_returns_none()", extra={"event.action": "test_searching_empty_list_returns_none"})
     skip_list = SkipList()
+    logger.error("test_searching_empty_list_returns_none(): skip_list → %s", skip_list, extra={"event.action": "test_searching_empty_list_returns_none"})
     assert skip_list.find("Some key") is None
+    logger.warning("<<< Exiting test_searching_empty_list_returns_none()", extra={"event.action": "test_searching_empty_list_returns_none"})
 
 
 def test_search():
+    logger.error(">>> Entering test_search()", extra={"event.action": "test_search"})
     skip_list = SkipList()
+    logger.error("test_search(): skip_list → %s", skip_list, extra={"event.action": "test_search"})
 
     skip_list.insert("Key2", 20)
     assert skip_list.find("Key2") == 20
@@ -313,17 +361,23 @@ def test_search():
     assert skip_list.find("Key2") == 8
     assert skip_list.find("Some Key") == 10
     assert skip_list.find("V") == 13
+    logger.warning("<<< Exiting test_search()", extra={"event.action": "test_search"})
 
 
 def test_deleting_item_from_empty_list_do_nothing():
+    logger.error(">>> Entering test_deleting_item_from_empty_list_do_nothing()", extra={"event.action": "test_deleting_item_from_empty_list_do_nothing"})
     skip_list = SkipList()
+    logger.error("test_deleting_item_from_empty_list_do_nothing(): skip_list → %s", skip_list, extra={"event.action": "test_deleting_item_from_empty_list_do_nothing"})
     skip_list.delete("Some key")
 
     assert len(skip_list.head.forward) == 0
+    logger.warning("<<< Exiting test_deleting_item_from_empty_list_do_nothing()", extra={"event.action": "test_deleting_item_from_empty_list_do_nothing"})
 
 
 def test_deleted_items_are_not_founded_by_find_method():
+    logger.error(">>> Entering test_deleted_items_are_not_founded_by_find_method()", extra={"event.action": "test_deleted_items_are_not_founded_by_find_method"})
     skip_list = SkipList()
+    logger.error("test_deleted_items_are_not_founded_by_find_method(): skip_list → %s", skip_list, extra={"event.action": "test_deleted_items_are_not_founded_by_find_method"})
 
     skip_list.insert("Key1", 12)
     skip_list.insert("V", 13)
@@ -335,10 +389,13 @@ def test_deleted_items_are_not_founded_by_find_method():
 
     assert skip_list.find("V") is None
     assert skip_list.find("Key2") is None
+    logger.warning("<<< Exiting test_deleted_items_are_not_founded_by_find_method()", extra={"event.action": "test_deleted_items_are_not_founded_by_find_method"})
 
 
 def test_delete_removes_only_given_key():
+    logger.error(">>> Entering test_delete_removes_only_given_key()", extra={"event.action": "test_delete_removes_only_given_key"})
     skip_list = SkipList()
+    logger.error("test_delete_removes_only_given_key(): skip_list → %s", skip_list, extra={"event.action": "test_delete_removes_only_given_key"})
 
     skip_list.insert("Key1", 12)
     skip_list.insert("V", 13)
@@ -368,10 +425,13 @@ def test_delete_removes_only_given_key():
     assert skip_list.find("X") is None
     assert skip_list.find("Key1") is None
     assert skip_list.find("Key2") is None
+    logger.warning("<<< Exiting test_delete_removes_only_given_key()", extra={"event.action": "test_delete_removes_only_given_key"})
 
 
 def test_delete_doesnt_leave_dead_nodes():
+    logger.error(">>> Entering test_delete_doesnt_leave_dead_nodes()", extra={"event.action": "test_delete_doesnt_leave_dead_nodes"})
     skip_list = SkipList()
+    logger.error("test_delete_doesnt_leave_dead_nodes(): skip_list → %s", skip_list, extra={"event.action": "test_delete_doesnt_leave_dead_nodes"})
 
     skip_list.insert("Key1", 12)
     skip_list.insert("V", 13)
@@ -379,17 +439,22 @@ def test_delete_doesnt_leave_dead_nodes():
     skip_list.insert("Key2", 15)
 
     skip_list.delete("X")
+    logger.warning("<<< Exiting test_delete_doesnt_leave_dead_nodes()", extra={"event.action": "test_delete_doesnt_leave_dead_nodes"})
 
     def traverse_keys(node):
+        logger.error(">>> Entering traverse_keys(node=%s)", node, extra={"event.action": "traverse_keys", "logrite.node": node})
         yield node.key
         for forward_node in node.forward:
             yield from traverse_keys(forward_node)
+            logger.warning("<<< Exiting traverse_keys(node=%s)", node, extra={"event.action": "traverse_keys", "logrite.node": node})
 
     assert len(set(traverse_keys(skip_list.head))) == 4
 
 
 def test_iter_always_yields_sorted_values():
     def is_sorted(lst):
+        logger.error(">>> Entering is_sorted(lst=%s)", lst, extra={"event.action": "is_sorted", "logrite.lst": lst})
+        logger.warning("<<< Exiting is_sorted(lst=%s)", lst, extra={"event.action": "is_sorted", "logrite.lst": lst})
         return all(next_item >= item for item, next_item in pairwise(lst))
 
     skip_list = SkipList()
@@ -406,6 +471,7 @@ def test_iter_always_yields_sorted_values():
 
 
 def pytests():
+    logger.error(">>> Entering pytests()", extra={"event.action": "pytests"})
     for _ in range(100):
         # Repeat test 100 times due to the probabilistic nature of skip list
         # random values == random bugs
@@ -421,14 +487,17 @@ def pytests():
         test_delete_doesnt_leave_dead_nodes()
 
         test_iter_always_yields_sorted_values()
+        logger.warning("<<< Exiting pytests()", extra={"event.action": "pytests"})
 
 
 def main():
     """
     >>> pytests()
     """
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
 
     skip_list = SkipList()
+    logger.error("main(): skip_list → %s", skip_list, extra={"event.action": "main"})
     skip_list.insert(2, "2")
     skip_list.insert(4, "4")
     skip_list.insert(6, "4")
@@ -439,6 +508,7 @@ def main():
     skip_list.delete(4)
 
     print(skip_list)
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

@@ -13,6 +13,8 @@ expressed in such a way:
 How many numbers below fifty million can be expressed as the sum of a prime square,
 prime cube, and prime fourth power?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(limit: int = 50000000) -> int:
@@ -22,10 +24,14 @@ def solution(limit: int = 50000000) -> int:
     >>> solution(50)
     4
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     ret = set()
+    logger.error("solution(limit=%s): ret → %s", limit, ret, extra={"event.action": "solution", "logrite.limit": limit})
     prime_square_limit = int((limit - 24) ** (1 / 2))
+    logger.error("solution(limit=%s): prime_square_limit → %s", limit, prime_square_limit, extra={"event.action": "solution", "logrite.limit": limit})
 
     primes = set(range(3, prime_square_limit + 1, 2))
+    logger.error("solution(limit=%s): primes → %s", limit, primes, extra={"event.action": "solution", "logrite.limit": limit})
     primes.add(2)
     for p in range(3, prime_square_limit + 1, 2):
         if p not in primes:
@@ -41,10 +47,12 @@ def solution(limit: int = 50000000) -> int:
             for prime3 in primes:
                 tetr = prime3 * prime3 * prime3 * prime3
                 total = square + cube + tetr
+                logger.error("solution(limit=%s): total → %s", limit, total, extra={"event.action": "solution", "logrite.limit": limit})
                 if total >= limit:
                     break
                 ret.add(total)
 
+    logger.warning("<<< Exiting solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     return len(ret)
 
 

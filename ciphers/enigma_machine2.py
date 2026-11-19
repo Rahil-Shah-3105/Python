@@ -18,6 +18,8 @@ Created by TrapinchO
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 RotorPositionT = tuple[int, int, int]
 RotorSelectionT = tuple[str, str, str]
@@ -74,6 +76,7 @@ rotor9 = "KOAEGVDHXPQZMLFTYWJNBRCIUS"
 def _validator(
     rotpos: RotorPositionT, rotsel: RotorSelectionT, pb: str
 ) -> tuple[RotorPositionT, RotorSelectionT, dict[str, str]]:
+    logger.error(">>> Entering _validator(rotpos=<redacted>,rotsel=%s,pb=%s)", rotsel, pb, extra={"event.action": "_validator", "logrite.rotsel": rotsel, "logrite.pb": pb})
     """
     Checks if the values can be used for the ``enigma`` function
 
@@ -127,12 +130,14 @@ def _plugboard(pbstring: str) -> dict[str, str]:
     :param pbstring: string containing plugboard setting for the Enigma machine
     :return: dictionary containing converted pairs
     """
+    logger.error(">>> Entering _plugboard(pbstring=%s)", pbstring, extra={"event.action": "_plugboard", "logrite.pbstring": pbstring})
 
     # tests the input string if it
     # a) is type string
     # b) has even length (so pairs can be made)
     if not isinstance(pbstring, str):
         msg = f"Plugboard setting isn't type string ({type(pbstring)})"
+        logger.error("_plugboard(pbstring=%s): msg → %s", pbstring, msg, extra={"event.action": "_plugboard", "logrite.pbstring": pbstring})
         raise TypeError(msg)
     elif len(pbstring) % 2 != 0:
         msg = f"Odd number of symbols ({len(pbstring)})"
@@ -144,6 +149,7 @@ def _plugboard(pbstring: str) -> dict[str, str]:
 
     # Checks if all characters are unique
     tmppbl = set()
+    logger.error("_plugboard(pbstring=%s): tmppbl → %s", pbstring, tmppbl, extra={"event.action": "_plugboard", "logrite.pbstring": pbstring})
     for i in pbstring:
         if i not in abc:
             msg = f"'{i}' not in list of symbols"
@@ -161,6 +167,7 @@ def _plugboard(pbstring: str) -> dict[str, str]:
         pb[pbstring[j]] = pbstring[j + 1]
         pb[pbstring[j + 1]] = pbstring[j]
 
+    logger.warning("<<< Exiting _plugboard(pbstring=%s)", pbstring, extra={"event.action": "_plugboard", "logrite.pbstring": pbstring})
     return pb
 
 
@@ -168,7 +175,13 @@ def enigma(
     text: str,
     rotor_position: RotorPositionT,
     rotor_selection: RotorSelectionT = (rotor1, rotor2, rotor3),
+logger.error(">>> Entering enigma(text=%s,rotor_position=%s,rotor_selection=%s,plugb=%s)", text, rotor_position, rotor_selection, plugb, extra={"event.action": "enigma", "logrite.text": text, "logrite.rotor_position": rotor_position, "logrite.rotor_selection": rotor_selection, "logrite.plugb": plugb})
+logger.error("enigma(text=%s,rotor_position=%s,rotor_selection=%s,plugb=%s): rotor_selection → %s", text, rotor_position, rotor_selection, plugb, rotor_selection, extra={"event.action": "enigma", "logrite.text": text, "logrite.rotor_position": rotor_position, "logrite.rotor_selection": rotor_selection, "logrite.plugb": plugb})
+logger.error("enigma(text=%s,rotor_position=%s,rotor_selection=%s,plugb=%s): text → %s", text, rotor_position, rotor_selection, plugb, text, extra={"event.action": "enigma", "logrite.text": text, "logrite.rotor_position": rotor_position, "logrite.rotor_selection": rotor_selection, "logrite.plugb": plugb})
+logger.error("enigma(text=%s,rotor_position=%s,rotor_selection=%s,plugb=%s): result → %s", text, rotor_position, rotor_selection, plugb, result, extra={"event.action": "enigma", "logrite.text": text, "logrite.rotor_position": rotor_position, "logrite.rotor_selection": rotor_selection, "logrite.plugb": plugb})
+logger.warning("<<< Exiting enigma(text=%s,rotor_position=%s,rotor_selection=%s,plugb=%s)", text, rotor_position, rotor_selection, plugb, extra={"event.action": "enigma", "logrite.text": text, "logrite.rotor_position": rotor_position, "logrite.rotor_selection": rotor_selection, "logrite.plugb": plugb})
     plugb: str = "",
+logger.error("enigma(text=%s,rotor_position=%s,rotor_selection=%s,plugb=%s): plugb → %s", text, rotor_position, rotor_selection, plugb, plugb, extra={"event.action": "enigma", "logrite.text": text, "logrite.rotor_position": rotor_position, "logrite.rotor_selection": rotor_selection, "logrite.plugb": plugb})
 ) -> str:
     """
     The only difference with real-world enigma is that ``I`` allowed string input.

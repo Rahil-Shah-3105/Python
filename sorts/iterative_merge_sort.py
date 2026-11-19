@@ -10,6 +10,8 @@ python3 iterative_merge_sort.py
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def merge(input_list: list, low: int, mid: int, high: int) -> list:
@@ -17,11 +19,14 @@ def merge(input_list: list, low: int, mid: int, high: int) -> list:
     sorting left-half and right-half individually
     then merging them into result
     """
+    logger.error(">>> Entering merge(input_list=%s,low=%s,mid=%s,high=%s)", input_list, low, mid, high, extra={"event.action": "merge", "logrite.input_list": input_list, "logrite.low": low, "logrite.mid": mid, "logrite.high": high})
     result = []
+    logger.error("merge(input_list=%s,low=%s,mid=%s,high=%s): result → %s", input_list, low, mid, high, result, extra={"event.action": "merge", "logrite.input_list": input_list, "logrite.low": low, "logrite.mid": mid, "logrite.high": high})
     left, right = input_list[low:mid], input_list[mid : high + 1]
     while left and right:
         result.append((left if left[0] <= right[0] else right).pop(0))
     input_list[low : high + 1] = result + left + right
+    logger.warning("<<< Exiting merge(input_list=%s,low=%s,mid=%s,high=%s)", input_list, low, mid, high, extra={"event.action": "merge", "logrite.input_list": input_list, "logrite.low": low, "logrite.mid": mid, "logrite.high": high})
     return input_list
 
 
@@ -61,6 +66,7 @@ def iter_merge_sort(input_list: list) -> list:
     >>> iter_merge_sort('cba')
     ['a', 'b', 'c']
     """
+    logger.error(">>> Entering iter_merge_sort(input_list=%s)", input_list, extra={"event.action": "iter_merge_sort", "logrite.input_list": input_list})
     if len(input_list) <= 1:
         return input_list
     input_list = list(input_list)
@@ -81,6 +87,7 @@ def iter_merge_sort(input_list: list) -> list:
             break
         p *= 2
 
+    logger.warning("<<< Exiting iter_merge_sort(input_list=%s)", input_list, extra={"event.action": "iter_merge_sort", "logrite.input_list": input_list})
     return input_list
 
 

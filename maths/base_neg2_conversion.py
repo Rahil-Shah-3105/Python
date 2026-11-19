@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def decimal_to_negative_base_2(num: int) -> int:
     """
     This function returns the number negative base 2
@@ -19,6 +21,7 @@ def decimal_to_negative_base_2(num: int) -> int:
         >>> decimal_to_negative_base_2(7)
         11011
     """
+    logger.error(">>> Entering decimal_to_negative_base_2(num=%s)", num, extra={"event.action": "decimal_to_negative_base_2", "logrite.num": num})
     if num == 0:
         return 0
     ans = ""
@@ -28,6 +31,7 @@ def decimal_to_negative_base_2(num: int) -> int:
             rem += 2
             num += 1
         ans = str(rem) + ans
+    logger.warning("<<< Exiting decimal_to_negative_base_2(num=%s)", num, extra={"event.action": "decimal_to_negative_base_2", "logrite.num": num})
     return int(ans)
 
 

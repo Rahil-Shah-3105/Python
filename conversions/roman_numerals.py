@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 ROMAN = [
     (1000, "M"),
     (900, "CM"),
@@ -25,8 +27,11 @@ def roman_to_int(roman: str) -> int:
     >>> all(roman_to_int(key) == value for key, value in tests.items())
     True
     """
+    logger.error(">>> Entering roman_to_int(roman=%s)", roman, extra={"event.action": "roman_to_int", "logrite.roman": roman})
     vals = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
+    logger.error("roman_to_int(roman=%s): vals → %s", roman, vals, extra={"event.action": "roman_to_int", "logrite.roman": roman})
     total = 0
+    logger.error("roman_to_int(roman=%s): total → %s", roman, total, extra={"event.action": "roman_to_int", "logrite.roman": roman})
     place = 0
     while place < len(roman):
         if (place + 1 < len(roman)) and (vals[roman[place]] < vals[roman[place + 1]]):
@@ -35,6 +40,7 @@ def roman_to_int(roman: str) -> int:
         else:
             total += vals[roman[place]]
             place += 1
+    logger.warning("<<< Exiting roman_to_int(roman=%s)", roman, extra={"event.action": "roman_to_int", "logrite.roman": roman})
     return total
 
 
@@ -46,12 +52,15 @@ def int_to_roman(number: int) -> str:
     >>> all(int_to_roman(value) == key for key, value in tests.items())
     True
     """
+    logger.error(">>> Entering int_to_roman(number=%s)", number, extra={"event.action": "int_to_roman", "logrite.number": number})
     result = []
+    logger.error("int_to_roman(number=%s): result → %s", number, result, extra={"event.action": "int_to_roman", "logrite.number": number})
     for arabic, roman in ROMAN:
         (factor, number) = divmod(number, arabic)
         result.append(roman * factor)
         if number == 0:
             break
+    logger.warning("<<< Exiting int_to_roman(number=%s)", number, extra={"event.action": "int_to_roman", "logrite.number": number})
     return "".join(result)
 
 

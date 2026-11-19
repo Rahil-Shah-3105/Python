@@ -14,19 +14,27 @@ import unittest
 from collections.abc import Iterator
 
 import pytest
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
     def __init__(self, label: int, parent: Node | None) -> None:
+        logger.error(">>> Entering __init__(label=%s,parent=%s)", label, parent, extra={"event.action": "__init__", "logrite.label": label})
         self.label = label
+        logger.debug("__init__(self=%s,label=%s,parent=%s): self.label → %s", self, label, parent, self.label, extra={"event.action": "__init__", "logrite.label": label})
         self.parent = parent
+        logger.debug("__init__(self=%s,label=%s,parent=%s): self.parent → %s", self, label, parent, self.parent, extra={"event.action": "__init__", "logrite.label": label})
         self.left: Node | None = None
         self.right: Node | None = None
+        logger.warning("<<< Exiting __init__(label=%s,parent=%s)", label, parent, extra={"event.action": "__init__", "logrite.label": label})
 
 
 class BinarySearchTree:
     def __init__(self) -> None:
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
         self.root: Node | None = None
+        logger.warning("<<< Exiting __init__()", extra={"event.action": "__init__"})
 
     def empty(self) -> None:
         """
@@ -37,7 +45,10 @@ class BinarySearchTree:
         >>> t.put(8)
         >>> assert t.root is not None
         """
+        logger.error(">>> Entering empty()", extra={"event.action": "empty"})
         self.root = None
+        logger.warning("<<< Exiting empty()", extra={"event.action": "empty"})
+        logger.debug("empty(self=%s): self.root → %s", self, self.root, extra={"event.action": "empty"})
 
     def is_empty(self) -> bool:
         """
@@ -50,6 +61,8 @@ class BinarySearchTree:
         >>> t.is_empty()
         False
         """
+        logger.error(">>> Entering is_empty()", extra={"event.action": "is_empty"})
+        logger.warning("<<< Exiting is_empty()", extra={"event.action": "is_empty"})
         return self.root is None
 
     def put(self, label: int) -> None:
@@ -69,19 +82,26 @@ class BinarySearchTree:
         >>> assert t.root.left.parent == t.root
         >>> assert t.root.left.label == 3
         """
+        logger.error(">>> Entering put(label=%s)", label, extra={"event.action": "put", "logrite.label": label})
         self.root = self._put(self.root, label)
+        logger.warning("<<< Exiting put(label=%s)", label, extra={"event.action": "put", "logrite.label": label})
+        logger.error("put(label=%s): self.root → %s", label, self.root, extra={"event.action": "put", "logrite.label": label})
 
     def _put(self, node: Node | None, label: int, parent: Node | None = None) -> Node:
+        logger.error(">>> Entering _put(node=%s,label=%s,parent=%s)", node, label, parent, extra={"event.action": "_put", "logrite.node": node, "logrite.label": label})
         if node is None:
             node = Node(label, parent)
         elif label < node.label:
+            logger.error("_put(node=%s,label=%s,parent=%s): node → %s", node, label, parent, node, extra={"event.action": "_put", "logrite.node": node, "logrite.label": label})
             node.left = self._put(node.left, label, node)
         elif label > node.label:
             node.right = self._put(node.right, label, node)
         else:
             msg = f"Node with label {label} already exists"
+            logger.error("_put(node=%s,label=%s,parent=%s): msg → %s", node, label, parent, msg, extra={"event.action": "_put", "logrite.node": node, "logrite.label": label})
             raise ValueError(msg)
 
+        logger.warning("<<< Exiting _put(node=%s,label=%s,parent=%s)", node, label, parent, extra={"event.action": "_put", "logrite.node": node, "logrite.label": label})
         return node
 
     def search(self, label: int) -> Node:
@@ -99,17 +119,23 @@ class BinarySearchTree:
             ...
         ValueError: Node with label 3 does not exist
         """
+        logger.error(">>> Entering search(label=%s)", label, extra={"event.action": "search", "logrite.label": label})
+        logger.warning("<<< Exiting search(label=%s)", label, extra={"event.action": "search", "logrite.label": label})
         return self._search(self.root, label)
 
     def _search(self, node: Node | None, label: int) -> Node:
+        logger.error(">>> Entering _search(node=%s,label=%s)", node, label, extra={"event.action": "_search", "logrite.node": node, "logrite.label": label})
         if node is None:
             msg = f"Node with label {label} does not exist"
+            logger.error("_search(node=%s,label=%s): msg → %s", node, label, msg, extra={"event.action": "_search", "logrite.node": node, "logrite.label": label})
             raise ValueError(msg)
         elif label < node.label:
             node = self._search(node.left, label)
         elif label > node.label:
             node = self._search(node.right, label)
+        logger.error("_search(node=%s,label=%s): node → %s", node, label, node, extra={"event.action": "_search", "logrite.node": node, "logrite.label": label})
 
+        logger.warning("<<< Exiting _search(node=%s,label=%s)", node, label, extra={"event.action": "_search", "logrite.node": node, "logrite.label": label})
         return node
 
     def remove(self, label: int) -> None:
@@ -127,11 +153,16 @@ class BinarySearchTree:
             ...
         ValueError: Node with label 3 does not exist
         """
+        logger.error(">>> Entering remove(label=%s)", label, extra={"event.action": "remove", "logrite.label": label})
         node = self.search(label)
+        logger.error("remove(label=%s): node → %s", label, node, extra={"event.action": "remove", "logrite.label": label})
         if node.right and node.left:
             lowest_node = self._get_lowest_node(node.right)
+            logger.error("remove(label=%s): lowest_node → %s", label, lowest_node, extra={"event.action": "remove", "logrite.label": label})
             lowest_node.left = node.left
+            logger.debug("remove(self=%s,label=%s): lowest_node.left → %s", self, label, lowest_node.left, extra={"event.action": "remove", "logrite.label": label})
             lowest_node.right = node.right
+            logger.debug("remove(self=%s,label=%s): lowest_node.right → %s", self, label, lowest_node.right, extra={"event.action": "remove", "logrite.label": label})
             node.left.parent = lowest_node
             if node.right:
                 node.right.parent = lowest_node
@@ -142,10 +173,13 @@ class BinarySearchTree:
             self._reassign_nodes(node, node.right)
         else:
             self._reassign_nodes(node, None)
+            logger.warning("<<< Exiting remove(label=%s)", label, extra={"event.action": "remove", "logrite.label": label})
 
     def _reassign_nodes(self, node: Node, new_children: Node | None) -> None:
+        logger.error(">>> Entering _reassign_nodes(node=%s,new_children=%s)", node, new_children, extra={"event.action": "_reassign_nodes", "logrite.node": node, "logrite.new_children": new_children})
         if new_children:
             new_children.parent = node.parent
+            logger.debug("_reassign_nodes(self=%s,node=%s,new_children=%s): new_children.parent → %s", self, node, new_children, new_children.parent, extra={"event.action": "_reassign_nodes", "logrite.node": node, "logrite.new_children": new_children})
 
         if node.parent:
             if node.parent.right == node:
@@ -153,15 +187,19 @@ class BinarySearchTree:
             else:
                 node.parent.left = new_children
         else:
+            logger.warning("<<< Exiting _reassign_nodes(node=%s,new_children=%s)", node, new_children, extra={"event.action": "_reassign_nodes", "logrite.node": node, "logrite.new_children": new_children})
             self.root = new_children
+            logger.debug("_reassign_nodes(self=%s,node=%s,new_children=%s): self.root → %s", self, node, new_children, self.root, extra={"event.action": "_reassign_nodes", "logrite.node": node, "logrite.new_children": new_children})
 
     def _get_lowest_node(self, node: Node) -> Node:
+        logger.error(">>> Entering _get_lowest_node(node=%s)", node, extra={"event.action": "_get_lowest_node", "logrite.node": node})
         if node.left:
             lowest_node = self._get_lowest_node(node.left)
         else:
             lowest_node = node
             self._reassign_nodes(node, node.right)
 
+        logger.warning("<<< Exiting _get_lowest_node(node=%s)", node, extra={"event.action": "_get_lowest_node", "logrite.node": node})
         return lowest_node
 
     def exists(self, label: int) -> bool:
@@ -177,10 +215,13 @@ class BinarySearchTree:
         >>> t.exists(3)
         False
         """
+        logger.error(">>> Entering exists(label=%s)", label, extra={"event.action": "exists", "logrite.label": label})
         try:
             self.search(label)
             return True
         except ValueError:
+            logger.error("Exception in exists(label=%s)", label, exc_info=True, extra={"event.action": "exists", "event.category": "process", "logrite.label": label})
+            logger.warning("<<< Exiting exists(label=%s)", label, extra={"event.action": "exists", "logrite.label": label})
             return False
 
     def get_max_label(self) -> int:
@@ -198,6 +239,7 @@ class BinarySearchTree:
         >>> t.get_max_label()
         10
         """
+        logger.error(">>> Entering get_max_label()", extra={"event.action": "get_max_label"})
         if self.root is None:
             raise ValueError("Binary search tree is empty")
 
@@ -205,6 +247,7 @@ class BinarySearchTree:
         while node.right is not None:
             node = node.right
 
+        logger.warning("<<< Exiting get_max_label()", extra={"event.action": "get_max_label"})
         return node.label
 
     def get_min_label(self) -> int:
@@ -222,6 +265,7 @@ class BinarySearchTree:
         >>> t.get_min_label()
         8
         """
+        logger.error(">>> Entering get_min_label()", extra={"event.action": "get_min_label"})
         if self.root is None:
             raise ValueError("Binary search tree is empty")
 
@@ -229,6 +273,7 @@ class BinarySearchTree:
         while node.left is not None:
             node = node.left
 
+        logger.warning("<<< Exiting get_min_label()", extra={"event.action": "get_min_label"})
         return node.label
 
     def inorder_traversal(self) -> Iterator[Node]:
@@ -245,13 +290,17 @@ class BinarySearchTree:
         >>> [i.label for i in t.inorder_traversal()]
         [8, 9, 10]
         """
+        logger.error(">>> Entering inorder_traversal()", extra={"event.action": "inorder_traversal"})
+        logger.warning("<<< Exiting inorder_traversal()", extra={"event.action": "inorder_traversal"})
         return self._inorder_traversal(self.root)
 
     def _inorder_traversal(self, node: Node | None) -> Iterator[Node]:
+        logger.error(">>> Entering _inorder_traversal(node=%s)", node, extra={"event.action": "_inorder_traversal", "logrite.node": node})
         if node is not None:
             yield from self._inorder_traversal(node.left)
             yield node
             yield from self._inorder_traversal(node.right)
+            logger.warning("<<< Exiting _inorder_traversal(node=%s)", node, extra={"event.action": "_inorder_traversal", "logrite.node": node})
 
     def preorder_traversal(self) -> Iterator[Node]:
         """
@@ -267,13 +316,17 @@ class BinarySearchTree:
         >>> [i.label for i in t.preorder_traversal()]
         [8, 10, 9]
         """
+        logger.error(">>> Entering preorder_traversal()", extra={"event.action": "preorder_traversal"})
+        logger.warning("<<< Exiting preorder_traversal()", extra={"event.action": "preorder_traversal"})
         return self._preorder_traversal(self.root)
 
     def _preorder_traversal(self, node: Node | None) -> Iterator[Node]:
+        logger.error(">>> Entering _preorder_traversal(node=%s)", node, extra={"event.action": "_preorder_traversal", "logrite.node": node})
         if node is not None:
             yield node
             yield from self._preorder_traversal(node.left)
             yield from self._preorder_traversal(node.right)
+            logger.warning("<<< Exiting _preorder_traversal(node=%s)", node, extra={"event.action": "_preorder_traversal", "logrite.node": node})
 
 
 class BinarySearchTreeTest(unittest.TestCase):
@@ -290,7 +343,9 @@ class BinarySearchTreeTest(unittest.TestCase):
              \
               5
         """
+        logger.error(">>> Entering _get_binary_search_tree()", extra={"event.action": "_get_binary_search_tree"})
         t = BinarySearchTree()
+        logger.error("_get_binary_search_tree(): t → %s", t, extra={"event.action": "_get_binary_search_tree"})
         t.put(8)
         t.put(3)
         t.put(6)
@@ -302,10 +357,13 @@ class BinarySearchTreeTest(unittest.TestCase):
         t.put(7)
         t.put(5)
 
+        logger.warning("<<< Exiting _get_binary_search_tree()", extra={"event.action": "_get_binary_search_tree"})
         return t
 
     def test_put(self) -> None:
+        logger.error(">>> Entering test_put()", extra={"event.action": "test_put"})
         t = BinarySearchTree()
+        logger.error("test_put(): t → %s", t, extra={"event.action": "test_put"})
         assert t.is_empty()
 
         t.put(8)
@@ -362,11 +420,15 @@ class BinarySearchTreeTest(unittest.TestCase):
 
         with pytest.raises(ValueError):
             t.put(1)
+            logger.warning("<<< Exiting test_put()", extra={"event.action": "test_put"})
 
     def test_search(self) -> None:
+        logger.error(">>> Entering test_search()", extra={"event.action": "test_search"})
         t = self._get_binary_search_tree()
+        logger.error("test_search(): t → %s", t, extra={"event.action": "test_search"})
 
         node = t.search(6)
+        logger.error("test_search(): node → %s", node, extra={"event.action": "test_search"})
         assert node.label == 6
 
         node = t.search(13)
@@ -374,9 +436,12 @@ class BinarySearchTreeTest(unittest.TestCase):
 
         with pytest.raises(ValueError):
             t.search(2)
+            logger.warning("<<< Exiting test_search()", extra={"event.action": "test_search"})
 
     def test_remove(self) -> None:
+        logger.error(">>> Entering test_remove()", extra={"event.action": "test_remove"})
         t = self._get_binary_search_tree()
+        logger.error("test_remove(): t → %s", t, extra={"event.action": "test_remove"})
 
         t.remove(13)
         r"""
@@ -464,9 +529,12 @@ class BinarySearchTreeTest(unittest.TestCase):
         assert t.root.left.left.label == 1
         assert t.root.left.parent == t.root
         assert t.root.left.left.parent == t.root.left
+        logger.warning("<<< Exiting test_remove()", extra={"event.action": "test_remove"})
 
     def test_remove_2(self) -> None:
+        logger.error(">>> Entering test_remove_2()", extra={"event.action": "test_remove_2"})
         t = self._get_binary_search_tree()
+        logger.error("test_remove_2(): t → %s", t, extra={"event.action": "test_remove_2"})
 
         t.remove(3)
         r"""
@@ -493,54 +561,78 @@ class BinarySearchTreeTest(unittest.TestCase):
         assert t.root.left.right.parent == t.root.left
         assert t.root.left.left.parent == t.root.left
         assert t.root.left.right.left.parent == t.root.left.right
+        logger.warning("<<< Exiting test_remove_2()", extra={"event.action": "test_remove_2"})
 
     def test_empty(self) -> None:
+        logger.error(">>> Entering test_empty()", extra={"event.action": "test_empty"})
         t = self._get_binary_search_tree()
+        logger.error("test_empty(): t → %s", t, extra={"event.action": "test_empty"})
         t.empty()
         assert t.root is None
+        logger.warning("<<< Exiting test_empty()", extra={"event.action": "test_empty"})
 
     def test_is_empty(self) -> None:
+        logger.error(">>> Entering test_is_empty()", extra={"event.action": "test_is_empty"})
         t = self._get_binary_search_tree()
+        logger.error("test_is_empty(): t → %s", t, extra={"event.action": "test_is_empty"})
         assert not t.is_empty()
 
         t.empty()
         assert t.is_empty()
+        logger.warning("<<< Exiting test_is_empty()", extra={"event.action": "test_is_empty"})
 
     def test_exists(self) -> None:
+        logger.error(">>> Entering test_exists()", extra={"event.action": "test_exists"})
         t = self._get_binary_search_tree()
+        logger.error("test_exists(): t → %s", t, extra={"event.action": "test_exists"})
 
         assert t.exists(6)
         assert not t.exists(-1)
+        logger.warning("<<< Exiting test_exists()", extra={"event.action": "test_exists"})
 
     def test_get_max_label(self) -> None:
+        logger.error(">>> Entering test_get_max_label()", extra={"event.action": "test_get_max_label"})
         t = self._get_binary_search_tree()
+        logger.error("test_get_max_label(): t → %s", t, extra={"event.action": "test_get_max_label"})
 
         assert t.get_max_label() == 14
 
         t.empty()
         with pytest.raises(ValueError):
             t.get_max_label()
+            logger.warning("<<< Exiting test_get_max_label()", extra={"event.action": "test_get_max_label"})
 
     def test_get_min_label(self) -> None:
+        logger.error(">>> Entering test_get_min_label()", extra={"event.action": "test_get_min_label"})
         t = self._get_binary_search_tree()
+        logger.error("test_get_min_label(): t → %s", t, extra={"event.action": "test_get_min_label"})
 
         assert t.get_min_label() == 1
 
         t.empty()
         with pytest.raises(ValueError):
             t.get_min_label()
+            logger.warning("<<< Exiting test_get_min_label()", extra={"event.action": "test_get_min_label"})
 
     def test_inorder_traversal(self) -> None:
+        logger.error(">>> Entering test_inorder_traversal()", extra={"event.action": "test_inorder_traversal"})
         t = self._get_binary_search_tree()
+        logger.error("test_inorder_traversal(): t → %s", t, extra={"event.action": "test_inorder_traversal"})
 
         inorder_traversal_nodes = [i.label for i in t.inorder_traversal()]
+        logger.error("test_inorder_traversal(): inorder_traversal_nodes → %s", inorder_traversal_nodes, extra={"event.action": "test_inorder_traversal"})
         assert inorder_traversal_nodes == [1, 3, 4, 5, 6, 7, 8, 10, 13, 14]
+        logger.warning("<<< Exiting test_inorder_traversal()", extra={"event.action": "test_inorder_traversal"})
 
     def test_preorder_traversal(self) -> None:
+        logger.error(">>> Entering test_preorder_traversal()", extra={"event.action": "test_preorder_traversal"})
         t = self._get_binary_search_tree()
+        logger.error("test_preorder_traversal(): t → %s", t, extra={"event.action": "test_preorder_traversal"})
 
         preorder_traversal_nodes = [i.label for i in t.preorder_traversal()]
+        logger.error("test_preorder_traversal(): preorder_traversal_nodes → %s", preorder_traversal_nodes, extra={"event.action": "test_preorder_traversal"})
         assert preorder_traversal_nodes == [8, 3, 1, 6, 4, 5, 7, 10, 14, 13]
+        logger.warning("<<< Exiting test_preorder_traversal()", extra={"event.action": "test_preorder_traversal"})
 
 
 def binary_search_tree_example() -> None:
@@ -564,8 +656,10 @@ def binary_search_tree_example() -> None:
                       5
 
     """
+    logger.error(">>> Entering binary_search_tree_example()", extra={"event.action": "binary_search_tree_example"})
 
     t = BinarySearchTree()
+    logger.error("binary_search_tree_example(): t → %s", t, extra={"event.action": "binary_search_tree_example"})
     t.put(8)
     t.put(3)
     t.put(6)
@@ -598,10 +692,12 @@ def binary_search_tree_example() -> None:
 
     # Prints all the elements of the list in inorder traversal
     inorder_traversal_nodes = [i.label for i in t.inorder_traversal()]
+    logger.error("binary_search_tree_example(): inorder_traversal_nodes → %s", inorder_traversal_nodes, extra={"event.action": "binary_search_tree_example"})
     print("Inorder traversal:", inorder_traversal_nodes)
 
     # Prints all the elements of the list in preorder traversal
     preorder_traversal_nodes = [i.label for i in t.preorder_traversal()]
+    logger.error("binary_search_tree_example(): preorder_traversal_nodes → %s", preorder_traversal_nodes, extra={"event.action": "binary_search_tree_example"})
     print("Preorder traversal:", preorder_traversal_nodes)
 
     print("Max. label:", t.get_max_label())
@@ -635,6 +731,7 @@ def binary_search_tree_example() -> None:
 
     print("Max. label:", t.get_max_label())
     print("Min. label:", t.get_min_label())
+    logger.warning("<<< Exiting binary_search_tree_example()", extra={"event.action": "binary_search_tree_example"})
 
 
 if __name__ == "__main__":

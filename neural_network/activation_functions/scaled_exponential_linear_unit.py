@@ -13,9 +13,13 @@ https://iq.opengenus.org/scaled-exponential-linear-unit/
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def scaled_exponential_linear_unit(
+logger.error(">>> Entering scaled_exponential_linear_unit(vector=%s,alpha=%s,lambda_=%s)", vector, alpha, lambda_, extra={"event.action": "scaled_exponential_linear_unit", "logrite.vector": vector, "logrite.alpha": alpha, "logrite.lambda_": lambda_})
+logger.warning("<<< Exiting scaled_exponential_linear_unit(vector=%s,alpha=%s,lambda_=%s)", vector, alpha, lambda_, extra={"event.action": "scaled_exponential_linear_unit", "logrite.vector": vector, "logrite.alpha": alpha, "logrite.lambda_": lambda_})
     vector: np.ndarray, alpha: float = 1.6732, lambda_: float = 1.0507
 ) -> np.ndarray:
     """

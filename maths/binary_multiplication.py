@@ -18,6 +18,8 @@ Now apply RULE 1 or 2, whichever is required.
 
 @author chinmoy159
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binary_multiply(a: int, b: int) -> int:
@@ -47,6 +49,7 @@ def binary_multiply(a: int, b: int) -> int:
     >>> binary_multiply(1, 10)
     10
     """
+    logger.error(">>> Entering binary_multiply(a=%s,b=%s)", a, b, extra={"event.action": "binary_multiply", "logrite.a": a, "logrite.b": b})
     res = 0
     while b > 0:
         if b & 1:
@@ -55,6 +58,7 @@ def binary_multiply(a: int, b: int) -> int:
         a += a
         b >>= 1
 
+    logger.warning("<<< Exiting binary_multiply(a=%s,b=%s)", a, b, extra={"event.action": "binary_multiply", "logrite.a": a, "logrite.b": b})
     return res
 
 
@@ -84,7 +88,9 @@ def binary_mod_multiply(a: int, b: int, modulus: int) -> int:
     >>> binary_mod_multiply(1, 10, 3)
     1
     """
+    logger.error(">>> Entering binary_mod_multiply(a=%s,b=%s,modulus=%s)", a, b, modulus, extra={"event.action": "binary_mod_multiply", "logrite.a": a, "logrite.b": b, "logrite.modulus": modulus})
     res = 0
+    logger.error("binary_mod_multiply(a=%s,b=%s,modulus=%s): res → %s", a, b, modulus, res, extra={"event.action": "binary_mod_multiply", "logrite.a": a, "logrite.b": b, "logrite.modulus": modulus})
     while b > 0:
         if b & 1:
             res = ((res % modulus) + (a % modulus)) % modulus
@@ -92,6 +98,7 @@ def binary_mod_multiply(a: int, b: int, modulus: int) -> int:
         a += a
         b >>= 1
 
+    logger.warning("<<< Exiting binary_mod_multiply(a=%s,b=%s,modulus=%s)", a, b, modulus, extra={"event.action": "binary_mod_multiply", "logrite.a": a, "logrite.b": b, "logrite.modulus": modulus})
     return res
 
 

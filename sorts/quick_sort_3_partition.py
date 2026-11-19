@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def quick_sort_3partition(sorting: list, left: int, right: int) -> None:
     """ "
     Python implementation of quick sort algorithm with 3-way partition.
@@ -22,7 +24,9 @@ def quick_sort_3partition(sorting: list, left: int, right: int) -> None:
     >>> array3
     []
     """
+    logger.error(">>> Entering quick_sort_3partition(sorting=%s,left=%s,right=%s)", sorting, left, right, extra={"event.action": "quick_sort_3partition", "logrite.sorting": sorting, "logrite.left": left, "logrite.right": right})
     if right <= left:
+        logger.warning("<<< Exiting quick_sort_3partition(sorting=%s,left=%s,right=%s)", sorting, left, right, extra={"event.action": "quick_sort_3partition", "logrite.sorting": sorting, "logrite.left": left, "logrite.right": right})
         return
     a = i = left
     b = right
@@ -66,10 +70,13 @@ def quick_sort_lomuto_partition(sorting: list, left: int, right: int) -> None:
     >>> nums3
     [-4, -2, 0, 5]
     """
+    logger.error(">>> Entering quick_sort_lomuto_partition(sorting=%s,left=%s,right=%s)", sorting, left, right, extra={"event.action": "quick_sort_lomuto_partition", "logrite.sorting": sorting, "logrite.left": left, "logrite.right": right})
     if left < right:
         pivot_index = lomuto_partition(sorting, left, right)
+        logger.error("quick_sort_lomuto_partition(sorting=%s,left=%s,right=%s): pivot_index → %s", sorting, left, right, pivot_index, extra={"event.action": "quick_sort_lomuto_partition", "logrite.sorting": sorting, "logrite.left": left, "logrite.right": right})
         quick_sort_lomuto_partition(sorting, left, pivot_index - 1)
         quick_sort_lomuto_partition(sorting, pivot_index + 1, right)
+        logger.warning("<<< Exiting quick_sort_lomuto_partition(sorting=%s,left=%s,right=%s)", sorting, left, right, extra={"event.action": "quick_sort_lomuto_partition", "logrite.sorting": sorting, "logrite.left": left, "logrite.right": right})
 
 
 def lomuto_partition(sorting: list, left: int, right: int) -> int:
@@ -78,6 +85,7 @@ def lomuto_partition(sorting: list, left: int, right: int) -> int:
     >>> lomuto_partition([1,5,7,6], 0, 3)
     2
     """
+    logger.error(">>> Entering lomuto_partition(sorting=%s,left=%s,right=%s)", sorting, left, right, extra={"event.action": "lomuto_partition", "logrite.sorting": sorting, "logrite.left": left, "logrite.right": right})
     pivot = sorting[right]
     store_index = left
     for i in range(left, right):
@@ -85,6 +93,7 @@ def lomuto_partition(sorting: list, left: int, right: int) -> int:
             sorting[store_index], sorting[i] = sorting[i], sorting[store_index]
             store_index += 1
     sorting[right], sorting[store_index] = sorting[store_index], sorting[right]
+    logger.warning("<<< Exiting lomuto_partition(sorting=%s,left=%s,right=%s)", sorting, left, right, extra={"event.action": "lomuto_partition", "logrite.sorting": sorting, "logrite.left": left, "logrite.right": right})
     return store_index
 
 
@@ -104,7 +113,9 @@ def three_way_radix_quicksort(sorting: list) -> list:
     >>> three_way_radix_quicksort([1, 2, 5, 1, 2, 0, 0, 5, 2, -1])
     [-1, 0, 0, 1, 1, 2, 2, 2, 5, 5]
     """
+    logger.error(">>> Entering three_way_radix_quicksort(sorting=%s)", sorting, extra={"event.action": "three_way_radix_quicksort", "logrite.sorting": sorting})
     if len(sorting) <= 1:
+        logger.warning("<<< Exiting three_way_radix_quicksort(sorting=%s)", sorting, extra={"event.action": "three_way_radix_quicksort", "logrite.sorting": sorting})
         return sorting
     return (
         three_way_radix_quicksort([i for i in sorting if i < sorting[0]])

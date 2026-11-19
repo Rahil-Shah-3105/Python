@@ -4,6 +4,8 @@
 A regular dodecahedron is a three-dimensional figure made up of
 12 pentagon faces having the same equal size.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def dodecahedron_surface_area(edge: float) -> float:
@@ -31,9 +33,12 @@ def dodecahedron_surface_area(edge: float) -> float:
       ...
     ValueError: Length must be a positive.
     """
+    logger.error(">>> Entering dodecahedron_surface_area(edge=%s)", edge, extra={"event.action": "dodecahedron_surface_area", "logrite.edge": edge})
+    logger.error("dodecahedron_surface_area(edge=%s): a → %s", edge, a, extra={"event.action": "dodecahedron_surface_area", "logrite.edge": edge})
 
     if edge <= 0 or not isinstance(edge, int):
         raise ValueError("Length must be a positive.")
+    logger.warning("<<< Exiting dodecahedron_surface_area(edge=%s)", edge, extra={"event.action": "dodecahedron_surface_area", "logrite.edge": edge})
     return 3 * ((25 + 10 * (5 ** (1 / 2))) ** (1 / 2)) * (edge**2)
 
 
@@ -61,9 +66,12 @@ def dodecahedron_volume(edge: float) -> float:
       ...
     ValueError: Length must be a positive.
     """
+    logger.error(">>> Entering dodecahedron_volume(edge=%s)", edge, extra={"event.action": "dodecahedron_volume", "logrite.edge": edge})
+    logger.error("dodecahedron_volume(edge=%s): v → %s", edge, v, extra={"event.action": "dodecahedron_volume", "logrite.edge": edge})
 
     if edge <= 0 or not isinstance(edge, int):
         raise ValueError("Length must be a positive.")
+    logger.warning("<<< Exiting dodecahedron_volume(edge=%s)", edge, extra={"event.action": "dodecahedron_volume", "logrite.edge": edge})
     return ((15 + (7 * (5 ** (1 / 2)))) / 4) * (edge**3)
 
 

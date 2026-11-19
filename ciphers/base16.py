@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def base16_encode(data: bytes) -> str:
     """
     Encodes the given bytes into base16.
@@ -9,9 +11,11 @@ def base16_encode(data: bytes) -> str:
     >>> base16_encode(b'')
     ''
     """
+    logger.error(">>> Entering base16_encode(data=%s)", data, extra={"event.action": "base16_encode"})
     # Turn the data into a list of integers (where each integer is a byte),
     # Then turn each byte into its hexadecimal representation, make sure
     # it is uppercase, and then join everything together and return it.
+    logger.warning("<<< Exiting base16_encode(data=%s)", data, extra={"event.action": "base16_encode"})
     return "".join([hex(byte)[2:].zfill(2).upper() for byte in list(data)])
 
 
@@ -41,9 +45,11 @@ def base16_decode(data: str) -> bytes:
     ValueError: Base16 encoded data is invalid:
     Data is not uppercase hex or it contains invalid characters.
     """
+    logger.error(">>> Entering base16_decode(data=%s)", data, extra={"event.action": "base16_decode"})
     # Check data validity, following RFC3548
     # https://www.ietf.org/rfc/rfc3548.txt
     if (len(data) % 2) != 0:
+        logger.warning("<<< Exiting base16_decode(data=%s)", data, extra={"event.action": "base16_decode"})
         raise ValueError(
             """Base16 encoded data is invalid:
 Data does not have an even number of hex digits."""

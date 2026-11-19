@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def camel_to_snake_case(input_str: str) -> str:
     """
     Transforms a camelCase (or PascalCase) string to snake_case
@@ -20,10 +22,12 @@ def camel_to_snake_case(input_str: str) -> str:
     ValueError: Expected string as input, found <class 'int'>
 
     """
+    logger.error(">>> Entering camel_to_snake_case(input_str=%s)", input_str, extra={"event.action": "camel_to_snake_case", "logrite.input_str": input_str})
 
     # check for invalid input type
     if not isinstance(input_str, str):
         msg = f"Expected string as input, found {type(input_str)}"
+        logger.error("camel_to_snake_case(input_str=%s): msg → %s", input_str, msg, extra={"event.action": "camel_to_snake_case", "logrite.input_str": input_str})
         raise ValueError(msg)
 
     snake_str = ""
@@ -51,6 +55,7 @@ def camel_to_snake_case(input_str: str) -> str:
     if snake_str[0] == "_":
         snake_str = snake_str[1:]
 
+    logger.warning("<<< Exiting camel_to_snake_case(input_str=%s)", input_str, extra={"event.action": "camel_to_snake_case", "logrite.input_str": input_str})
     return snake_str
 
 

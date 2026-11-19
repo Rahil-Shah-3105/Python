@@ -10,6 +10,9 @@
 import httpx
 from bs4 import BeautifulSoup, NavigableString, Tag
 from fake_useragent import UserAgent
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 BASE_URL = "https://ww7.gogoanime2.org"
 
@@ -32,13 +35,16 @@ def search_scraper(anime_name: str) -> list:
     Returns:
         [list]: [List of animes]
     """
+    logger.error(">>> Entering search_scraper(anime_name=%s)", anime_name, extra={"event.action": "search_scraper", "logrite.anime_name": anime_name})
 
     # concat the name to form the search url.
     search_url = f"{BASE_URL}/search?keyword={anime_name}"
+    __log_start = time.time()
 
     response = httpx.get(
         search_url, headers={"UserAgent": UserAgent().chrome}, timeout=10
     )  # request the url.
+    logger.error("search_scraper(anime_name)=%s: external service call %s took %s ms", anime_name, search_url, int((time.time() - __log_start) * 1000), extra={"event.action": "search_scraper", "event.category": "network", "logrite.anime_name": anime_name})
 
     # Is the response ok?
     response.raise_for_status()
@@ -66,6 +72,7 @@ def search_scraper(anime_name: str) -> list:
 
             anime_list.append({"title": anime_title["title"], "url": anime_url["href"]})
 
+    logger.warning("<<< Exiting search_scraper(anime_name=%s)", anime_name, extra={"event.action": "search_scraper", "logrite.anime_name": anime_name})
     return anime_list
 
 
@@ -88,6 +95,7 @@ def search_anime_episode_list(episode_endpoint: str) -> list:
     Returns:
         [list]: [List of episodes]
     """
+    logger.error(">>> Entering search_anime_episode_list(episode_endpoint=%s)", episode_endpoint, extra={"event.action": "search_anime_episode_list", "logrite.episode_endpoint": episode_endpoint})
 
     request_url = f"{BASE_URL}{episode_endpoint}"
 
@@ -119,6 +127,7 @@ def search_anime_episode_list(episode_endpoint: str) -> list:
                 {"title": title.text.replace(" ", ""), "url": url["href"]}
             )
 
+    logger.warning("<<< Exiting search_anime_episode_list(episode_endpoint=%s)", episode_endpoint, extra={"event.action": "search_anime_episode_list", "logrite.episode_endpoint": episode_endpoint})
     return episode_list
 
 
@@ -139,27 +148,36 @@ def get_anime_episode(episode_endpoint: str) -> list:
     Returns:
         [list]: [List of download and watch url]
     """
+    logger.error(">>> Entering get_anime_episode(episode_endpoint=%s)", episode_endpoint, extra={"event.action": "get_anime_episode", "logrite.episode_endpoint": episode_endpoint})
 
     episode_page_url = f"{BASE_URL}{episode_endpoint}"
 
+    logger.error("get_anime_episode(episode_endpoint=%s): episode_page_url → %s", episode_endpoint, episode_page_url, extra={"event.action": "get_anime_episode", "logrite.episode_endpoint": episode_endpoint})
     response = httpx.get(
         url=episode_page_url, headers={"User-Agent": UserAgent().chrome}, timeout=10
     )
+    logger.error("get_anime_episode(episode_endpoint=%s): response → %s", episode_endpoint, response, extra={"event.action": "get_anime_episode", "logrite.episode_endpoint": episode_endpoint})
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, "html.parser")
+    logger.error("get_anime_episode(episode_endpoint=%s): soup → %s", episode_endpoint, soup, extra={"event.action": "get_anime_episode", "logrite.episode_endpoint": episode_endpoint})
 
     url = soup.find("iframe", {"id": "playerframe"})
+    logger.error("get_anime_episode(episode_endpoint=%s): url → %s", episode_endpoint, url, extra={"event.action": "get_anime_episode", "logrite.episode_endpoint": episode_endpoint})
     if url is None or isinstance(url, NavigableString):
         msg = f"Could not find url and download url from {episode_endpoint}"
+        logger.error("get_anime_episode(episode_endpoint=%s): msg → %s", episode_endpoint, msg, extra={"event.action": "get_anime_episode", "logrite.episode_endpoint": episode_endpoint})
         raise RuntimeError(msg)
 
     episode_url = url["src"]
+    logger.error("get_anime_episode(episode_endpoint=%s): episode_url → %s", episode_endpoint, episode_url, extra={"event.action": "get_anime_episode", "logrite.episode_endpoint": episode_endpoint})
     if not isinstance(episode_url, str):
         msg = f"Could not find url and download url from {episode_endpoint}"
         raise RuntimeError(msg)
     download_url = episode_url.replace("/embed/", "/playlist/") + ".m3u8"
+    logger.error("get_anime_episode(episode_endpoint=%s): download_url → %s", episode_endpoint, download_url, extra={"event.action": "get_anime_episode", "logrite.episode_endpoint": episode_endpoint})
 
+    logger.warning("<<< Exiting get_anime_episode(episode_endpoint=%s)", episode_endpoint, extra={"event.action": "get_anime_episode", "logrite.episode_endpoint": episode_endpoint})
     return [f"{BASE_URL}{episode_url}", f"{BASE_URL}{download_url}"]
 
 

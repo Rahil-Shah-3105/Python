@@ -18,6 +18,8 @@ Calculating no of solutions for every n till 1 million by fixing a, and n must b
 multiple of a. Total no of steps = n * (1/1 + 1/2 + 1/3 + 1/4 + ... + 1/n), so roughly
 O(nlogn) time complexity.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(limit: int = 1000000) -> int:
@@ -31,6 +33,7 @@ def solution(limit: int = 1000000) -> int:
     >>> solution(50050)
     292
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     limit = limit + 1
     frequency = [0] * limit
     for first_term in range(1, limit):
@@ -47,7 +50,9 @@ def solution(limit: int = 1000000) -> int:
                     frequency[n] += 1  # so z > 0, a > d and 4d < a
 
     count = sum(1 for x in frequency[1:limit] if x == 10)
+    logger.error("solution(limit=%s): count → %s", limit, count, extra={"event.action": "solution", "logrite.limit": limit})
 
+    logger.warning("<<< Exiting solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     return count
 
 

@@ -1,6 +1,8 @@
 """Created by Nathan Damon, @bizzfitch on github
 >>> test_miller_rabin()
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def miller_rabin(n: int, allow_probable: bool = False) -> bool:
@@ -28,6 +30,7 @@ def miller_rabin(n: int, allow_probable: bool = False) -> bool:
     ---------
     https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test
     """
+    logger.error(">>> Entering miller_rabin(n=%s,allow_probable=%s)", n, allow_probable, extra={"event.action": "miller_rabin", "logrite.n": n, "logrite.allow_probable": allow_probable})
     if n == 2:
         return True
     if not n % 2 or n < 2:
@@ -84,6 +87,7 @@ def miller_rabin(n: int, allow_probable: bool = False) -> bool:
         # if pr is False, then the above loop never evaluated to true,
         # and the n MUST be composite
         return False
+    logger.warning("<<< Exiting miller_rabin(n=%s,allow_probable=%s)", n, allow_probable, extra={"event.action": "miller_rabin", "logrite.n": n, "logrite.allow_probable": allow_probable})
     return True
 
 
@@ -91,6 +95,7 @@ def test_miller_rabin() -> None:
     """Testing a nontrivial (ends in 1, 3, 7, 9) composite
     and a prime in each range.
     """
+    logger.error(">>> Entering test_miller_rabin()", extra={"event.action": "test_miller_rabin"})
     assert not miller_rabin(561)
     assert miller_rabin(563)
     # 2047
@@ -129,6 +134,7 @@ def test_miller_rabin() -> None:
 
     assert not miller_rabin(552_840_677_446_647_897_660_333)
     assert miller_rabin(552_840_677_446_647_897_660_359)
+    logger.warning("<<< Exiting test_miller_rabin()", extra={"event.action": "test_miller_rabin"})
     # 3_317_044_064_679_887_385_961_981
     # upper limit for probabilistic test
 

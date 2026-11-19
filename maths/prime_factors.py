@@ -3,6 +3,8 @@ python/black : True
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def prime_factors(n: int) -> list[int]:
@@ -34,6 +36,7 @@ def prime_factors(n: int) -> list[int]:
     TypeError: '<=' not supported between instances of 'int' and 'list'
 
     """
+    logger.error(">>> Entering prime_factors(n=%s)", n, extra={"event.action": "prime_factors", "logrite.n": n})
     i = 2
     factors = []
     while i * i <= n:
@@ -44,6 +47,7 @@ def prime_factors(n: int) -> list[int]:
             factors.append(i)
     if n > 1:
         factors.append(n)
+    logger.warning("<<< Exiting prime_factors(n=%s)", n, extra={"event.action": "prime_factors", "logrite.n": n})
     return factors
 
 
@@ -74,6 +78,7 @@ def unique_prime_factors(n: int) -> list[int]:
         ...
     TypeError: '<=' not supported between instances of 'int' and 'list'
     """
+    logger.error(">>> Entering unique_prime_factors(n=%s)", n, extra={"event.action": "unique_prime_factors", "logrite.n": n})
     i = 2
     factors = []
     while i * i <= n:
@@ -84,6 +89,7 @@ def unique_prime_factors(n: int) -> list[int]:
         i += 1
     if n > 1:
         factors.append(n)
+    logger.warning("<<< Exiting unique_prime_factors(n=%s)", n, extra={"event.action": "unique_prime_factors", "logrite.n": n})
     return factors
 
 

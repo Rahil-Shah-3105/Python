@@ -12,6 +12,8 @@ from collections import deque
 from enum import Enum
 from math import atan2, degrees
 from sys import maxsize
+import logging
+logger = logging.getLogger(__name__)
 
 
 # traversal from the lowest and the most left point in anti-clockwise direction
@@ -22,6 +24,8 @@ class Direction(Enum):
     right = 3
 
     def __repr__(self):
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"{self.__class__.__name__}.{self.name}"
 
 
@@ -43,14 +47,17 @@ def angle_comparer(point: tuple[int, int], minx: int, miny: int) -> float:
     >>> angle_comparer((5,5), 2, 3)
     33.690067525979785
     """
+    logger.error(">>> Entering angle_comparer(point=%s,minx=%s,miny=%s)", point, minx, miny, extra={"event.action": "angle_comparer", "logrite.point": point, "logrite.minx": minx, "logrite.miny": miny})
     # sort the points accorgind to the angle from the lowest and the most left point
     x, y = point
+    logger.warning("<<< Exiting angle_comparer(point=%s,minx=%s,miny=%s)", point, minx, miny, extra={"event.action": "angle_comparer", "logrite.point": point, "logrite.minx": minx, "logrite.miny": miny})
     return degrees(atan2(y - miny, x - minx))
 
 
 def check_direction(
     starting: tuple[int, int], via: tuple[int, int], target: tuple[int, int]
 ) -> Direction:
+    logger.error(">>> Entering check_direction(starting=%s,via=%s,target=%s)", starting, via, target, extra={"event.action": "check_direction", "logrite.starting": starting, "logrite.via": via, "logrite.target": target})
     """Return the direction toward to the line from via to target from starting
 
     :param starting: The starting point
@@ -72,8 +79,10 @@ def check_direction(
     x1, y1 = via
     x2, y2 = target
     via_angle = degrees(atan2(y1 - y0, x1 - x0))
+    logger.error("check_direction(starting=%s,via=%s,target=%s): via_angle → %s", starting, via, target, via_angle, extra={"event.action": "check_direction", "logrite.starting": starting, "logrite.via": via, "logrite.target": target})
     via_angle %= 360
     target_angle = degrees(atan2(y2 - y0, x2 - x0))
+    logger.error("check_direction(starting=%s,via=%s,target=%s): target_angle → %s", starting, via, target, target_angle, extra={"event.action": "check_direction", "logrite.starting": starting, "logrite.via": via, "logrite.target": target})
     target_angle %= 360
     # t-
     #  \ \
@@ -87,6 +96,7 @@ def check_direction(
     elif target_angle == via_angle:
         return Direction.straight
     else:
+        logger.warning("<<< Exiting check_direction(starting=%s,via=%s,target=%s)", starting, via, target, extra={"event.action": "check_direction", "logrite.starting": starting, "logrite.via": via, "logrite.target": target})
         return Direction.right
 
 
@@ -109,6 +119,7 @@ def graham_scan(points: list[tuple[int, int]]) -> list[tuple[int, int]]:
     >>> graham_scan([(-100, 20), (99, 3), (1, 10000001), (5133186, -25), (-66, -4)])
     [(5133186, -25), (1, 10000001), (-100, 20), (-66, -4)]
     """
+    logger.error(">>> Entering graham_scan(points=%s)", points, extra={"event.action": "graham_scan", "logrite.points": points})
 
     if len(points) <= 2:
         # There is no convex hull
@@ -169,4 +180,5 @@ def graham_scan(points: list[tuple[int, int]]) -> list[tuple[int, int]]:
             if next_direction == Direction.right:
                 stack.pop()
         stack.append(sorted_points[i])
+    logger.warning("<<< Exiting graham_scan(points=%s)", points, extra={"event.action": "graham_scan", "logrite.points": points})
     return list(stack)

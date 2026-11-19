@@ -2,6 +2,8 @@
 
 from dataclasses import dataclass
 from operator import attrgetter
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -27,6 +29,8 @@ class Item:
         >>> Item(30, 120).ratio
         4.0
         """
+        logger.error(">>> Entering ratio()", extra={"event.action": "ratio"})
+        logger.warning("<<< Exiting ratio()", extra={"event.action": "ratio"})
         return self.value / self.weight
 
 
@@ -75,6 +79,7 @@ def fractional_cover(items: list[Item], capacity: int) -> float:
         ...
     ValueError: Capacity cannot be negative
     """
+    logger.error(">>> Entering fractional_cover(items=%s,capacity=%s)", items, capacity, extra={"event.action": "fractional_cover", "logrite.items": items, "logrite.capacity": capacity})
     if capacity < 0:
         raise ValueError("Capacity cannot be negative")
 
@@ -87,9 +92,11 @@ def fractional_cover(items: list[Item], capacity: int) -> float:
             break
 
         weight_taken = min(item.weight, remaining_capacity)
+        logger.error("fractional_cover(items=%s,capacity=%s): weight_taken → %s", items, capacity, weight_taken, extra={"event.action": "fractional_cover", "logrite.items": items, "logrite.capacity": capacity})
         total_value += weight_taken * item.ratio
         remaining_capacity -= weight_taken
 
+    logger.warning("<<< Exiting fractional_cover(items=%s,capacity=%s)", items, capacity, extra={"event.action": "fractional_cover", "logrite.items": items, "logrite.capacity": capacity})
     return total_value
 
 

@@ -1,25 +1,32 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def print_distance(distance: list[float], src):
+    logger.error(">>> Entering print_distance(distance=%s,src=%s)", distance, src, extra={"event.action": "print_distance", "logrite.distance": distance, "logrite.src": src})
     print(f"Vertex\tShortest Distance from vertex {src}")
     for i, d in enumerate(distance):
         print(f"{i}\t\t{d}")
+        logger.warning("<<< Exiting print_distance(distance=%s,src=%s)", distance, src, extra={"event.action": "print_distance", "logrite.distance": distance, "logrite.src": src})
 
 
 def check_negative_cycle(
     graph: list[dict[str, int]], distance: list[float], edge_count: int
 ):
+    logger.error(">>> Entering check_negative_cycle(graph=%s,distance=%s,edge_count=%s)", graph, distance, edge_count, extra={"event.action": "check_negative_cycle", "logrite.graph": graph, "logrite.distance": distance, "logrite.edge_count": edge_count})
     for j in range(edge_count):
         u, v, w = (graph[j][k] for k in ["src", "dst", "weight"])
         if distance[u] != float("inf") and distance[u] + w < distance[v]:
             return True
+    logger.warning("<<< Exiting check_negative_cycle(graph=%s,distance=%s,edge_count=%s)", graph, distance, edge_count, extra={"event.action": "check_negative_cycle", "logrite.graph": graph, "logrite.distance": distance, "logrite.edge_count": edge_count})
     return False
 
 
 def bellman_ford(
     graph: list[dict[str, int]], vertex_count: int, edge_count: int, src: int
 ) -> list[float]:
+    logger.error(">>> Entering bellman_ford(graph=%s,vertex_count=%s,edge_count=%s,src=%s)", graph, vertex_count, edge_count, src, extra={"event.action": "bellman_ford", "logrite.graph": graph, "logrite.vertex_count": vertex_count, "logrite.edge_count": edge_count, "logrite.src": src})
     """
     Returns shortest paths from a vertex src to all
     other vertices.
@@ -34,6 +41,7 @@ def bellman_ford(
     Exception: Negative cycle found
     """
     distance = [float("inf")] * vertex_count
+    logger.error("bellman_ford(graph=%s,vertex_count=%s,edge_count=%s,src=%s): distance → %s", graph, vertex_count, edge_count, src, distance, extra={"event.action": "bellman_ford", "logrite.graph": graph, "logrite.vertex_count": vertex_count, "logrite.edge_count": edge_count, "logrite.src": src})
     distance[src] = 0.0
 
     for _ in range(vertex_count - 1):
@@ -44,9 +52,11 @@ def bellman_ford(
                 distance[v] = distance[u] + w
 
     negative_cycle_exists = check_negative_cycle(graph, distance, edge_count)
+    logger.error("bellman_ford(graph=%s,vertex_count=%s,edge_count=%s,src=%s): negative_cycle_exists → %s", graph, vertex_count, edge_count, src, negative_cycle_exists, extra={"event.action": "bellman_ford", "logrite.graph": graph, "logrite.vertex_count": vertex_count, "logrite.edge_count": edge_count, "logrite.src": src})
     if negative_cycle_exists:
         raise Exception("Negative cycle found")
 
+    logger.warning("<<< Exiting bellman_ford(graph=%s,vertex_count=%s,edge_count=%s,src=%s)", graph, vertex_count, edge_count, src, extra={"event.action": "bellman_ford", "logrite.graph": graph, "logrite.vertex_count": vertex_count, "logrite.edge_count": edge_count, "logrite.src": src})
     return distance
 
 

@@ -1,12 +1,17 @@
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Graph:
     def __init__(self, n=0):  # a graph with Node 0,1,...,N-1
+        logger.error(">>> Entering __init__(n=%s)", n, extra={"event.action": "__init__", "logrite.n": n})
         self.n = n
+        logger.debug("__init__(self=%s,n=%s): self.n → %s", self, n, self.n, extra={"event.action": "__init__", "logrite.n": n})
         self.w = [
             [math.inf for j in range(n)] for i in range(n)
         ]  # adjacency matrix for weight
+        logger.debug("__init__(self=%s,n=%s): self.w → %s", self, n, self.w, extra={"event.action": "__init__", "logrite.n": n})
         self.dp = [
             [math.inf for j in range(n)] for i in range(n)
         ]  # dp[i][j] stores minimum distance from i to j
@@ -21,7 +26,9 @@ class Graph:
         >>> g.dp[0][1]
         5
         """
+        logger.error(">>> Entering add_edge(u=%s,v=%s,w=%s)", u, v, w, extra={"event.action": "add_edge", "logrite.u": u, "logrite.v": v})
         self.dp[u][v] = w
+        logger.warning("<<< Exiting add_edge(u=%s,v=%s,w=%s)", u, v, w, extra={"event.action": "add_edge", "logrite.u": u, "logrite.v": v})
 
     def floyd_warshall(self):
         """
@@ -37,10 +44,12 @@ class Graph:
         >>> g.show_min(2, 0)
         inf
         """
+        logger.error(">>> Entering floyd_warshall()", extra={"event.action": "floyd_warshall"})
         for k in range(self.n):
             for i in range(self.n):
                 for j in range(self.n):
                     self.dp[i][j] = min(self.dp[i][j], self.dp[i][k] + self.dp[k][j])
+                    logger.warning("<<< Exiting floyd_warshall()", extra={"event.action": "floyd_warshall"})
 
     def show_min(self, u, v):
         """
@@ -55,6 +64,8 @@ class Graph:
         >>> g.show_min(1, 0)
         inf
         """
+        logger.error(">>> Entering show_min(u=%s,v=%s)", u, v, extra={"event.action": "show_min", "logrite.u": u, "logrite.v": v})
+        logger.warning("<<< Exiting show_min(u=%s,v=%s)", u, v, extra={"event.action": "show_min", "logrite.u": u, "logrite.v": v})
         return self.dp[u][v]
 
 

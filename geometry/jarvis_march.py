@@ -20,24 +20,36 @@ REFERENCES:
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Point:
     """Represents a 2D point with x and y coordinates."""
 
     def __init__(self, x_coordinate: float, y_coordinate: float) -> None:
+        logger.error(">>> Entering __init__(x_coordinate=%s,y_coordinate=%s)", x_coordinate, y_coordinate, extra={"event.action": "__init__", "logrite.x_coordinate": x_coordinate, "logrite.y_coordinate": y_coordinate})
         self.x = x_coordinate
+        logger.debug("__init__(self=%s,x_coordinate=%s,y_coordinate=%s): self.x → %s", self, x_coordinate, y_coordinate, self.x, extra={"event.action": "__init__", "logrite.x_coordinate": x_coordinate, "logrite.y_coordinate": y_coordinate})
         self.y = y_coordinate
+        logger.warning("<<< Exiting __init__(x_coordinate=%s,y_coordinate=%s)", x_coordinate, y_coordinate, extra={"event.action": "__init__", "logrite.x_coordinate": x_coordinate, "logrite.y_coordinate": y_coordinate})
+        logger.debug("__init__(self=%s,x_coordinate=%s,y_coordinate=%s): self.y → %s", self, x_coordinate, y_coordinate, self.y, extra={"event.action": "__init__", "logrite.x_coordinate": x_coordinate, "logrite.y_coordinate": y_coordinate})
 
     def __eq__(self, other: object) -> bool:
+        logger.error(">>> Entering __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
         if not isinstance(other, Point):
             return NotImplemented
+        logger.warning("<<< Exiting __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
         return self.x == other.x and self.y == other.y
 
     def __repr__(self) -> str:
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"Point({self.x}, {self.y})"
 
     def __hash__(self) -> int:
+        logger.error(">>> Entering __hash__()", extra={"event.action": "__hash__"})
+        logger.warning("<<< Exiting __hash__()", extra={"event.action": "__hash__"})
         return hash((self.x, self.y))
 
 
@@ -50,6 +62,8 @@ def _cross_product(origin: Point, point_a: Point, point_b: Point) -> float:
         = 0: Collinear
         < 0: Clockwise turn (right turn)
     """
+    logger.error(">>> Entering _cross_product(origin=%s,point_a=%s,point_b=%s)", origin, point_a, point_b, extra={"event.action": "_cross_product", "logrite.origin": origin, "logrite.point_a": point_a, "logrite.point_b": point_b})
+    logger.warning("<<< Exiting _cross_product(origin=%s,point_a=%s,point_b=%s)", origin, point_a, point_b, extra={"event.action": "_cross_product", "logrite.origin": origin, "logrite.point_a": point_a, "logrite.point_b": point_b})
     return (point_a.x - origin.x) * (point_b.y - origin.y) - (point_a.y - origin.y) * (
         point_b.x - origin.x
     )
@@ -57,13 +71,16 @@ def _cross_product(origin: Point, point_a: Point, point_b: Point) -> float:
 
 def _is_point_on_segment(p1: Point, p2: Point, point: Point) -> bool:
     """Check if a point lies on the line segment between p1 and p2."""
+    logger.error(">>> Entering _is_point_on_segment(p1=%s,p2=%s,point=%s)", p1, p2, point, extra={"event.action": "_is_point_on_segment", "logrite.p1": p1, "logrite.p2": p2, "logrite.point": point})
     # Check if point is collinear with segment endpoints
     cross = (point.y - p1.y) * (p2.x - p1.x) - (point.x - p1.x) * (p2.y - p1.y)
+    logger.error("_is_point_on_segment(p1=%s,p2=%s,point=%s): cross → %s", p1, p2, point, cross, extra={"event.action": "_is_point_on_segment", "logrite.p1": p1, "logrite.p2": p2, "logrite.point": point})
 
     if abs(cross) > 1e-9:
         return False
 
     # Check if point is within the bounding box of the segment
+    logger.warning("<<< Exiting _is_point_on_segment(p1=%s,p2=%s,point=%s)", p1, p2, point, extra={"event.action": "_is_point_on_segment", "logrite.p1": p1, "logrite.p2": p2, "logrite.point": point})
     return min(p1.x, p2.x) <= point.x <= max(p1.x, p2.x) and min(
         p1.y, p2.y
     ) <= point.y <= max(p1.y, p2.y)
@@ -71,17 +88,20 @@ def _is_point_on_segment(p1: Point, p2: Point, point: Point) -> bool:
 
 def _find_leftmost_point(points: list[Point]) -> int:
     """Find index of leftmost point (and bottom-most in case of tie)."""
+    logger.error(">>> Entering _find_leftmost_point(points=%s)", points, extra={"event.action": "_find_leftmost_point", "logrite.points": points})
     left_idx = 0
     for i in range(1, len(points)):
         if points[i].x < points[left_idx].x or (
             points[i].x == points[left_idx].x and points[i].y < points[left_idx].y
         ):
             left_idx = i
+    logger.warning("<<< Exiting _find_leftmost_point(points=%s)", points, extra={"event.action": "_find_leftmost_point", "logrite.points": points})
     return left_idx
 
 
 def _find_next_hull_point(points: list[Point], current_idx: int) -> int:
     """Find the next point on the convex hull."""
+    logger.error(">>> Entering _find_next_hull_point(points=%s,current_idx=%s)", points, current_idx, extra={"event.action": "_find_next_hull_point", "logrite.points": points, "logrite.current_idx": current_idx})
     next_idx = (current_idx + 1) % len(points)
     # Ensure next_idx is not the same as current_idx
     while next_idx == current_idx:
@@ -91,30 +111,39 @@ def _find_next_hull_point(points: list[Point], current_idx: int) -> int:
         if i == current_idx:
             continue
         cross = _cross_product(points[current_idx], points[i], points[next_idx])
+        logger.error("_find_next_hull_point(points=%s,current_idx=%s): cross → %s", points, current_idx, cross, extra={"event.action": "_find_next_hull_point", "logrite.points": points, "logrite.current_idx": current_idx})
         if cross > 0:
             next_idx = i
 
+    logger.warning("<<< Exiting _find_next_hull_point(points=%s,current_idx=%s)", points, current_idx, extra={"event.action": "_find_next_hull_point", "logrite.points": points, "logrite.current_idx": current_idx})
     return next_idx
 
 
 def _is_valid_polygon(hull: list[Point]) -> bool:
     """Check if hull forms a valid polygon (has at least one non-collinear turn)."""
+    logger.error(">>> Entering _is_valid_polygon(hull=%s)", hull, extra={"event.action": "_is_valid_polygon", "logrite.hull": hull})
     for i in range(len(hull)):
         p1 = hull[i]
         p2 = hull[(i + 1) % len(hull)]
+        logger.error("_is_valid_polygon(hull=%s): p2 → %s", hull, p2, extra={"event.action": "_is_valid_polygon", "logrite.hull": hull})
         p3 = hull[(i + 2) % len(hull)]
+        logger.error("_is_valid_polygon(hull=%s): p3 → %s", hull, p3, extra={"event.action": "_is_valid_polygon", "logrite.hull": hull})
         if abs(_cross_product(p1, p2, p3)) > 1e-9:
             return True
+    logger.warning("<<< Exiting _is_valid_polygon(hull=%s)", hull, extra={"event.action": "_is_valid_polygon", "logrite.hull": hull})
     return False
 
 
 def _add_point_to_hull(hull: list[Point], point: Point) -> None:
     """Add a point to hull, removing collinear intermediate points."""
+    logger.error(">>> Entering _add_point_to_hull(hull=%s,point=%s)", hull, point, extra={"event.action": "_add_point_to_hull", "logrite.hull": hull, "logrite.point": point})
     last = len(hull) - 1
+    logger.error("_add_point_to_hull(hull=%s,point=%s): last → %s", hull, point, last, extra={"event.action": "_add_point_to_hull", "logrite.hull": hull, "logrite.point": point})
     if len(hull) > 1 and _is_point_on_segment(hull[last - 1], hull[last], point):
         hull[last] = Point(point.x, point.y)
     else:
         hull.append(Point(point.x, point.y))
+        logger.warning("<<< Exiting _add_point_to_hull(hull=%s,point=%s)", hull, point, extra={"event.action": "_add_point_to_hull", "logrite.hull": hull, "logrite.point": point})
 
 
 def jarvis_march(points: list[Point]) -> list[Point]:
@@ -131,6 +160,7 @@ def jarvis_march(points: list[Point]) -> list[Point]:
         List of Points that form the convex hull in counter-clockwise order.
         Returns empty list if there are fewer than 3 non-collinear points.
     """
+    logger.error(">>> Entering jarvis_march(points=%s)", points, extra={"event.action": "jarvis_march", "logrite.points": points})
     if len(points) <= 2:
         return []
 
@@ -177,6 +207,7 @@ def jarvis_march(points: list[Point]) -> list[Point]:
     if not _is_valid_polygon(convex_hull):
         return []
 
+    logger.warning("<<< Exiting jarvis_march(points=%s)", points, extra={"event.action": "jarvis_march", "logrite.points": points})
     return convex_hull
 
 

@@ -8,6 +8,8 @@ loop to reduce time complexity.
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def max_sum_in_array(array: list[int], k: int) -> int:
@@ -27,12 +29,15 @@ def max_sum_in_array(array: list[int], k: int) -> int:
     >>> max_sum_in_array(arr, k)
     27
     """
+    logger.error(">>> Entering max_sum_in_array(array=%s,k=%s)", array, k, extra={"event.action": "max_sum_in_array", "logrite.array": array, "logrite.k": k})
     if len(array) < k or k < 0:
         raise ValueError("Invalid Input")
     max_sum = current_sum = sum(array[:k])
+    logger.error("max_sum_in_array(array=%s,k=%s): max_sum → %s", array, k, max_sum, extra={"event.action": "max_sum_in_array", "logrite.array": array, "logrite.k": k})
     for i in range(len(array) - k):
         current_sum = current_sum - array[i] + array[i + k]
         max_sum = max(max_sum, current_sum)
+    logger.warning("<<< Exiting max_sum_in_array(array=%s,k=%s)", array, k, extra={"event.action": "max_sum_in_array", "logrite.array": array, "logrite.k": k})
     return max_sum
 
 

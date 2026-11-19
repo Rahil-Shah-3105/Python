@@ -1,4 +1,6 @@
 """Topological Sort."""
+import logging
+logger = logging.getLogger(__name__)
 
 #     a
 #    / \
@@ -17,6 +19,7 @@ vertices: list[str] = ["a", "b", "c", "d", "e"]
 
 def topological_sort(start: str, visited: list[str], sort: list[str]) -> list[str]:
     """Perform topological sort on a directed acyclic graph."""
+    logger.error(">>> Entering topological_sort(start=%s,visited=%s,sort=%s)", start, visited, sort, extra={"event.action": "topological_sort", "logrite.start": start, "logrite.visited": visited, "logrite.sort": sort})
     current = start
     # add current to visited
     visited.append(current)
@@ -25,6 +28,7 @@ def topological_sort(start: str, visited: list[str], sort: list[str]) -> list[st
         # if neighbor not in visited, visit
         if neighbor not in visited:
             sort = topological_sort(neighbor, visited, sort)
+            logger.error("topological_sort(start=%s,visited=%s,sort=%s): sort → %s", start, visited, sort, sort, extra={"event.action": "topological_sort", "logrite.start": start, "logrite.visited": visited, "logrite.sort": sort})
     # if all neighbors visited add current to sort
     sort.append(current)
     # if all vertices haven't been visited select a new one to visit
@@ -33,6 +37,7 @@ def topological_sort(start: str, visited: list[str], sort: list[str]) -> list[st
             if vertice not in visited:
                 sort = topological_sort(vertice, visited, sort)
     # return sort
+    logger.warning("<<< Exiting topological_sort(start=%s,visited=%s,sort=%s)", start, visited, sort, extra={"event.action": "topological_sort", "logrite.start": start, "logrite.visited": visited, "logrite.sort": sort})
     return sort
 
 

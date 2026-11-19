@@ -1,10 +1,13 @@
 # https://en.wikipedia.org/wiki/Wheatstone_bridge
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def wheatstone_solver(
     resistance_1: float, resistance_2: float, resistance_3: float
 ) -> float:
+    logger.error(">>> Entering wheatstone_solver(resistance_1=%s,resistance_2=%s,resistance_3=%s)", resistance_1, resistance_2, resistance_3, extra={"event.action": "wheatstone_solver", "logrite.resistance_1": resistance_1, "logrite.resistance_2": resistance_2, "logrite.resistance_3": resistance_3})
     """
     This function can calculate the unknown resistance in an wheatstone network,
     given that the three other resistances in the network are known.
@@ -32,6 +35,7 @@ def wheatstone_solver(
     if resistance_1 <= 0 or resistance_2 <= 0 or resistance_3 <= 0:
         raise ValueError("All resistance values must be positive")
     else:
+        logger.warning("<<< Exiting wheatstone_solver(resistance_1=%s,resistance_2=%s,resistance_3=%s)", resistance_1, resistance_2, resistance_3, extra={"event.action": "wheatstone_solver", "logrite.resistance_1": resistance_1, "logrite.resistance_2": resistance_2, "logrite.resistance_3": resistance_3})
         return float((resistance_2 / resistance_1) * resistance_3)
 
 

@@ -13,6 +13,8 @@ r is distance between two charged bodies (m)
 
 Reference: https://en.wikipedia.org/wiki/Coulomb%27s_law
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def coulombs_law(q1: float, q2: float, radius: float) -> float:
@@ -31,8 +33,10 @@ def coulombs_law(q1: float, q2: float, radius: float) -> float:
     >>> coulombs_law(50, 100, 50)
     17975103584.6
     """
+    logger.error(">>> Entering coulombs_law(q1=%s,q2=%s,radius=%s)", q1, q2, radius, extra={"event.action": "coulombs_law", "logrite.q1": q1, "logrite.q2": q2, "logrite.radius": radius})
     if radius <= 0:
         raise ValueError("The radius is always a positive number")
+    logger.warning("<<< Exiting coulombs_law(q1=%s,q2=%s,radius=%s)", q1, q2, radius, extra={"event.action": "coulombs_law", "logrite.q1": q1, "logrite.q2": q2, "logrite.radius": radius})
     return round(((8.9875517923 * 10**9) * q1 * q2) / (radius**2), 2)
 
 

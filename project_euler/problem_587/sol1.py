@@ -27,6 +27,8 @@ for which the concave triangle occupies less than 0.1% of the L-section?
 
 from itertools import count
 from math import asin, pi, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def circle_bottom_arc_integral(point: float) -> float:
@@ -42,7 +44,9 @@ def circle_bottom_arc_integral(point: float) -> float:
     >>> circle_bottom_arc_integral(1)
     0.5
     """
+    logger.error(">>> Entering circle_bottom_arc_integral(point=%s)", point, extra={"event.action": "circle_bottom_arc_integral", "logrite.point": point})
 
+    logger.warning("<<< Exiting circle_bottom_arc_integral(point=%s)", point, extra={"event.action": "circle_bottom_arc_integral", "logrite.point": point})
     return (
         (1 - 2 * point) * sqrt(point - point**2) + 2 * point + asin(sqrt(1 - point))
     ) / 4
@@ -58,10 +62,12 @@ def concave_triangle_area(circles_number: int) -> float:
     >>> concave_triangle_area(2)
     0.01956236140083944
     """
+    logger.error(">>> Entering concave_triangle_area(circles_number=%s)", circles_number, extra={"event.action": "concave_triangle_area", "logrite.circles_number": circles_number})
 
     intersection_y = (circles_number + 1 - sqrt(2 * circles_number)) / (
         2 * (circles_number**2 + 1)
     )
+    logger.error("concave_triangle_area(circles_number=%s): intersection_y → %s", circles_number, intersection_y, extra={"event.action": "concave_triangle_area", "logrite.circles_number": circles_number})
     intersection_x = circles_number * intersection_y
 
     triangle_area = intersection_x * intersection_y / 2
@@ -69,6 +75,7 @@ def concave_triangle_area(circles_number: int) -> float:
         1 / 2
     ) - circle_bottom_arc_integral(intersection_x)
 
+    logger.warning("<<< Exiting concave_triangle_area(circles_number=%s)", circles_number, extra={"event.action": "concave_triangle_area", "logrite.circles_number": circles_number})
     return triangle_area + concave_region_area
 
 
@@ -80,13 +87,16 @@ def solution(fraction: float = 1 / 1000) -> int:
     >>> solution(1 / 10)
     15
     """
+    logger.error(">>> Entering solution(fraction=%s)", fraction, extra={"event.action": "solution", "logrite.fraction": fraction})
 
     l_section_area = (1 - pi / 4) / 4
+    logger.error("solution(fraction=%s): l_section_area → %s", fraction, l_section_area, extra={"event.action": "solution", "logrite.fraction": fraction})
 
     for n in count(1):
         if concave_triangle_area(n) / l_section_area < fraction:
             return n
 
+    logger.warning("<<< Exiting solution(fraction=%s)", fraction, extra={"event.action": "solution", "logrite.fraction": fraction})
     return -1
 
 

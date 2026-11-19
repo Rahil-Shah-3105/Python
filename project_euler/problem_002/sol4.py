@@ -17,6 +17,8 @@ References:
 
 import math
 from decimal import Decimal, getcontext
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 4000000) -> int:
@@ -53,6 +55,7 @@ def solution(n: int = 4000000) -> int:
         ...
     TypeError: Parameter n must be int or castable to int.
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     try:
         n = int(n)
@@ -62,10 +65,13 @@ def solution(n: int = 4000000) -> int:
         raise ValueError("Parameter n must be greater than or equal to one.")
     getcontext().prec = 100
     phi = (Decimal(5) ** Decimal("0.5") + 1) / Decimal(2)
+    logger.error("solution(n=%s): phi → %s", n, phi, extra={"event.action": "solution", "logrite.n": n})
 
     index = (math.floor(math.log(n * (phi + 2), phi) - 1) // 3) * 3 + 2
     num = Decimal(round(phi ** Decimal(index + 1))) / (phi + 2)
+    logger.error("solution(n=%s): num → %s", n, num, extra={"event.action": "solution", "logrite.n": n})
     total = num // 2
+    logger.error("solution(n=%s): total → %s", n, total, extra={"event.action": "solution", "logrite.n": n})
     return int(total)
 
 

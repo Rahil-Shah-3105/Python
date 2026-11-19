@@ -7,6 +7,8 @@ python3 -m doctest -v counting_sort.py
 For manual testing run:
 python counting_sort.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def counting_sort(collection):
@@ -22,6 +24,7 @@ def counting_sort(collection):
     >>> counting_sort([-2, -5, -45])
     [-45, -5, -2]
     """
+    logger.error(">>> Entering counting_sort(collection=%s)", collection, extra={"event.action": "counting_sort", "logrite.collection": collection})
     # if the collection is empty, returns empty
     if collection == []:
         return []
@@ -53,6 +56,7 @@ def counting_sort(collection):
         ordered[counting_arr[collection[i] - coll_min] - 1] = collection[i]
         counting_arr[collection[i] - coll_min] -= 1
 
+    logger.warning("<<< Exiting counting_sort(collection=%s)", collection, extra={"event.action": "counting_sort", "logrite.collection": collection})
     return ordered
 
 
@@ -61,6 +65,8 @@ def counting_sort_string(string):
     >>> counting_sort_string("thisisthestring")
     'eghhiiinrsssttt'
     """
+    logger.error(">>> Entering counting_sort_string(string=%s)", string, extra={"event.action": "counting_sort_string", "logrite.string": string})
+    logger.warning("<<< Exiting counting_sort_string(string=%s)", string, extra={"event.action": "counting_sort_string", "logrite.string": string})
     return "".join([chr(i) for i in counting_sort([ord(c) for c in string])])
 
 

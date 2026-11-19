@@ -6,6 +6,8 @@ Description :
 
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_altitude_at_pressure(pressure: float) -> float:
@@ -38,11 +40,13 @@ def get_altitude_at_pressure(pressure: float) -> float:
       ...
     ValueError: Atmospheric Pressure can not be negative !
     """
+    logger.error(">>> Entering get_altitude_at_pressure(pressure=%s)", pressure, extra={"event.action": "get_altitude_at_pressure", "logrite.pressure": pressure})
 
     if pressure > 101325:
         raise ValueError("Value Higher than Pressure at Sea Level !")
     if pressure < 0:
         raise ValueError("Atmospheric Pressure can not be negative !")
+    logger.warning("<<< Exiting get_altitude_at_pressure(pressure=%s)", pressure, extra={"event.action": "get_altitude_at_pressure", "logrite.pressure": pressure})
     return 44_330 * (1 - (pressure / 101_325) ** (1 / 5.5255))
 
 

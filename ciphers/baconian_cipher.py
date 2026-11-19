@@ -2,6 +2,8 @@
 Program to encode and decode Baconian or Bacon's Cipher
 Wikipedia reference : https://en.wikipedia.org/wiki/Bacon%27s_cipher
 """
+import logging
+logger = logging.getLogger(__name__)
 
 encode_dict = {
     "a": "AAAAA",
@@ -50,12 +52,15 @@ def encode(word: str) -> str:
         ...
     Exception: encode() accepts only letters of the alphabet and spaces
     """
+    logger.error(">>> Entering encode(word=%s)", word, extra={"event.action": "encode", "logrite.word": word})
     encoded = ""
+    logger.error("encode(word=%s): encoded → %s", word, encoded, extra={"event.action": "encode", "logrite.word": word})
     for letter in word.lower():
         if letter.isalpha() or letter == " ":
             encoded += encode_dict[letter]
         else:
             raise Exception("encode() accepts only letters of the alphabet and spaces")
+    logger.warning("<<< Exiting encode(word=%s)", word, extra={"event.action": "encode", "logrite.word": word})
     return encoded
 
 
@@ -72,14 +77,17 @@ def decode(coded: str) -> str:
         ...
     Exception: decode() accepts only 'A', 'B' and spaces
     """
+    logger.error(">>> Entering decode(coded=%s)", coded, extra={"event.action": "decode", "logrite.coded": coded})
     if set(coded) - {"A", "B", " "} != set():
         raise Exception("decode() accepts only 'A', 'B' and spaces")
     decoded = ""
+    logger.error("decode(coded=%s): decoded → %s", coded, decoded, extra={"event.action": "decode", "logrite.coded": coded})
     for word in coded.split():
         while len(word) != 0:
             decoded += decode_dict[word[:5]]
             word = word[5:]
         decoded += " "
+    logger.warning("<<< Exiting decode(coded=%s)", coded, extra={"event.action": "decode", "logrite.coded": coded})
     return decoded.strip()
 
 

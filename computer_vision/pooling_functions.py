@@ -2,6 +2,8 @@
 # Importing the libraries
 import numpy as np
 from PIL import Image
+import logging
+logger = logging.getLogger(__name__)
 
 
 # Maxpooling Function
@@ -22,7 +24,9 @@ def maxpooling(arr: np.ndarray, size: int, stride: int) -> np.ndarray:
     array([[241., 180.],
            [241., 157.]])
     """
+    logger.error(">>> Entering maxpooling(arr=%s,size=%s,stride=%s)", arr, size, stride, extra={"event.action": "maxpooling", "logrite.arr": arr, "logrite.size": size, "logrite.stride": stride})
     arr = np.array(arr)
+    logger.error("maxpooling(arr=%s,size=%s,stride=%s): arr → %s", arr, size, stride, arr, extra={"event.action": "maxpooling", "logrite.arr": arr, "logrite.size": size, "logrite.stride": stride})
     if arr.shape[0] != arr.shape[1]:
         raise ValueError("The input array is not a square matrix")
     i = 0
@@ -32,8 +36,10 @@ def maxpooling(arr: np.ndarray, size: int, stride: int) -> np.ndarray:
 
     # compute the shape of the output matrix
     maxpool_shape = (arr.shape[0] - size) // stride + 1
+    logger.error("maxpooling(arr=%s,size=%s,stride=%s): maxpool_shape → %s", arr, size, stride, maxpool_shape, extra={"event.action": "maxpooling", "logrite.arr": arr, "logrite.size": size, "logrite.stride": stride})
     # initialize the output matrix with zeros of shape maxpool_shape
     updated_arr = np.zeros((maxpool_shape, maxpool_shape))
+    logger.error("maxpooling(arr=%s,size=%s,stride=%s): updated_arr → %s", arr, size, stride, updated_arr, extra={"event.action": "maxpooling", "logrite.arr": arr, "logrite.size": size, "logrite.stride": stride})
 
     while i < arr.shape[0]:
         if i + size > arr.shape[0]:
@@ -57,6 +63,7 @@ def maxpooling(arr: np.ndarray, size: int, stride: int) -> np.ndarray:
         j = 0
         mat_j = 0
 
+    logger.warning("<<< Exiting maxpooling(arr=%s,size=%s,stride=%s)", arr, size, stride, extra={"event.action": "maxpooling", "logrite.arr": arr, "logrite.size": size, "logrite.stride": stride})
     return updated_arr
 
 
@@ -78,7 +85,9 @@ def avgpooling(arr: np.ndarray, size: int, stride: int) -> np.ndarray:
     array([[161., 102.],
            [114.,  69.]])
     """
+    logger.error(">>> Entering avgpooling(arr=%s,size=%s,stride=%s)", arr, size, stride, extra={"event.action": "avgpooling", "logrite.arr": arr, "logrite.size": size, "logrite.stride": stride})
     arr = np.array(arr)
+    logger.error("avgpooling(arr=%s,size=%s,stride=%s): arr → %s", arr, size, stride, arr, extra={"event.action": "avgpooling", "logrite.arr": arr, "logrite.size": size, "logrite.stride": stride})
     if arr.shape[0] != arr.shape[1]:
         raise ValueError("The input array is not a square matrix")
     i = 0
@@ -88,8 +97,10 @@ def avgpooling(arr: np.ndarray, size: int, stride: int) -> np.ndarray:
 
     # compute the shape of the output matrix
     avgpool_shape = (arr.shape[0] - size) // stride + 1
+    logger.error("avgpooling(arr=%s,size=%s,stride=%s): avgpool_shape → %s", arr, size, stride, avgpool_shape, extra={"event.action": "avgpooling", "logrite.arr": arr, "logrite.size": size, "logrite.stride": stride})
     # initialize the output matrix with zeros of shape avgpool_shape
     updated_arr = np.zeros((avgpool_shape, avgpool_shape))
+    logger.error("avgpooling(arr=%s,size=%s,stride=%s): updated_arr → %s", arr, size, stride, updated_arr, extra={"event.action": "avgpooling", "logrite.arr": arr, "logrite.size": size, "logrite.stride": stride})
 
     while i < arr.shape[0]:
         # if the end of the matrix is reached, break
@@ -112,6 +123,7 @@ def avgpooling(arr: np.ndarray, size: int, stride: int) -> np.ndarray:
         j = 0
         mat_j = 0
 
+    logger.warning("<<< Exiting avgpooling(arr=%s,size=%s,stride=%s)", arr, size, stride, extra={"event.action": "avgpooling", "logrite.arr": arr, "logrite.size": size, "logrite.stride": stride})
     return updated_arr
 
 

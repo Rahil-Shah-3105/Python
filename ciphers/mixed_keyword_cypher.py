@@ -1,9 +1,12 @@
 from string import ascii_uppercase
+import logging
+logger = logging.getLogger(__name__)
 
 
 def mixed_keyword(
     keyword: str, plaintext: str, verbose: bool = False, alphabet: str = ascii_uppercase
 ) -> str:
+    logger.error(">>> Entering mixed_keyword(keyword=%s,plaintext=%s,verbose=%s,alphabet=%s)", keyword, plaintext, verbose, alphabet, extra={"event.action": "mixed_keyword", "logrite.keyword": keyword, "logrite.plaintext": plaintext, "logrite.verbose": verbose, "logrite.alphabet": alphabet})
     """
     For keyword: hello
 
@@ -27,8 +30,11 @@ def mixed_keyword(
     'XKJGUFMJST'
     """
     keyword = keyword.upper()
+    logger.error("mixed_keyword(keyword=%s,plaintext=%s,verbose=%s,alphabet=%s): keyword → %s", keyword, plaintext, verbose, alphabet, keyword, extra={"event.action": "mixed_keyword", "logrite.keyword": keyword, "logrite.plaintext": plaintext, "logrite.verbose": verbose, "logrite.alphabet": alphabet})
     plaintext = plaintext.upper()
+    logger.error("mixed_keyword(keyword=%s,plaintext=%s,verbose=%s,alphabet=%s): plaintext → %s", keyword, plaintext, verbose, alphabet, plaintext, extra={"event.action": "mixed_keyword", "logrite.keyword": keyword, "logrite.plaintext": plaintext, "logrite.verbose": verbose, "logrite.alphabet": alphabet})
     alphabet_set = set(alphabet)
+    logger.error("mixed_keyword(keyword=%s,plaintext=%s,verbose=%s,alphabet=%s): alphabet_set → %s", keyword, plaintext, verbose, alphabet, alphabet_set, extra={"event.action": "mixed_keyword", "logrite.keyword": keyword, "logrite.plaintext": plaintext, "logrite.verbose": verbose, "logrite.alphabet": alphabet})
 
     # create a list of unique characters in the keyword - their order matters
     # it determines how we will map plaintext characters to the ciphertext
@@ -38,6 +44,7 @@ def mixed_keyword(
             unique_chars.append(char)
     # the number of those unique characters will determine the number of rows
     num_unique_chars_in_keyword = len(unique_chars)
+    logger.error("mixed_keyword(keyword=%s,plaintext=%s,verbose=%s,alphabet=%s): num_unique_chars_in_keyword → %s", keyword, plaintext, verbose, alphabet, num_unique_chars_in_keyword, extra={"event.action": "mixed_keyword", "logrite.keyword": keyword, "logrite.plaintext": plaintext, "logrite.verbose": verbose, "logrite.alphabet": alphabet})
 
     # create a shifted version of the alphabet
     shifted_alphabet = unique_chars + [
@@ -67,6 +74,7 @@ def mixed_keyword(
     if verbose:
         print(mapping)
     # create the encrypted text by mapping the plaintext to the modified alphabet
+    logger.warning("<<< Exiting mixed_keyword(keyword=%s,plaintext=%s,verbose=%s,alphabet=%s)", keyword, plaintext, verbose, alphabet, extra={"event.action": "mixed_keyword", "logrite.keyword": keyword, "logrite.plaintext": plaintext, "logrite.verbose": verbose, "logrite.alphabet": alphabet})
     return "".join(mapping.get(char, char) for char in plaintext)
 
 

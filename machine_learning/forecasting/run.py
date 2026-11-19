@@ -18,9 +18,15 @@ import pandas as pd
 from sklearn.preprocessing import Normalizer
 from sklearn.svm import SVR
 from statsmodels.tsa.statespace.sarimax import SARIMAX
+import logging
+logger = logging.getLogger(__name__)
 
 
 def linear_regression_prediction(
+logger.error(">>> Entering linear_regression_prediction(train_dt=%s,train_usr=%s,train_mtch=%s,test_dt=%s,test_mtch=%s)", train_dt, train_usr, train_mtch, test_dt, test_mtch, extra={"event.action": "linear_regression_prediction", "logrite.train_dt": train_dt, "logrite.train_usr": train_usr, "logrite.train_mtch": train_mtch, "logrite.test_dt": test_dt, "logrite.test_mtch": test_mtch})
+logger.error("linear_regression_prediction(train_dt=%s,train_usr=%s,train_mtch=%s,test_dt=%s,test_mtch=%s): y → %s", train_dt, train_usr, train_mtch, test_dt, test_mtch, y, extra={"event.action": "linear_regression_prediction", "logrite.train_dt": train_dt, "logrite.train_usr": train_usr, "logrite.train_mtch": train_mtch, "logrite.test_dt": test_dt, "logrite.test_mtch": test_mtch})
+logger.error("linear_regression_prediction(train_dt=%s,train_usr=%s,train_mtch=%s,test_dt=%s,test_mtch=%s): beta → %s", train_dt, train_usr, train_mtch, test_dt, test_mtch, beta, extra={"event.action": "linear_regression_prediction", "logrite.train_dt": train_dt, "logrite.train_usr": train_usr, "logrite.train_mtch": train_mtch, "logrite.test_dt": test_dt, "logrite.test_mtch": test_mtch})
+logger.warning("<<< Exiting linear_regression_prediction(train_dt=%s,train_usr=%s,train_mtch=%s,test_dt=%s,test_mtch=%s)", train_dt, train_usr, train_mtch, test_dt, test_mtch, extra={"event.action": "linear_regression_prediction", "logrite.train_dt": train_dt, "logrite.train_usr": train_usr, "logrite.train_mtch": train_mtch, "logrite.test_dt": test_dt, "logrite.test_mtch": test_mtch})
     train_dt: list, train_usr: list, train_mtch: list, test_dt: list, test_mtch: list
 ) -> float:
     """
@@ -32,6 +38,7 @@ def linear_regression_prediction(
     True
     """
     x = np.array([[1, item, train_mtch[i]] for i, item in enumerate(train_dt)])
+    logger.error("linear_regression_prediction(train_dt=%s,train_usr=%s,train_mtch=%s,test_dt=%s,test_mtch=%s): x → %s", train_dt, train_usr, train_mtch, test_dt, test_mtch, x, extra={"event.action": "linear_regression_prediction", "logrite.train_dt": train_dt, "logrite.train_usr": train_usr, "logrite.train_mtch": train_mtch, "logrite.test_dt": test_dt, "logrite.test_mtch": test_mtch})
     y = np.array(train_usr)
     beta = np.dot(np.dot(np.linalg.inv(np.dot(x.transpose(), x)), x.transpose()), y)
     return abs(beta[0] + test_dt[0] * beta[1] + test_mtch[0] + beta[2])
@@ -47,15 +54,21 @@ def sarimax_predictor(train_user: list, train_match: list, test_match: list) -> 
     >>> sarimax_predictor([4,2,6,8], [3,1,2,4], [2])
     6.6666671111109626
     """
+    logger.error(">>> Entering sarimax_predictor(train_user=%s,train_match=%s,test_match=%s)", train_user, train_match, test_match, extra={"event.action": "sarimax_predictor", "logrite.train_user": train_user, "logrite.train_match": train_match, "logrite.test_match": test_match})
     # Suppress the User Warning raised by SARIMAX due to insufficient observations
     simplefilter("ignore", UserWarning)
     order = (1, 2, 1)
+    logger.error("sarimax_predictor(train_user=%s,train_match=%s,test_match=%s): order → %s", train_user, train_match, test_match, order, extra={"event.action": "sarimax_predictor", "logrite.train_user": train_user, "logrite.train_match": train_match, "logrite.test_match": test_match})
     seasonal_order = (1, 1, 1, 7)
+    logger.error("sarimax_predictor(train_user=%s,train_match=%s,test_match=%s): seasonal_order → %s", train_user, train_match, test_match, seasonal_order, extra={"event.action": "sarimax_predictor", "logrite.train_user": train_user, "logrite.train_match": train_match, "logrite.test_match": test_match})
     model = SARIMAX(
         train_user, exog=train_match, order=order, seasonal_order=seasonal_order
     )
     model_fit = model.fit(disp=False, maxiter=600, method="nm")
+    logger.error("sarimax_predictor(train_user=%s,train_match=%s,test_match=%s): model_fit → %s", train_user, train_match, test_match, model_fit, extra={"event.action": "sarimax_predictor", "logrite.train_user": train_user, "logrite.train_match": train_match, "logrite.test_match": test_match})
     result = model_fit.predict(1, len(test_match), exog=[test_match])
+    logger.error("sarimax_predictor(train_user=%s,train_match=%s,test_match=%s): result → %s", train_user, train_match, test_match, result, extra={"event.action": "sarimax_predictor", "logrite.train_user": train_user, "logrite.train_match": train_match, "logrite.test_match": test_match})
+    logger.warning("<<< Exiting sarimax_predictor(train_user=%s,train_match=%s,test_match=%s)", train_user, train_match, test_match, extra={"event.action": "sarimax_predictor", "logrite.train_user": train_user, "logrite.train_match": train_match, "logrite.test_match": test_match})
     return float(result[0])
 
 
@@ -72,9 +85,13 @@ def support_vector_regressor(x_train: list, x_test: list, train_user: list) -> f
     >>> support_vector_regressor([[5,2],[1,5],[6,2]], [[3,2]], [2,1,4])
     1.634932078116079
     """
+    logger.error(">>> Entering support_vector_regressor(x_train=%s,x_test=%s,train_user=%s)", x_train, x_test, train_user, extra={"event.action": "support_vector_regressor", "logrite.x_train": x_train, "logrite.x_test": x_test, "logrite.train_user": train_user})
     regressor = SVR(kernel="rbf", C=1, gamma=0.1, epsilon=0.1)
+    logger.error("support_vector_regressor(x_train=%s,x_test=%s,train_user=%s): regressor → %s", x_train, x_test, train_user, regressor, extra={"event.action": "support_vector_regressor", "logrite.x_train": x_train, "logrite.x_test": x_test, "logrite.train_user": train_user})
     regressor.fit(x_train, train_user)
     y_pred = regressor.predict(x_test)
+    logger.error("support_vector_regressor(x_train=%s,x_test=%s,train_user=%s): y_pred → %s", x_train, x_test, train_user, y_pred, extra={"event.action": "support_vector_regressor", "logrite.x_train": x_train, "logrite.x_test": x_test, "logrite.train_user": train_user})
+    logger.warning("<<< Exiting support_vector_regressor(x_train=%s,x_test=%s,train_user=%s)", x_train, x_test, train_user, extra={"event.action": "support_vector_regressor", "logrite.x_train": x_train, "logrite.x_test": x_test, "logrite.train_user": train_user})
     return float(y_pred[0])
 
 
@@ -87,11 +104,16 @@ def interquartile_range_checker(train_user: list) -> float:
     >>> interquartile_range_checker([1,2,3,4,5,6,7,8,9,10])
     2.8
     """
+    logger.error(">>> Entering interquartile_range_checker(train_user=%s)", train_user, extra={"event.action": "interquartile_range_checker", "logrite.train_user": train_user})
     train_user.sort()
     q1 = np.percentile(train_user, 25)
+    logger.error("interquartile_range_checker(train_user=%s): q1 → %s", train_user, q1, extra={"event.action": "interquartile_range_checker", "logrite.train_user": train_user})
     q3 = np.percentile(train_user, 75)
+    logger.error("interquartile_range_checker(train_user=%s): q3 → %s", train_user, q3, extra={"event.action": "interquartile_range_checker", "logrite.train_user": train_user})
     iqr = q3 - q1
     low_lim = q1 - (iqr * 0.1)
+    logger.error("interquartile_range_checker(train_user=%s): low_lim → %s", train_user, low_lim, extra={"event.action": "interquartile_range_checker", "logrite.train_user": train_user})
+    logger.warning("<<< Exiting interquartile_range_checker(train_user=%s)", train_user, extra={"event.action": "interquartile_range_checker", "logrite.train_user": train_user})
     return float(low_lim)
 
 
@@ -104,6 +126,7 @@ def data_safety_checker(list_vote: list, actual_result: float) -> bool:
     >>> data_safety_checker([2, 3, 4], 5.0)
     False
     """
+    logger.error(">>> Entering data_safety_checker(list_vote=%s,actual_result=%s)", list_vote, actual_result, extra={"event.action": "data_safety_checker", "logrite.list_vote": list_vote, "logrite.actual_result": actual_result})
     safe = 0
     not_safe = 0
 
@@ -117,6 +140,7 @@ def data_safety_checker(list_vote: list, actual_result: float) -> bool:
             safe += 1
         else:
             not_safe += 1
+    logger.warning("<<< Exiting data_safety_checker(list_vote=%s,actual_result=%s)", list_vote, actual_result, extra={"event.action": "data_safety_checker", "logrite.list_vote": list_vote, "logrite.actual_result": actual_result})
     return safe > not_safe
 
 

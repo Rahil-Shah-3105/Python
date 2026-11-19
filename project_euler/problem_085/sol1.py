@@ -48,6 +48,8 @@ Reference: https://en.wikipedia.org/wiki/Triangular_number
 from __future__ import annotations
 
 from math import ceil, floor, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(target: int = 2000000) -> int:
@@ -61,6 +63,7 @@ def solution(target: int = 2000000) -> int:
     >>> solution(2000000000)
     86595
     """
+    logger.error(">>> Entering solution(target=%s)", target, extra={"event.action": "solution", "logrite.target": target})
     triangle_numbers: list[int] = [0]
     idx: int
 
@@ -84,8 +87,11 @@ def solution(target: int = 2000000) -> int:
 
     for idx_a, triangle_a in enumerate(triangle_numbers[1:], 1):
         b_estimate = (-1 + sqrt(1 + 8 * target / triangle_a)) / 2
+        logger.error("solution(target=%s): b_estimate → %s", target, b_estimate, extra={"event.action": "solution", "logrite.target": target})
         b_floor = floor(b_estimate)
+        logger.error("solution(target=%s): b_floor → %s", target, b_floor, extra={"event.action": "solution", "logrite.target": target})
         b_ceil = ceil(b_estimate)
+        logger.error("solution(target=%s): b_ceil → %s", target, b_ceil, extra={"event.action": "solution", "logrite.target": target})
         triangle_b_first_guess = triangle_numbers[b_floor]
         triangle_b_second_guess = triangle_numbers[b_ceil]
 
@@ -101,6 +107,7 @@ def solution(target: int = 2000000) -> int:
             best_product = triangle_b_second_guess * triangle_a
             area = idx_a * b_ceil
 
+    logger.warning("<<< Exiting solution(target=%s)", target, extra={"event.action": "solution", "logrite.target": target})
     return area
 
 

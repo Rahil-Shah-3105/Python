@@ -15,6 +15,8 @@ natural numbers and the square of the sum is 3025 - 385 = 2640.
 Find the difference between the sum of the squares of the first one
 hundred natural numbers and the square of the sum.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 100) -> int:
@@ -31,9 +33,12 @@ def solution(n: int = 100) -> int:
     >>> solution(50)
     1582700
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     sum_cubes = (n * (n + 1) // 2) ** 2
+    logger.error("solution(n=%s): sum_cubes → %s", n, sum_cubes, extra={"event.action": "solution", "logrite.n": n})
     sum_squares = n * (n + 1) * (2 * n + 1) // 6
+    logger.error("solution(n=%s): sum_squares → %s", n, sum_squares, extra={"event.action": "solution", "logrite.n": n})
     return sum_cubes - sum_squares
 
 

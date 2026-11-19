@@ -23,6 +23,8 @@ Runtime Complexity: O(n * log(n))
 Space  Complexity: O(1)
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def h_index(citations: list[int]) -> int:
@@ -48,6 +50,7 @@ def h_index(citations: list[int]) -> int:
         ...
     ValueError: The citations should be a list of non negative integers.
     """
+    logger.error(">>> Entering h_index(citations=%s)", citations, extra={"event.action": "h_index", "logrite.citations": citations})
 
     # validate:
     if not isinstance(citations, list) or not all(
@@ -57,11 +60,13 @@ def h_index(citations: list[int]) -> int:
 
     citations.sort()
     len_citations = len(citations)
+    logger.error("h_index(citations=%s): len_citations → %s", citations, len_citations, extra={"event.action": "h_index", "logrite.citations": citations})
 
     for i in range(len_citations):
         if citations[len_citations - 1 - i] <= i:
             return i
 
+    logger.warning("<<< Exiting h_index(citations=%s)", citations, extra={"event.action": "h_index", "logrite.citations": citations})
     return len_citations
 
 

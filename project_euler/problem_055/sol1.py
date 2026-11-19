@@ -25,6 +25,8 @@ Surprisingly, there are palindromic numbers that are themselves Lychrel numbers;
 the first example is 4994.
 How many Lychrel numbers are there below ten-thousand?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_palindrome(n: int) -> bool:
@@ -37,6 +39,8 @@ def is_palindrome(n: int) -> bool:
     >>> is_palindrome(9876789)
     True
     """
+    logger.error(">>> Entering is_palindrome(n=%s)", n, extra={"event.action": "is_palindrome", "logrite.n": n})
+    logger.warning("<<< Exiting is_palindrome(n=%s)", n, extra={"event.action": "is_palindrome", "logrite.n": n})
     return str(n) == str(n)[::-1]
 
 
@@ -50,6 +54,8 @@ def sum_reverse(n: int) -> int:
     >>> sum_reverse(12)
     33
     """
+    logger.error(">>> Entering sum_reverse(n=%s)", n, extra={"event.action": "sum_reverse", "logrite.n": n})
+    logger.warning("<<< Exiting sum_reverse(n=%s)", n, extra={"event.action": "sum_reverse", "logrite.n": n})
     return int(n) + int(str(n)[::-1])
 
 
@@ -63,17 +69,20 @@ def solution(limit: int = 10000) -> int:
     >>> solution(1000)
     13
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     lychrel_nums = []
     for num in range(1, limit):
         iterations = 0
         a = num
         while iterations < 50:
             num = sum_reverse(num)
+            logger.error("solution(limit=%s): num → %s", limit, num, extra={"event.action": "solution", "logrite.limit": limit})
             iterations += 1
             if is_palindrome(num):
                 break
         else:
             lychrel_nums.append(a)
+    logger.warning("<<< Exiting solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     return len(lychrel_nums)
 
 

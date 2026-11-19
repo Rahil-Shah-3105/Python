@@ -13,6 +13,8 @@ For more info, see https://en.wikipedia.org/wiki/MD5
 
 from collections.abc import Generator
 from math import sin
+import logging
+logger = logging.getLogger(__name__)
 
 
 def to_little_endian(string_32: bytes) -> bytes:
@@ -34,12 +36,15 @@ def to_little_endian(string_32: bytes) -> bytes:
     ...
     ValueError: Input must be of length 32
     """
+    logger.error(">>> Entering to_little_endian(string_32=%s)", string_32, extra={"event.action": "to_little_endian", "logrite.string_32": string_32})
     if len(string_32) != 32:
         raise ValueError("Input must be of length 32")
 
     little_endian = b""
+    logger.error("to_little_endian(string_32=%s): little_endian → %s", string_32, little_endian, extra={"event.action": "to_little_endian", "logrite.string_32": string_32})
     for i in [3, 2, 1, 0]:
         little_endian += string_32[8 * i : 8 * i + 8]
+    logger.warning("<<< Exiting to_little_endian(string_32=%s)", string_32, extra={"event.action": "to_little_endian", "logrite.string_32": string_32})
     return little_endian
 
 
@@ -77,13 +82,17 @@ def reformat_hex(i: int) -> bytes:
     ...
     ValueError: Input must be non-negative
     """
+    logger.error(">>> Entering reformat_hex(i=%s)", i, extra={"event.action": "reformat_hex", "logrite.i": i})
     if i < 0:
         raise ValueError("Input must be non-negative")
 
     hex_rep = format(i, "08x")[-8:]
+    logger.error("reformat_hex(i=%s): hex_rep → %s", i, hex_rep, extra={"event.action": "reformat_hex", "logrite.i": i})
     little_endian_hex = b""
+    logger.error("reformat_hex(i=%s): little_endian_hex → %s", i, little_endian_hex, extra={"event.action": "reformat_hex", "logrite.i": i})
     for j in [3, 2, 1, 0]:
         little_endian_hex += hex_rep[2 * j : 2 * j + 2].encode("utf-8")
+    logger.warning("<<< Exiting reformat_hex(i=%s)", i, extra={"event.action": "reformat_hex", "logrite.i": i})
     return little_endian_hex
 
 
@@ -117,10 +126,14 @@ def preprocess(message: bytes) -> bytes:
     >>> preprocess(b"") == b"1" + (b"0" * 447) + (b"0" * 64)
     True
     """
+    logger.error(">>> Entering preprocess(message=%s)", message, extra={"event.action": "preprocess", "logrite.message": message})
+    logger.error("preprocess(message=%s): message → %s", message, message, extra={"event.action": "preprocess", "logrite.message": message})
     bit_string = b""
     for char in message:
+        logger.error("preprocess(message=%s): bit_string → %s", message, bit_string, extra={"event.action": "preprocess", "logrite.message": message})
         bit_string += format(char, "08b").encode("utf-8")
     start_len = format(len(bit_string), "064b").encode("utf-8")
+    logger.error("preprocess(message=%s): start_len → %s", message, start_len, extra={"event.action": "preprocess", "logrite.message": message})
 
     # Pad bit_string to a multiple of 512 chars
     bit_string += b"1"
@@ -128,6 +141,7 @@ def preprocess(message: bytes) -> bytes:
         bit_string += b"0"
     bit_string += to_little_endian(start_len[32:]) + to_little_endian(start_len[:32])
 
+    logger.warning("<<< Exiting preprocess(message=%s)", message, extra={"event.action": "preprocess", "logrite.message": message})
     return bit_string
 
 
@@ -176,6 +190,7 @@ def get_block_words(bit_string: bytes) -> Generator[list[int]]:
     ...
     ValueError: Input must have length that's a multiple of 512
     """
+    logger.error(">>> Entering get_block_words(bit_string=%s)", bit_string, extra={"event.action": "get_block_words", "logrite.bit_string": bit_string})
     if len(bit_string) % 512 != 0:
         raise ValueError("Input must have length that's a multiple of 512")
 
@@ -185,6 +200,7 @@ def get_block_words(bit_string: bytes) -> Generator[list[int]]:
         for i in range(0, 512, 32):
             block_words.append(int(to_little_endian(block[i : i + 32]), 2))
         yield block_words
+        logger.warning("<<< Exiting get_block_words(bit_string=%s)", bit_string, extra={"event.action": "get_block_words", "logrite.bit_string": bit_string})
 
 
 def not_32(i: int) -> int:
@@ -215,13 +231,17 @@ def not_32(i: int) -> int:
     ...
     ValueError: Input must be non-negative
     """
+    logger.error(">>> Entering not_32(i=%s)", i, extra={"event.action": "not_32", "logrite.i": i})
     if i < 0:
         raise ValueError("Input must be non-negative")
 
     i_str = format(i, "032b")
+    logger.error("not_32(i=%s): i_str → %s", i, i_str, extra={"event.action": "not_32", "logrite.i": i})
     new_str = ""
+    logger.error("not_32(i=%s): new_str → %s", i, new_str, extra={"event.action": "not_32", "logrite.i": i})
     for c in i_str:
         new_str += "1" if c == "0" else "0"
+    logger.warning("<<< Exiting not_32(i=%s)", i, extra={"event.action": "not_32", "logrite.i": i})
     return int(new_str, 2)
 
 
@@ -247,6 +267,8 @@ def sum_32(a: int, b: int) -> int:
     >>> sum_32(4294967295, 1)
     0
     """
+    logger.error(">>> Entering sum_32(a=%s,b=%s)", a, b, extra={"event.action": "sum_32", "logrite.a": a, "logrite.b": b})
+    logger.warning("<<< Exiting sum_32(a=%s,b=%s)", a, b, extra={"event.action": "sum_32", "logrite.a": a, "logrite.b": b})
     return (a + b) % 2**32
 
 
@@ -287,10 +309,12 @@ def left_rotate_32(i: int, shift: int) -> int:
     ...
     ValueError: Shift must be non-negative
     """
+    logger.error(">>> Entering left_rotate_32(i=%s,shift=%s)", i, shift, extra={"event.action": "left_rotate_32", "logrite.i": i, "logrite.shift": shift})
     if i < 0:
         raise ValueError("Input must be non-negative")
     if shift < 0:
         raise ValueError("Shift must be non-negative")
+    logger.warning("<<< Exiting left_rotate_32(i=%s,shift=%s)", i, shift, extra={"event.action": "left_rotate_32", "logrite.i": i, "logrite.shift": shift})
     return ((i << shift) ^ (i >> (32 - shift))) % 2**32
 
 
@@ -320,17 +344,24 @@ def md5_me(message: bytes) -> bytes:
     >>> all(md5_me(msg) == hashlib.md5(msg).hexdigest().encode("utf-8") for msg in msgs)
     True
     """
+    logger.error(">>> Entering md5_me(message=%s)", message, extra={"event.action": "md5_me", "logrite.message": message})
 
     # Convert to bit string, add padding and append message length
     bit_string = preprocess(message)
+    logger.error("md5_me(message=%s): bit_string → %s", message, bit_string, extra={"event.action": "md5_me", "logrite.message": message})
 
     added_consts = [int(2**32 * abs(sin(i + 1))) for i in range(64)]
+    logger.error("md5_me(message=%s): added_consts → %s", message, added_consts, extra={"event.action": "md5_me", "logrite.message": message})
 
     # Starting states
     a0 = 0x67452301
+    logger.error("md5_me(message=%s): a0 → %s", message, a0, extra={"event.action": "md5_me", "logrite.message": message})
     b0 = 0xEFCDAB89
+    logger.error("md5_me(message=%s): b0 → %s", message, b0, extra={"event.action": "md5_me", "logrite.message": message})
     c0 = 0x98BADCFE
+    logger.error("md5_me(message=%s): c0 → %s", message, c0, extra={"event.action": "md5_me", "logrite.message": message})
     d0 = 0x10325476
+    logger.error("md5_me(message=%s): d0 → %s", message, d0, extra={"event.action": "md5_me", "logrite.message": message})
 
     shift_amounts = [
         7,
@@ -403,6 +434,7 @@ def md5_me(message: bytes) -> bytes:
     for block_words in get_block_words(bit_string):
         a = a0
         b = b0
+        logger.error("md5_me(message=%s): b → %s", message, b, extra={"event.action": "md5_me", "logrite.message": message})
         c = c0
         d = d0
 
@@ -411,6 +443,7 @@ def md5_me(message: bytes) -> bytes:
             if i <= 15:
                 # f = (b & c) | (not_32(b) & d)     # Alternate definition for f
                 f = d ^ (b & (c ^ d))
+                logger.error("md5_me(message=%s): f → %s", message, f, extra={"event.action": "md5_me", "logrite.message": message})
                 g = i
             elif i <= 31:
                 # f = (d & b) | (not_32(d) & c)     # Alternate definition for f
@@ -435,6 +468,8 @@ def md5_me(message: bytes) -> bytes:
         d0 = sum_32(d0, d)
 
     digest = reformat_hex(a0) + reformat_hex(b0) + reformat_hex(c0) + reformat_hex(d0)
+    logger.error("md5_me(message=%s): digest → %s", message, digest, extra={"event.action": "md5_me", "logrite.message": message})
+    logger.warning("<<< Exiting md5_me(message=%s)", message, extra={"event.action": "md5_me", "logrite.message": message})
     return digest
 
 

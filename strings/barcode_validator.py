@@ -1,6 +1,8 @@
 """
 https://en.wikipedia.org/wiki/Check_digit#Algorithms
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_check_digit(barcode: int) -> int:
@@ -18,6 +20,7 @@ def get_check_digit(barcode: int) -> int:
     >>> [get_check_digit(x) for x in range(0, 100, 10)]
     [0, 7, 4, 1, 8, 5, 2, 9, 6, 3]
     """
+    logger.error(">>> Entering get_check_digit(barcode=%s)", barcode, extra={"event.action": "get_check_digit", "logrite.barcode": barcode})
     barcode //= 10  # exclude the last digit
     checker = False
     s = 0
@@ -29,6 +32,7 @@ def get_check_digit(barcode: int) -> int:
         barcode //= 10
         checker = not checker
 
+    logger.warning("<<< Exiting get_check_digit(barcode=%s)", barcode, extra={"event.action": "get_check_digit", "logrite.barcode": barcode})
     return (10 - (s % 10)) % 10
 
 
@@ -50,6 +54,8 @@ def is_valid(barcode: int) -> bool:
         ...
     NameError: name 'dwefgiweuf' is not defined
     """
+    logger.error(">>> Entering is_valid(barcode=%s)", barcode, extra={"event.action": "is_valid", "logrite.barcode": barcode})
+    logger.warning("<<< Exiting is_valid(barcode=%s)", barcode, extra={"event.action": "is_valid", "logrite.barcode": barcode})
     return len(str(barcode)) == 13 and get_check_digit(barcode) == barcode % 10
 
 
@@ -64,12 +70,15 @@ def get_barcode(barcode: str) -> int:
         ...
     ValueError: Barcode 'dwefgiweuf' has alphabetic characters.
     """
+    logger.error(">>> Entering get_barcode(barcode=%s)", barcode, extra={"event.action": "get_barcode", "logrite.barcode": barcode})
     if str(barcode).isalpha():
         msg = f"Barcode '{barcode}' has alphabetic characters."
+        logger.error("get_barcode(barcode=%s): msg → %s", barcode, msg, extra={"event.action": "get_barcode", "logrite.barcode": barcode})
         raise ValueError(msg)
     elif int(barcode) < 0:
         raise ValueError("The entered barcode has a negative value. Try again.")
     else:
+        logger.warning("<<< Exiting get_barcode(barcode=%s)", barcode, extra={"event.action": "get_barcode", "logrite.barcode": barcode})
         return int(barcode)
 
 

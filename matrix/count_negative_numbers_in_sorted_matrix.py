@@ -4,6 +4,8 @@ order, return the number of negative numbers in grid.
 
 Reference: https://leetcode.com/problems/count-negative-numbers-in-a-sorted-matrix
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def generate_large_matrix() -> list[list[int]]:
@@ -11,6 +13,8 @@ def generate_large_matrix() -> list[list[int]]:
     >>> generate_large_matrix() # doctest: +ELLIPSIS
     [[1000, ..., -999], [999, ..., -1001], ..., [2, ..., -1998]]
     """
+    logger.error(">>> Entering generate_large_matrix()", extra={"event.action": "generate_large_matrix"})
+    logger.warning("<<< Exiting generate_large_matrix()", extra={"event.action": "generate_large_matrix"})
     return [list(range(1000 - i, -1000 - i, -1)) for i in range(1000)]
 
 
@@ -30,8 +34,10 @@ def validate_grid(grid: list[list[int]]) -> None:
     >>> for grid in test_grids:
     ...     validate_grid(grid)
     """
+    logger.error(">>> Entering validate_grid(grid=%s)", grid, extra={"event.action": "validate_grid", "logrite.grid": grid})
     assert all(row == sorted(row, reverse=True) for row in grid)
     assert all(list(col) == sorted(col, reverse=True) for col in zip(*grid))
+    logger.warning("<<< Exiting validate_grid(grid=%s)", grid, extra={"event.action": "validate_grid", "logrite.grid": grid})
 
 
 def find_negative_index(array: list[int]) -> int:
@@ -59,6 +65,7 @@ def find_negative_index(array: list[int]) -> int:
     >>> find_negative_index([])
     0
     """
+    logger.error(">>> Entering find_negative_index(array=%s)", array, extra={"event.action": "find_negative_index", "logrite.array": array})
     left = 0
     right = len(array) - 1
 
@@ -79,6 +86,7 @@ def find_negative_index(array: list[int]) -> int:
         else:
             right = mid - 1
     # No negative numbers so return the last index of the array + 1 which is the length.
+    logger.warning("<<< Exiting find_negative_index(array=%s)", array, extra={"event.action": "find_negative_index", "logrite.array": array})
     return len(array)
 
 
@@ -90,12 +98,16 @@ def count_negatives_binary_search(grid: list[list[int]]) -> int:
     >>> [count_negatives_binary_search(grid) for grid in test_grids]
     [8, 0, 0, 3, 1498500]
     """
+    logger.error(">>> Entering count_negatives_binary_search(grid=%s)", grid, extra={"event.action": "count_negatives_binary_search", "logrite.grid": grid})
     total = 0
+    logger.error("count_negatives_binary_search(grid=%s): total → %s", grid, total, extra={"event.action": "count_negatives_binary_search", "logrite.grid": grid})
     bound = len(grid[0])
+    logger.error("count_negatives_binary_search(grid=%s): bound → %s", grid, bound, extra={"event.action": "count_negatives_binary_search", "logrite.grid": grid})
 
     for i in range(len(grid)):
         bound = find_negative_index(grid[i][:bound])
         total += bound
+    logger.warning("<<< Exiting count_negatives_binary_search(grid=%s)", grid, extra={"event.action": "count_negatives_binary_search", "logrite.grid": grid})
     return (len(grid) * len(grid[0])) - total
 
 
@@ -106,6 +118,8 @@ def count_negatives_brute_force(grid: list[list[int]]) -> int:
     >>> [count_negatives_brute_force(grid) for grid in test_grids]
     [8, 0, 0, 3, 1498500]
     """
+    logger.error(">>> Entering count_negatives_brute_force(grid=%s)", grid, extra={"event.action": "count_negatives_brute_force", "logrite.grid": grid})
+    logger.warning("<<< Exiting count_negatives_brute_force(grid=%s)", grid, extra={"event.action": "count_negatives_brute_force", "logrite.grid": grid})
     return len([number for row in grid for number in row if number < 0])
 
 
@@ -117,17 +131,21 @@ def count_negatives_brute_force_with_break(grid: list[list[int]]) -> int:
     >>> [count_negatives_brute_force_with_break(grid) for grid in test_grids]
     [8, 0, 0, 3, 1498500]
     """
+    logger.error(">>> Entering count_negatives_brute_force_with_break(grid=%s)", grid, extra={"event.action": "count_negatives_brute_force_with_break", "logrite.grid": grid})
     total = 0
+    logger.error("count_negatives_brute_force_with_break(grid=%s): total → %s", grid, total, extra={"event.action": "count_negatives_brute_force_with_break", "logrite.grid": grid})
     for row in grid:
         for i, number in enumerate(row):
             if number < 0:
                 total += len(row) - i
                 break
+    logger.warning("<<< Exiting count_negatives_brute_force_with_break(grid=%s)", grid, extra={"event.action": "count_negatives_brute_force_with_break", "logrite.grid": grid})
     return total
 
 
 def benchmark() -> None:
     """Benchmark our functions next to each other"""
+    logger.error(">>> Entering benchmark()", extra={"event.action": "benchmark"})
     from timeit import timeit
 
     print("Running benchmarks")
@@ -141,7 +159,9 @@ def benchmark() -> None:
         "count_negatives_brute_force",  # took 12.8160 seconds
     ):
         time = timeit(f"{func}(grid=grid)", setup=setup, number=500)
+        logger.error("benchmark(): time → %s", time, extra={"event.action": "benchmark"})
         print(f"{func}() took {time:0.4f} seconds")
+        logger.warning("<<< Exiting benchmark()", extra={"event.action": "benchmark"})
 
 
 if __name__ == "__main__":

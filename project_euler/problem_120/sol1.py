@@ -13,6 +13,8 @@ Solution:
 On expanding the terms, we get 2 if n is even and 2an if n is odd.
 For maximizing the value, 2an < a*a => n <= (a - 1)/2 (integer division)
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 1000) -> int:
@@ -25,6 +27,7 @@ def solution(n: int = 1000) -> int:
     >>> solution(1000)
     333082500
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return sum(2 * a * ((a - 1) // 2) for a in range(3, n + 1))
 
 

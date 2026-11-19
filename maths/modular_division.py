@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def modular_division(a: int, b: int, n: int) -> int:
@@ -28,6 +30,7 @@ def modular_division(a: int, b: int, n: int) -> int:
     4
 
     """
+    logger.error(">>> Entering modular_division(a=%s,b=%s,n=%s)", a, b, n, extra={"event.action": "modular_division", "logrite.a": a, "logrite.b": b, "logrite.n": n})
     if n <= 1:
         raise ValueError("Modulus n must be greater than 1")
     if a <= 0:
@@ -37,6 +40,7 @@ def modular_division(a: int, b: int, n: int) -> int:
 
     (_d, _t, s) = extended_gcd(n, a)  # Implemented below
     x = (b * s) % n
+    logger.warning("<<< Exiting modular_division(a=%s,b=%s,n=%s)", a, b, n, extra={"event.action": "modular_division", "logrite.a": a, "logrite.b": b, "logrite.n": n})
     return x
 
 
@@ -51,9 +55,12 @@ def invert_modulo(a: int, n: int) -> int:
     1
 
     """
+    logger.error(">>> Entering invert_modulo(a=%s,n=%s)", a, n, extra={"event.action": "invert_modulo", "logrite.a": a, "logrite.n": n})
     (b, _x) = extended_euclid(a, n)  # Implemented below
     if b < 0:
         b = (b % n + n) % n
+    logger.error("invert_modulo(a=%s,n=%s): b → %s", a, n, b, extra={"event.action": "invert_modulo", "logrite.a": a, "logrite.n": n})
+    logger.warning("<<< Exiting invert_modulo(a=%s,n=%s)", a, n, extra={"event.action": "invert_modulo", "logrite.a": a, "logrite.n": n})
     return b
 
 
@@ -74,8 +81,12 @@ def modular_division2(a: int, b: int, n: int) -> int:
     4
 
     """
+    logger.error(">>> Entering modular_division2(a=%s,b=%s,n=%s)", a, b, n, extra={"event.action": "modular_division2", "logrite.a": a, "logrite.b": b, "logrite.n": n})
     s = invert_modulo(a, n)
+    logger.error("modular_division2(a=%s,b=%s,n=%s): s → %s", a, b, n, s, extra={"event.action": "modular_division2", "logrite.a": a, "logrite.b": b, "logrite.n": n})
     x = (b * s) % n
+    logger.error("modular_division2(a=%s,b=%s,n=%s): x → %s", a, b, n, x, extra={"event.action": "modular_division2", "logrite.a": a, "logrite.b": b, "logrite.n": n})
+    logger.warning("<<< Exiting modular_division2(a=%s,b=%s,n=%s)", a, b, n, extra={"event.action": "modular_division2", "logrite.a": a, "logrite.b": b, "logrite.n": n})
     return x
 
 
@@ -92,6 +103,7 @@ def extended_gcd(a: int, b: int) -> tuple[int, int, int]:
     ** extended_gcd function is used when d = gcd(a,b) is required in output
 
     """
+    logger.error(">>> Entering extended_gcd(a=%s,b=%s)", a, b, extra={"event.action": "extended_gcd", "logrite.a": a, "logrite.b": b})
     assert a >= 0
     assert b >= 0
 
@@ -100,6 +112,7 @@ def extended_gcd(a: int, b: int) -> tuple[int, int, int]:
     else:
         (d, p, q) = extended_gcd(b, a % b)
         x = q
+        logger.error("extended_gcd(a=%s,b=%s): y → %s", a, b, y, extra={"event.action": "extended_gcd", "logrite.a": a, "logrite.b": b})
         y = p - q * (a // b)
 
     assert a % d == 0

@@ -3,6 +3,8 @@ Given an array of integers and an integer k, find the kth largest element in the
 
 https://stackoverflow.com/questions/251781
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def partition(arr: list[int], low: int, high: int) -> int:
@@ -31,6 +33,7 @@ def partition(arr: list[int], low: int, high: int) -> int:
         >>> partition([3.1, 1.2, 5.6, 4.7], 0, 3)
         1
     """
+    logger.error(">>> Entering partition(arr=%s,low=%s,high=%s)", arr, low, high, extra={"event.action": "partition", "logrite.arr": arr, "logrite.low": low, "logrite.high": high})
     pivot = arr[high]
     i = low - 1
     for j in range(low, high):
@@ -38,6 +41,7 @@ def partition(arr: list[int], low: int, high: int) -> int:
             i += 1
             arr[i], arr[j] = arr[j], arr[i]
     arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    logger.warning("<<< Exiting partition(arr=%s,low=%s,high=%s)", arr, low, high, extra={"event.action": "partition", "logrite.arr": arr, "logrite.low": low, "logrite.high": high})
     return i + 1
 
 
@@ -91,6 +95,7 @@ def kth_largest_element(arr: list[int], position: int) -> int:
         ...
         TypeError: 'tuple' object does not support item assignment
     """
+    logger.error(">>> Entering kth_largest_element(arr=%s,position=%s)", arr, position, extra={"event.action": "kth_largest_element", "logrite.arr": arr, "logrite.position": position})
     if not arr:
         return -1
     if not isinstance(position, int):
@@ -108,6 +113,7 @@ def kth_largest_element(arr: list[int], position: int) -> int:
             high = pivot_index - 1
         else:
             low = pivot_index + 1
+    logger.warning("<<< Exiting kth_largest_element(arr=%s,position=%s)", arr, position, extra={"event.action": "kth_largest_element", "logrite.arr": arr, "logrite.position": position})
     return -1
 
 

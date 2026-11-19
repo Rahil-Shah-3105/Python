@@ -16,6 +16,8 @@ which have not been implemented here, yet.
 from __future__ import annotations
 
 from collections.abc import Iterable
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Point:
@@ -46,48 +48,67 @@ class Point:
     """
 
     def __init__(self, x, y):
+        logger.error(">>> Entering __init__(x=%s,y=%s)", x, y, extra={"event.action": "__init__", "logrite.x": x, "logrite.y": y})
         self.x, self.y = float(x), float(y)
+        logger.warning("<<< Exiting __init__(x=%s,y=%s)", x, y, extra={"event.action": "__init__", "logrite.x": x, "logrite.y": y})
 
     def __eq__(self, other):
+        logger.error(">>> Entering __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
+        logger.warning("<<< Exiting __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
         return self.x == other.x and self.y == other.y
 
     def __ne__(self, other):
+        logger.error(">>> Entering __ne__(other=%s)", other, extra={"event.action": "__ne__", "logrite.other": other})
+        logger.warning("<<< Exiting __ne__(other=%s)", other, extra={"event.action": "__ne__", "logrite.other": other})
         return not self == other
 
     def __gt__(self, other):
+        logger.error(">>> Entering __gt__(other=%s)", other, extra={"event.action": "__gt__", "logrite.other": other})
         if self.x > other.x:
             return True
         elif self.x == other.x:
             return self.y > other.y
+        logger.warning("<<< Exiting __gt__(other=%s)", other, extra={"event.action": "__gt__", "logrite.other": other})
         return False
 
     def __lt__(self, other):
+        logger.error(">>> Entering __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
+        logger.warning("<<< Exiting __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
         return not self > other
 
     def __ge__(self, other):
+        logger.error(">>> Entering __ge__(other=%s)", other, extra={"event.action": "__ge__", "logrite.other": other})
         if self.x > other.x:
             return True
         elif self.x == other.x:
             return self.y >= other.y
+        logger.warning("<<< Exiting __ge__(other=%s)", other, extra={"event.action": "__ge__", "logrite.other": other})
         return False
 
     def __le__(self, other):
+        logger.error(">>> Entering __le__(other=%s)", other, extra={"event.action": "__le__", "logrite.other": other})
         if self.x < other.x:
             return True
         elif self.x == other.x:
             return self.y <= other.y
+        logger.warning("<<< Exiting __le__(other=%s)", other, extra={"event.action": "__le__", "logrite.other": other})
         return False
 
     def __repr__(self):
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"({self.x}, {self.y})"
 
     def __hash__(self):
+        logger.error(">>> Entering __hash__()", extra={"event.action": "__hash__"})
+        logger.warning("<<< Exiting __hash__()", extra={"event.action": "__hash__"})
         return hash(self.x)
 
 
 def _construct_points(
     list_of_tuples: list[Point] | list[list[float]] | Iterable[list[float]],
 ) -> list[Point]:
+    logger.error(">>> Entering _construct_points(list_of_tuples=%s)", list_of_tuples, extra={"event.action": "_construct_points", "logrite.list_of_tuples": list_of_tuples})
     """
     constructs a list of points from an array-like object of numbers
 
@@ -129,6 +150,7 @@ def _construct_points(
                         f"Ignoring deformed point {p}. All points"
                         " must have at least 2 coordinates."
                     )
+    logger.warning("<<< Exiting _construct_points(list_of_tuples=%s)", list_of_tuples, extra={"event.action": "_construct_points", "logrite.list_of_tuples": list_of_tuples})
     return points
 
 
@@ -173,15 +195,18 @@ def _validate_input(points: list[Point] | list[list[float]]) -> list[Point]:
         ...
     ValueError: Expecting an iterable object but got an non-iterable type 1
     """
+    logger.error(">>> Entering _validate_input(points=%s)", points, extra={"event.action": "_validate_input", "logrite.points": points})
 
     if not hasattr(points, "__iter__"):
         msg = f"Expecting an iterable object but got an non-iterable type {points}"
+        logger.error("_validate_input(points=%s): msg → %s", points, msg, extra={"event.action": "_validate_input", "logrite.points": points})
         raise ValueError(msg)
 
     if not points:
         msg = f"Expecting a list of points but got {points}"
         raise ValueError(msg)
 
+    logger.warning("<<< Exiting _validate_input(points=%s)", points, extra={"event.action": "_validate_input", "logrite.points": points})
     return _construct_points(points)
 
 
@@ -215,8 +240,11 @@ def _det(a: Point, b: Point, c: Point) -> float:
     >>> _det(Point(0, 0), Point(10, 0), Point(0, -10))
     -100.0
     """
+    logger.error(">>> Entering _det(a=%s,b=%s,c=%s)", a, b, c, extra={"event.action": "_det", "logrite.a": a, "logrite.b": b, "logrite.c": c})
 
     det = (a.x * b.y + b.x * c.y + c.x * a.y) - (a.y * b.x + b.y * c.x + c.y * a.x)
+    logger.error("_det(a=%s,b=%s,c=%s): det → %s", a, b, c, det, extra={"event.action": "_det", "logrite.a": a, "logrite.b": b, "logrite.c": c})
+    logger.warning("<<< Exiting _det(a=%s,b=%s,c=%s)", a, b, c, extra={"event.action": "_det", "logrite.a": a, "logrite.b": b, "logrite.c": c})
     return det
 
 
@@ -257,10 +285,14 @@ def convex_hull_bf(points: list[Point]) -> list[Point]:
      ...                 (2, -1), (2, -4), (1, -3)])
      [(0.0, 0.0), (0.0, 3.0), (1.0, -3.0), (2.0, -4.0), (3.0, 0.0), (3.0, 3.0)]
     """
+    logger.error(">>> Entering convex_hull_bf(points=%s)", points, extra={"event.action": "convex_hull_bf", "logrite.points": points})
 
     points = sorted(_validate_input(points))
+    logger.error("convex_hull_bf(points=%s): points → %s", points, points, extra={"event.action": "convex_hull_bf", "logrite.points": points})
     n = len(points)
+    logger.error("convex_hull_bf(points=%s): n → %s", points, n, extra={"event.action": "convex_hull_bf", "logrite.points": points})
     convex_set = set()
+    logger.error("convex_hull_bf(points=%s): convex_set → %s", points, convex_set, extra={"event.action": "convex_hull_bf", "logrite.points": points})
 
     for i in range(n - 1):
         for j in range(i + 1, n):
@@ -269,6 +301,7 @@ def convex_hull_bf(points: list[Point]) -> list[Point]:
             for k in range(n):
                 if k not in {i, j}:
                     det_k = _det(points[i], points[j], points[k])
+                    logger.error("convex_hull_bf(points=%s): det_k → %s", points, det_k, extra={"event.action": "convex_hull_bf", "logrite.points": points})
 
                     if det_k > 0:
                         points_left_of_ij = True
@@ -289,6 +322,7 @@ def convex_hull_bf(points: list[Point]) -> list[Point]:
             if ij_part_of_convex_hull:
                 convex_set.update([points[i], points[j]])
 
+    logger.warning("<<< Exiting convex_hull_bf(points=%s)", points, extra={"event.action": "convex_hull_bf", "logrite.points": points})
     return sorted(convex_set)
 
 
@@ -325,8 +359,11 @@ def convex_hull_recursive(points: list[Point]) -> list[Point]:
     [(0.0, 0.0), (0.0, 3.0), (1.0, -3.0), (2.0, -4.0), (3.0, 0.0), (3.0, 3.0)]
 
     """
+    logger.error(">>> Entering convex_hull_recursive(points=%s)", points, extra={"event.action": "convex_hull_recursive", "logrite.points": points})
     points = sorted(_validate_input(points))
+    logger.error("convex_hull_recursive(points=%s): points → %s", points, points, extra={"event.action": "convex_hull_recursive", "logrite.points": points})
     n = len(points)
+    logger.error("convex_hull_recursive(points=%s): n → %s", points, n, extra={"event.action": "convex_hull_recursive", "logrite.points": points})
 
     # divide all the points into an upper hull and a lower hull
     # the left most point and the right most point are definitely
@@ -350,6 +387,7 @@ def convex_hull_recursive(points: list[Point]) -> list[Point]:
 
     for i in range(1, n - 1):
         det = _det(left_most_point, right_most_point, points[i])
+        logger.error("convex_hull_recursive(points=%s): det → %s", points, det, extra={"event.action": "convex_hull_recursive", "logrite.points": points})
 
         if det > 0:
             upper_hull.append(points[i])
@@ -359,10 +397,14 @@ def convex_hull_recursive(points: list[Point]) -> list[Point]:
     _construct_hull(upper_hull, left_most_point, right_most_point, convex_set)
     _construct_hull(lower_hull, right_most_point, left_most_point, convex_set)
 
+    logger.warning("<<< Exiting convex_hull_recursive(points=%s)", points, extra={"event.action": "convex_hull_recursive", "logrite.points": points})
     return sorted(convex_set)
 
 
 def _construct_hull(
+logger.error(">>> Entering _construct_hull(points=%s,left=%s,right=%s,convex_set=%s)", points, left, right, convex_set, extra={"event.action": "_construct_hull", "logrite.points": points, "logrite.left": left, "logrite.right": right, "logrite.convex_set": convex_set})
+logger.error("_construct_hull(points=%s,left=%s,right=%s,convex_set=%s): det → %s", points, left, right, convex_set, det, extra={"event.action": "_construct_hull", "logrite.points": points, "logrite.left": left, "logrite.right": right, "logrite.convex_set": convex_set})
+logger.warning("<<< Exiting _construct_hull(points=%s,left=%s,right=%s,convex_set=%s)", points, left, right, convex_set, extra={"event.action": "_construct_hull", "logrite.points": points, "logrite.left": left, "logrite.right": right, "logrite.convex_set": convex_set})
     points: list[Point], left: Point, right: Point, convex_set: set[Point]
 ) -> None:
     """
@@ -442,12 +484,16 @@ def convex_hull_melkman(points: list[Point]) -> list[Point]:
     ...                 (2, -1), (2, -4), (1, -3)])
     [(0.0, 0.0), (0.0, 3.0), (1.0, -3.0), (2.0, -4.0), (3.0, 0.0), (3.0, 3.0)]
     """
+    logger.error(">>> Entering convex_hull_melkman(points=%s)", points, extra={"event.action": "convex_hull_melkman", "logrite.points": points})
     points = sorted(_validate_input(points))
+    logger.error("convex_hull_melkman(points=%s): points → %s", points, points, extra={"event.action": "convex_hull_melkman", "logrite.points": points})
     n = len(points)
+    logger.error("convex_hull_melkman(points=%s): n → %s", points, n, extra={"event.action": "convex_hull_melkman", "logrite.points": points})
 
     convex_hull = points[:2]
     for i in range(2, n):
         det = _det(convex_hull[1], convex_hull[0], points[i])
+        logger.error("convex_hull_melkman(points=%s): det → %s", points, det, extra={"event.action": "convex_hull_melkman", "logrite.points": points})
         if det > 0:
             convex_hull.insert(0, points[i])
             break
@@ -474,10 +520,12 @@ def convex_hull_melkman(points: list[Point]) -> list[Point]:
             del convex_hull[-2]
 
     # `convex_hull` is contains the convex hull in circular order
+    logger.warning("<<< Exiting convex_hull_melkman(points=%s)", points, extra={"event.action": "convex_hull_melkman", "logrite.points": points})
     return sorted(convex_hull[1:] if len(convex_hull) > 3 else convex_hull)
 
 
 def main():
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     points = [
         (0, 3),
         (2, 2),
@@ -493,14 +541,18 @@ def main():
     # the convex set of points is
     # [(0, 0), (0, 3), (1, -3), (2, -4), (3, 0), (3, 3)]
     results_bf = convex_hull_bf(points)
+    logger.error("main(): results_bf → %s", results_bf, extra={"event.action": "main"})
 
     results_recursive = convex_hull_recursive(points)
+    logger.error("main(): results_recursive → %s", results_recursive, extra={"event.action": "main"})
     assert results_bf == results_recursive
 
     results_melkman = convex_hull_melkman(points)
+    logger.error("main(): results_melkman → %s", results_melkman, extra={"event.action": "main"})
     assert results_bf == results_melkman
 
     print(results_bf)
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

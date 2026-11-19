@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from string import ascii_letters
+import logging
+logger = logging.getLogger(__name__)
 
 
 def encrypt(input_string: str, key: int, alphabet: str | None = None) -> str:
@@ -68,11 +70,13 @@ def encrypt(input_string: str, key: int, alphabet: str | None = None) -> str:
     >>> encrypt('a lowercase alphabet', 5, 'abcdefghijklmnopqrstuvwxyz')
     'f qtbjwhfxj fqumfgjy'
     """
+    logger.error(">>> Entering encrypt(input_string=%s,key=%s,alphabet=%s)", input_string, key, alphabet, extra={"event.action": "encrypt", "logrite.input_string": input_string, "logrite.key": key, "logrite.alphabet": alphabet})
     # Set default alphabet to lower and upper case english chars
     alpha = alphabet or ascii_letters
 
     # The final result string
     result = ""
+    logger.error("encrypt(input_string=%s,key=%s,alphabet=%s): result → %s", input_string, key, alphabet, result, extra={"event.action": "encrypt", "logrite.input_string": input_string, "logrite.key": key, "logrite.alphabet": alphabet})
 
     for character in input_string:
         if character not in alpha:
@@ -81,10 +85,12 @@ def encrypt(input_string: str, key: int, alphabet: str | None = None) -> str:
         else:
             # Get the index of the new key and make sure it isn't too large
             new_key = (alpha.index(character) + key) % len(alpha)
+            logger.error("encrypt(input_string=%s,key=%s,alphabet=%s): new_key → %s", input_string, key, alphabet, new_key, extra={"event.action": "encrypt", "logrite.input_string": input_string, "logrite.key": key, "logrite.alphabet": alphabet})
 
             # Append the encoded character to the alphabet
             result += alpha[new_key]
 
+    logger.warning("<<< Exiting encrypt(input_string=%s,key=%s,alphabet=%s)", input_string, key, alphabet, extra={"event.action": "encrypt", "logrite.input_string": input_string, "logrite.key": key, "logrite.alphabet": alphabet})
     return result
 
 
@@ -154,9 +160,11 @@ def decrypt(input_string: str, key: int, alphabet: str | None = None) -> str:
     >>> decrypt('f qtbjwhfxj fqumfgjy', 5, 'abcdefghijklmnopqrstuvwxyz')
     'a lowercase alphabet'
     """
+    logger.error(">>> Entering decrypt(input_string=%s,key=%s,alphabet=%s)", input_string, key, alphabet, extra={"event.action": "decrypt", "logrite.input_string": input_string, "logrite.key": key, "logrite.alphabet": alphabet})
     # Turn on decode mode by making the key negative
     key *= -1
 
+    logger.warning("<<< Exiting decrypt(input_string=%s,key=%s,alphabet=%s)", input_string, key, alphabet, extra={"event.action": "decrypt", "logrite.input_string": input_string, "logrite.key": key, "logrite.alphabet": alphabet})
     return encrypt(input_string, key, alphabet)
 
 
@@ -209,17 +217,20 @@ def brute_force(input_string: str, alphabet: str | None = None) -> dict[int, str
     Traceback (most recent call last):
     TypeError: 'int' object is not iterable
     """
+    logger.error(">>> Entering brute_force(input_string=%s,alphabet=%s)", input_string, alphabet, extra={"event.action": "brute_force", "logrite.input_string": input_string, "logrite.alphabet": alphabet})
     # Set default alphabet to lower and upper case english chars
     alpha = alphabet or ascii_letters
 
     # To store data on all the combinations
     brute_force_data = {}
+    logger.error("brute_force(input_string=%s,alphabet=%s): brute_force_data → %s", input_string, alphabet, brute_force_data, extra={"event.action": "brute_force", "logrite.input_string": input_string, "logrite.alphabet": alphabet})
 
     # Cycle through each combination
     for key in range(1, len(alpha) + 1):
         # Decrypt the message and store the result in the data
         brute_force_data[key] = decrypt(input_string, key, alpha)
 
+    logger.warning("<<< Exiting brute_force(input_string=%s,alphabet=%s)", input_string, alphabet, extra={"event.action": "brute_force", "logrite.input_string": input_string, "logrite.alphabet": alphabet})
     return brute_force_data
 
 

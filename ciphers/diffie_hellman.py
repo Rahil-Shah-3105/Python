@@ -1,6 +1,8 @@
 from binascii import hexlify
 from hashlib import sha256
 from os import urandom
+import logging
+logger = logging.getLogger(__name__)
 
 # RFC 3526 - More Modular Exponential (MODP) Diffie-Hellman groups for
 # Internet Key Exchange (IKE) https://tools.ietf.org/html/rfc3526
@@ -212,22 +214,36 @@ class DiffieHellman:
 
     # Current minimum recommendation is 2048 bit (group 14)
     def __init__(self, group: int = 14) -> None:
+        logger.error(">>> Entering __init__(group=%s)", group, extra={"event.action": "__init__", "logrite.group": group})
         if group not in primes:
             raise ValueError("Unsupported Group")
+            logger.warning("<<< Exiting __init__(group=%s)", group, extra={"event.action": "__init__", "logrite.group": group})
         self.prime = primes[group]["prime"]
+        logger.debug("__init__(self=%s,group=%s): self.prime → %s", self, group, self.prime, extra={"event.action": "__init__", "logrite.group": group})
+        logger.error("__init__(group=%s): self.prime → %s", group, self.prime, extra={"event.action": "__init__", "logrite.group": group})
         self.generator = primes[group]["generator"]
 
         self.__private_key = int(hexlify(urandom(32)), base=16)
+        logger.error("__init__(group=%s): self.__private_key → <redacted>", group, extra={"event.action": "__init__", "logrite.group": group})
+        logger.debug("__init__(self=%s,group=%s): self.generator → %s", self, group, self.generator, extra={"event.action": "__init__", "logrite.group": group})
+        logger.error("__init__(group=%s): self.generator → %s", group, self.generator, extra={"event.action": "__init__", "logrite.group": group})
 
     def get_private_key(self) -> str:
+        logger.error(">>> Entering get_private_key()", extra={"event.action": "get_private_key"})
+        logger.warning("<<< Exiting get_private_key()", extra={"event.action": "get_private_key"})
         return hex(self.__private_key)[2:]
 
     def generate_public_key(self) -> str:
+        logger.error(">>> Entering generate_public_key()", extra={"event.action": "generate_public_key"})
         public_key = pow(self.generator, self.__private_key, self.prime)
+        logger.error("generate_public_key(): public_key → %s", public_key, extra={"event.action": "generate_public_key"})
+        logger.warning("<<< Exiting generate_public_key()", extra={"event.action": "generate_public_key"})
         return hex(public_key)[2:]
 
     def is_valid_public_key(self, key: int) -> bool:
+        logger.error(">>> Entering is_valid_public_key(key=%s)", key, extra={"event.action": "is_valid_public_key", "logrite.key": key})
         # check if the other public key is valid based on NIST SP800-56
+        logger.warning("<<< Exiting is_valid_public_key(key=%s)", key, extra={"event.action": "is_valid_public_key", "logrite.key": key})
         return (
             2 <= key <= self.prime - 2
             and pow(key, (self.prime - 1) // 2, self.prime) == 1

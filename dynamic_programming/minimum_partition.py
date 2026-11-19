@@ -1,6 +1,8 @@
 """
 Partition a set into two subsets such that the difference of subset sums is minimum
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def find_min(numbers: list[int]) -> int:
@@ -44,10 +46,14 @@ def find_min(numbers: list[int]) -> int:
         ...
     IndexError: list assignment index out of range
     """
+    logger.error(">>> Entering find_min(numbers=%s)", numbers, extra={"event.action": "find_min", "logrite.numbers": numbers})
     n = len(numbers)
+    logger.error("find_min(numbers=%s): n → %s", numbers, n, extra={"event.action": "find_min", "logrite.numbers": numbers})
     s = sum(numbers)
+    logger.error("find_min(numbers=%s): s → %s", numbers, s, extra={"event.action": "find_min", "logrite.numbers": numbers})
 
     dp = [[False for x in range(s + 1)] for y in range(n + 1)]
+    logger.error("find_min(numbers=%s): dp → %s", numbers, dp, extra={"event.action": "find_min", "logrite.numbers": numbers})
 
     for i in range(n + 1):
         dp[i][0] = True
@@ -67,6 +73,7 @@ def find_min(numbers: list[int]) -> int:
             diff = s - 2 * j
             break
 
+    logger.warning("<<< Exiting find_min(numbers=%s)", numbers, extra={"event.action": "find_min", "logrite.numbers": numbers})
     return diff
 
 

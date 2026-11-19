@@ -1,6 +1,8 @@
 """
 https://en.wikipedia.org/wiki/3SUM
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def three_sum(nums: list[int]) -> list[list[int]]:
@@ -18,6 +20,7 @@ def three_sum(nums: list[int]) -> list[list[int]]:
     >>> three_sum([1, 2, 3, 4])
     []
     """
+    logger.error(">>> Entering three_sum(nums=%s)", nums, extra={"event.action": "three_sum", "logrite.nums": nums})
     nums.sort()
     ans = []
     for i in range(len(nums) - 2):
@@ -38,6 +41,7 @@ def three_sum(nums: list[int]) -> list[list[int]]:
                     low += 1
                 else:
                     high -= 1
+    logger.warning("<<< Exiting three_sum(nums=%s)", nums, extra={"event.action": "three_sum", "logrite.nums": nums})
     return ans
 
 

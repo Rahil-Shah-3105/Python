@@ -6,11 +6,14 @@ is the 'Hamiltonian path problem', which is NP-complete.
 
 Wikipedia: https://en.wikipedia.org/wiki/Hamiltonian_path
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def valid_connection(
     graph: list[list[int]], next_ver: int, curr_ind: int, path: list[int]
 ) -> bool:
+    logger.error(">>> Entering valid_connection(graph=%s,next_ver=%s,curr_ind=%s,path=%s)", graph, next_ver, curr_ind, path, extra={"event.action": "valid_connection", "logrite.graph": graph, "logrite.next_ver": next_ver, "logrite.curr_ind": curr_ind, "logrite.path": path})
     """
     Checks whether it is possible to add next into path by validating 2 statements
     1. There should be path between current and next vertex
@@ -43,6 +46,7 @@ def valid_connection(
         return False
 
     # 2. Validate that next vertex is not already in path
+    logger.warning("<<< Exiting valid_connection(graph=%s,next_ver=%s,curr_ind=%s,path=%s)", graph, next_ver, curr_ind, path, extra={"event.action": "valid_connection", "logrite.graph": graph, "logrite.next_ver": next_ver, "logrite.curr_ind": curr_ind, "logrite.path": path})
     return not any(vertex == next_ver for vertex in path)
 
 
@@ -88,6 +92,7 @@ def util_hamilton_cycle(graph: list[list[int]], path: list[int], curr_ind: int) 
     >>> path
     [0, 1, 2, 4, 3, 0]
     """
+    logger.error(">>> Entering util_hamilton_cycle(graph=%s,path=%s,curr_ind=%s)", graph, path, curr_ind, extra={"event.action": "util_hamilton_cycle", "logrite.graph": graph, "logrite.path": path, "logrite.curr_ind": curr_ind})
 
     # Base Case
     if curr_ind == len(graph):
@@ -104,6 +109,7 @@ def util_hamilton_cycle(graph: list[list[int]], path: list[int], curr_ind: int) 
                 return True
             # Backtrack
             path[curr_ind] = -1
+    logger.warning("<<< Exiting util_hamilton_cycle(graph=%s,path=%s,curr_ind=%s)", graph, path, curr_ind, extra={"event.action": "util_hamilton_cycle", "logrite.graph": graph, "logrite.path": path, "logrite.curr_ind": curr_ind})
     return False
 
 
@@ -167,10 +173,13 @@ def hamilton_cycle(graph: list[list[int]], start_index: int = 0) -> list[int]:
     >>> hamilton_cycle(graph,4)
     []
     """
+    logger.error(">>> Entering hamilton_cycle(graph=%s,start_index=%s)", graph, start_index, extra={"event.action": "hamilton_cycle", "logrite.graph": graph, "logrite.start_index": start_index})
 
     # Initialize path with -1, indicating that we have not visited them yet
     path = [-1] * (len(graph) + 1)
+    logger.error("hamilton_cycle(graph=%s,start_index=%s): path → %s", graph, start_index, path, extra={"event.action": "hamilton_cycle", "logrite.graph": graph, "logrite.start_index": start_index})
     # initialize start and end of path with starting index
     path[0] = path[-1] = start_index
     # evaluate and if we find answer return path either return empty array
+    logger.warning("<<< Exiting hamilton_cycle(graph=%s,start_index=%s)", graph, start_index, extra={"event.action": "hamilton_cycle", "logrite.graph": graph, "logrite.start_index": start_index})
     return path if util_hamilton_cycle(graph, path, 1) else []

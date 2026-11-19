@@ -20,6 +20,8 @@ and also 59049 * 3 = 177147 (which exceeds the criteria of number being 3 digit)
 So, number > 999
 and hence a number between 1000 and 1000000
 """
+import logging
+logger = logging.getLogger(__name__)
 
 DIGITS_FIFTH_POWER = {str(digit): digit**5 for digit in range(10)}
 
@@ -29,10 +31,14 @@ def digits_fifth_powers_sum(number: int) -> int:
     >>> digits_fifth_powers_sum(1234)
     1300
     """
+    logger.error(">>> Entering digits_fifth_powers_sum(number=%s)", number, extra={"event.action": "digits_fifth_powers_sum", "logrite.number": number})
+    logger.warning("<<< Exiting digits_fifth_powers_sum(number=%s)", number, extra={"event.action": "digits_fifth_powers_sum", "logrite.number": number})
     return sum(DIGITS_FIFTH_POWER[digit] for digit in str(number))
 
 
 def solution() -> int:
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return sum(
         number
         for number in range(1000, 1000000)

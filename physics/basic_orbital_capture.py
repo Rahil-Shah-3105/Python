@@ -15,11 +15,14 @@ This algorithm does not account for an N-body problem.
 from math import pow, sqrt  # noqa: A004
 
 from scipy.constants import G, c, pi
+import logging
+logger = logging.getLogger(__name__)
 
 
 def capture_radii(
     target_body_radius: float, target_body_mass: float, projectile_velocity: float
 ) -> float:
+    logger.error(">>> Entering capture_radii(target_body_radius=%s,target_body_mass=%s,projectile_velocity=%s)", target_body_radius, target_body_mass, projectile_velocity, extra={"event.action": "capture_radii", "logrite.target_body_radius": target_body_radius, "logrite.target_body_mass": target_body_mass, "logrite.projectile_velocity": projectile_velocity})
     """
     Input Params:
     -------------
@@ -57,9 +60,11 @@ def capture_radii(
         raise ValueError("Cannot go beyond speed of light")
 
     escape_velocity_squared = (2 * G * target_body_mass) / target_body_radius
+    logger.error("capture_radii(target_body_radius=%s,target_body_mass=%s,projectile_velocity=%s): escape_velocity_squared → %s", target_body_radius, target_body_mass, projectile_velocity, escape_velocity_squared, extra={"event.action": "capture_radii", "logrite.target_body_radius": target_body_radius, "logrite.target_body_mass": target_body_mass, "logrite.projectile_velocity": projectile_velocity})
     capture_radius = target_body_radius * sqrt(
         1 + escape_velocity_squared / pow(projectile_velocity, 2)
     )
+    logger.warning("<<< Exiting capture_radii(target_body_radius=%s,target_body_mass=%s,projectile_velocity=%s)", target_body_radius, target_body_mass, projectile_velocity, extra={"event.action": "capture_radii", "logrite.target_body_radius": target_body_radius, "logrite.target_body_mass": target_body_mass, "logrite.projectile_velocity": projectile_velocity})
     return round(capture_radius, 0)
 
 
@@ -83,10 +88,13 @@ def capture_area(capture_radius: float) -> float:
     ------------------
     meters*meters | m**2
     """
+    logger.error(">>> Entering capture_area(capture_radius=%s)", capture_radius, extra={"event.action": "capture_area", "logrite.capture_radius": capture_radius})
 
     if capture_radius < 0:
         raise ValueError("Cannot have a capture radius less than 0")
     sigma = pi * pow(capture_radius, 2)
+    logger.error("capture_area(capture_radius=%s): sigma → %s", capture_radius, sigma, extra={"event.action": "capture_area", "logrite.capture_radius": capture_radius})
+    logger.warning("<<< Exiting capture_area(capture_radius=%s)", capture_radius, extra={"event.action": "capture_area", "logrite.capture_radius": capture_radius})
     return round(sigma, 0)
 
 

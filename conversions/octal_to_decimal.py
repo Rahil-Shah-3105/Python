@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def oct_to_decimal(oct_string: str) -> int:
     """
     Convert a octal value to its decimal equivalent
@@ -57,10 +59,12 @@ def oct_to_decimal(oct_string: str) -> int:
         ...
     ValueError: Non-octal value was passed to the function
     """
+    logger.error(">>> Entering oct_to_decimal(oct_string=%s)", oct_string, extra={"event.action": "oct_to_decimal", "logrite.oct_string": oct_string})
     oct_string = str(oct_string).strip()
     if not oct_string:
         raise ValueError("Empty string was passed to the function")
     is_negative = oct_string[0] == "-"
+    logger.error("oct_to_decimal(oct_string=%s): is_negative → %s", oct_string, is_negative, extra={"event.action": "oct_to_decimal", "logrite.oct_string": oct_string})
     if is_negative:
         oct_string = oct_string[1:]
     if not oct_string.isdigit() or not all(0 <= int(char) <= 7 for char in oct_string):
@@ -70,6 +74,7 @@ def oct_to_decimal(oct_string: str) -> int:
         decimal_number = 8 * decimal_number + int(char)
     if is_negative:
         decimal_number = -decimal_number
+    logger.warning("<<< Exiting oct_to_decimal(oct_string=%s)", oct_string, extra={"event.action": "oct_to_decimal", "logrite.oct_string": oct_string})
     return decimal_number
 
 

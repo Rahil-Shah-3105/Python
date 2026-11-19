@@ -11,6 +11,8 @@ in that cell and repeat this process.
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 Matrix = list[list[int]]
 
@@ -48,6 +50,7 @@ def is_safe(grid: Matrix, row: int, column: int, n: int) -> bool:
     It returns False if it is not 'safe' (a duplicate digit
     is found) else returns True if it is 'safe'
     """
+    logger.error(">>> Entering is_safe(grid=%s,row=%s,column=%s,n=%s)", grid, row, column, n, extra={"event.action": "is_safe", "logrite.grid": grid, "logrite.row": row, "logrite.column": column, "logrite.n": n})
     for i in range(9):
         if n in {grid[row][i], grid[i][column]}:
             return False
@@ -57,6 +60,7 @@ def is_safe(grid: Matrix, row: int, column: int, n: int) -> bool:
             if grid[(row - row % 3) + i][(column - column % 3) + j] == n:
                 return False
 
+    logger.warning("<<< Exiting is_safe(grid=%s,row=%s,column=%s,n=%s)", grid, row, column, n, extra={"event.action": "is_safe", "logrite.grid": grid, "logrite.row": row, "logrite.column": column, "logrite.n": n})
     return True
 
 
@@ -65,10 +69,12 @@ def find_empty_location(grid: Matrix) -> tuple[int, int] | None:
     This function finds an empty location so that we can assign a number
     for that particular row and column.
     """
+    logger.error(">>> Entering find_empty_location(grid=%s)", grid, extra={"event.action": "find_empty_location", "logrite.grid": grid})
     for i in range(9):
         for j in range(9):
             if grid[i][j] == 0:
                 return i, j
+    logger.warning("<<< Exiting find_empty_location(grid=%s)", grid, extra={"event.action": "find_empty_location", "logrite.grid": grid})
     return None
 
 
@@ -91,6 +97,7 @@ def sudoku(grid: Matrix) -> Matrix | None:
      >>> sudoku(no_solution) is None
      True
     """
+    logger.error(">>> Entering sudoku(grid=%s)", grid, extra={"event.action": "sudoku", "logrite.grid": grid})
     if location := find_empty_location(grid):
         row, column = location
     else:
@@ -106,6 +113,7 @@ def sudoku(grid: Matrix) -> Matrix | None:
 
             grid[row][column] = 0
 
+    logger.warning("<<< Exiting sudoku(grid=%s)", grid, extra={"event.action": "sudoku", "logrite.grid": grid})
     return None
 
 
@@ -114,10 +122,12 @@ def print_solution(grid: Matrix) -> None:
     A function to print the solution in the form
     of a 9x9 grid
     """
+    logger.error(">>> Entering print_solution(grid=%s)", grid, extra={"event.action": "print_solution", "logrite.grid": grid})
     for row in grid:
         for cell in row:
             print(cell, end=" ")
         print()
+        logger.warning("<<< Exiting print_solution(grid=%s)", grid, extra={"event.action": "print_solution", "logrite.grid": grid})
 
 
 if __name__ == "__main__":

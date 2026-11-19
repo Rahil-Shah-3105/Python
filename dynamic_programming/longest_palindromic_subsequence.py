@@ -6,6 +6,8 @@ Output: 4
 Explanation: One possible longest palindromic subsequence is "bbbb".
 Leetcode link: https://leetcode.com/problems/longest-palindromic-subsequence/description/
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def longest_palindromic_subsequence(input_string: str) -> int:
@@ -16,10 +18,14 @@ def longest_palindromic_subsequence(input_string: str) -> int:
     >>> longest_palindromic_subsequence("bbabcbcab")
     7
     """
+    logger.error(">>> Entering longest_palindromic_subsequence(input_string=%s)", input_string, extra={"event.action": "longest_palindromic_subsequence", "logrite.input_string": input_string})
     n = len(input_string)
+    logger.error("longest_palindromic_subsequence(input_string=%s): n → %s", input_string, n, extra={"event.action": "longest_palindromic_subsequence", "logrite.input_string": input_string})
     rev = input_string[::-1]
     m = len(rev)
+    logger.error("longest_palindromic_subsequence(input_string=%s): m → %s", input_string, m, extra={"event.action": "longest_palindromic_subsequence", "logrite.input_string": input_string})
     dp = [[-1] * (m + 1) for i in range(n + 1)]
+    logger.error("longest_palindromic_subsequence(input_string=%s): dp → %s", input_string, dp, extra={"event.action": "longest_palindromic_subsequence", "logrite.input_string": input_string})
     for i in range(n + 1):
         dp[i][0] = 0
     for i in range(m + 1):
@@ -35,6 +41,7 @@ def longest_palindromic_subsequence(input_string: str) -> int:
             else:
                 dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
 
+    logger.warning("<<< Exiting longest_palindromic_subsequence(input_string=%s)", input_string, extra={"event.action": "longest_palindromic_subsequence", "logrite.input_string": input_string})
     return dp[n][m]
 
 

@@ -5,6 +5,8 @@ Problem 16: https://projecteuler.net/problem=16
 
 What is the sum of the digits of the number 2^1000?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(power: int = 1000) -> int:
@@ -19,10 +21,12 @@ def solution(power: int = 1000) -> int:
     >>> solution(15)
     26
     """
+    logger.error(">>> Entering solution(power=%s)", power, extra={"event.action": "solution", "logrite.power": power})
     n = 2**power
     r = 0
     while n:
         r, n = r + n % 10, n // 10
+    logger.warning("<<< Exiting solution(power=%s)", power, extra={"event.action": "solution", "logrite.power": power})
     return r
 
 

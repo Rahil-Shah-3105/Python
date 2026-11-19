@@ -3,6 +3,8 @@ Calculate the rank of a matrix.
 
 See: https://en.wikipedia.org/wiki/Rank_(linear_algebra)
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def rank_of_matrix(matrix: list[list[int | float]]) -> int:
@@ -55,10 +57,14 @@ def rank_of_matrix(matrix: list[list[int | float]]) -> int:
     >>> rank_of_matrix([[]])
     0
     """
+    logger.error(">>> Entering rank_of_matrix(matrix=%s)", matrix, extra={"event.action": "rank_of_matrix", "logrite.matrix": matrix})
 
     rows = len(matrix)
+    logger.error("rank_of_matrix(matrix=%s): rows → %s", matrix, rows, extra={"event.action": "rank_of_matrix", "logrite.matrix": matrix})
     columns = len(matrix[0])
+    logger.error("rank_of_matrix(matrix=%s): columns → %s", matrix, columns, extra={"event.action": "rank_of_matrix", "logrite.matrix": matrix})
     rank = min(rows, columns)
+    logger.error("rank_of_matrix(matrix=%s): rank → %s", matrix, rank, extra={"event.action": "rank_of_matrix", "logrite.matrix": matrix})
 
     for row in range(rank):
         # Check if diagonal element is not zero
@@ -84,6 +90,7 @@ def rank_of_matrix(matrix: list[list[int | float]]) -> int:
             # Reduce the row pointer by one to stay on the same row
             row -= 1
 
+    logger.warning("<<< Exiting rank_of_matrix(matrix=%s)", matrix, extra={"event.action": "rank_of_matrix", "logrite.matrix": matrix})
     return rank
 
 

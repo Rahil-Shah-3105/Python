@@ -14,12 +14,15 @@ References:
 from __future__ import annotations
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def _euclidean_distance(
     point_a: tuple[float, float],
     point_b: tuple[float, float],
 ) -> float:
+    logger.error(">>> Entering _euclidean_distance(point_a=%s,point_b=%s)", point_a, point_b, extra={"event.action": "_euclidean_distance", "logrite.point_a": point_a, "logrite.point_b": point_b})
     """Return the Euclidean distance between two 2-D points.
 
     >>> _euclidean_distance((0.0, 0.0), (3.0, 4.0))
@@ -27,6 +30,7 @@ def _euclidean_distance(
     >>> _euclidean_distance((1.0, 1.0), (1.0, 1.0))
     0.0
     """
+    logger.warning("<<< Exiting _euclidean_distance(point_a=%s,point_b=%s)", point_a, point_b, extra={"event.action": "_euclidean_distance", "logrite.point_a": point_a, "logrite.point_b": point_b})
     return math.hypot(point_b[0] - point_a[0], point_b[1] - point_a[1])
 
 
@@ -35,6 +39,7 @@ def _perpendicular_distance(
     line_start: tuple[float, float],
     line_end: tuple[float, float],
 ) -> float:
+    logger.error(">>> Entering _perpendicular_distance(point=%s,line_start=%s,line_end=%s)", point, line_start, line_end, extra={"event.action": "_perpendicular_distance", "logrite.point": point, "logrite.line_start": line_start, "logrite.line_end": line_end})
     """Return the distance from *point* to the line **segment** between
     *line_start* and *line_end*.
 
@@ -73,6 +78,7 @@ def _perpendicular_distance(
     t = max(0.0, min(1.0, ((px - ax) * dx + (py - ay) * dy) / seg_len_sq))
     nearest_x = ax + t * dx
     nearest_y = ay + t * dy
+    logger.warning("<<< Exiting _perpendicular_distance(point=%s,line_start=%s,line_end=%s)", point, line_start, line_end, extra={"event.action": "_perpendicular_distance", "logrite.point": point, "logrite.line_start": line_start, "logrite.line_end": line_end})
     return math.hypot(px - nearest_x, py - nearest_y)
 
 
@@ -80,6 +86,7 @@ def ramer_douglas_peucker(
     pts: list[tuple[float, float]],
     epsilon: float,
 ) -> list[tuple[float, float]]:
+    logger.error(">>> Entering ramer_douglas_peucker(pts=%s,epsilon=%s)", pts, epsilon, extra={"event.action": "ramer_douglas_peucker", "logrite.pts": pts, "logrite.epsilon": epsilon})
     """Simplify a polyline using the Ramer-Douglas-Peucker algorithm.
 
     Given a sequence of 2-D points and a maximum allowable deviation
@@ -130,6 +137,7 @@ def ramer_douglas_peucker(
     """
     if epsilon < 0:
         msg = f"epsilon must be non-negative, got {epsilon!r}"
+        logger.error("ramer_douglas_peucker(pts=%s,epsilon=%s): msg → %s", pts, epsilon, msg, extra={"event.action": "ramer_douglas_peucker", "logrite.pts": pts, "logrite.epsilon": epsilon})
         raise ValueError(msg)
 
     if len(pts) < 3:
@@ -175,6 +183,7 @@ def ramer_douglas_peucker(
             stack.append((max_index, end))
         # else: all interior points are within epsilon; discard them all.
 
+    logger.warning("<<< Exiting ramer_douglas_peucker(pts=%s,epsilon=%s)", pts, epsilon, extra={"event.action": "ramer_douglas_peucker", "logrite.pts": pts, "logrite.epsilon": epsilon})
     return [pts[i] for i in range(n) if keep[i]]
 
 

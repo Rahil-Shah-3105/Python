@@ -9,6 +9,8 @@ The problem is :
 Given two strings A and B. Find the minimum number of operations to string B such that
 A = B. The permitted operations are removal,  insertion, and substitution.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 class EditDistance:
@@ -19,11 +21,17 @@ class EditDistance:
     """
 
     def __init__(self):
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
         self.word1 = ""
+        logger.debug("__init__(self=%s): self.word1 → %s", self, self.word1, extra={"event.action": "__init__"})
         self.word2 = ""
+        logger.error("__init__(): self.word2 → %s", self.word2, extra={"event.action": "__init__"})
+        logger.error("__init__(): self.word1 → %s", self.word1, extra={"event.action": "__init__"})
+        logger.debug("__init__(self=%s): self.word2 → %s", self, self.word2, extra={"event.action": "__init__"})
         self.dp = []
 
     def __min_dist_top_down_dp(self, m: int, n: int) -> int:
+        logger.error(">>> Entering __min_dist_top_down_dp(m=%s,n=%s)", m, n, extra={"event.action": "__min_dist_top_down_dp", "logrite.m": m, "logrite.n": n})
         if m == -1:
             return n + 1
         elif n == -1:
@@ -39,6 +47,7 @@ class EditDistance:
                 replace = self.__min_dist_top_down_dp(m - 1, n - 1)
                 self.dp[m][n] = 1 + min(insert, delete, replace)
 
+            logger.warning("<<< Exiting __min_dist_top_down_dp(m=%s,n=%s)", m, n, extra={"event.action": "__min_dist_top_down_dp", "logrite.m": m, "logrite.n": n})
             return self.dp[m][n]
 
     def min_dist_top_down(self, word1: str, word2: str) -> int:
@@ -50,10 +59,15 @@ class EditDistance:
         >>> EditDistance().min_dist_top_down("", "")
         0
         """
+        logger.error(">>> Entering min_dist_top_down(word1=%s,word2=%s)", word1, word2, extra={"event.action": "min_dist_top_down", "logrite.word1": word1, "logrite.word2": word2})
         self.word1 = word1
+        logger.debug("min_dist_top_down(self=%s,word1=%s,word2=%s): self.word1 → %s", self, word1, word2, self.word1, extra={"event.action": "min_dist_top_down", "logrite.word1": word1, "logrite.word2": word2})
         self.word2 = word2
+        logger.debug("min_dist_top_down(self=%s,word1=%s,word2=%s): self.word2 → %s", self, word1, word2, self.word2, extra={"event.action": "min_dist_top_down", "logrite.word1": word1, "logrite.word2": word2})
         self.dp = [[-1 for _ in range(len(word2))] for _ in range(len(word1))]
+        logger.error("min_dist_top_down(word1=%s,word2=%s): self.dp → %s", word1, word2, self.dp, extra={"event.action": "min_dist_top_down", "logrite.word1": word1, "logrite.word2": word2})
 
+        logger.warning("<<< Exiting min_dist_top_down(word1=%s,word2=%s)", word1, word2, extra={"event.action": "min_dist_top_down", "logrite.word1": word1, "logrite.word2": word2})
         return self.__min_dist_top_down_dp(len(word1) - 1, len(word2) - 1)
 
     def min_dist_bottom_up(self, word1: str, word2: str) -> int:
@@ -65,11 +79,17 @@ class EditDistance:
         >>> EditDistance().min_dist_bottom_up("", "")
         0
         """
+        logger.error(">>> Entering min_dist_bottom_up(word1=%s,word2=%s)", word1, word2, extra={"event.action": "min_dist_bottom_up", "logrite.word1": word1, "logrite.word2": word2})
         self.word1 = word1
+        logger.debug("min_dist_bottom_up(self=%s,word1=%s,word2=%s): self.word1 → %s", self, word1, word2, self.word1, extra={"event.action": "min_dist_bottom_up", "logrite.word1": word1, "logrite.word2": word2})
         self.word2 = word2
+        logger.debug("min_dist_bottom_up(self=%s,word1=%s,word2=%s): self.word2 → %s", self, word1, word2, self.word2, extra={"event.action": "min_dist_bottom_up", "logrite.word1": word1, "logrite.word2": word2})
         m = len(word1)
+        logger.error("min_dist_bottom_up(word1=%s,word2=%s): m → %s", word1, word2, m, extra={"event.action": "min_dist_bottom_up", "logrite.word1": word1, "logrite.word2": word2})
         n = len(word2)
+        logger.error("min_dist_bottom_up(word1=%s,word2=%s): n → %s", word1, word2, n, extra={"event.action": "min_dist_bottom_up", "logrite.word1": word1, "logrite.word2": word2})
         self.dp = [[0 for _ in range(n + 1)] for _ in range(m + 1)]
+        logger.error("min_dist_bottom_up(word1=%s,word2=%s): self.dp → %s", word1, word2, self.dp, extra={"event.action": "min_dist_bottom_up", "logrite.word1": word1, "logrite.word2": word2})
 
         for i in range(m + 1):
             for j in range(n + 1):
@@ -84,6 +104,7 @@ class EditDistance:
                     delete = self.dp[i - 1][j]
                     replace = self.dp[i - 1][j - 1]
                     self.dp[i][j] = 1 + min(insert, delete, replace)
+        logger.warning("<<< Exiting min_dist_bottom_up(word1=%s,word2=%s)", word1, word2, extra={"event.action": "min_dist_bottom_up", "logrite.word1": word1, "logrite.word2": word2})
         return self.dp[m][n]
 
 

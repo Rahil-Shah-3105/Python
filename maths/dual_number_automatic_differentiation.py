@@ -1,4 +1,6 @@
 from math import factorial
+import logging
+logger = logging.getLogger(__name__)
 
 """
 https://en.wikipedia.org/wiki/Automatic_differentiation#Automatic_differentiation_using_dual_numbers
@@ -10,23 +12,34 @@ Note this only works for basic functions, f(x) where the power of x is positive.
 
 class Dual:
     def __init__(self, real, rank):
+        logger.error(">>> Entering __init__(real=%s,rank=%s)", real, rank, extra={"event.action": "__init__", "logrite.real": real, "logrite.rank": rank})
         self.real = real
+        logger.debug("__init__(self=%s,real=%s,rank=%s): self.real → %s", self, real, rank, self.real, extra={"event.action": "__init__", "logrite.real": real, "logrite.rank": rank})
         if isinstance(rank, int):
             self.duals = [1] * rank
         else:
             self.duals = rank
+            logger.debug("__init__(self=%s,real=%s,rank=%s): self.duals → %s", self, real, rank, self.duals, extra={"event.action": "__init__", "logrite.real": real, "logrite.rank": rank})
+            logger.warning("<<< Exiting __init__(real=%s,rank=%s)", real, rank, extra={"event.action": "__init__", "logrite.real": real, "logrite.rank": rank})
 
     def __repr__(self):
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
         s = "+".join(f"{dual}E{n}" for n, dual in enumerate(self.duals, 1))
+        logger.error("__repr__(): s → %s", s, extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"{self.real}+{s}"
 
     def reduce(self):
+        logger.error(">>> Entering reduce()", extra={"event.action": "reduce"})
         cur = self.duals.copy()
+        logger.error("reduce(): cur → %s", cur, extra={"event.action": "reduce"})
         while cur[-1] == 0:
             cur.pop(-1)
+        logger.warning("<<< Exiting reduce()", extra={"event.action": "reduce"})
         return Dual(self.real, cur)
 
     def __add__(self, other):
+        logger.error(">>> Entering __add__(other=%s)", other, extra={"event.action": "__add__", "logrite.other": other})
         if not isinstance(other, Dual):
             return Dual(self.real + other, self.duals)
         s_dual = self.duals.copy()
@@ -38,16 +51,21 @@ class Dual:
         new_duals = []
         for i in range(len(s_dual)):
             new_duals.append(s_dual[i] + o_dual[i])
+        logger.warning("<<< Exiting __add__(other=%s)", other, extra={"event.action": "__add__", "logrite.other": other})
         return Dual(self.real + other.real, new_duals)
 
     __radd__ = __add__
 
     def __sub__(self, other):
+        logger.error(">>> Entering __sub__(other=%s)", other, extra={"event.action": "__sub__", "logrite.other": other})
+        logger.warning("<<< Exiting __sub__(other=%s)", other, extra={"event.action": "__sub__", "logrite.other": other})
         return self + other * -1
 
     def __mul__(self, other):
+        logger.error(">>> Entering __mul__(other=%s)", other, extra={"event.action": "__mul__", "logrite.other": other})
         if not isinstance(other, Dual):
             new_duals = []
+            logger.error("__mul__(other=%s): new_duals → %s", other, new_duals, extra={"event.action": "__mul__", "logrite.other": other})
             for i in self.duals:
                 new_duals.append(i * other)
             return Dual(self.real * other, new_duals)
@@ -59,19 +77,23 @@ class Dual:
             new_duals[k] += self.duals[k] * other.real
         for index in range(len(other.duals)):
             new_duals[index] += other.duals[index] * self.real
+        logger.warning("<<< Exiting __mul__(other=%s)", other, extra={"event.action": "__mul__", "logrite.other": other})
         return Dual(self.real * other.real, new_duals)
 
     __rmul__ = __mul__
 
     def __truediv__(self, other):
+        logger.error(">>> Entering __truediv__(other=%s)", other, extra={"event.action": "__truediv__", "logrite.other": other})
         if not isinstance(other, Dual):
             new_duals = []
             for i in self.duals:
                 new_duals.append(i / other)
             return Dual(self.real / other, new_duals)
+        logger.warning("<<< Exiting __truediv__(other=%s)", other, extra={"event.action": "__truediv__", "logrite.other": other})
         raise ValueError
 
     def __floordiv__(self, other):
+        logger.error(">>> Entering __floordiv__(other=%s)", other, extra={"event.action": "__floordiv__", "logrite.other": other})
         if not isinstance(other, Dual):
             new_duals = []
             for i in self.duals:

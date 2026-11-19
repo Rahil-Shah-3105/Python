@@ -19,6 +19,8 @@ What is sum N(n) for 1 ≤ n ≤ 10?
 
 from collections import defaultdict
 from math import ceil, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(t_limit: int = 1000000, n_limit: int = 10) -> int:
@@ -32,7 +34,9 @@ def solution(t_limit: int = 1000000, n_limit: int = 10) -> int:
     >>> solution(10000,10)
     2383
     """
+    logger.error(">>> Entering solution(t_limit=%s,n_limit=%s)", t_limit, n_limit, extra={"event.action": "solution", "logrite.t_limit": t_limit, "logrite.n_limit": n_limit})
     count: defaultdict = defaultdict(int)
+    logger.error("solution(t_limit=%s,n_limit=%s): count → %s", t_limit, n_limit, count, extra={"event.action": "solution", "logrite.t_limit": t_limit, "logrite.n_limit": n_limit})
 
     for outer_width in range(3, (t_limit // 4) + 2):
         if outer_width * outer_width > t_limit:

@@ -7,6 +7,8 @@ from __future__ import annotations
 
 from pprint import pformat
 from typing import TypeVar
+import logging
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
 
@@ -77,13 +79,17 @@ class GraphAdjacencyList[T]:
         Parameters:
         directed: (bool) Indicates if graph is directed or undirected. Default is True.
         """
+        logger.error(">>> Entering __init__(directed=%s)", directed, extra={"event.action": "__init__", "logrite.directed": directed})
 
         self.adj_list: dict[T, list[T]] = {}  # dictionary of lists
+        logger.warning("<<< Exiting __init__(directed=%s)", directed, extra={"event.action": "__init__", "logrite.directed": directed})
         self.directed = directed
+        logger.debug("__init__(self=%s,directed=%s): self.directed → %s", self, directed, self.directed, extra={"event.action": "__init__", "logrite.directed": directed})
 
     def add_edge(
         self, source_vertex: T, destination_vertex: T
     ) -> GraphAdjacencyList[T]:
+        logger.error(">>> Entering add_edge(source_vertex=%s,destination_vertex=%s)", source_vertex, destination_vertex, extra={"event.action": "add_edge", "logrite.source_vertex": source_vertex, "logrite.destination_vertex": destination_vertex})
         """
         Connects vertices together. Creates and Edge from source vertex to destination
         vertex.
@@ -144,7 +150,10 @@ class GraphAdjacencyList[T]:
             self.adj_list[source_vertex] = [destination_vertex]
             self.adj_list[destination_vertex] = []
 
+        logger.warning("<<< Exiting add_edge(source_vertex=%s,destination_vertex=%s)", source_vertex, destination_vertex, extra={"event.action": "add_edge", "logrite.source_vertex": source_vertex, "logrite.destination_vertex": destination_vertex})
         return self
 
     def __repr__(self) -> str:
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return pformat(self.adj_list)

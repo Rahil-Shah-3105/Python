@@ -23,6 +23,8 @@ Result: 2 step
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 __author__ = "Alexander Joslin"
 
@@ -40,12 +42,15 @@ def min_steps_to_one(number: int) -> int:
     :param number:
     :return int:
     """
+    logger.error(">>> Entering min_steps_to_one(number=%s)", number, extra={"event.action": "min_steps_to_one", "logrite.number": number})
 
     if number <= 0:
         msg = f"n must be greater than 0. Got n = {number}"
+        logger.error("min_steps_to_one(number=%s): msg → %s", number, msg, extra={"event.action": "min_steps_to_one", "logrite.number": number})
         raise ValueError(msg)
 
     table = [number + 1] * (number + 1)
+    logger.error("min_steps_to_one(number=%s): table → %s", number, table, extra={"event.action": "min_steps_to_one", "logrite.number": number})
 
     # starting position
     table[1] = 0
@@ -57,6 +62,7 @@ def min_steps_to_one(number: int) -> int:
         # check if out of bounds
         if i * 3 <= number:
             table[i * 3] = min(table[i * 3], table[i] + 1)
+    logger.warning("<<< Exiting min_steps_to_one(number=%s)", number, extra={"event.action": "min_steps_to_one", "logrite.number": number})
     return table[number]
 
 

@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 """
 Shear stress is a component of stress that is coplanar to the material cross-section.
@@ -14,6 +16,7 @@ def shear_stress(
     tangential_force: float,
     area: float,
 ) -> tuple[str, float]:
+    logger.error(">>> Entering shear_stress(stress=%s,tangential_force=%s,area=%s)", stress, tangential_force, area, extra={"event.action": "shear_stress", "logrite.stress": stress, "logrite.tangential_force": tangential_force, "logrite.area": area})
     """
     This function can calculate any one of the three -
     1. Shear Stress
@@ -47,6 +50,7 @@ def shear_stress(
             stress * area,
         )
     else:
+        logger.warning("<<< Exiting shear_stress(stress=%s,tangential_force=%s,area=%s)", stress, tangential_force, area, extra={"event.action": "shear_stress", "logrite.stress": stress, "logrite.tangential_force": tangential_force, "logrite.area": area})
         return (
             "area",
             tangential_force / stress,

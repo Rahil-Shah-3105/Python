@@ -12,6 +12,8 @@ from __future__ import annotations
 
 from enum import Enum, unique
 from typing import TypeVar
+import logging
+logger = logging.getLogger(__name__)
 
 # Create a generic variable that can be 'Enum', or any subclass.
 T = TypeVar("T", bound="Enum")
@@ -65,6 +67,8 @@ class SIUnit(Enum):
         >>> dict(inc)
         {'giga': 9, 'mega': 6, 'kilo': 3, 'hecto': 2, 'deca': 1}
         """
+        logger.error(">>> Entering get_positive()", extra={"event.action": "get_positive"})
+        logger.warning("<<< Exiting get_positive()", extra={"event.action": "get_positive"})
         return {unit.name: unit.value for unit in cls if unit.value > 0}
 
     @classmethod
@@ -81,6 +85,8 @@ class SIUnit(Enum):
         >>> dict(inc)
         {'pico': -12, 'femto': -15, 'atto': -18, 'zepto': -21, 'yocto': -24}
         """
+        logger.error(">>> Entering get_negative()", extra={"event.action": "get_negative"})
+        logger.warning("<<< Exiting get_negative()", extra={"event.action": "get_negative"})
         return {unit.name: unit.value for unit in cls if unit.value < 0}
 
 
@@ -92,11 +98,15 @@ def add_si_prefix(value: float) -> str:
     >>> add_si_prefix(10000)
     '10.0 kilo'
     """
+    logger.error(">>> Entering add_si_prefix(value=%s)", value, extra={"event.action": "add_si_prefix", "logrite.value": value})
     prefixes = SIUnit.get_positive() if value > 0 else SIUnit.get_negative()
+    logger.error("add_si_prefix(value=%s): prefixes → %s", value, prefixes, extra={"event.action": "add_si_prefix", "logrite.value": value})
     for name_prefix, value_prefix in prefixes.items():
         numerical_part = value / (10**value_prefix)
+        logger.error("add_si_prefix(value=%s): numerical_part → %s", value, numerical_part, extra={"event.action": "add_si_prefix", "logrite.value": value})
         if numerical_part > 1:
             return f"{numerical_part!s} {name_prefix}"
+    logger.warning("<<< Exiting add_si_prefix(value=%s)", value, extra={"event.action": "add_si_prefix", "logrite.value": value})
     return str(value)
 
 
@@ -108,10 +118,13 @@ def add_binary_prefix(value: float) -> str:
     >>> add_binary_prefix(65536)
     '64.0 kilo'
     """
+    logger.error(">>> Entering add_binary_prefix(value=%s)", value, extra={"event.action": "add_binary_prefix", "logrite.value": value})
     for prefix in BinaryUnit:
         numerical_part = value / (2**prefix.value)
+        logger.error("add_binary_prefix(value=%s): numerical_part → %s", value, numerical_part, extra={"event.action": "add_binary_prefix", "logrite.value": value})
         if numerical_part > 1:
             return f"{numerical_part!s} {prefix.name}"
+    logger.warning("<<< Exiting add_binary_prefix(value=%s)", value, extra={"event.action": "add_binary_prefix", "logrite.value": value})
     return str(value)
 
 

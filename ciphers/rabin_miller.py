@@ -1,9 +1,12 @@
 # Primality Testing with the Rabin-Miller Algorithm
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 def rabin_miller(num: int) -> bool:
+    logger.error(">>> Entering rabin_miller(num=%s)", num, extra={"event.action": "rabin_miller", "logrite.num": num})
     s = num - 1
     t = 0
 
@@ -13,7 +16,9 @@ def rabin_miller(num: int) -> bool:
 
     for _ in range(5):
         a = random.randrange(2, num - 1)
+        logger.error("rabin_miller(num=%s): a → %s", num, a, extra={"event.action": "rabin_miller", "logrite.num": num})
         v = pow(a, s, num)
+        logger.error("rabin_miller(num=%s): v → %s", num, v, extra={"event.action": "rabin_miller", "logrite.num": num})
         if v != 1:
             i = 0
             while v != (num - 1):
@@ -22,10 +27,12 @@ def rabin_miller(num: int) -> bool:
                 else:
                     i = i + 1
                     v = (v**2) % num
+    logger.warning("<<< Exiting rabin_miller(num=%s)", num, extra={"event.action": "rabin_miller", "logrite.num": num})
     return True
 
 
 def is_prime_low_num(num: int) -> bool:
+    logger.error(">>> Entering is_prime_low_num(num=%s)", num, extra={"event.action": "is_prime_low_num", "logrite.num": num})
     if num < 2:
         return False
 
@@ -207,13 +214,17 @@ def is_prime_low_num(num: int) -> bool:
         if (num % prime) == 0:
             return False
 
+    logger.warning("<<< Exiting is_prime_low_num(num=%s)", num, extra={"event.action": "is_prime_low_num", "logrite.num": num})
     return rabin_miller(num)
 
 
 def generate_large_prime(keysize: int = 1024) -> int:
+    logger.error(">>> Entering generate_large_prime(keysize=%s)", keysize, extra={"event.action": "generate_large_prime", "logrite.keysize": keysize})
     while True:
         num = random.randrange(2 ** (keysize - 1), 2 ** (keysize))
+        logger.error("generate_large_prime(keysize=%s): num → %s", keysize, num, extra={"event.action": "generate_large_prime", "logrite.keysize": keysize})
         if is_prime_low_num(num):
+            logger.warning("<<< Exiting generate_large_prime(keysize=%s)", keysize, extra={"event.action": "generate_large_prime", "logrite.keysize": keysize})
             return num
 
 

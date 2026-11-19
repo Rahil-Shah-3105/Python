@@ -4,6 +4,8 @@ Best Case Scenario : O(n)
 Worst Case Scenario : O(n^2) because native Python functions:min, max and remove are
 already O(n)
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def merge_sort(collection: list) -> list:
@@ -23,6 +25,7 @@ def merge_sort(collection: list) -> list:
     >>> merge_sort([-2, -5, -45])
     [-45, -5, -2]
     """
+    logger.error(">>> Entering merge_sort(collection=%s)", collection, extra={"event.action": "merge_sort", "logrite.collection": collection})
     start, end = [], []
     while len(collection) > 1:
         min_one, max_one = min(collection), max(collection)
@@ -31,6 +34,7 @@ def merge_sort(collection: list) -> list:
         collection.remove(min_one)
         collection.remove(max_one)
     end.reverse()
+    logger.warning("<<< Exiting merge_sort(collection=%s)", collection, extra={"event.action": "merge_sort", "logrite.collection": collection})
     return start + collection + end
 
 

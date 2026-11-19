@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def upper(word: str) -> str:
     """
     Convert an entire string to ASCII uppercase letters by looking for lowercase ASCII
@@ -13,6 +15,8 @@ def upper(word: str) -> str:
     >>> upper("wh[]32")
     'WH[]32'
     """
+    logger.error(">>> Entering upper(word=%s)", word, extra={"event.action": "upper", "logrite.word": word})
+    logger.warning("<<< Exiting upper(word=%s)", word, extra={"event.action": "upper", "logrite.word": word})
     return "".join(chr(ord(char) - 32) if "a" <= char <= "z" else char for char in word)
 
 

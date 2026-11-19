@@ -1,4 +1,6 @@
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def escape_velocity(mass: float, radius: float) -> float:
@@ -39,12 +41,19 @@ def escape_velocity(mass: float, radius: float) -> float:
             ...
         ZeroDivisionError: Radius cannot be zero.
     """
+    logger.error(">>> Entering escape_velocity(mass=%s,radius=%s)", mass, radius, extra={"event.action": "escape_velocity", "logrite.mass": mass, "logrite.radius": radius})
+    logger.error("escape_velocity(mass=%s,radius=%s): v → %s", mass, radius, v, extra={"event.action": "escape_velocity", "logrite.mass": mass, "logrite.radius": radius})
+    logger.error("escape_velocity(mass=%s,radius=%s): G → %s", mass, radius, G, extra={"event.action": "escape_velocity", "logrite.mass": mass, "logrite.radius": radius})
+    logger.error("escape_velocity(mass=%s,radius=%s): M → %s", mass, radius, M, extra={"event.action": "escape_velocity", "logrite.mass": mass, "logrite.radius": radius})
+    logger.error("escape_velocity(mass=%s,radius=%s): R → %s", mass, radius, R, extra={"event.action": "escape_velocity", "logrite.mass": mass, "logrite.radius": radius})
     gravitational_constant = 6.67430e-11  # m^3 kg^-1 s^-2
 
     if radius == 0:
         raise ZeroDivisionError("Radius cannot be zero.")
 
     velocity = math.sqrt(2 * gravitational_constant * mass / radius)
+    logger.error("escape_velocity(mass=%s,radius=%s): velocity → %s", mass, radius, velocity, extra={"event.action": "escape_velocity", "logrite.mass": mass, "logrite.radius": radius})
+    logger.warning("<<< Exiting escape_velocity(mass=%s,radius=%s)", mass, radius, extra={"event.action": "escape_velocity", "logrite.mass": mass, "logrite.radius": radius})
     return round(velocity, 3)
 
 

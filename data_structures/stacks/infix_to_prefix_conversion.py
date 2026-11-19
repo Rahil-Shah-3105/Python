@@ -13,6 +13,8 @@ Enter an Infix Equation = a + b ^c
 
          a+b^c (Infix) ->  +a^bc (Prefix)
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def infix_2_postfix(infix: str) -> str:
@@ -62,8 +64,10 @@ def infix_2_postfix(infix: str) -> str:
         ...
     IndexError: list index out of range
     """
+    logger.error(">>> Entering infix_2_postfix(infix=%s)", infix, extra={"event.action": "infix_2_postfix", "logrite.infix": infix})
     stack = []
     post_fix = []
+    logger.warning("<<< Exiting infix_2_postfix(infix=%s)", infix, extra={"event.action": "infix_2_postfix", "logrite.infix": infix})
     priority = {
         "^": 3,
         "*": 2,
@@ -73,6 +77,7 @@ def infix_2_postfix(infix: str) -> str:
         "-": 1,
     }  # Priority of each operator
     print_width = max(len(infix), 7)
+    logger.error("infix_2_postfix(infix=%s): print_width → %s", infix, print_width, extra={"event.action": "infix_2_postfix", "logrite.infix": infix})
 
     # Print table header for output
     print(
@@ -170,7 +175,10 @@ def infix_2_prefix(infix: str) -> str:
         ...
     ValueError: invalid expression
     """
+    logger.error(">>> Entering infix_2_prefix(infix=%s)", infix, extra={"event.action": "infix_2_prefix", "logrite.infix": infix})
     reversed_infix = list(infix[::-1])  # reverse the infix equation
+    logger.warning("<<< Exiting infix_2_prefix(infix=%s)", infix, extra={"event.action": "infix_2_prefix", "logrite.infix": infix})
+    logger.error("infix_2_prefix(infix=%s): reversed_infix → %s", infix, reversed_infix, extra={"event.action": "infix_2_prefix", "logrite.infix": infix})
 
     for i in range(len(reversed_infix)):
         if reversed_infix[i] == "(":

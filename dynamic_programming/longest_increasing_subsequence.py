@@ -14,6 +14,8 @@ Example:
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def longest_subsequence(array: list[int]) -> list[int]:  # This function is recursive
@@ -33,7 +35,9 @@ def longest_subsequence(array: list[int]) -> list[int]:  # This function is recu
     >>> longest_subsequence([])
     []
     """
+    logger.error(">>> Entering longest_subsequence(array=%s)", array, extra={"event.action": "longest_subsequence", "logrite.array": array})
     array_length = len(array)
+    logger.error("longest_subsequence(array=%s): array_length → %s", array, array_length, extra={"event.action": "longest_subsequence", "logrite.array": array})
     # If the array contains only one element, we return it (it's the stop condition of
     # recursion)
     if array_length <= 1:
@@ -58,6 +62,7 @@ def longest_subsequence(array: list[int]) -> list[int]:  # This function is recu
     if len(temp_array) > len(longest_subseq):
         return temp_array
     else:
+        logger.warning("<<< Exiting longest_subsequence(array=%s)", array, extra={"event.action": "longest_subsequence", "logrite.array": array})
         return longest_subseq
 
 

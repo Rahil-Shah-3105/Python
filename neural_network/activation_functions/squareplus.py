@@ -7,6 +7,8 @@ https://en.wikipedia.org/wiki/Rectifier_(neural_networks)#Squareplus
 """
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def squareplus(vector: np.ndarray, beta: float) -> np.ndarray:
@@ -29,6 +31,8 @@ def squareplus(vector: np.ndarray, beta: float) -> np.ndarray:
     >>> squareplus(np.array([-9.2, -0.3, 0.45, -4.56]), beta=3)
     array([0.0808119 , 0.72891979, 1.11977651, 0.15893419])
     """
+    logger.error(">>> Entering squareplus(vector=%s,beta=%s)", vector, beta, extra={"event.action": "squareplus", "logrite.vector": vector, "logrite.beta": beta})
+    logger.warning("<<< Exiting squareplus(vector=%s,beta=%s)", vector, beta, extra={"event.action": "squareplus", "logrite.vector": vector, "logrite.beta": beta})
     return (vector + np.sqrt(vector**2 + beta)) / 2
 
 

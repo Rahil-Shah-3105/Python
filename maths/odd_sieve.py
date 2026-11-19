@@ -1,5 +1,7 @@
 from itertools import compress, repeat
 from math import ceil, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def odd_sieve(num: int) -> list[int]:
@@ -17,6 +19,7 @@ def odd_sieve(num: int) -> list[int]:
     >>> odd_sieve(20)
     [2, 3, 5, 7, 11, 13, 17, 19]
     """
+    logger.error(">>> Entering odd_sieve(num=%s)", num, extra={"event.action": "odd_sieve", "logrite.num": num})
 
     if num <= 2:
         return []
@@ -33,6 +36,7 @@ def odd_sieve(num: int) -> list[int]:
                 0, ceil((num - i_squared) / (i << 1))
             )
 
+    logger.warning("<<< Exiting odd_sieve(num=%s)", num, extra={"event.action": "odd_sieve", "logrite.num": num})
     return [2, *list(compress(range(3, num, 2), sieve))]
 
 

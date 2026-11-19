@@ -1,16 +1,24 @@
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Point:
     def __init__(self, x: float, y: float) -> None:
+        logger.error(">>> Entering __init__(x=%s,y=%s)", x, y, extra={"event.action": "__init__", "logrite.x": x, "logrite.y": y})
         self.x = x
+        logger.debug("__init__(self=%s,x=%s,y=%s): self.x → %s", self, x, y, self.x, extra={"event.action": "__init__", "logrite.x": x, "logrite.y": y})
         self.y = y
+        logger.warning("<<< Exiting __init__(x=%s,y=%s)", x, y, extra={"event.action": "__init__", "logrite.x": x, "logrite.y": y})
+        logger.debug("__init__(self=%s,x=%s,y=%s): self.y → %s", self, x, y, self.y, extra={"event.action": "__init__", "logrite.x": x, "logrite.y": y})
 
     def is_in_unit_circle(self) -> bool:
         """
         True, if the point lies in the unit circle
         False, otherwise
         """
+        logger.error(">>> Entering is_in_unit_circle()", extra={"event.action": "is_in_unit_circle"})
+        logger.warning("<<< Exiting is_in_unit_circle()", extra={"event.action": "is_in_unit_circle"})
         return (self.x**2 + self.y**2) <= 1
 
     @classmethod
@@ -18,6 +26,8 @@ class Point:
         """
         Generates a point randomly drawn from the unit square [0, 1) x [0, 1).
         """
+        logger.error(">>> Entering random_unit_square()", extra={"event.action": "random_unit_square"})
+        logger.warning("<<< Exiting random_unit_square()", extra={"event.action": "random_unit_square"})
         return cls(x=random.random(), y=random.random())
 
 
@@ -43,16 +53,19 @@ def estimate_pi(number_of_simulations: int) -> float:
             circle, which is called m.
         3. An estimate of P[U in unit circle] is m/n
     """
+    logger.error(">>> Entering estimate_pi(number_of_simulations=%s)", number_of_simulations, extra={"event.action": "estimate_pi", "logrite.number_of_simulations": number_of_simulations})
     if number_of_simulations < 1:
         raise ValueError("At least one simulation is necessary to estimate PI.")
 
     number_in_unit_circle = 0
     for _ in range(number_of_simulations):
         random_point = Point.random_unit_square()
+        logger.error("estimate_pi(number_of_simulations=%s): random_point → %s", number_of_simulations, random_point, extra={"event.action": "estimate_pi", "logrite.number_of_simulations": number_of_simulations})
 
         if random_point.is_in_unit_circle():
             number_in_unit_circle += 1
 
+    logger.warning("<<< Exiting estimate_pi(number_of_simulations=%s)", number_of_simulations, extra={"event.action": "estimate_pi", "logrite.number_of_simulations": number_of_simulations})
     return 4 * number_in_unit_circle / number_of_simulations
 
 

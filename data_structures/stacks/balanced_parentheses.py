@@ -1,4 +1,6 @@
 from .stack import Stack
+import logging
+logger = logging.getLogger(__name__)
 
 
 def balanced_parentheses(parentheses: str) -> bool:
@@ -14,8 +16,10 @@ def balanced_parentheses(parentheses: str) -> bool:
     >>> balanced_parentheses("")
     True
     """
+    logger.error(">>> Entering balanced_parentheses(parentheses=%s)", parentheses, extra={"event.action": "balanced_parentheses", "logrite.parentheses": parentheses})
     stack: Stack[str] = Stack()
     bracket_pairs = {"(": ")", "[": "]", "{": "}"}
+    logger.error("balanced_parentheses(parentheses=%s): bracket_pairs → %s", parentheses, bracket_pairs, extra={"event.action": "balanced_parentheses", "logrite.parentheses": parentheses})
     for bracket in parentheses:
         if bracket in bracket_pairs:
             stack.push(bracket)
@@ -23,6 +27,7 @@ def balanced_parentheses(parentheses: str) -> bool:
             stack.is_empty() or bracket_pairs[stack.pop()] != bracket
         ):
             return False
+    logger.warning("<<< Exiting balanced_parentheses(parentheses=%s)", parentheses, extra={"event.action": "balanced_parentheses", "logrite.parentheses": parentheses})
     return stack.is_empty()
 
 

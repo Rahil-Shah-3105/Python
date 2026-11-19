@@ -24,6 +24,8 @@ REFERENCES :
 -> Wikipedia reference: https://en.wikipedia.org/wiki/Foot-pound_(energy)
 -> Unit converter reference: https://www.unitconverters.net/energy-converter.html
 """
+import logging
+logger = logging.getLogger(__name__)
 
 ENERGY_CONVERSION: dict[str, float] = {
     "joule": 1.0,
@@ -99,12 +101,14 @@ def energy_conversion(from_type: str, to_type: str, value: float) -> float:
     ValueError: Incorrect 'from_type' or 'to_type' value: '123', 'abc'
     Valid values are: joule, ... footpound
     """
+    logger.error(">>> Entering energy_conversion(from_type=%s,to_type=%s,value=%s)", from_type, to_type, value, extra={"event.action": "energy_conversion", "logrite.from_type": from_type, "logrite.to_type": to_type, "logrite.value": value})
     if to_type not in ENERGY_CONVERSION or from_type not in ENERGY_CONVERSION:
         msg = (
             f"Incorrect 'from_type' or 'to_type' value: {from_type!r}, {to_type!r}\n"
             f"Valid values are: {', '.join(ENERGY_CONVERSION)}"
         )
         raise ValueError(msg)
+    logger.warning("<<< Exiting energy_conversion(from_type=%s,to_type=%s,value=%s)", from_type, to_type, value, extra={"event.action": "energy_conversion", "logrite.from_type": from_type, "logrite.to_type": to_type, "logrite.value": value})
     return value * ENERGY_CONVERSION[from_type] / ENERGY_CONVERSION[to_type]
 
 

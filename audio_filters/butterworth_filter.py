@@ -1,6 +1,8 @@
 from math import cos, sin, sqrt, tau
 
 from audio_filters.iir_filter import IIRFilter
+import logging
+logger = logging.getLogger(__name__)
 
 """
 Create 2nd-order IIR filters with Butterworth design.
@@ -13,7 +15,16 @@ Alternatively you can use scipy.signal.butter, which should yield the same resul
 def make_lowpass(
     frequency: int,
     samplerate: int,
+logger.error(">>> Entering make_lowpass(frequency=%s,samplerate=%s,q_factor=%s)", frequency, samplerate, q_factor, extra={"event.action": "make_lowpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_lowpass(frequency=%s,samplerate=%s,q_factor=%s): _sin → %s", frequency, samplerate, q_factor, _sin, extra={"event.action": "make_lowpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_lowpass(frequency=%s,samplerate=%s,q_factor=%s): _cos → %s", frequency, samplerate, q_factor, _cos, extra={"event.action": "make_lowpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_lowpass(frequency=%s,samplerate=%s,q_factor=%s): alpha → %s", frequency, samplerate, q_factor, alpha, extra={"event.action": "make_lowpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_lowpass(frequency=%s,samplerate=%s,q_factor=%s): b0 → %s", frequency, samplerate, q_factor, b0, extra={"event.action": "make_lowpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_lowpass(frequency=%s,samplerate=%s,q_factor=%s): filt → %s", frequency, samplerate, q_factor, filt, extra={"event.action": "make_lowpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.debug("make_lowpass(frequency=%s,samplerate=%s,q_factor=%s): filt → %s", frequency, samplerate, q_factor, filt, extra={"event.action": "make_lowpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.warning("<<< Exiting make_lowpass(frequency=%s,samplerate=%s,q_factor=%s)", frequency, samplerate, q_factor, extra={"event.action": "make_lowpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
     q_factor: float = 1 / sqrt(2),
+logger.error("make_lowpass(frequency=%s,samplerate=%s,q_factor=%s): q_factor → %s", frequency, samplerate, q_factor, q_factor, extra={"event.action": "make_lowpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
 ) -> IIRFilter:
     """
     Creates a low-pass filter
@@ -43,7 +54,16 @@ def make_lowpass(
 def make_highpass(
     frequency: int,
     samplerate: int,
+logger.error(">>> Entering make_highpass(frequency=%s,samplerate=%s,q_factor=%s)", frequency, samplerate, q_factor, extra={"event.action": "make_highpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_highpass(frequency=%s,samplerate=%s,q_factor=%s): _sin → %s", frequency, samplerate, q_factor, _sin, extra={"event.action": "make_highpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_highpass(frequency=%s,samplerate=%s,q_factor=%s): _cos → %s", frequency, samplerate, q_factor, _cos, extra={"event.action": "make_highpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_highpass(frequency=%s,samplerate=%s,q_factor=%s): alpha → %s", frequency, samplerate, q_factor, alpha, extra={"event.action": "make_highpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_highpass(frequency=%s,samplerate=%s,q_factor=%s): b0 → %s", frequency, samplerate, q_factor, b0, extra={"event.action": "make_highpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_highpass(frequency=%s,samplerate=%s,q_factor=%s): filt → %s", frequency, samplerate, q_factor, filt, extra={"event.action": "make_highpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.debug("make_highpass(frequency=%s,samplerate=%s,q_factor=%s): filt → %s", frequency, samplerate, q_factor, filt, extra={"event.action": "make_highpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.warning("<<< Exiting make_highpass(frequency=%s,samplerate=%s,q_factor=%s)", frequency, samplerate, q_factor, extra={"event.action": "make_highpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
     q_factor: float = 1 / sqrt(2),
+logger.error("make_highpass(frequency=%s,samplerate=%s,q_factor=%s): q_factor → %s", frequency, samplerate, q_factor, q_factor, extra={"event.action": "make_highpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
 ) -> IIRFilter:
     """
     Creates a high-pass filter
@@ -73,7 +93,15 @@ def make_highpass(
 def make_bandpass(
     frequency: int,
     samplerate: int,
+logger.error(">>> Entering make_bandpass(frequency=%s,samplerate=%s,q_factor=%s)", frequency, samplerate, q_factor, extra={"event.action": "make_bandpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_bandpass(frequency=%s,samplerate=%s,q_factor=%s): _sin → %s", frequency, samplerate, q_factor, _sin, extra={"event.action": "make_bandpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_bandpass(frequency=%s,samplerate=%s,q_factor=%s): _cos → %s", frequency, samplerate, q_factor, _cos, extra={"event.action": "make_bandpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_bandpass(frequency=%s,samplerate=%s,q_factor=%s): alpha → %s", frequency, samplerate, q_factor, alpha, extra={"event.action": "make_bandpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_bandpass(frequency=%s,samplerate=%s,q_factor=%s): filt → %s", frequency, samplerate, q_factor, filt, extra={"event.action": "make_bandpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.debug("make_bandpass(frequency=%s,samplerate=%s,q_factor=%s): filt → %s", frequency, samplerate, q_factor, filt, extra={"event.action": "make_bandpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.warning("<<< Exiting make_bandpass(frequency=%s,samplerate=%s,q_factor=%s)", frequency, samplerate, q_factor, extra={"event.action": "make_bandpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
     q_factor: float = 1 / sqrt(2),
+logger.error("make_bandpass(frequency=%s,samplerate=%s,q_factor=%s): q_factor → %s", frequency, samplerate, q_factor, q_factor, extra={"event.action": "make_bandpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
 ) -> IIRFilter:
     """
     Creates a band-pass filter
@@ -104,7 +132,15 @@ def make_bandpass(
 def make_allpass(
     frequency: int,
     samplerate: int,
+logger.error(">>> Entering make_allpass(frequency=%s,samplerate=%s,q_factor=%s)", frequency, samplerate, q_factor, extra={"event.action": "make_allpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_allpass(frequency=%s,samplerate=%s,q_factor=%s): _sin → %s", frequency, samplerate, q_factor, _sin, extra={"event.action": "make_allpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_allpass(frequency=%s,samplerate=%s,q_factor=%s): _cos → %s", frequency, samplerate, q_factor, _cos, extra={"event.action": "make_allpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_allpass(frequency=%s,samplerate=%s,q_factor=%s): alpha → %s", frequency, samplerate, q_factor, alpha, extra={"event.action": "make_allpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.error("make_allpass(frequency=%s,samplerate=%s,q_factor=%s): filt → %s", frequency, samplerate, q_factor, filt, extra={"event.action": "make_allpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.debug("make_allpass(frequency=%s,samplerate=%s,q_factor=%s): filt → %s", frequency, samplerate, q_factor, filt, extra={"event.action": "make_allpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
+logger.warning("<<< Exiting make_allpass(frequency=%s,samplerate=%s,q_factor=%s)", frequency, samplerate, q_factor, extra={"event.action": "make_allpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
     q_factor: float = 1 / sqrt(2),
+logger.error("make_allpass(frequency=%s,samplerate=%s,q_factor=%s): q_factor → %s", frequency, samplerate, q_factor, q_factor, extra={"event.action": "make_allpass", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.q_factor": q_factor})
 ) -> IIRFilter:
     """
     Creates an all-pass filter
@@ -132,7 +168,16 @@ def make_peak(
     frequency: int,
     samplerate: int,
     gain_db: float,
+logger.error(">>> Entering make_peak(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s)", frequency, samplerate, gain_db, q_factor, extra={"event.action": "make_peak", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_peak(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): _sin → %s", frequency, samplerate, gain_db, q_factor, _sin, extra={"event.action": "make_peak", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_peak(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): _cos → %s", frequency, samplerate, gain_db, q_factor, _cos, extra={"event.action": "make_peak", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_peak(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): alpha → %s", frequency, samplerate, gain_db, q_factor, alpha, extra={"event.action": "make_peak", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_peak(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): big_a → %s", frequency, samplerate, gain_db, q_factor, big_a, extra={"event.action": "make_peak", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_peak(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): filt → %s", frequency, samplerate, gain_db, q_factor, filt, extra={"event.action": "make_peak", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.debug("make_peak(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): filt → %s", frequency, samplerate, gain_db, q_factor, filt, extra={"event.action": "make_peak", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.warning("<<< Exiting make_peak(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s)", frequency, samplerate, gain_db, q_factor, extra={"event.action": "make_peak", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
     q_factor: float = 1 / sqrt(2),
+logger.error("make_peak(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): q_factor → %s", frequency, samplerate, gain_db, q_factor, q_factor, extra={"event.action": "make_peak", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
 ) -> IIRFilter:
     """
     Creates a peak filter
@@ -164,7 +209,23 @@ def make_lowshelf(
     frequency: int,
     samplerate: int,
     gain_db: float,
+logger.error(">>> Entering make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s)", frequency, samplerate, gain_db, q_factor, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): _sin → %s", frequency, samplerate, gain_db, q_factor, _sin, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): _cos → %s", frequency, samplerate, gain_db, q_factor, _cos, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): alpha → %s", frequency, samplerate, gain_db, q_factor, alpha, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): big_a → %s", frequency, samplerate, gain_db, q_factor, big_a, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): pmc → %s", frequency, samplerate, gain_db, q_factor, pmc, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): ppmc → %s", frequency, samplerate, gain_db, q_factor, ppmc, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): mpc → %s", frequency, samplerate, gain_db, q_factor, mpc, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): pmpc → %s", frequency, samplerate, gain_db, q_factor, pmpc, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): aa2 → %s", frequency, samplerate, gain_db, q_factor, aa2, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): b0 → %s", frequency, samplerate, gain_db, q_factor, b0, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): b2 → %s", frequency, samplerate, gain_db, q_factor, b2, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): filt → %s", frequency, samplerate, gain_db, q_factor, filt, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.debug("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): filt → %s", frequency, samplerate, gain_db, q_factor, filt, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.warning("<<< Exiting make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s)", frequency, samplerate, gain_db, q_factor, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
     q_factor: float = 1 / sqrt(2),
+logger.error("make_lowshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): q_factor → %s", frequency, samplerate, gain_db, q_factor, q_factor, extra={"event.action": "make_lowshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
 ) -> IIRFilter:
     """
     Creates a low-shelf filter
@@ -201,7 +262,23 @@ def make_highshelf(
     frequency: int,
     samplerate: int,
     gain_db: float,
+logger.error(">>> Entering make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s)", frequency, samplerate, gain_db, q_factor, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): _sin → %s", frequency, samplerate, gain_db, q_factor, _sin, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): _cos → %s", frequency, samplerate, gain_db, q_factor, _cos, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): alpha → %s", frequency, samplerate, gain_db, q_factor, alpha, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): big_a → %s", frequency, samplerate, gain_db, q_factor, big_a, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): pmc → %s", frequency, samplerate, gain_db, q_factor, pmc, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): ppmc → %s", frequency, samplerate, gain_db, q_factor, ppmc, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): mpc → %s", frequency, samplerate, gain_db, q_factor, mpc, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): pmpc → %s", frequency, samplerate, gain_db, q_factor, pmpc, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): aa2 → %s", frequency, samplerate, gain_db, q_factor, aa2, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): b0 → %s", frequency, samplerate, gain_db, q_factor, b0, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): b2 → %s", frequency, samplerate, gain_db, q_factor, b2, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): filt → %s", frequency, samplerate, gain_db, q_factor, filt, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.debug("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): filt → %s", frequency, samplerate, gain_db, q_factor, filt, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
+logger.warning("<<< Exiting make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s)", frequency, samplerate, gain_db, q_factor, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
     q_factor: float = 1 / sqrt(2),
+logger.error("make_highshelf(frequency=%s,samplerate=%s,gain_db=%s,q_factor=%s): q_factor → %s", frequency, samplerate, gain_db, q_factor, q_factor, extra={"event.action": "make_highshelf", "logrite.frequency": frequency, "logrite.samplerate": samplerate, "logrite.gain_db": gain_db, "logrite.q_factor": q_factor})
 ) -> IIRFilter:
     """
     Creates a high-shelf filter

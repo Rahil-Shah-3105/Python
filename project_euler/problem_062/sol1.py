@@ -11,6 +11,8 @@ cube.
 """
 
 from collections import defaultdict
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(max_base: int = 5) -> int:
@@ -30,15 +32,19 @@ def solution(max_base: int = 5) -> int:
     >>> solution(3)
     41063625
     """
+    logger.error(">>> Entering solution(max_base=%s)", max_base, extra={"event.action": "solution", "logrite.max_base": max_base})
     freqs = defaultdict(list)
+    logger.error("solution(max_base=%s): freqs → %s", max_base, freqs, extra={"event.action": "solution", "logrite.max_base": max_base})
     num = 0
 
     while True:
         digits = get_digits(num)
+        logger.error("solution(max_base=%s): digits → %s", max_base, digits, extra={"event.action": "solution", "logrite.max_base": max_base})
         freqs[digits].append(num)
 
         if len(freqs[digits]) == max_base:
             base = freqs[digits][0] ** 3
+            logger.warning("<<< Exiting solution(max_base=%s)", max_base, extra={"event.action": "solution", "logrite.max_base": max_base})
             return base
 
         num += 1
@@ -55,6 +61,8 @@ def get_digits(num: int) -> str:
     >>> get_digits(123)
     '0166788'
     """
+    logger.error(">>> Entering get_digits(num=%s)", num, extra={"event.action": "get_digits", "logrite.num": num})
+    logger.warning("<<< Exiting get_digits(num=%s)", num, extra={"event.action": "get_digits", "logrite.num": num})
     return "".join(sorted(str(num**3)))
 
 

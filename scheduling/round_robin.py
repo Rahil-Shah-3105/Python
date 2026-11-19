@@ -7,6 +7,8 @@ https://en.wikipedia.org/wiki/Round-robin_scheduling
 from __future__ import annotations
 
 from statistics import mean
+import logging
+logger = logging.getLogger(__name__)
 
 
 def calculate_waiting_times(burst_times: list[int]) -> list[int]:
@@ -21,9 +23,12 @@ def calculate_waiting_times(burst_times: list[int]) -> list[int]:
     >>> calculate_waiting_times([12, 2, 10])
     [12, 2, 12]
     """
+    logger.error(">>> Entering calculate_waiting_times(burst_times=%s)", burst_times, extra={"event.action": "calculate_waiting_times", "logrite.burst_times": burst_times})
     quantum = 2
     rem_burst_times = list(burst_times)
+    logger.error("calculate_waiting_times(burst_times=%s): rem_burst_times → %s", burst_times, rem_burst_times, extra={"event.action": "calculate_waiting_times", "logrite.burst_times": burst_times})
     waiting_times = [0] * len(burst_times)
+    logger.error("calculate_waiting_times(burst_times=%s): waiting_times → %s", burst_times, waiting_times, extra={"event.action": "calculate_waiting_times", "logrite.burst_times": burst_times})
     t = 0
     while True:
         done = True
@@ -38,18 +43,21 @@ def calculate_waiting_times(burst_times: list[int]) -> list[int]:
                     waiting_times[i] = t - burst_time
                     rem_burst_times[i] = 0
         if done is True:
+            logger.warning("<<< Exiting calculate_waiting_times(burst_times=%s)", burst_times, extra={"event.action": "calculate_waiting_times", "logrite.burst_times": burst_times})
             return waiting_times
 
 
 def calculate_turn_around_times(
     burst_times: list[int], waiting_times: list[int]
 ) -> list[int]:
+    logger.error(">>> Entering calculate_turn_around_times(burst_times=%s,waiting_times=%s)", burst_times, waiting_times, extra={"event.action": "calculate_turn_around_times", "logrite.burst_times": burst_times, "logrite.waiting_times": waiting_times})
     """
     >>> calculate_turn_around_times([1, 2, 3, 4], [0, 1, 3])
     [1, 3, 6]
     >>> calculate_turn_around_times([10, 3, 7], [10, 6, 11])
     [20, 9, 18]
     """
+    logger.warning("<<< Exiting calculate_turn_around_times(burst_times=%s,waiting_times=%s)", burst_times, waiting_times, extra={"event.action": "calculate_turn_around_times", "logrite.burst_times": burst_times, "logrite.waiting_times": waiting_times})
     return [burst + waiting for burst, waiting in zip(burst_times, waiting_times)]
 
 

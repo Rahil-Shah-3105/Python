@@ -1,5 +1,7 @@
 # https://en.wikipedia.org/wiki/Hill_climbing
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 class SearchProblem:
@@ -17,9 +19,14 @@ class SearchProblem:
         step_size: size of the step to take when looking for neighbors.
         function_to_optimize: a function to optimize having the signature f(x, y).
         """
+        logger.error(">>> Entering __init__(x=%s,y=%s,step_size=%s,function_to_optimize=%s)", x, y, step_size, function_to_optimize, extra={"event.action": "__init__", "logrite.x": x, "logrite.y": y, "logrite.step_size": step_size, "logrite.function_to_optimize": function_to_optimize})
         self.x = x
+        logger.warning("<<< Exiting __init__(x=%s,y=%s,step_size=%s,function_to_optimize=%s)", x, y, step_size, function_to_optimize, extra={"event.action": "__init__", "logrite.x": x, "logrite.y": y, "logrite.step_size": step_size, "logrite.function_to_optimize": function_to_optimize})
+        logger.debug("__init__(self=%s,x=%s,y=%s,step_size=%s,function_to_optimize=%s): self.x → %s", self, x, y, step_size, function_to_optimize, self.x, extra={"event.action": "__init__", "logrite.x": x, "logrite.y": y, "logrite.step_size": step_size, "logrite.function_to_optimize": function_to_optimize})
         self.y = y
         self.step_size = step_size
+        logger.debug("__init__(self=%s,x=%s,y=%s,step_size=%s,function_to_optimize=%s): self.y → %s", self, x, y, step_size, function_to_optimize, self.y, extra={"event.action": "__init__", "logrite.x": x, "logrite.y": y, "logrite.step_size": step_size, "logrite.function_to_optimize": function_to_optimize})
+        logger.debug("__init__(self=%s,x=%s,y=%s,step_size=%s,function_to_optimize=%s): self.step_size → %s", self, x, y, step_size, function_to_optimize, self.step_size, extra={"event.action": "__init__", "logrite.x": x, "logrite.y": y, "logrite.step_size": step_size, "logrite.function_to_optimize": function_to_optimize})
         self.function = function_to_optimize
 
     def score(self) -> int:
@@ -32,6 +39,8 @@ class SearchProblem:
         >>> SearchProblem(5, 7, 1, test_function).score()  # 5 + 7 = 12
         12
         """
+        logger.error(">>> Entering score()", extra={"event.action": "score"})
+        logger.warning("<<< Exiting score()", extra={"event.action": "score"})
         return self.function(self.x, self.y)
 
     def get_neighbors(self):
@@ -43,7 +52,9 @@ class SearchProblem:
         | 3 | _ | 4 |
         | 5 | 6 | 7 |
         """
+        logger.error(">>> Entering get_neighbors()", extra={"event.action": "get_neighbors"})
         step_size = self.step_size
+        logger.warning("<<< Exiting get_neighbors()", extra={"event.action": "get_neighbors"})
         return [
             SearchProblem(x, y, step_size, self.function)
             for x, y in (
@@ -62,14 +73,18 @@ class SearchProblem:
         """
         hash the string representation of the current search state.
         """
+        logger.error(">>> Entering __hash__()", extra={"event.action": "__hash__"})
+        logger.warning("<<< Exiting __hash__()", extra={"event.action": "__hash__"})
         return hash(str(self))
 
     def __eq__(self, obj):
         """
         Check if the 2 objects are equal.
         """
+        logger.error(">>> Entering __eq__(obj=%s)", obj, extra={"event.action": "__eq__", "logrite.obj": obj})
         if isinstance(obj, SearchProblem):
             return hash(str(self)) == hash(str(obj))
+        logger.warning("<<< Exiting __eq__(obj=%s)", obj, extra={"event.action": "__eq__", "logrite.obj": obj})
         return False
 
     def __str__(self):
@@ -80,6 +95,8 @@ class SearchProblem:
         >>> str(SearchProblem(2, 5, 1, None))
         'x: 2 y: 5'
         """
+        logger.error(">>> Entering __str__()", extra={"event.action": "__str__"})
+        logger.warning("<<< Exiting __str__()", extra={"event.action": "__str__"})
         return f"x: {self.x} y: {self.y}"
 
 
@@ -93,6 +110,7 @@ def hill_climbing(
     visualization: bool = False,
     max_iter: int = 10000,
 ) -> SearchProblem:
+    logger.error(">>> Entering hill_climbing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,max_iter=%s)", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, max_iter, extra={"event.action": "hill_climbing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.max_iter": max_iter})
     """
     Implementation of the hill climbling algorithm.
     We start with a given state, find all its neighbors,
@@ -112,12 +130,15 @@ def hill_climbing(
     iterations = 0
     solution_found = False
     visited = set()
+    logger.error("hill_climbing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,max_iter=%s): visited → %s", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, max_iter, visited, extra={"event.action": "hill_climbing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.max_iter": max_iter})
     while not solution_found and iterations < max_iter:
         visited.add(current_state)
         iterations += 1
         current_score = current_state.score()
+        logger.error("hill_climbing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,max_iter=%s): current_score → %s", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, max_iter, current_score, extra={"event.action": "hill_climbing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.max_iter": max_iter})
         scores.append(current_score)
         neighbors = current_state.get_neighbors()
+        logger.error("hill_climbing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,max_iter=%s): neighbors → %s", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, max_iter, neighbors, extra={"event.action": "hill_climbing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.max_iter": max_iter})
         max_change = -math.inf
         min_change = math.inf
         next_state = None  # to hold the next best neighbor
@@ -132,6 +153,7 @@ def hill_climbing(
             ):
                 continue  # neighbor outside our bounds
             change = neighbor.score() - current_score
+            logger.error("hill_climbing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,max_iter=%s): change → %s", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, max_iter, change, extra={"event.action": "hill_climbing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.max_iter": max_iter})
             if find_max:  # finding max
                 # going to direction with greatest ascent
                 if change > max_change and change > 0:
@@ -156,6 +178,7 @@ def hill_climbing(
         plt.ylabel("Function values")
         plt.show()
 
+    logger.warning("<<< Exiting hill_climbing(search_prob=%s,find_max=%s,max_x=%s,min_x=%s,max_y=%s,min_y=%s,visualization=%s,max_iter=%s)", search_prob, find_max, max_x, min_x, max_y, min_y, visualization, max_iter, extra={"event.action": "hill_climbing", "logrite.search_prob": search_prob, "logrite.find_max": find_max, "logrite.max_x": max_x, "logrite.min_x": min_x, "logrite.max_y": max_y, "logrite.min_y": min_y, "logrite.visualization": visualization, "logrite.max_iter": max_iter})
     return current_state
 
 
@@ -165,6 +188,8 @@ if __name__ == "__main__":
     doctest.testmod()
 
     def test_f1(x, y):
+        logger.error(">>> Entering test_f1(x=%s,y=%s)", x, y, extra={"event.action": "test_f1", "logrite.x": x, "logrite.y": y})
+        logger.warning("<<< Exiting test_f1(x=%s,y=%s)", x, y, extra={"event.action": "test_f1", "logrite.x": x, "logrite.y": y})
         return (x**2) + (y**2)
 
     # starting the problem with initial coordinates (3, 4)
@@ -186,6 +211,8 @@ if __name__ == "__main__":
     )
 
     def test_f2(x, y):
+        logger.error(">>> Entering test_f2(x=%s,y=%s)", x, y, extra={"event.action": "test_f2", "logrite.x": x, "logrite.y": y})
+        logger.warning("<<< Exiting test_f2(x=%s,y=%s)", x, y, extra={"event.action": "test_f2", "logrite.x": x, "logrite.y": y})
         return (3 * x**2) - (6 * y)
 
     prob = SearchProblem(x=3, y=4, step_size=1, function_to_optimize=test_f1)

@@ -9,6 +9,8 @@ Addison Wesley 2006: Chapter 5 Solved Exercise 1)
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def peak(lst: list[int]) -> int:
@@ -25,8 +27,10 @@ def peak(lst: list[int]) -> int:
     >>> peak([1, 2, 3, 4, 3, 2, 1, 0, -1, -2])
     4
     """
+    logger.error(">>> Entering peak(lst=%s)", lst, extra={"event.action": "peak", "logrite.lst": lst})
     # middle index
     m = len(lst) // 2
+    logger.error("peak(lst=%s): m → %s", lst, m, extra={"event.action": "peak", "logrite.lst": lst})
 
     # choose the middle 3 elements
     three = lst[m - 1 : m + 2]
@@ -45,6 +49,7 @@ def peak(lst: list[int]) -> int:
     else:
         if len(lst[:m]) == 2:
             m += 1
+        logger.warning("<<< Exiting peak(lst=%s)", lst, extra={"event.action": "peak", "logrite.lst": lst})
         return peak(lst[:m])
 
 

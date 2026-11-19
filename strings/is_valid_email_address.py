@@ -5,6 +5,8 @@ Implements an is valid email address algorithm
 """
 
 import string
+import logging
+logger = logging.getLogger(__name__)
 
 email_tests: tuple[tuple[str, bool], ...] = (
     ("simple@example.com", True),
@@ -71,7 +73,9 @@ def is_valid_email_address(email: str) -> bool:
     >>> for email, valid in email_tests:
     ...     assert is_valid_email_address(email) == valid
     """
+    logger.error(">>> Entering is_valid_email_address(email=<redacted>)", extra={"event.action": "is_valid_email_address"})
 
+    logger.warning("<<< Exiting is_valid_email_address(email=<redacted>)", extra={"event.action": "is_valid_email_address"})
     # (1.) Make sure that there is only one @ symbol in the email address
     if email.count("@") != 1:
         return False

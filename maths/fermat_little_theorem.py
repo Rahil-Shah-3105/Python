@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # Python program to show the usage of Fermat's little theorem in a division
 # According to Fermat's little theorem, (a / b) mod p always equals
 # a * (b ^ (p - 2)) mod p
@@ -6,6 +8,7 @@
 
 
 def binary_exponentiation(a: int, n: float, mod: int) -> int:
+    logger.error(">>> Entering binary_exponentiation(a=%s,n=%s,mod=%s)", a, n, mod, extra={"event.action": "binary_exponentiation", "logrite.a": a, "logrite.n": n, "logrite.mod": mod})
     if n == 0:
         return 1
 
@@ -14,6 +17,7 @@ def binary_exponentiation(a: int, n: float, mod: int) -> int:
 
     else:
         b = binary_exponentiation(a, n / 2, mod)
+        logger.warning("<<< Exiting binary_exponentiation(a=%s,n=%s,mod=%s)", a, n, mod, extra={"event.action": "binary_exponentiation", "logrite.a": a, "logrite.n": n, "logrite.mod": mod})
         return (b * b) % mod
 
 

@@ -6,6 +6,8 @@ https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 from __future__ import annotations
 
 from PIL import Image
+import logging
+logger = logging.getLogger(__name__)
 
 # Define glider example
 GLIDER = [
@@ -29,6 +31,7 @@ def new_generation(cells: list[list[int]]) -> list[list[int]]:
     >>> new_generation(BLINKER)
     [[0, 0, 0], [1, 1, 1], [0, 0, 0]]
     """
+    logger.error(">>> Entering new_generation(cells=%s)", cells, extra={"event.action": "new_generation", "logrite.cells": cells})
     next_generation = []
     for i in range(len(cells)):
         next_generation_row = []
@@ -66,6 +69,7 @@ def new_generation(cells: list[list[int]]) -> list[list[int]]:
                 next_generation_row.append(0)
 
         next_generation.append(next_generation_row)
+    logger.warning("<<< Exiting new_generation(cells=%s)", cells, extra={"event.action": "new_generation", "logrite.cells": cells})
     return next_generation
 
 
@@ -73,11 +77,14 @@ def generate_images(cells: list[list[int]], frames: int) -> list[Image.Image]:
     """
     Generates a list of images of subsequent Game of Life states.
     """
+    logger.error(">>> Entering generate_images(cells=%s,frames=%s)", cells, frames, extra={"event.action": "generate_images", "logrite.cells": cells, "logrite.frames": frames})
     images = []
     for _ in range(frames):
         # Create output image
         img = Image.new("RGB", (len(cells[0]), len(cells)))
+        logger.error("generate_images(cells=%s,frames=%s): img → %s", cells, frames, img, extra={"event.action": "generate_images", "logrite.cells": cells, "logrite.frames": frames})
         pixels = img.load()
+        logger.error("generate_images(cells=%s,frames=%s): pixels → %s", cells, frames, pixels, extra={"event.action": "generate_images", "logrite.cells": cells, "logrite.frames": frames})
 
         # Save cells to image
         for x in range(len(cells)):
@@ -88,6 +95,8 @@ def generate_images(cells: list[list[int]], frames: int) -> list[Image.Image]:
         # Save image
         images.append(img)
         cells = new_generation(cells)
+    logger.error("generate_images(cells=%s,frames=%s): cells → %s", cells, frames, cells, extra={"event.action": "generate_images", "logrite.cells": cells, "logrite.frames": frames})
+    logger.warning("<<< Exiting generate_images(cells=%s,frames=%s)", cells, frames, extra={"event.action": "generate_images", "logrite.cells": cells, "logrite.frames": frames})
     return images
 
 

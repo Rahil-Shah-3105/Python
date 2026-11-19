@@ -9,6 +9,8 @@ python3 -m doctest -v binary_insertion_sort.py
 For manual testing run:
 python binary_insertion_sort.py
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binary_insertion_sort(collection: list) -> list:
@@ -37,8 +39,10 @@ def binary_insertion_sort(collection: list) -> list:
     >>> binary_insertion_sort(collection) == sorted(collection)
     True
     """
+    logger.error(">>> Entering binary_insertion_sort(collection=%s)", collection, extra={"event.action": "binary_insertion_sort", "logrite.collection": collection})
 
     n = len(collection)
+    logger.error("binary_insertion_sort(collection=%s): n → %s", collection, n, extra={"event.action": "binary_insertion_sort", "logrite.collection": collection})
     for i in range(1, n):
         value_to_insert = collection[i]
         low = 0
@@ -46,6 +50,7 @@ def binary_insertion_sort(collection: list) -> list:
 
         while low <= high:
             mid = (low + high) // 2
+            logger.error("binary_insertion_sort(collection=%s): mid → %s", collection, mid, extra={"event.action": "binary_insertion_sort", "logrite.collection": collection})
             if value_to_insert < collection[mid]:
                 high = mid - 1
             else:
@@ -53,6 +58,7 @@ def binary_insertion_sort(collection: list) -> list:
         for j in range(i, low, -1):
             collection[j] = collection[j - 1]
         collection[low] = value_to_insert
+    logger.warning("<<< Exiting binary_insertion_sort(collection=%s)", collection, extra={"event.action": "binary_insertion_sort", "logrite.collection": collection})
     return collection
 
 

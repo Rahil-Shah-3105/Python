@@ -5,6 +5,8 @@ Use the Runge-Kutta-Fehlberg method to solve Ordinary Differential Equations.
 from collections.abc import Callable
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def runge_kutta_fehlberg_45(
@@ -14,6 +16,7 @@ def runge_kutta_fehlberg_45(
     step_size: float,
     x_final: float,
 ) -> np.ndarray:
+    logger.error(">>> Entering runge_kutta_fehlberg_45(func=%s,x_initial=%s,y_initial=%s,step_size=%s,x_final=%s)", func, x_initial, y_initial, step_size, x_final, extra={"event.action": "runge_kutta_fehlberg_45", "logrite.func": func, "logrite.x_initial": x_initial, "logrite.y_initial": y_initial, "logrite.step_size": step_size, "logrite.x_final": x_final})
     """
     Solve an Ordinary Differential Equations using Runge-Kutta-Fehlberg Method (rkf45)
     of order 5.
@@ -67,15 +70,19 @@ def runge_kutta_fehlberg_45(
         raise ValueError("Step size must be positive.")
 
     n = int((x_final - x_initial) / step_size)
+    logger.error("runge_kutta_fehlberg_45(func=%s,x_initial=%s,y_initial=%s,step_size=%s,x_final=%s): n → %s", func, x_initial, y_initial, step_size, x_final, n, extra={"event.action": "runge_kutta_fehlberg_45", "logrite.func": func, "logrite.x_initial": x_initial, "logrite.y_initial": y_initial, "logrite.step_size": step_size, "logrite.x_final": x_final})
     y = np.zeros(
         (n + 1),
     )
     x = np.zeros(n + 1)
+    logger.error("runge_kutta_fehlberg_45(func=%s,x_initial=%s,y_initial=%s,step_size=%s,x_final=%s): x → %s", func, x_initial, y_initial, step_size, x_final, x, extra={"event.action": "runge_kutta_fehlberg_45", "logrite.func": func, "logrite.x_initial": x_initial, "logrite.y_initial": y_initial, "logrite.step_size": step_size, "logrite.x_final": x_final})
     y[0] = y_initial
     x[0] = x_initial
     for i in range(n):
         k1 = step_size * func(x[i], y[i])
+        logger.error("runge_kutta_fehlberg_45(func=%s,x_initial=%s,y_initial=%s,step_size=%s,x_final=%s): k1 → %s", func, x_initial, y_initial, step_size, x_final, k1, extra={"event.action": "runge_kutta_fehlberg_45", "logrite.func": func, "logrite.x_initial": x_initial, "logrite.y_initial": y_initial, "logrite.step_size": step_size, "logrite.x_final": x_final})
         k2 = step_size * func(x[i] + step_size / 4, y[i] + k1 / 4)
+        logger.error("runge_kutta_fehlberg_45(func=%s,x_initial=%s,y_initial=%s,step_size=%s,x_final=%s): k2 → %s", func, x_initial, y_initial, step_size, x_final, k2, extra={"event.action": "runge_kutta_fehlberg_45", "logrite.func": func, "logrite.x_initial": x_initial, "logrite.y_initial": y_initial, "logrite.step_size": step_size, "logrite.x_final": x_final})
         k3 = step_size * func(
             x[i] + (3 / 8) * step_size, y[i] + (3 / 32) * k1 + (9 / 32) * k2
         )
@@ -105,6 +112,7 @@ def runge_kutta_fehlberg_45(
             + (2 / 55) * k6
         )
         x[i + 1] = step_size + x[i]
+    logger.warning("<<< Exiting runge_kutta_fehlberg_45(func=%s,x_initial=%s,y_initial=%s,step_size=%s,x_final=%s)", func, x_initial, y_initial, step_size, x_final, extra={"event.action": "runge_kutta_fehlberg_45", "logrite.func": func, "logrite.x_initial": x_initial, "logrite.y_initial": y_initial, "logrite.step_size": step_size, "logrite.x_final": x_final})
     return y
 
 

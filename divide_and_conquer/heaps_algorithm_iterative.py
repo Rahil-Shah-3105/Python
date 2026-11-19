@@ -5,6 +5,8 @@ by swapping only two elements.
 More information:
 https://en.wikipedia.org/wiki/Heap%27s_algorithm.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def heaps(arr: list) -> list:
@@ -26,13 +28,16 @@ def heaps(arr: list) -> list:
     ...     for x in ([], [0], [-1, 1], [1, 2, 3]))
     True
     """
+    logger.error(">>> Entering heaps(arr=%s)", arr, extra={"event.action": "heaps", "logrite.arr": arr})
 
     if len(arr) <= 1:
+        logger.warning("<<< Exiting heaps(arr=%s)", arr, extra={"event.action": "heaps", "logrite.arr": arr})
         return [tuple(arr)]
 
     res = []
 
     def generate(n: int, arr: list):
+        logger.error(">>> Entering generate(n=%s,arr=%s)", n, arr, extra={"event.action": "generate", "logrite.n": n, "logrite.arr": arr})
         c = [0] * n
         res.append(tuple(arr))
 
@@ -49,6 +54,7 @@ def heaps(arr: list) -> list:
             else:
                 c[i] = 0
                 i += 1
+                logger.warning("<<< Exiting generate(n=%s,arr=%s)", n, arr, extra={"event.action": "generate", "logrite.n": n, "logrite.arr": arr})
 
     generate(len(arr), arr)
     return res

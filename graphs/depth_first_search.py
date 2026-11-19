@@ -1,6 +1,8 @@
 """Non recursive implementation of a DFS algorithm."""
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def depth_first_search(graph: dict, start: str) -> set[str]:
@@ -17,10 +19,12 @@ def depth_first_search(graph: dict, start: str) -> set[str]:
     >>> all(x in output_G for x in list(depth_first_search(input_G, "G")))
     True
     """
+    logger.error(">>> Entering depth_first_search(graph=%s,start=%s)", graph, start, extra={"event.action": "depth_first_search", "logrite.graph": graph, "logrite.start": start})
     explored, stack = set(start), [start]
 
     while stack:
         v = stack.pop()
+        logger.error("depth_first_search(graph=%s,start=%s): v → %s", graph, start, v, extra={"event.action": "depth_first_search", "logrite.graph": graph, "logrite.start": start})
         explored.add(v)
         # Differences from BFS:
         # 1) pop last element instead of first one
@@ -28,6 +32,7 @@ def depth_first_search(graph: dict, start: str) -> set[str]:
         for adj in reversed(graph[v]):
             if adj not in explored:
                 stack.append(adj)
+    logger.warning("<<< Exiting depth_first_search(graph=%s,start=%s)", graph, start, extra={"event.action": "depth_first_search", "logrite.graph": graph, "logrite.start": start})
     return explored
 
 

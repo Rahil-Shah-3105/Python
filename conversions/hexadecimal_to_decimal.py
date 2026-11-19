@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 hex_table = {hex(i)[2:]: i for i in range(16)}  # Use [:2] to strip off the leading '0x'
 
 
@@ -29,10 +31,12 @@ def hex_to_decimal(hex_string: str) -> int:
         ...
     ValueError: Non-hexadecimal value was passed to the function
     """
+    logger.error(">>> Entering hex_to_decimal(hex_string=%s)", hex_string, extra={"event.action": "hex_to_decimal", "logrite.hex_string": hex_string})
     hex_string = hex_string.strip().lower()
     if not hex_string:
         raise ValueError("Empty string was passed to the function")
     is_negative = hex_string[0] == "-"
+    logger.error("hex_to_decimal(hex_string=%s): is_negative → %s", hex_string, is_negative, extra={"event.action": "hex_to_decimal", "logrite.hex_string": hex_string})
     if is_negative:
         hex_string = hex_string[1:]
     if not all(char in hex_table for char in hex_string):
@@ -40,6 +44,7 @@ def hex_to_decimal(hex_string: str) -> int:
     decimal_number = 0
     for char in hex_string:
         decimal_number = 16 * decimal_number + hex_table[char]
+    logger.warning("<<< Exiting hex_to_decimal(hex_string=%s)", hex_string, extra={"event.action": "hex_to_decimal", "logrite.hex_string": hex_string})
     return -decimal_number if is_negative else decimal_number
 
 

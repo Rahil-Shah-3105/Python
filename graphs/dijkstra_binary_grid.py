@@ -9,6 +9,8 @@ Diagonal movement can be allowed or disallowed.
 from heapq import heappop, heappush
 
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def dijkstra(
@@ -17,6 +19,7 @@ def dijkstra(
     destination: tuple[int, int],
     allow_diagonal: bool,
 ) -> tuple[float | int, list[tuple[int, int]]]:
+    logger.error(">>> Entering dijkstra(grid=%s,source=%s,destination=%s,allow_diagonal=%s)", grid, source, destination, allow_diagonal, extra={"event.action": "dijkstra", "logrite.grid": grid, "logrite.source": source, "logrite.destination": destination, "logrite.allow_diagonal": allow_diagonal})
     """
     Implements Dijkstra's algorithm on a binary grid.
 
@@ -52,8 +55,10 @@ def dijkstra(
 
     queue, visited = [(0, source)], set()
     matrix = np.full((rows, cols), np.inf)
+    logger.error("dijkstra(grid=%s,source=%s,destination=%s,allow_diagonal=%s): matrix → %s", grid, source, destination, allow_diagonal, matrix, extra={"event.action": "dijkstra", "logrite.grid": grid, "logrite.source": source, "logrite.destination": destination, "logrite.allow_diagonal": allow_diagonal})
     matrix[source] = 0
     predecessors = np.empty((rows, cols), dtype=object)
+    logger.error("dijkstra(grid=%s,source=%s,destination=%s,allow_diagonal=%s): predecessors → %s", grid, source, destination, allow_diagonal, predecessors, extra={"event.action": "dijkstra", "logrite.grid": grid, "logrite.source": source, "logrite.destination": destination, "logrite.allow_diagonal": allow_diagonal})
     predecessors[source] = None
 
     while queue:
@@ -80,6 +85,7 @@ def dijkstra(
                     matrix[nx, ny] = dist + 1
                     predecessors[nx, ny] = (x, y)
 
+    logger.warning("<<< Exiting dijkstra(grid=%s,source=%s,destination=%s,allow_diagonal=%s)", grid, source, destination, allow_diagonal, extra={"event.action": "dijkstra", "logrite.grid": grid, "logrite.source": source, "logrite.destination": destination, "logrite.allow_diagonal": allow_diagonal})
     return np.inf, []
 
 

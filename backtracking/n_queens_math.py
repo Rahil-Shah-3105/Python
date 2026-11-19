@@ -77,6 +77,8 @@ for another one or vice versa.
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def depth_first_search(
@@ -86,6 +88,7 @@ def depth_first_search(
     boards: list[list[str]],
     n: int,
 ) -> None:
+    logger.error(">>> Entering depth_first_search(possible_board=%s,diagonal_right_collisions=%s,diagonal_left_collisions=%s,boards=%s,n=%s)", possible_board, diagonal_right_collisions, diagonal_left_collisions, boards, n, extra={"event.action": "depth_first_search", "logrite.possible_board": possible_board, "logrite.diagonal_right_collisions": diagonal_right_collisions, "logrite.diagonal_left_collisions": diagonal_left_collisions, "logrite.boards": boards, "logrite.n": n})
     """
     >>> boards = []
     >>> depth_first_search([], [], [], boards, 4)
@@ -97,6 +100,7 @@ def depth_first_search(
 
     # Get next row in the current board (possible_board) to fill it with a queen
     row = len(possible_board)
+    logger.error("depth_first_search(possible_board=%s,diagonal_right_collisions=%s,diagonal_left_collisions=%s,boards=%s,n=%s): row → %s", possible_board, diagonal_right_collisions, diagonal_left_collisions, boards, n, row, extra={"event.action": "depth_first_search", "logrite.possible_board": possible_board, "logrite.diagonal_right_collisions": diagonal_right_collisions, "logrite.diagonal_left_collisions": diagonal_left_collisions, "logrite.boards": boards, "logrite.n": n})
 
     # If row is equal to the size of the board it means there are a queen in each row in
     # the current board (possible_board)
@@ -104,6 +108,7 @@ def depth_first_search(
         # We convert the variable possible_board that looks like this: [1, 3, 0, 2] to
         # this: ['. Q . . ', '. . . Q ', 'Q . . . ', '. . Q . ']
         boards.append([". " * i + "Q " + ". " * (n - 1 - i) for i in possible_board])
+        logger.warning("<<< Exiting depth_first_search(possible_board=%s,diagonal_right_collisions=%s,diagonal_left_collisions=%s,boards=%s,n=%s)", possible_board, diagonal_right_collisions, diagonal_left_collisions, boards, n, extra={"event.action": "depth_first_search", "logrite.possible_board": possible_board, "logrite.diagonal_right_collisions": diagonal_right_collisions, "logrite.diagonal_left_collisions": diagonal_left_collisions, "logrite.boards": boards, "logrite.n": n})
         return
 
     # We iterate each column in the row to find all possible results in each row
@@ -139,6 +144,7 @@ def depth_first_search(
 
 
 def n_queens_solution(n: int) -> None:
+    logger.error(">>> Entering n_queens_solution(n=%s)", n, extra={"event.action": "n_queens_solution", "logrite.n": n})
     boards: list[list[str]] = []
     depth_first_search([], [], [], boards, n)
 
@@ -149,6 +155,7 @@ def n_queens_solution(n: int) -> None:
         print("")
 
     print(len(boards), "solutions were found.")
+    logger.warning("<<< Exiting n_queens_solution(n=%s)", n, extra={"event.action": "n_queens_solution", "logrite.n": n})
 
 
 if __name__ == "__main__":

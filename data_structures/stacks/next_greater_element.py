@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 arr = [-10, -5, 0, 5, 5.1, 11, 13, 21, 3, 4, -21, -10, -5, -1, 0]
 expect = [-5, 0, 5, 5.1, 11, 13, 21, -1, 4, -1, -10, -5, -1, 0, -1]
@@ -23,9 +25,12 @@ def next_greatest_element_slow(arr: list[float]) -> list[float]:
     >>> next_greatest_element_slow(arr) == expect
     True
     """
+    logger.error(">>> Entering next_greatest_element_slow(arr=%s)", arr, extra={"event.action": "next_greatest_element_slow", "logrite.arr": arr})
 
     result = []
+    logger.error("next_greatest_element_slow(arr=%s): result → %s", arr, result, extra={"event.action": "next_greatest_element_slow", "logrite.arr": arr})
     arr_size = len(arr)
+    logger.error("next_greatest_element_slow(arr=%s): arr_size → %s", arr, arr_size, extra={"event.action": "next_greatest_element_slow", "logrite.arr": arr})
 
     for i in range(arr_size):
         next_element: float = -1
@@ -34,6 +39,7 @@ def next_greatest_element_slow(arr: list[float]) -> list[float]:
                 next_element = arr[j]
                 break
         result.append(next_element)
+    logger.warning("<<< Exiting next_greatest_element_slow(arr=%s)", arr, extra={"event.action": "next_greatest_element_slow", "logrite.arr": arr})
     return result
 
 
@@ -57,7 +63,9 @@ def next_greatest_element_fast(arr: list[float]) -> list[float]:
     >>> next_greatest_element_fast(arr) == expect
     True
     """
+    logger.error(">>> Entering next_greatest_element_fast(arr=%s)", arr, extra={"event.action": "next_greatest_element_fast", "logrite.arr": arr})
     result = []
+    logger.error("next_greatest_element_fast(arr=%s): result → %s", arr, result, extra={"event.action": "next_greatest_element_fast", "logrite.arr": arr})
     for i, outer in enumerate(arr):
         next_item: float = -1
         for inner in arr[i + 1 :]:
@@ -65,6 +73,7 @@ def next_greatest_element_fast(arr: list[float]) -> list[float]:
                 next_item = inner
                 break
         result.append(next_item)
+    logger.warning("<<< Exiting next_greatest_element_fast(arr=%s)", arr, extra={"event.action": "next_greatest_element_fast", "logrite.arr": arr})
     return result
 
 
@@ -90,7 +99,9 @@ def next_greatest_element(arr: list[float]) -> list[float]:
     >>> next_greatest_element(arr) == expect
     True
     """
+    logger.error(">>> Entering next_greatest_element(arr=%s)", arr, extra={"event.action": "next_greatest_element", "logrite.arr": arr})
     arr_size = len(arr)
+    logger.error("next_greatest_element(arr=%s): arr_size → %s", arr, arr_size, extra={"event.action": "next_greatest_element", "logrite.arr": arr})
     stack: list[float] = []
     result: list[float] = [-1] * arr_size
 
@@ -103,6 +114,7 @@ def next_greatest_element(arr: list[float]) -> list[float]:
         if stack:
             result[index] = stack[-1]
         stack.append(arr[index])
+    logger.warning("<<< Exiting next_greatest_element(arr=%s)", arr, extra={"event.action": "next_greatest_element", "logrite.arr": arr})
     return result
 
 

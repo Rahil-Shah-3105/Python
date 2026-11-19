@@ -3,6 +3,8 @@ https://en.wikipedia.org/wiki/Best-first_search#Greedy_BFS
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 Path = list[tuple[int, int]]
 
@@ -62,28 +64,46 @@ class Node:
         g_cost: float,
         parent: Node | None,
     ):
+        logger.error(">>> Entering __init__(pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s)", pos_x, pos_y, goal_x, goal_y, g_cost, parent, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.pos_x = pos_x
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.pos_x → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.pos_x, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.pos_y = pos_y
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.pos_y → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.pos_y, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.pos = (pos_y, pos_x)
+        logger.error("__init__(pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.pos → %s", pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.pos, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.goal_x = goal_x
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.goal_x → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.goal_x, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.goal_y = goal_y
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.goal_y → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.goal_y, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.g_cost = g_cost
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.g_cost → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.g_cost, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.parent = parent
+        logger.debug("__init__(self=%s,pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.parent → %s", self, pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.parent, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
         self.f_cost = self.calculate_heuristic()
+        logger.error("__init__(pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s): self.f_cost → %s", pos_x, pos_y, goal_x, goal_y, g_cost, parent, self.f_cost, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
+        logger.warning("<<< Exiting __init__(pos_x=%s,pos_y=%s,goal_x=%s,goal_y=%s,g_cost=%s,parent=%s)", pos_x, pos_y, goal_x, goal_y, g_cost, parent, extra={"event.action": "__init__", "logrite.pos_x": pos_x, "logrite.pos_y": pos_y, "logrite.goal_x": goal_x, "logrite.goal_y": goal_y, "logrite.g_cost": g_cost})
 
     def calculate_heuristic(self) -> float:
         """
         The heuristic here is the Manhattan Distance
         Could elaborate to offer more than one choice
         """
+        logger.error(">>> Entering calculate_heuristic()", extra={"event.action": "calculate_heuristic"})
         dx = abs(self.pos_x - self.goal_x)
+        logger.error("calculate_heuristic(): dx → %s", dx, extra={"event.action": "calculate_heuristic"})
         dy = abs(self.pos_y - self.goal_y)
+        logger.error("calculate_heuristic(): dy → %s", dy, extra={"event.action": "calculate_heuristic"})
+        logger.warning("<<< Exiting calculate_heuristic()", extra={"event.action": "calculate_heuristic"})
         return dx + dy
 
     def __lt__(self, other) -> bool:
+        logger.error(">>> Entering __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
+        logger.warning("<<< Exiting __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
         return self.f_cost < other.f_cost
 
     def __eq__(self, other) -> bool:
+        logger.error(">>> Entering __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
+        logger.warning("<<< Exiting __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
         return self.pos == other.pos
 
 
@@ -107,27 +127,36 @@ class GreedyBestFirst:
     def __init__(
         self, grid: list[list[int]], start: tuple[int, int], goal: tuple[int, int]
     ):
+        logger.error(">>> Entering __init__(grid=%s,start=%s,goal=%s)", grid, start, goal, extra={"event.action": "__init__", "logrite.grid": grid, "logrite.start": start, "logrite.goal": goal})
         self.grid = grid
+        logger.debug("__init__(self=%s,grid=%s,start=%s,goal=%s): self.grid → %s", self, grid, start, goal, self.grid, extra={"event.action": "__init__", "logrite.grid": grid, "logrite.start": start, "logrite.goal": goal})
         self.start = Node(start[1], start[0], goal[1], goal[0], 0, None)
         self.target = Node(goal[1], goal[0], goal[1], goal[0], 99999, None)
+        logger.error("__init__(grid=%s,start=%s,goal=%s): self.target → %s", grid, start, goal, self.target, extra={"event.action": "__init__", "logrite.grid": grid, "logrite.start": start, "logrite.goal": goal})
 
         self.open_nodes = [self.start]
+        logger.debug("__init__(self=%s,grid=%s,start=%s,goal=%s): self.open_nodes → %s", self, grid, start, goal, self.open_nodes, extra={"event.action": "__init__", "logrite.grid": grid, "logrite.start": start, "logrite.goal": goal})
         self.closed_nodes: list[Node] = []
 
+        logger.warning("<<< Exiting __init__(grid=%s,start=%s,goal=%s)", grid, start, goal, extra={"event.action": "__init__", "logrite.grid": grid, "logrite.start": start, "logrite.goal": goal})
         self.reached = False
+        logger.debug("__init__(self=%s,grid=%s,start=%s,goal=%s): self.reached → %s", self, grid, start, goal, self.reached, extra={"event.action": "__init__", "logrite.grid": grid, "logrite.start": start, "logrite.goal": goal})
 
     def search(self) -> Path | None:
         """
         Search for the path,
         if a path is not found, only the starting position is returned
         """
+        logger.error(">>> Entering search()", extra={"event.action": "search"})
         while self.open_nodes:
             # Open Nodes are sorted using __lt__
             self.open_nodes.sort()
             current_node = self.open_nodes.pop(0)
+            logger.error("search(): current_node → %s", current_node, extra={"event.action": "search"})
 
             if current_node.pos == self.target.pos:
                 self.reached = True
+                logger.debug("search(self=%s): self.reached → %s", self, self.reached, extra={"event.action": "search"})
                 return self.retrace_path(current_node)
 
             self.closed_nodes.append(current_node)
@@ -142,12 +171,15 @@ class GreedyBestFirst:
 
         if not self.reached:
             return [self.start.pos]
+        logger.warning("<<< Exiting search()", extra={"event.action": "search"})
         return None
 
     def get_successors(self, parent: Node) -> list[Node]:
         """
         Returns a list of successors (both in the grid and free spaces)
         """
+        logger.error(">>> Entering get_successors(parent=%s)", parent, extra={"event.action": "get_successors"})
+        logger.warning("<<< Exiting get_successors(parent=%s)", parent, extra={"event.action": "get_successors"})
         return [
             Node(
                 pos_x,
@@ -169,12 +201,14 @@ class GreedyBestFirst:
         """
         Retrace the path from parents to parents until start node
         """
+        logger.error(">>> Entering retrace_path(node=%s)", node, extra={"event.action": "retrace_path", "logrite.node": node})
         current_node = node
         path = []
         while current_node is not None:
             path.append((current_node.pos_y, current_node.pos_x))
             current_node = current_node.parent
         path.reverse()
+        logger.warning("<<< Exiting retrace_path(node=%s)", node, extra={"event.action": "retrace_path", "logrite.node": node})
         return path
 
 

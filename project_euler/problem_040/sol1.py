@@ -13,6 +13,8 @@ following expression.
 
 d1 x d10 x d100 x d1000 x d10000 x d100000 x d1000000
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution():
@@ -21,7 +23,9 @@ def solution():
     >>> solution()
     210
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
     constant = []
+    logger.error("solution(): constant → %s", constant, extra={"event.action": "solution"})
     i = 1
 
     while len(constant) < 1e6:
@@ -30,6 +34,7 @@ def solution():
 
     constant = "".join(constant)
 
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return (
         int(constant[0])
         * int(constant[9])

@@ -12,6 +12,8 @@ Using up to one million tiles how many different square laminae can be formed?
 """
 
 from math import ceil, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(limit: int = 1000000) -> int:
@@ -21,6 +23,7 @@ def solution(limit: int = 1000000) -> int:
     >>> solution(100)
     41
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     answer = 0
 
     for outer_width in range(3, (limit // 4) + 2):

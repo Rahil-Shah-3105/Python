@@ -11,6 +11,8 @@ python3 quick_sort.py
 from __future__ import annotations
 
 from random import randrange
+import logging
+logger = logging.getLogger(__name__)
 
 
 def quick_sort(collection: list) -> list:
@@ -27,6 +29,7 @@ def quick_sort(collection: list) -> list:
     >>> quick_sort([-2, 5, 0, -45])
     [-45, -2, 0, 5]
     """
+    logger.error(">>> Entering quick_sort(collection=%s)", collection, extra={"event.action": "quick_sort", "logrite.collection": collection})
     # Base case: if the collection has 0 or 1 elements, it is already sorted
     if len(collection) < 2:
         return collection
@@ -40,6 +43,7 @@ def quick_sort(collection: list) -> list:
     greater = [item for item in collection if item > pivot]
 
     # Recursively sort the lesser and greater groups, and combine with the pivot
+    logger.warning("<<< Exiting quick_sort(collection=%s)", collection, extra={"event.action": "quick_sort", "logrite.collection": collection})
     return [*quick_sort(lesser), pivot, *quick_sort(greater)]
 
 

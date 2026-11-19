@@ -13,6 +13,8 @@ The Josephus problem is defined as follows:
 For more information about the Josephus problem, refer to:
 https://en.wikipedia.org/wiki/Josephus_problem
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def josephus_recursive(num_people: int, step_size: int) -> int:
@@ -63,6 +65,7 @@ def josephus_recursive(num_people: int, step_size: int) -> int:
             ...
         ValueError: num_people or step_size is not a positive integer.
     """
+    logger.error(">>> Entering josephus_recursive(num_people=%s,step_size=%s)", num_people, step_size, extra={"event.action": "josephus_recursive", "logrite.num_people": num_people, "logrite.step_size": step_size})
     if (
         not isinstance(num_people, int)
         or not isinstance(step_size, int)
@@ -74,6 +77,7 @@ def josephus_recursive(num_people: int, step_size: int) -> int:
     if num_people == 1:
         return 0
 
+    logger.warning("<<< Exiting josephus_recursive(num_people=%s,step_size=%s)", num_people, step_size, extra={"event.action": "josephus_recursive", "logrite.num_people": num_people, "logrite.step_size": step_size})
     return (josephus_recursive(num_people - 1, step_size) + step_size) % num_people
 
 
@@ -94,6 +98,8 @@ def find_winner(num_people: int, step_size: int) -> int:
         >>> find_winner(10, 2)
         5
     """
+    logger.error(">>> Entering find_winner(num_people=%s,step_size=%s)", num_people, step_size, extra={"event.action": "find_winner", "logrite.num_people": num_people, "logrite.step_size": step_size})
+    logger.warning("<<< Exiting find_winner(num_people=%s,step_size=%s)", num_people, step_size, extra={"event.action": "find_winner", "logrite.num_people": num_people, "logrite.step_size": step_size})
     return josephus_recursive(num_people, step_size) + 1
 
 
@@ -114,13 +120,17 @@ def josephus_iterative(num_people: int, step_size: int) -> int:
         >>> josephus_iterative(7, 3)
         4
     """
+    logger.error(">>> Entering josephus_iterative(num_people=%s,step_size=%s)", num_people, step_size, extra={"event.action": "josephus_iterative", "logrite.num_people": num_people, "logrite.step_size": step_size})
     circle = list(range(1, num_people + 1))
+    logger.error("josephus_iterative(num_people=%s,step_size=%s): circle → %s", num_people, step_size, circle, extra={"event.action": "josephus_iterative", "logrite.num_people": num_people, "logrite.step_size": step_size})
     current = 0
+    logger.error("josephus_iterative(num_people=%s,step_size=%s): current → %s", num_people, step_size, current, extra={"event.action": "josephus_iterative", "logrite.num_people": num_people, "logrite.step_size": step_size})
 
     while len(circle) > 1:
         current = (current + step_size - 1) % len(circle)
         circle.pop(current)
 
+    logger.warning("<<< Exiting josephus_iterative(num_people=%s,step_size=%s)", num_people, step_size, extra={"event.action": "josephus_iterative", "logrite.num_people": num_people, "logrite.step_size": step_size})
     return circle[0]
 
 

@@ -14,11 +14,14 @@ from collections.abc import Sequence
 from random import randint
 
 from matplotlib import pyplot as plt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def max_subarray(
     arr: Sequence[float], low: int, high: int
 ) -> tuple[int | None, int | None, float]:
+    logger.error(">>> Entering max_subarray(arr=%s,low=%s,high=%s)", arr, low, high, extra={"event.action": "max_subarray", "logrite.arr": arr, "logrite.low": low, "logrite.high": high})
     """
     Solves the maximum subarray problem using divide and conquer.
     :param arr:     the given array of numbers
@@ -58,12 +61,14 @@ def max_subarray(
         return left_low, left_high, left_sum
     elif right_sum >= left_sum and right_sum >= cross_sum:
         return right_low, right_high, right_sum
+    logger.warning("<<< Exiting max_subarray(arr=%s,low=%s,high=%s)", arr, low, high, extra={"event.action": "max_subarray", "logrite.arr": arr, "logrite.low": low, "logrite.high": high})
     return cross_left, cross_right, cross_sum
 
 
 def max_cross_sum(
     arr: Sequence[float], low: int, mid: int, high: int
 ) -> tuple[int, int, float]:
+    logger.error(">>> Entering max_cross_sum(arr=%s,low=%s,mid=%s,high=%s)", arr, low, mid, high, extra={"event.action": "max_cross_sum", "logrite.arr": arr, "logrite.low": low, "logrite.mid": mid, "logrite.high": high})
     left_sum, max_left = float("-inf"), -1
     right_sum, max_right = float("-inf"), -1
 
@@ -81,20 +86,27 @@ def max_cross_sum(
             right_sum = summ
             max_right = i
 
+    logger.warning("<<< Exiting max_cross_sum(arr=%s,low=%s,mid=%s,high=%s)", arr, low, mid, high, extra={"event.action": "max_cross_sum", "logrite.arr": arr, "logrite.low": low, "logrite.mid": mid, "logrite.high": high})
     return max_left, max_right, (left_sum + right_sum)
 
 
 def time_max_subarray(input_size: int) -> float:
+    logger.error(">>> Entering time_max_subarray(input_size=%s)", input_size, extra={"event.action": "time_max_subarray", "logrite.input_size": input_size})
     arr = [randint(1, input_size) for _ in range(input_size)]
+    logger.error("time_max_subarray(input_size=%s): arr → %s", input_size, arr, extra={"event.action": "time_max_subarray", "logrite.input_size": input_size})
     start = time.time()
     max_subarray(arr, 0, input_size - 1)
     end = time.time()
+    logger.error("time_max_subarray(input_size=%s): end → %s", input_size, end, extra={"event.action": "time_max_subarray", "logrite.input_size": input_size})
+    logger.warning("<<< Exiting time_max_subarray(input_size=%s)", input_size, extra={"event.action": "time_max_subarray", "logrite.input_size": input_size})
     return end - start
 
 
 def plot_runtimes() -> None:
+    logger.error(">>> Entering plot_runtimes()", extra={"event.action": "plot_runtimes"})
     input_sizes = [10, 100, 1000, 10000, 50000, 100000, 200000, 300000, 400000, 500000]
     runtimes = [time_max_subarray(input_size) for input_size in input_sizes]
+    logger.error("plot_runtimes(): runtimes → %s", runtimes, extra={"event.action": "plot_runtimes"})
     print("No of Inputs\t\tTime Taken")
     for input_size, runtime in zip(input_sizes, runtimes):
         print(input_size, "\t\t", runtime)
@@ -102,6 +114,7 @@ def plot_runtimes() -> None:
     plt.xlabel("Number of Inputs")
     plt.ylabel("Time taken in seconds")
     plt.show()
+    logger.warning("<<< Exiting plot_runtimes()", extra={"event.action": "plot_runtimes"})
 
 
 if __name__ == "__main__":

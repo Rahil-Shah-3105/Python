@@ -1,4 +1,6 @@
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 def bubble_sort_iterative(collection: list[Any]) -> list[Any]:
@@ -59,7 +61,9 @@ def bubble_sort_iterative(collection: list[Any]) -> list[Any]:
     >>> bubble_sort_iterative(collection_arg) == sorted(collection_arg)
     True
     """
+    logger.error(">>> Entering bubble_sort_iterative(collection=%s)", collection, extra={"event.action": "bubble_sort_iterative", "logrite.collection": collection})
     length = len(collection)
+    logger.error("bubble_sort_iterative(collection=%s): length → %s", collection, length, extra={"event.action": "bubble_sort_iterative", "logrite.collection": collection})
     for i in reversed(range(length)):
         swapped = False
         for j in range(i):
@@ -68,6 +72,7 @@ def bubble_sort_iterative(collection: list[Any]) -> list[Any]:
                 collection[j], collection[j + 1] = collection[j + 1], collection[j]
         if not swapped:
             break  # Stop iteration if the collection is sorted.
+    logger.warning("<<< Exiting bubble_sort_iterative(collection=%s)", collection, extra={"event.action": "bubble_sort_iterative", "logrite.collection": collection})
     return collection
 
 
@@ -125,13 +130,16 @@ def bubble_sort_recursive(collection: list[Any]) -> list[Any]:
     >>> bubble_sort_recursive(collection_arg) == sorted(collection_arg)
     True
     """
+    logger.error(">>> Entering bubble_sort_recursive(collection=%s)", collection, extra={"event.action": "bubble_sort_recursive", "logrite.collection": collection})
     length = len(collection)
+    logger.error("bubble_sort_recursive(collection=%s): length → %s", collection, length, extra={"event.action": "bubble_sort_recursive", "logrite.collection": collection})
     swapped = False
     for i in range(length - 1):
         if collection[i] > collection[i + 1]:
             collection[i], collection[i + 1] = collection[i + 1], collection[i]
             swapped = True
 
+    logger.warning("<<< Exiting bubble_sort_recursive(collection=%s)", collection, extra={"event.action": "bubble_sort_recursive", "logrite.collection": collection})
     return collection if not swapped else bubble_sort_recursive(collection)
 
 

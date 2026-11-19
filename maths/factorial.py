@@ -1,6 +1,8 @@
 """
 Factorial of a positive integer -- https://en.wikipedia.org/wiki/Factorial
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def factorial(number: int) -> int:
@@ -25,6 +27,7 @@ def factorial(number: int) -> int:
     >>> factorial(0)
     1
     """
+    logger.error(">>> Entering factorial(number=%s)", number, extra={"event.action": "factorial", "logrite.number": number})
     if number != int(number):
         raise ValueError("factorial() only accepts integral values")
     if number < 0:
@@ -32,6 +35,7 @@ def factorial(number: int) -> int:
     value = 1
     for i in range(1, number + 1):
         value *= i
+    logger.warning("<<< Exiting factorial(number=%s)", number, extra={"event.action": "factorial", "logrite.number": number})
     return value
 
 
@@ -52,10 +56,12 @@ def factorial_recursive(n: int) -> int:
         ...
     ValueError: factorial_recursive() not defined for negative values
     """
+    logger.error(">>> Entering factorial_recursive(n=%s)", n, extra={"event.action": "factorial_recursive", "logrite.n": n})
     if not isinstance(n, int):
         raise ValueError("factorial_recursive() only accepts integral values")
     if n < 0:
         raise ValueError("factorial_recursive() not defined for negative values")
+    logger.warning("<<< Exiting factorial_recursive(n=%s)", n, extra={"event.action": "factorial_recursive", "logrite.n": n})
     return 1 if n in {0, 1} else n * factorial_recursive(n - 1)
 
 

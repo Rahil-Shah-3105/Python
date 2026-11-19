@@ -11,6 +11,8 @@ References:
     - https://en.wikipedia.org/wiki/Prime_number
     - https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 2000000) -> int:
@@ -41,8 +43,10 @@ def solution(n: int = 2000000) -> int:
         ...
     TypeError: can only concatenate str (not "int") to str
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     primality_list = [0 for i in range(n + 1)]
+    logger.error("solution(n=%s): primality_list → %s", n, primality_list, extra={"event.action": "solution", "logrite.n": n})
     primality_list[0] = 1
     primality_list[1] = 1
 
@@ -54,6 +58,7 @@ def solution(n: int = 2000000) -> int:
     for i in range(n):
         if primality_list[i] == 0:
             sum_of_primes += i
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return sum_of_primes
 
 

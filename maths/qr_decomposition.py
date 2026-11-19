@@ -1,4 +1,6 @@
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def qr_householder(a: np.ndarray):
@@ -37,8 +39,10 @@ def qr_householder(a: np.ndarray):
     >>> np.allclose(np.triu(R), R)
     True
     """
+    logger.error(">>> Entering qr_householder(a=%s)", a, extra={"event.action": "qr_householder", "logrite.a": a})
     m, n = a.shape
     t = min(m, n)
+    logger.error("qr_householder(a=%s): t → %s", a, t, extra={"event.action": "qr_householder", "logrite.a": a})
     q = np.eye(m)
     r = a.copy()
 
@@ -47,21 +51,26 @@ def qr_householder(a: np.ndarray):
         x = r[k:, [k]]
         # construct first basis vector
         e1 = np.zeros_like(x)
+        logger.error("qr_householder(a=%s): e1 → %s", a, e1, extra={"event.action": "qr_householder", "logrite.a": a})
         e1[0] = 1.0
         # determine scaling factor
         alpha = np.linalg.norm(x)
+        logger.error("qr_householder(a=%s): alpha → %s", a, alpha, extra={"event.action": "qr_householder", "logrite.a": a})
         # construct vector v for Householder reflection
         v = x + np.sign(x[0]) * alpha * e1
+        logger.error("qr_householder(a=%s): v → %s", a, v, extra={"event.action": "qr_householder", "logrite.a": a})
         v /= np.linalg.norm(v)
 
         # construct the Householder matrix
         q_k = np.eye(m - k) - 2.0 * v @ v.T
+        logger.error("qr_householder(a=%s): q_k → %s", a, q_k, extra={"event.action": "qr_householder", "logrite.a": a})
         # pad with ones and zeros as necessary
         q_k = np.block([[np.eye(k), np.zeros((k, m - k))], [np.zeros((m - k, k)), q_k]])
 
         q = q @ q_k.T
         r = q_k @ r
 
+    logger.warning("<<< Exiting qr_householder(a=%s)", a, extra={"event.action": "qr_householder", "logrite.a": a})
     return q, r
 
 

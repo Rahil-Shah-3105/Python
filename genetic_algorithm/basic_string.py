@@ -8,6 +8,8 @@ Author: D4rkia
 from __future__ import annotations
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 # Maximum size of the population.  Bigger could be faster but is more memory expensive.
 N_POPULATION = 200
@@ -28,7 +30,10 @@ def evaluate(item: str, main_target: str) -> tuple[str, float]:
     >>> evaluate("Helxo Worlx", "Hello World")
     ('Helxo Worlx', 9.0)
     """
+    logger.error(">>> Entering evaluate(item=%s,main_target=%s)", item, main_target, extra={"event.action": "evaluate", "logrite.item": item, "logrite.main_target": main_target})
     score = len([g for position, g in enumerate(item) if g == main_target[position]])
+    logger.error("evaluate(item=%s,main_target=%s): score → %s", item, main_target, score, extra={"event.action": "evaluate", "logrite.item": item, "logrite.main_target": main_target})
+    logger.warning("<<< Exiting evaluate(item=%s,main_target=%s)", item, main_target, extra={"event.action": "evaluate", "logrite.item": item, "logrite.main_target": main_target})
     return (item, float(score))
 
 
@@ -39,9 +44,12 @@ def crossover(parent_1: str, parent_2: str) -> tuple[str, str]:
     >>> crossover("123456", "abcdef")
     ('12345f', 'abcde6')
     """
+    logger.error(">>> Entering crossover(parent_1=%s,parent_2=%s)", parent_1, parent_2, extra={"event.action": "crossover", "logrite.parent_1": parent_1, "logrite.parent_2": parent_2})
     random_slice = random.randint(0, len(parent_1) - 1)
+    logger.error("crossover(parent_1=%s,parent_2=%s): random_slice → %s", parent_1, parent_2, random_slice, extra={"event.action": "crossover", "logrite.parent_1": parent_1, "logrite.parent_2": parent_2})
     child_1 = parent_1[:random_slice] + parent_2[random_slice:]
     child_2 = parent_2[:random_slice] + parent_1[random_slice:]
+    logger.warning("<<< Exiting crossover(parent_1=%s,parent_2=%s)", parent_1, parent_2, extra={"event.action": "crossover", "logrite.parent_1": parent_1, "logrite.parent_2": parent_2})
     return (child_1, child_2)
 
 
@@ -52,9 +60,12 @@ def mutate(child: str, genes: list[str]) -> str:
     >>> mutate("123456", list("ABCDEF"))
     '12345A'
     """
+    logger.error(">>> Entering mutate(child=%s,genes=%s)", child, genes, extra={"event.action": "mutate", "logrite.child": child, "logrite.genes": genes})
     child_list = list(child)
+    logger.error("mutate(child=%s,genes=%s): child_list → %s", child, genes, child_list, extra={"event.action": "mutate", "logrite.child": child, "logrite.genes": genes})
     if random.uniform(0, 1) < MUTATION_PROBABILITY:
         child_list[random.randint(0, len(child)) - 1] = random.choice(genes)
+    logger.warning("<<< Exiting mutate(child=%s,genes=%s)", child, genes, extra={"event.action": "mutate", "logrite.child": child, "logrite.genes": genes})
     return "".join(child_list)
 
 
@@ -64,6 +75,7 @@ def select(
     population_score: list[tuple[str, float]],
     genes: list[str],
 ) -> list[str]:
+    logger.error(">>> Entering select(parent_1=%s,population_score=%s,genes=%s)", parent_1, population_score, genes, extra={"event.action": "select", "logrite.parent_1": parent_1, "logrite.population_score": population_score, "logrite.genes": genes})
     """
     Select the second parent and generate new population
 
@@ -86,11 +98,13 @@ def select(
     child_n = 10 if child_n >= 10 else child_n
     for _ in range(child_n):
         parent_2 = population_score[random.randint(0, N_SELECTED)][0]
+        logger.error("select(parent_1=%s,population_score=%s,genes=%s): parent_2 → %s", parent_1, population_score, genes, parent_2, extra={"event.action": "select", "logrite.parent_1": parent_1, "logrite.population_score": population_score, "logrite.genes": genes})
 
         child_1, child_2 = crossover(parent_1[0], parent_2)
         # Append new string to the population list.
         pop.append(mutate(child_1, genes))
         pop.append(mutate(child_2, genes))
+    logger.warning("<<< Exiting select(parent_1=%s,population_score=%s,genes=%s)", parent_1, population_score, genes, extra={"event.action": "select", "logrite.parent_1": parent_1, "logrite.population_score": population_score, "logrite.genes": genes})
     return pop
 
 
@@ -118,13 +132,16 @@ def basic(target: str, genes: list[str], debug: bool = True) -> tuple[int, int, 
         ...
     ValueError: ['e', 's', 't'] is not in genes list, evolution cannot converge
     """
+    logger.error(">>> Entering basic(target=%s,genes=%s,debug=%s)", target, genes, debug, extra={"event.action": "basic", "logrite.target": target, "logrite.genes": genes, "logrite.debug": debug})
 
     # Verify if N_POPULATION is bigger than N_SELECTED
     if N_POPULATION < N_SELECTED:
         msg = f"{N_POPULATION} must be bigger than {N_SELECTED}"
+        logger.error("basic(target=%s,genes=%s,debug=%s): msg → %s", target, genes, debug, msg, extra={"event.action": "basic", "logrite.target": target, "logrite.genes": genes, "logrite.debug": debug})
         raise ValueError(msg)
     # Verify that the target contains no genes besides the ones inside genes variable.
     not_in_genes_list = sorted({c for c in target if c not in genes})
+    logger.error("basic(target=%s,genes=%s,debug=%s): not_in_genes_list → %s", target, genes, debug, not_in_genes_list, extra={"event.action": "basic", "logrite.target": target, "logrite.genes": genes, "logrite.debug": debug})
     if not_in_genes_list:
         msg = f"{not_in_genes_list} is not in genes list, evolution cannot converge"
         raise ValueError(msg)
@@ -161,6 +178,7 @@ def basic(target: str, genes: list[str], debug: bool = True) -> tuple[int, int, 
         # Check if there is a matching evolution.
         population_score = sorted(population_score, key=lambda x: x[1], reverse=True)
         if population_score[0][0] == target:
+            logger.warning("<<< Exiting basic(target=%s,genes=%s,debug=%s)", target, genes, debug, extra={"event.action": "basic", "logrite.target": target, "logrite.genes": genes, "logrite.debug": debug})
             return (generation, total_population, population_score[0][0])
 
         # Print the best result every 10 generation.

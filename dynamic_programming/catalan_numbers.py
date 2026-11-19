@@ -25,6 +25,8 @@ Print all the Catalan numbers from 0 to n, n being the user input.
  *  [1] https://brilliant.org/wiki/catalan-numbers/
  *  [2] https://en.wikipedia.org/wiki/Catalan_number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def catalan_numbers(upper_limit: int) -> "list[int]":
@@ -39,10 +41,12 @@ def catalan_numbers(upper_limit: int) -> "list[int]":
     Traceback (most recent call last):
     ValueError: Limit for the Catalan sequence must be ≥ 0
     """
+    logger.error(">>> Entering catalan_numbers(upper_limit=%s)", upper_limit, extra={"event.action": "catalan_numbers", "logrite.upper_limit": upper_limit})
     if upper_limit < 0:
         raise ValueError("Limit for the Catalan sequence must be ≥ 0")
 
     catalan_list = [0] * (upper_limit + 1)
+    logger.error("catalan_numbers(upper_limit=%s): catalan_list → %s", upper_limit, catalan_list, extra={"event.action": "catalan_numbers", "logrite.upper_limit": upper_limit})
 
     # Base case: C(0) = C(1) = 1
     catalan_list[0] = 1
@@ -54,6 +58,7 @@ def catalan_numbers(upper_limit: int) -> "list[int]":
         for j in range(i):
             catalan_list[i] += catalan_list[j] * catalan_list[i - j - 1]
 
+    logger.warning("<<< Exiting catalan_numbers(upper_limit=%s)", upper_limit, extra={"event.action": "catalan_numbers", "logrite.upper_limit": upper_limit})
     return catalan_list
 
 

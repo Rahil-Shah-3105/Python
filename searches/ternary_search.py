@@ -8,6 +8,8 @@ Space Complexity : O(1)
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 # This is the precision for this function which can be altered.
 # It is recommended for users to keep this number greater than or equal to 10.
@@ -53,9 +55,11 @@ def lin_search(left: int, right: int, array: list[int], target: int) -> int:
     >>> lin_search(0, 3, [.1, .4 , -.1], -.1)
     2
     """
+    logger.error(">>> Entering lin_search(left=%s,right=%s,array=%s,target=%s)", left, right, array, target, extra={"event.action": "lin_search", "logrite.left": left, "logrite.right": right, "logrite.array": array, "logrite.target": target})
     for i in range(left, right):
         if array[i] == target:
             return i
+    logger.warning("<<< Exiting lin_search(left=%s,right=%s,array=%s,target=%s)", left, right, array, target, extra={"event.action": "lin_search", "logrite.left": left, "logrite.right": right, "logrite.array": array, "logrite.target": target})
     return -1
 
 
@@ -83,6 +87,7 @@ def ite_ternary_search(array: list[int], target: int) -> int:
     >>> ite_ternary_search([.1, .4 , -.1], .1)
     0
     """
+    logger.error(">>> Entering ite_ternary_search(array=%s,target=%s)", array, target, extra={"event.action": "ite_ternary_search", "logrite.array": array, "logrite.target": target})
 
     left = 0
     right = len(array)
@@ -106,6 +111,7 @@ def ite_ternary_search(array: list[int], target: int) -> int:
         else:
             left = one_third + 1
             right = two_third - 1
+    logger.warning("<<< Exiting ite_ternary_search(array=%s,target=%s)", array, target, extra={"event.action": "ite_ternary_search", "logrite.array": array, "logrite.target": target})
     return -1
 
 
@@ -134,6 +140,7 @@ def rec_ternary_search(left: int, right: int, array: list[int], target: int) -> 
     >>> rec_ternary_search(0, 3, [.1, .4 , -.1], .1)
     0
     """
+    logger.error(">>> Entering rec_ternary_search(left=%s,right=%s,array=%s,target=%s)", left, right, array, target, extra={"event.action": "rec_ternary_search", "logrite.left": left, "logrite.right": right, "logrite.array": array, "logrite.target": target})
     if left < right:
         if right - left < precision:
             return lin_search(left, right, array, target)
@@ -152,6 +159,7 @@ def rec_ternary_search(left: int, right: int, array: list[int], target: int) -> 
         else:
             return rec_ternary_search(one_third + 1, two_third - 1, array, target)
     else:
+        logger.warning("<<< Exiting rec_ternary_search(left=%s,right=%s,array=%s,target=%s)", left, right, array, target, extra={"event.action": "rec_ternary_search", "logrite.left": left, "logrite.right": right, "logrite.array": array, "logrite.target": target})
         return -1
 
 

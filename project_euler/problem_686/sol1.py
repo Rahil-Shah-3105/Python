@@ -15,6 +15,8 @@ Find p(123, 678910).
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def log_difference(number: int) -> float:
@@ -36,10 +38,14 @@ def log_difference(number: int) -> float:
     0.090368356648852
 
     """
+    logger.error(">>> Entering log_difference(number=%s)", number, extra={"event.action": "log_difference", "logrite.number": number})
 
     log_number = math.log(2, 10) * number
+    logger.error("log_difference(number=%s): log_number → %s", number, log_number, extra={"event.action": "log_difference", "logrite.number": number})
     difference = round((log_number - int(log_number)), 15)
+    logger.error("log_difference(number=%s): difference → %s", number, difference, extra={"event.action": "log_difference", "logrite.number": number})
 
+    logger.warning("<<< Exiting log_difference(number=%s)", number, extra={"event.action": "log_difference", "logrite.number": number})
     return difference
 
 
@@ -127,16 +133,21 @@ def solution(number: int = 678910) -> int:
     193060223
 
     """
+    logger.error(">>> Entering solution(number=%s)", number, extra={"event.action": "solution", "logrite.number": number})
+    logger.error("solution(number=%s): lowerbound → %s", number, lowerbound, extra={"event.action": "solution", "logrite.number": number})
 
     power_iterator = 90
     position = 0
 
     lower_limit = math.log(1.23, 10)
+    logger.error("solution(number=%s): lower_limit → %s", number, lower_limit, extra={"event.action": "solution", "logrite.number": number})
     upper_limit = math.log(1.24, 10)
+    logger.error("solution(number=%s): upper_limit → %s", number, upper_limit, extra={"event.action": "solution", "logrite.number": number})
     previous_power = 0
 
     while position < number:
         difference = log_difference(power_iterator)
+        logger.error("solution(number=%s): difference → %s", number, difference, extra={"event.action": "solution", "logrite.number": number})
 
         if difference >= upper_limit:
             power_iterator += 93
@@ -149,6 +160,7 @@ def solution(number: int = 678910) -> int:
             power_iterator += 196
             position += 1
 
+    logger.warning("<<< Exiting solution(number=%s)", number, extra={"event.action": "solution", "logrite.number": number})
     return previous_power
 
 

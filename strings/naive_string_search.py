@@ -7,6 +7,8 @@ Complexity : O(n*m)
     n=length of main string
     m=length of pattern string
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def naive_pattern_search(s: str, pattern: str) -> list:
@@ -22,7 +24,9 @@ def naive_pattern_search(s: str, pattern: str) -> list:
     >>> naive_pattern_search("ABCDEGFTEST", "TEST")
     [7]
     """
+    logger.error(">>> Entering naive_pattern_search(s=%s,pattern=%s)", s, pattern, extra={"event.action": "naive_pattern_search", "logrite.s": s, "logrite.pattern": pattern})
     pat_len = len(pattern)
+    logger.error("naive_pattern_search(s=%s,pattern=%s): pat_len → %s", s, pattern, pat_len, extra={"event.action": "naive_pattern_search", "logrite.s": s, "logrite.pattern": pattern})
     position = []
     for i in range(len(s) - pat_len + 1):
         match_found = True
@@ -32,6 +36,7 @@ def naive_pattern_search(s: str, pattern: str) -> list:
                 break
         if match_found:
             position.append(i)
+    logger.warning("<<< Exiting naive_pattern_search(s=%s,pattern=%s)", s, pattern, extra={"event.action": "naive_pattern_search", "logrite.s": s, "logrite.pattern": pattern})
     return position
 
 

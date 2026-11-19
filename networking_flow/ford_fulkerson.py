@@ -6,6 +6,8 @@ Description:
     (1) Start with initial flow as 0
     (2) Choose the augmenting path from source to sink and add the path to flow
 """
+import logging
+logger = logging.getLogger(__name__)
 
 graph = [
     [0, 16, 13, 0, 0, 0],
@@ -37,7 +39,9 @@ def breadth_first_search(graph: list, source: int, sink: int, parents: list) -> 
         ...
     IndexError: list index out of range
     """
+    logger.error(">>> Entering breadth_first_search(graph=%s,source=%s,sink=%s,parents=%s)", graph, source, sink, parents, extra={"event.action": "breadth_first_search", "logrite.graph": graph, "logrite.source": source, "logrite.sink": sink, "logrite.parents": parents})
     visited = [False] * len(graph)  # Mark all nodes as not visited
+    logger.error("breadth_first_search(graph=%s,source=%s,sink=%s,parents=%s): visited → %s", graph, source, sink, parents, visited, extra={"event.action": "breadth_first_search", "logrite.graph": graph, "logrite.source": source, "logrite.sink": sink, "logrite.parents": parents})
     queue = []  # breadth-first search queue
 
     # Source node
@@ -46,12 +50,14 @@ def breadth_first_search(graph: list, source: int, sink: int, parents: list) -> 
 
     while queue:
         u = queue.pop(0)  # Pop the front node
+        logger.error("breadth_first_search(graph=%s,source=%s,sink=%s,parents=%s): u → %s", graph, source, sink, parents, u, extra={"event.action": "breadth_first_search", "logrite.graph": graph, "logrite.source": source, "logrite.sink": sink, "logrite.parents": parents})
         # Traverse all adjacent nodes of u
         for ind, node in enumerate(graph[u]):
             if visited[ind] is False and node > 0:
                 queue.append(ind)
                 visited[ind] = True
                 parents[ind] = u
+    logger.warning("<<< Exiting breadth_first_search(graph=%s,source=%s,sink=%s,parents=%s)", graph, source, sink, parents, extra={"event.action": "breadth_first_search", "logrite.graph": graph, "logrite.source": source, "logrite.sink": sink, "logrite.parents": parents})
     return visited[sink]
 
 
@@ -80,13 +86,16 @@ def ford_fulkerson(graph: list, source: int, sink: int) -> int:
     >>> ford_fulkerson(test_graph, 0, 5)
     23
     """
+    logger.error(">>> Entering ford_fulkerson(graph=%s,source=%s,sink=%s)", graph, source, sink, extra={"event.action": "ford_fulkerson", "logrite.graph": graph, "logrite.source": source, "logrite.sink": sink})
     # This array is filled by breadth-first search and to store path
     parent = [-1] * (len(graph))
+    logger.error("ford_fulkerson(graph=%s,source=%s,sink=%s): parent → %s", graph, source, sink, parent, extra={"event.action": "ford_fulkerson", "logrite.graph": graph, "logrite.source": source, "logrite.sink": sink})
     max_flow = 0
 
     # While there is a path from source to sink
     while breadth_first_search(graph, source, sink, parent):
         path_flow = int(1e9)  # Infinite value
+        logger.error("ford_fulkerson(graph=%s,source=%s,sink=%s): path_flow → %s", graph, source, sink, path_flow, extra={"event.action": "ford_fulkerson", "logrite.graph": graph, "logrite.source": source, "logrite.sink": sink})
         s = sink
 
         while s != source:
@@ -103,6 +112,7 @@ def ford_fulkerson(graph: list, source: int, sink: int) -> int:
             graph[v][u] += path_flow
             v = parent[v]
 
+    logger.warning("<<< Exiting ford_fulkerson(graph=%s,source=%s,sink=%s)", graph, source, sink, extra={"event.action": "ford_fulkerson", "logrite.graph": graph, "logrite.source": source, "logrite.sink": sink})
     return max_flow
 
 

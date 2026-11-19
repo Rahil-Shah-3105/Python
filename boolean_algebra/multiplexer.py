@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def mux(input0: int, input1: int, select: int) -> int:
     """
     Implement a 2-to-1 Multiplexer.
@@ -31,8 +33,10 @@ def mux(input0: int, input1: int, select: int) -> int:
         ...
     ValueError: Inputs and select signal must be 0 or 1
     """
+    logger.error(">>> Entering mux(input0=%s,input1=%s,select=%s)", input0, input1, select, extra={"event.action": "mux", "logrite.input0": input0, "logrite.input1": input1, "logrite.select": select})
     if all(i in (0, 1) for i in (input0, input1, select)):
         return input1 if select else input0
+    logger.warning("<<< Exiting mux(input0=%s,input1=%s,select=%s)", input0, input1, select, extra={"event.action": "mux", "logrite.input0": input0, "logrite.input1": input1, "logrite.select": select})
     raise ValueError("Inputs and select signal must be 0 or 1")
 
 

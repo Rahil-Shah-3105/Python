@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 # https://www.tutorialspoint.com/python3/bitwise_operators_example.htm
 
 
@@ -31,11 +33,16 @@ def binary_or(a: int, b: int) -> str:
         ...
     TypeError: '<' not supported between instances of 'str' and 'int'
     """
+    logger.error(">>> Entering binary_or(a=%s,b=%s)", a, b, extra={"event.action": "binary_or", "logrite.a": a, "logrite.b": b})
     if a < 0 or b < 0:
         raise ValueError("the value of both inputs must be positive")
+        logger.warning("<<< Exiting binary_or(a=%s,b=%s)", a, b, extra={"event.action": "binary_or", "logrite.a": a, "logrite.b": b})
     a_binary = str(bin(a))[2:]  # remove the leading "0b"
+    logger.error("binary_or(a=%s,b=%s): a_binary → %s", a, b, a_binary, extra={"event.action": "binary_or", "logrite.a": a, "logrite.b": b})
     b_binary = str(bin(b))[2:]
+    logger.error("binary_or(a=%s,b=%s): b_binary → %s", a, b, b_binary, extra={"event.action": "binary_or", "logrite.a": a, "logrite.b": b})
     max_len = max(len(a_binary), len(b_binary))
+    logger.error("binary_or(a=%s,b=%s): max_len → %s", a, b, max_len, extra={"event.action": "binary_or", "logrite.a": a, "logrite.b": b})
     return "0b" + "".join(
         str(int("1" in (char_a, char_b)))
         for char_a, char_b in zip(a_binary.zfill(max_len), b_binary.zfill(max_len))

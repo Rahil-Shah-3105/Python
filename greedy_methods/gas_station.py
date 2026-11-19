@@ -25,6 +25,8 @@ start checking from the next station.
 """
 
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -36,6 +38,7 @@ class GasStation:
 def get_gas_stations(
     gas_quantities: list[int], costs: list[int]
 ) -> tuple[GasStation, ...]:
+    logger.error(">>> Entering get_gas_stations(gas_quantities=%s,costs=%s)", gas_quantities, costs, extra={"event.action": "get_gas_stations", "logrite.gas_quantities": gas_quantities, "logrite.costs": costs})
     """
     This function returns a tuple of gas stations.
 
@@ -54,6 +57,7 @@ def get_gas_stations(
     >>> gas_stations[-1]
     GasStation(gas_quantity=5, cost=2)
     """
+    logger.warning("<<< Exiting get_gas_stations(gas_quantities=%s,costs=%s)", gas_quantities, costs, extra={"event.action": "get_gas_stations", "logrite.gas_quantities": gas_quantities, "logrite.costs": costs})
     return tuple(
         GasStation(quantity, cost) for quantity, cost in zip(gas_quantities, costs)
     )
@@ -77,8 +81,11 @@ def can_complete_journey(gas_stations: tuple[GasStation, ...]) -> int:
     >>> can_complete_journey(get_gas_stations([2, 3, 4], [3, 4, 3]))
     -1
     """
+    logger.error(">>> Entering can_complete_journey(gas_stations=%s)", gas_stations, extra={"event.action": "can_complete_journey", "logrite.gas_stations": gas_stations})
     total_gas = sum(gas_station.gas_quantity for gas_station in gas_stations)
+    logger.error("can_complete_journey(gas_stations=%s): total_gas → %s", gas_stations, total_gas, extra={"event.action": "can_complete_journey", "logrite.gas_stations": gas_stations})
     total_cost = sum(gas_station.cost for gas_station in gas_stations)
+    logger.error("can_complete_journey(gas_stations=%s): total_cost → %s", gas_stations, total_cost, extra={"event.action": "can_complete_journey", "logrite.gas_stations": gas_stations})
     if total_gas < total_cost:
         return -1
 
@@ -89,6 +96,7 @@ def can_complete_journey(gas_stations: tuple[GasStation, ...]) -> int:
         if net < 0:
             start = i + 1
             net = 0
+    logger.warning("<<< Exiting can_complete_journey(gas_stations=%s)", gas_stations, extra={"event.action": "can_complete_journey", "logrite.gas_stations": gas_stations})
     return start
 
 

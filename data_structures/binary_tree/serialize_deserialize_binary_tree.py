@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -20,8 +22,10 @@ class TreeNode:
     right: TreeNode | None = None
 
     def __post_init__(self):
+        logger.error(">>> Entering __post_init__()", extra={"event.action": "__post_init__"})
         if not isinstance(self.value, int):
             raise TypeError("Value must be an integer.")
+            logger.warning("<<< Exiting __post_init__()", extra={"event.action": "__post_init__"})
 
     def __iter__(self) -> Iterator[TreeNode]:
         """
@@ -35,9 +39,11 @@ class TreeNode:
         >>> tuple(TreeNode(1, TreeNode(2), TreeNode(3)))
         (1,2,null,null,3,null,null, 2,null,null, 3,null,null)
         """
+        logger.error(">>> Entering __iter__()", extra={"event.action": "__iter__"})
         yield self
         yield from self.left or ()
         yield from self.right or ()
+        logger.warning("<<< Exiting __iter__()", extra={"event.action": "__iter__"})
 
     def __len__(self) -> int:
         """
@@ -51,6 +57,8 @@ class TreeNode:
         >>> len(TreeNode(1, TreeNode(2), TreeNode(3)))
         3
         """
+        logger.error(">>> Entering __len__()", extra={"event.action": "__len__"})
+        logger.warning("<<< Exiting __len__()", extra={"event.action": "__len__"})
         return sum(1 for _ in self)
 
     def __repr__(self) -> str:
@@ -67,6 +75,8 @@ class TreeNode:
         >>> repr(TreeNode(1, TreeNode(2), TreeNode(3, TreeNode(4), TreeNode(5))))
         '1,2,null,null,3,4,null,null,5,null,null'
         """
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"{self.value},{self.left!r},{self.right!r}".replace("None", "null")
 
     @classmethod
@@ -75,11 +85,14 @@ class TreeNode:
         >>> repr(TreeNode.five_tree())
         '1,2,null,null,3,4,null,null,5,null,null'
         """
+        logger.error(">>> Entering five_tree()", extra={"event.action": "five_tree"})
         root = TreeNode(1)
+        logger.error("five_tree(): root → %s", root, extra={"event.action": "five_tree"})
         root.left = TreeNode(2)
         root.right = TreeNode(3)
         root.right.left = TreeNode(4)
         root.right.right = TreeNode(5)
+        logger.warning("<<< Exiting five_tree()", extra={"event.action": "five_tree"})
         return root
 
 
@@ -112,16 +125,21 @@ def deserialize(data: str) -> TreeNode | None:
         ...
     ValueError: Data cannot be empty.
     """
+    logger.error(">>> Entering deserialize(data=%s)", data, extra={"event.action": "deserialize"})
 
     if not data:
         raise ValueError("Data cannot be empty.")
 
     # Split the serialized string by a comma to get node values
+    logger.warning("<<< Exiting deserialize(data=%s)", data, extra={"event.action": "deserialize"})
     nodes = data.split(",")
+    logger.error("deserialize(data=%s): nodes → %s", data, nodes, extra={"event.action": "deserialize"})
 
     def build_tree() -> TreeNode | None:
+        logger.error(">>> Entering build_tree()", extra={"event.action": "build_tree"})
         # Get the next value from the list
         value = nodes.pop(0)
+        logger.error("build_tree(): value → %s", value, extra={"event.action": "build_tree"})
 
         if value == "null":
             return None
@@ -129,6 +147,7 @@ def deserialize(data: str) -> TreeNode | None:
         node = TreeNode(int(value))
         node.left = build_tree()  # Recursively build left subtree
         node.right = build_tree()  # Recursively build right subtree
+        logger.warning("<<< Exiting build_tree()", extra={"event.action": "build_tree"})
         return node
 
     return build_tree()

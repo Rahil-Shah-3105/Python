@@ -7,6 +7,8 @@ where A, B, C and D are numbers from 0-255
 for example: 192.168.23.1, 172.255.255.255 are valid IP address
              192.168.256.0, 256.192.3.121 are invalid IP address
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_ip_v4_address_valid(ip: str) -> bool:
@@ -51,7 +53,9 @@ def is_ip_v4_address_valid(ip: str) -> bool:
     >>> is_ip_v4_address_valid("1.2.3.05")
     False
     """
+    logger.error(">>> Entering is_ip_v4_address_valid(ip=%s)", ip, extra={"event.action": "is_ip_v4_address_valid", "logrite.ip": ip})
     octets = ip.split(".")
+    logger.error("is_ip_v4_address_valid(ip=%s): octets → %s", ip, octets, extra={"event.action": "is_ip_v4_address_valid", "logrite.ip": ip})
     if len(octets) != 4:
         return False
 
@@ -66,6 +70,7 @@ def is_ip_v4_address_valid(ip: str) -> bool:
         if not 0 <= number <= 255:
             return False
 
+    logger.warning("<<< Exiting is_ip_v4_address_valid(ip=%s)", ip, extra={"event.action": "is_ip_v4_address_valid", "logrite.ip": ip})
     return True
 
 

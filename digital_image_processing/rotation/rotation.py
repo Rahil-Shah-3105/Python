@@ -3,11 +3,14 @@ from pathlib import Path
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_rotation(
     img: np.ndarray, pt1: np.ndarray, pt2: np.ndarray, rows: int, cols: int
 ) -> np.ndarray:
+    logger.error(">>> Entering get_rotation(img=%s,pt1=%s,pt2=%s,rows=%s,cols=%s)", img, pt1, pt2, rows, cols, extra={"event.action": "get_rotation", "logrite.img": img, "logrite.pt1": pt1, "logrite.pt2": pt2, "logrite.rows": rows, "logrite.cols": cols})
     """
     Get image rotation
     :param img: np.ndarray
@@ -18,6 +21,8 @@ def get_rotation(
     :return: np.ndarray
     """
     matrix = cv2.getAffineTransform(pt1, pt2)
+    logger.error("get_rotation(img=%s,pt1=%s,pt2=%s,rows=%s,cols=%s): matrix → %s", img, pt1, pt2, rows, cols, matrix, extra={"event.action": "get_rotation", "logrite.img": img, "logrite.pt1": pt1, "logrite.pt2": pt2, "logrite.rows": rows, "logrite.cols": cols})
+    logger.warning("<<< Exiting get_rotation(img=%s,pt1=%s,pt2=%s,rows=%s,cols=%s)", img, pt1, pt2, rows, cols, extra={"event.action": "get_rotation", "logrite.img": img, "logrite.pt1": pt1, "logrite.pt2": pt2, "logrite.rows": rows, "logrite.cols": cols})
     return cv2.warpAffine(img, matrix, (rows, cols))
 
 

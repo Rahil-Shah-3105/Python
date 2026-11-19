@@ -4,6 +4,8 @@ Implementation Burke's algorithm (dithering)
 
 import numpy as np
 from cv2 import destroyAllWindows, imread, imshow, waitKey
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Burkes:
@@ -17,24 +19,33 @@ class Burkes:
     """
 
     def __init__(self, input_img, threshold: int):
+        logger.error(">>> Entering __init__(input_img=%s,threshold=%s)", input_img, threshold, extra={"event.action": "__init__", "logrite.input_img": input_img, "logrite.threshold": threshold})
         self.min_threshold = 0
+        logger.debug("__init__(self=%s,input_img=%s,threshold=%s): self.min_threshold → %s", self, input_img, threshold, self.min_threshold, extra={"event.action": "__init__", "logrite.input_img": input_img, "logrite.threshold": threshold})
         # max greyscale value for #FFFFFF
         self.max_threshold = int(self.get_greyscale(255, 255, 255))
+        logger.error("__init__(input_img=%s,threshold=%s): self.max_threshold → %s", input_img, threshold, self.max_threshold, extra={"event.action": "__init__", "logrite.input_img": input_img, "logrite.threshold": threshold})
 
         if not self.min_threshold < threshold < self.max_threshold:
             msg = f"Factor value should be from 0 to {self.max_threshold}"
+            logger.error("__init__(input_img=%s,threshold=%s): msg → %s", input_img, threshold, msg, extra={"event.action": "__init__", "logrite.input_img": input_img, "logrite.threshold": threshold})
             raise ValueError(msg)
 
         self.input_img = input_img
+        logger.debug("__init__(self=%s,input_img=%s,threshold=%s): self.input_img → %s", self, input_img, threshold, self.input_img, extra={"event.action": "__init__", "logrite.input_img": input_img, "logrite.threshold": threshold})
         self.threshold = threshold
+        logger.debug("__init__(self=%s,input_img=%s,threshold=%s): self.threshold → %s", self, input_img, threshold, self.threshold, extra={"event.action": "__init__", "logrite.input_img": input_img, "logrite.threshold": threshold})
         self.width, self.height = self.input_img.shape[1], self.input_img.shape[0]
 
         # error table size (+4 columns and +1 row) greater than input image because of
         # lack of if statements
+        logger.warning("<<< Exiting __init__(input_img=%s,threshold=%s)", input_img, threshold, extra={"event.action": "__init__", "logrite.input_img": input_img, "logrite.threshold": threshold})
         self.error_table = [
             [0 for _ in range(self.height + 4)] for __ in range(self.width + 1)
         ]
+        logger.debug("__init__(self=%s,input_img=%s,threshold=%s): self.error_table → %s", self, input_img, threshold, self.error_table, extra={"event.action": "__init__", "logrite.input_img": input_img, "logrite.threshold": threshold})
         self.output_img = np.ones((self.width, self.height, 3), np.uint8) * 255
+        logger.error("__init__(input_img=%s,threshold=%s): self.output_img → %s", input_img, threshold, self.output_img, extra={"event.action": "__init__", "logrite.input_img": input_img, "logrite.threshold": threshold})
 
     @classmethod
     def get_greyscale(cls, blue: int, green: int, red: int) -> float:
@@ -46,17 +57,21 @@ class Burkes:
         >>> Burkes.get_greyscale(255, 255, 255)
         255.0
         """
+        logger.error(">>> Entering get_greyscale(blue=%s,green=%s,red=%s)", blue, green, red, extra={"event.action": "get_greyscale", "logrite.blue": blue, "logrite.green": green, "logrite.red": red})
         """
         Formula from https://en.wikipedia.org/wiki/HSL_and_HSV
         cf Lightness section, and Fig 13c.
         We use the first of four possible.
         """
+        logger.warning("<<< Exiting get_greyscale(blue=%s,green=%s,red=%s)", blue, green, red, extra={"event.action": "get_greyscale", "logrite.blue": blue, "logrite.green": green, "logrite.red": red})
         return 0.114 * blue + 0.587 * green + 0.299 * red
 
     def process(self) -> None:
+        logger.error(">>> Entering process()", extra={"event.action": "process"})
         for y in range(self.height):
             for x in range(self.width):
                 greyscale = int(self.get_greyscale(*self.input_img[y][x]))
+                logger.error("process(): greyscale → %s", greyscale, extra={"event.action": "process"})
                 if self.threshold > greyscale + self.error_table[y][x]:
                     self.output_img[y][x] = (0, 0, 0)
                     current_error = greyscale + self.error_table[y][x]
@@ -76,6 +91,7 @@ class Burkes:
                 self.error_table[y + 1][x + 2] += int(2 / 32 * current_error)
                 self.error_table[y + 1][x - 1] += int(4 / 32 * current_error)
                 self.error_table[y + 1][x - 2] += int(2 / 32 * current_error)
+                logger.warning("<<< Exiting process()", extra={"event.action": "process"})
 
 
 if __name__ == "__main__":

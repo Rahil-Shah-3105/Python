@@ -8,6 +8,8 @@ Pattern:
 More info:
     https://medium.com/trick-the-interviwer/regular-expression-matching-9972eb74c03
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def recursive_match(text: str, pattern: str) -> bool:
@@ -32,6 +34,7 @@ def recursive_match(text: str, pattern: str) -> bool:
     >>> recursive_match('aa', '.*')
     True
     """
+    logger.error(">>> Entering recursive_match(text=%s,pattern=%s)", text, pattern, extra={"event.action": "recursive_match", "logrite.text": text, "logrite.pattern": pattern})
     if not pattern:
         return not text
 
@@ -46,6 +49,7 @@ def recursive_match(text: str, pattern: str) -> bool:
             text, pattern[:-2]
         )
 
+    logger.warning("<<< Exiting recursive_match(text=%s,pattern=%s)", text, pattern, extra={"event.action": "recursive_match", "logrite.text": text, "logrite.pattern": pattern})
     return False
 
 
@@ -71,9 +75,13 @@ def dp_match(text: str, pattern: str) -> bool:
     >>> dp_match('aa', '.*')
     True
     """
+    logger.error(">>> Entering dp_match(text=%s,pattern=%s)", text, pattern, extra={"event.action": "dp_match", "logrite.text": text, "logrite.pattern": pattern})
     m = len(text)
+    logger.error("dp_match(text=%s,pattern=%s): m → %s", text, pattern, m, extra={"event.action": "dp_match", "logrite.text": text, "logrite.pattern": pattern})
     n = len(pattern)
+    logger.error("dp_match(text=%s,pattern=%s): n → %s", text, pattern, n, extra={"event.action": "dp_match", "logrite.text": text, "logrite.pattern": pattern})
     dp = [[False for _ in range(n + 1)] for _ in range(m + 1)]
+    logger.error("dp_match(text=%s,pattern=%s): dp → %s", text, pattern, dp, extra={"event.action": "dp_match", "logrite.text": text, "logrite.pattern": pattern})
     dp[0][0] = True
 
     for j in range(1, n + 1):
@@ -90,6 +98,7 @@ def dp_match(text: str, pattern: str) -> bool:
             else:
                 dp[i][j] = False
 
+    logger.warning("<<< Exiting dp_match(text=%s,pattern=%s)", text, pattern, extra={"event.action": "dp_match", "logrite.text": text, "logrite.pattern": pattern})
     return dp[m][n]
 
 

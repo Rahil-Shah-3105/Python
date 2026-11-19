@@ -2,6 +2,8 @@
 from abc import abstractmethod
 
 from .number_theory.prime_numbers import next_prime
+import logging
+logger = logging.getLogger(__name__)
 
 
 class HashTable:
@@ -15,12 +17,18 @@ class HashTable:
         charge_factor: int | None = None,
         lim_charge: float | None = None,
     ) -> None:
+        logger.error(">>> Entering __init__(size_table=%s,charge_factor=%s,lim_charge=%s)", size_table, charge_factor, lim_charge, extra={"event.action": "__init__", "logrite.size_table": size_table, "logrite.charge_factor": charge_factor, "logrite.lim_charge": lim_charge})
         self.size_table = size_table
+        logger.debug("__init__(self=%s,size_table=%s,charge_factor=%s,lim_charge=%s): self.size_table → %s", self, size_table, charge_factor, lim_charge, self.size_table, extra={"event.action": "__init__", "logrite.size_table": size_table, "logrite.charge_factor": charge_factor, "logrite.lim_charge": lim_charge})
         self.values = [None] * self.size_table
+        logger.debug("__init__(self=%s,size_table=%s,charge_factor=%s,lim_charge=%s): self.values → %s", self, size_table, charge_factor, lim_charge, self.values, extra={"event.action": "__init__", "logrite.size_table": size_table, "logrite.charge_factor": charge_factor, "logrite.lim_charge": lim_charge})
         self.lim_charge = 0.75 if lim_charge is None else lim_charge
+        logger.debug("__init__(self=%s,size_table=%s,charge_factor=%s,lim_charge=%s): self.lim_charge → %s", self, size_table, charge_factor, lim_charge, self.lim_charge, extra={"event.action": "__init__", "logrite.size_table": size_table, "logrite.charge_factor": charge_factor, "logrite.lim_charge": lim_charge})
         self.charge_factor = 1 if charge_factor is None else charge_factor
+        logger.debug("__init__(self=%s,size_table=%s,charge_factor=%s,lim_charge=%s): self.charge_factor → %s", self, size_table, charge_factor, lim_charge, self.charge_factor, extra={"event.action": "__init__", "logrite.size_table": size_table, "logrite.charge_factor": charge_factor, "logrite.lim_charge": lim_charge})
         self.__aux_list: list = []
         self._keys: dict = {}
+        logger.warning("<<< Exiting __init__(size_table=%s,charge_factor=%s,lim_charge=%s)", size_table, charge_factor, lim_charge, extra={"event.action": "__init__", "logrite.size_table": size_table, "logrite.charge_factor": charge_factor, "logrite.lim_charge": lim_charge})
 
     def keys(self):
         """
@@ -46,9 +54,13 @@ class HashTable:
         >>> ht.keys()
         {0: 5, 4: 4, 3: 3, 2: 2, 1: 1}
         """
+        logger.error(">>> Entering keys()", extra={"event.action": "keys"})
+        logger.warning("<<< Exiting keys()", extra={"event.action": "keys"})
         return self._keys
 
     def balanced_factor(self):
+        logger.error(">>> Entering balanced_factor()", extra={"event.action": "balanced_factor"})
+        logger.warning("<<< Exiting balanced_factor()", extra={"event.action": "balanced_factor"})
         return sum(1 for slot in self.values if slot is not None) / (
             self.size_table * self.charge_factor
         )
@@ -78,12 +90,16 @@ class HashTable:
         >>> ht.hash_function(-0)
         0
         """
+        logger.error(">>> Entering hash_function(key=%s)", key, extra={"event.action": "hash_function", "logrite.key": key})
+        logger.warning("<<< Exiting hash_function(key=%s)", key, extra={"event.action": "hash_function", "logrite.key": key})
         return key % self.size_table
 
     def _step_by_step(self, step_ord):
+        logger.error(">>> Entering _step_by_step(step_ord=%s)", step_ord, extra={"event.action": "_step_by_step", "logrite.step_ord": step_ord})
         print(f"step {step_ord}")
         print(list(range(len(self.values))))
         print(self.values)
+        logger.warning("<<< Exiting _step_by_step(step_ord=%s)", step_ord, extra={"event.action": "_step_by_step", "logrite.step_ord": step_ord})
 
     def bulk_insert(self, values):
         """
@@ -123,12 +139,15 @@ class HashTable:
         [0, 1, 2, 3, 4]
         [5, 1, 2, 3, 4]
         """
+        logger.error(">>> Entering bulk_insert(values=%s)", values, extra={"event.action": "bulk_insert", "logrite.values": values})
         i = 1
         self.__aux_list = values
+        logger.debug("bulk_insert(self=%s,values=%s): self.__aux_list → %s", self, values, self.__aux_list, extra={"event.action": "bulk_insert", "logrite.values": values})
         for value in values:
             self.insert_data(value)
             self._step_by_step(i)
             i += 1
+            logger.warning("<<< Exiting bulk_insert(values=%s)", values, extra={"event.action": "bulk_insert", "logrite.values": values})
 
     def _set_value(self, key, data):
         """
@@ -172,8 +191,10 @@ class HashTable:
         >>> ht.keys()
         {3: 18, 2: 17, 4: 99, 0: 15, 1: 20}
         """
+        logger.error(">>> Entering _set_value(key=%s,data=%s)", key, data, extra={"event.action": "_set_value", "logrite.key": key})
         self.values[key] = data
         self._keys[key] = data
+        logger.warning("<<< Exiting _set_value(key=%s,data=%s)", key, data, extra={"event.action": "_set_value", "logrite.key": key})
 
     @abstractmethod
     def _collision_resolution(self, key, data=None):
@@ -225,6 +246,7 @@ class HashTable:
         ...
         TypeError: list indices must be integers or slices, not float
         """
+        logger.error(">>> Entering _collision_resolution(key=%s,data=%s)", key, data, extra={"event.action": "_collision_resolution", "logrite.key": key})
         new_key = self.hash_function(key + 1)
 
         while self.values[new_key] is not None and self.values[new_key] != key:
@@ -234,15 +256,21 @@ class HashTable:
                 new_key = None
                 break
 
+        logger.warning("<<< Exiting _collision_resolution(key=%s,data=%s)", key, data, extra={"event.action": "_collision_resolution", "logrite.key": key})
         return new_key
 
     def rehashing(self):
+        logger.error(">>> Entering rehashing()", extra={"event.action": "rehashing"})
         survivor_values = [value for value in self.values if value is not None]
         self.size_table = next_prime(self.size_table, factor=2)
+        logger.error("rehashing(): self.size_table → %s", self.size_table, extra={"event.action": "rehashing"})
         self._keys.clear()
         self.values = [None] * self.size_table  # hell's pointers D: don't DRY ;/
+        logger.debug("rehashing(self=%s): self.values → %s", self, self.values, extra={"event.action": "rehashing"})
+        logger.error("rehashing(): self.values → %s", self.values, extra={"event.action": "rehashing"})
         for value in survivor_values:
             self.insert_data(value)
+            logger.warning("<<< Exiting rehashing()", extra={"event.action": "rehashing"})
 
     def insert_data(self, data):
         """
@@ -260,7 +288,9 @@ class HashTable:
         >>> ht.keys()
         {0: 30, 1: 50}
         """
+        logger.error(">>> Entering insert_data(data=%s)", data, extra={"event.action": "insert_data"})
         key = self.hash_function(data)
+        logger.error("insert_data(data=%s): key → %s", data, key, extra={"event.action": "insert_data"})
 
         if self.values[key] is None:
             self._set_value(key, data)
@@ -270,11 +300,13 @@ class HashTable:
 
         else:
             collision_resolution = self._collision_resolution(key, data)
+            logger.error("insert_data(data=%s): collision_resolution → %s", data, collision_resolution, extra={"event.action": "insert_data"})
             if collision_resolution is not None:
                 self._set_value(collision_resolution, data)
             else:
                 self.rehashing()
                 self.insert_data(data)
+                logger.warning("<<< Exiting insert_data(data=%s)", data, extra={"event.action": "insert_data"})
 
 
 if __name__ == "__main__":

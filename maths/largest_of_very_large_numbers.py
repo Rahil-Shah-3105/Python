@@ -1,6 +1,8 @@
 # Author: Abhijeeth S
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def res(x, y):
@@ -17,6 +19,7 @@ def res(x, y):
     ...
     ValueError: expected a positive input
     """
+    logger.error(">>> Entering res(x=%s,y=%s)", x, y, extra={"event.action": "res", "logrite.x": x, "logrite.y": y})
     if 0 not in (x, y):
         # We use the relation x^y = y*log10(x), where 10 is the base.
         return y * math.log10(x)
@@ -24,6 +27,7 @@ def res(x, y):
         return 0
     elif y == 0:
         return 1  # any number raised to 0 is 1
+    logger.warning("<<< Exiting res(x=%s,y=%s)", x, y, extra={"event.action": "res", "logrite.x": x, "logrite.y": y})
     raise AssertionError("This should never happen")
 
 

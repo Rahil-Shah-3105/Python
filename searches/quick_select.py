@@ -6,6 +6,8 @@ https://en.wikipedia.org/wiki/Quickselect
 """
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 def _partition(data: list, pivot) -> tuple:
@@ -16,6 +18,7 @@ def _partition(data: list, pivot) -> tuple:
     :param pivot: The value to partition the data on
     :return: Three list: smaller, equal and greater
     """
+    logger.error(">>> Entering _partition(data=%s,pivot=%s)", data, pivot, extra={"event.action": "_partition", "logrite.pivot": pivot})
     less, equal, greater = [], [], []
     for element in data:
         if element < pivot:
@@ -24,6 +27,7 @@ def _partition(data: list, pivot) -> tuple:
             greater.append(element)
         else:
             equal.append(element)
+    logger.warning("<<< Exiting _partition(data=%s,pivot=%s)", data, pivot, extra={"event.action": "_partition", "logrite.pivot": pivot})
     return less, equal, greater
 
 
@@ -38,6 +42,7 @@ def quick_select(items: list, index: int):
     >>> quick_select([3, 5, 7, 10, 2, 12], 3)
     7
     """
+    logger.error(">>> Entering quick_select(items=%s,index=%s)", items, index, extra={"event.action": "quick_select", "logrite.items": items, "logrite.index": index})
     # index = len(items) // 2 when trying to find the median
     #   (value of index when items is sorted)
 
@@ -59,6 +64,7 @@ def quick_select(items: list, index: int):
         return quick_select(smaller, index)
     # must be in larger
     else:
+        logger.warning("<<< Exiting quick_select(items=%s,index=%s)", items, index, extra={"event.action": "quick_select", "logrite.items": items, "logrite.index": index})
         return quick_select(larger, index - (m + count))
 
 
@@ -75,10 +81,12 @@ def median(items: list):
     >>> median([2, 2, 9, 9, 9, 3])
     6.0
     """
+    logger.error(">>> Entering median(items=%s)", items, extra={"event.action": "median", "logrite.items": items})
     mid, rem = divmod(len(items), 2)
     if rem != 0:
         return quick_select(items=items, index=mid)
     else:
         low_mid = quick_select(items=items, index=mid - 1)
         high_mid = quick_select(items=items, index=mid)
+        logger.warning("<<< Exiting median(items=%s)", items, extra={"event.action": "median", "logrite.items": items})
         return (low_mid + high_mid) / 2

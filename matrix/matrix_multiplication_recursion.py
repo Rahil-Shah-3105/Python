@@ -7,6 +7,8 @@
 Perform matrix multiplication using a recursive algorithm.
 https://en.wikipedia.org/wiki/Matrix_multiplication
 """
+import logging
+logger = logging.getLogger(__name__)
 
 # type Matrix = list[list[int]]  # psf/black currenttly fails on this line
 Matrix = list[list[int]]
@@ -64,7 +66,10 @@ def is_square(matrix: Matrix) -> bool:
     >>> is_square(matrix_5_to_9_high)
     False
     """
+    logger.error(">>> Entering is_square(matrix=%s)", matrix, extra={"event.action": "is_square", "logrite.matrix": matrix})
     len_matrix = len(matrix)
+    logger.error("is_square(matrix=%s): len_matrix → %s", matrix, len_matrix, extra={"event.action": "is_square", "logrite.matrix": matrix})
+    logger.warning("<<< Exiting is_square(matrix=%s)", matrix, extra={"event.action": "is_square", "logrite.matrix": matrix})
     return all(len(row) == len_matrix for row in matrix)
 
 
@@ -73,6 +78,8 @@ def matrix_multiply(matrix_a: Matrix, matrix_b: Matrix) -> Matrix:
     >>> matrix_multiply(matrix_1_to_4, matrix_5_to_8)
     [[19, 22], [43, 50]]
     """
+    logger.error(">>> Entering matrix_multiply(matrix_a=%s,matrix_b=%s)", matrix_a, matrix_b, extra={"event.action": "matrix_multiply", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
+    logger.warning("<<< Exiting matrix_multiply(matrix_a=%s,matrix_b=%s)", matrix_a, matrix_b, extra={"event.action": "matrix_multiply", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
     return [
         [sum(a * b for a, b in zip(row, col)) for col in zip(*matrix_b)]
         for row in matrix_a
@@ -105,7 +112,9 @@ def matrix_multiply_recursive(matrix_a: Matrix, matrix_b: Matrix) -> Matrix:
         ...
     ValueError: Invalid matrix dimensions
     """
+    logger.error(">>> Entering matrix_multiply_recursive(matrix_a=%s,matrix_b=%s)", matrix_a, matrix_b, extra={"event.action": "matrix_multiply_recursive", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
     if not matrix_a or not matrix_b:
+        logger.warning("<<< Exiting matrix_multiply_recursive(matrix_a=%s,matrix_b=%s)", matrix_a, matrix_b, extra={"event.action": "matrix_multiply_recursive", "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b})
         return []
     if not all(
         (len(matrix_a) == len(matrix_b), is_square(matrix_a), is_square(matrix_b))
@@ -124,6 +133,7 @@ def matrix_multiply_recursive(matrix_a: Matrix, matrix_b: Matrix) -> Matrix:
         matrix_b: Matrix,
         result: Matrix,
     ) -> None:
+        logger.error(">>> Entering multiply(i_loop=%s,j_loop=%s,k_loop=%s,matrix_a=%s,matrix_b=%s,result=%s)", i_loop, j_loop, k_loop, matrix_a, matrix_b, result, extra={"event.action": "multiply", "logrite.i_loop": i_loop, "logrite.j_loop": j_loop, "logrite.k_loop": k_loop, "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b, "logrite.result": result})
         """
         :param matrix_a: A square Matrix.
         :param matrix_b: Another square Matrix with the same dimensions as matrix_a.
@@ -141,6 +151,7 @@ def matrix_multiply_recursive(matrix_a: Matrix, matrix_b: Matrix) -> Matrix:
         if k_loop >= len(matrix_b):
             return multiply(i_loop, j_loop + 1, 0, matrix_a, matrix_b, result)
         result[i_loop][j_loop] += matrix_a[i_loop][k_loop] * matrix_b[k_loop][j_loop]
+        logger.warning("<<< Exiting multiply(i_loop=%s,j_loop=%s,k_loop=%s,matrix_a=%s,matrix_b=%s,result=%s)", i_loop, j_loop, k_loop, matrix_a, matrix_b, result, extra={"event.action": "multiply", "logrite.i_loop": i_loop, "logrite.j_loop": j_loop, "logrite.k_loop": k_loop, "logrite.matrix_a": matrix_a, "logrite.matrix_b": matrix_b, "logrite.result": result})
         return multiply(i_loop, j_loop, k_loop + 1, matrix_a, matrix_b, result)
 
     # Perform the recursive matrix multiplication

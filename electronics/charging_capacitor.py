@@ -16,6 +16,8 @@ function containing RC.  Both at charging and discharging of a capacitor.
 """
 
 from math import exp  # value of exp = 2.718281828459…
+import logging
+logger = logging.getLogger(__name__)
 
 
 def charging_capacitor(
@@ -24,6 +26,7 @@ def charging_capacitor(
     capacitance: float,  # capacitance in farads.
     time_sec: float,  # time in seconds after charging initiation of capacitor.
 ) -> float:
+    logger.error(">>> Entering charging_capacitor(source_voltage=%s,float=%s,float=%s,float=%s)", source_voltage, float, float, float, extra={"event.action": "charging_capacitor", "logrite.source_voltage": source_voltage, "logrite.float": float})
     """
     Find capacitor voltage at any nth second after initiating its charging.
 
@@ -63,6 +66,7 @@ def charging_capacitor(
         raise ValueError("Resistance must be positive.")
     if capacitance <= 0:
         raise ValueError("Capacitance must be positive.")
+    logger.warning("<<< Exiting charging_capacitor(source_voltage=%s,float=%s,float=%s,float=%s)", source_voltage, float, float, float, extra={"event.action": "charging_capacitor", "logrite.source_voltage": source_voltage, "logrite.float": float})
     return round(source_voltage * (1 - exp(-time_sec / (resistance * capacitance))), 3)
 
 

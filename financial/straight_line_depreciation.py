@@ -27,6 +27,8 @@ https://en.wikipedia.org/wiki/Depreciation
 The function, straight_line_depreciation, returns a list of
 the depreciation expenses over the given period.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def straight_line_depreciation(
@@ -34,6 +36,7 @@ def straight_line_depreciation(
     purchase_value: float,
     residual_value: float = 0.0,
 ) -> list[float]:
+    logger.error(">>> Entering straight_line_depreciation(useful_years=%s,purchase_value=%s,residual_value=%s)", useful_years, purchase_value, residual_value, extra={"event.action": "straight_line_depreciation", "logrite.useful_years": useful_years, "logrite.purchase_value": purchase_value, "logrite.residual_value": residual_value})
     """
     Calculate the depreciation expenses over the given period
     :param useful_years: Number of years the asset will be used
@@ -87,6 +90,7 @@ def straight_line_depreciation(
             )
             list_of_depreciation_expenses.append(depreciation_expense_in_end_year)
 
+    logger.warning("<<< Exiting straight_line_depreciation(useful_years=%s,purchase_value=%s,residual_value=%s)", useful_years, purchase_value, residual_value, extra={"event.action": "straight_line_depreciation", "logrite.useful_years": useful_years, "logrite.purchase_value": purchase_value, "logrite.residual_value": residual_value})
     return list_of_depreciation_expenses
 
 

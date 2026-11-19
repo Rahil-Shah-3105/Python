@@ -10,6 +10,8 @@ What is the largest prime factor of the number 600851475143?
 References:
     - https://en.wikipedia.org/wiki/Prime_number#Unique_factorization
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 600851475143) -> int:
@@ -41,10 +43,12 @@ def solution(n: int = 600851475143) -> int:
         ...
     TypeError: Parameter n must be int or castable to int.
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     try:
         n = int(n)
     except TypeError, ValueError:
+        logger.error("Exception in solution(n=%s)", n, exc_info=True, extra={"event.action": "solution", "event.category": "process", "logrite.n": n})
         raise TypeError("Parameter n must be int or castable to int.")
     if n <= 0:
         raise ValueError("Parameter n must be greater than or equal to one.")
@@ -57,6 +61,7 @@ def solution(n: int = 600851475143) -> int:
         i += 1
     if n > 1:
         prime = n
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return int(prime)
 
 

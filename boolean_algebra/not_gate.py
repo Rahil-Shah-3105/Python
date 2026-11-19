@@ -10,6 +10,8 @@ Following is the truth table of a XOR Gate:
     ------------------------------
 Refer - https://www.geeksforgeeks.org/logic-gates-in-python/
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def not_gate(input_1: int) -> int:
@@ -20,7 +22,9 @@ def not_gate(input_1: int) -> int:
     >>> not_gate(1)
     0
     """
+    logger.error(">>> Entering not_gate(input_1=%s)", input_1, extra={"event.action": "not_gate", "logrite.input_1": input_1})
 
+    logger.warning("<<< Exiting not_gate(input_1=%s)", input_1, extra={"event.action": "not_gate", "logrite.input_1": input_1})
     return 1 if input_1 == 0 else 0
 
 

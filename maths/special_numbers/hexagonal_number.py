@@ -7,6 +7,8 @@ overlaid so that they share one vertex.
 
 https://en.wikipedia.org/wiki/Hexagonal_number
 """
+import logging
+logger = logging.getLogger(__name__)
 
 # Author : Akshay Dubey (https://github.com/itsAkshayDubey)
 
@@ -35,11 +37,14 @@ def hexagonal(number: int) -> int:
         ...
     TypeError: Input value of [number=11.0] must be an integer
     """
+    logger.error(">>> Entering hexagonal(number=%s)", number, extra={"event.action": "hexagonal", "logrite.number": number})
     if not isinstance(number, int):
         msg = f"Input value of [number={number}] must be an integer"
+        logger.error("hexagonal(number=%s): msg → %s", number, msg, extra={"event.action": "hexagonal", "logrite.number": number})
         raise TypeError(msg)
     if number < 1:
         raise ValueError("Input must be a positive integer")
+    logger.warning("<<< Exiting hexagonal(number=%s)", number, extra={"event.action": "hexagonal", "logrite.number": number})
     return number * (2 * number - 1)
 
 

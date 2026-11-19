@@ -18,6 +18,8 @@ the number of digits in the denominator.
 In the first one-thousand expansions, how many fractions contain a numerator with
 more digits than the denominator?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 1000) -> int:
@@ -31,8 +33,10 @@ def solution(n: int = 1000) -> int:
     >>> solution(10000)
     1508
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     prev_numerator, prev_denominator = 1, 1
     result = []
+    logger.error("solution(n=%s): result → %s", n, result, extra={"event.action": "solution", "logrite.n": n})
     for i in range(1, n + 1):
         numerator = prev_numerator + 2 * prev_denominator
         denominator = prev_numerator + prev_denominator
@@ -41,6 +45,7 @@ def solution(n: int = 1000) -> int:
         prev_numerator = numerator
         prev_denominator = denominator
 
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return len(result)
 
 

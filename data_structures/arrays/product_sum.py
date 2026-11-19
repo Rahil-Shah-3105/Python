@@ -18,6 +18,8 @@ Example Input:
 Output: 12
 
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def product_sum(arr: list[int | list], depth: int) -> int:
@@ -58,9 +60,11 @@ def product_sum(arr: list[int | list], depth: int) -> int:
         1.5
 
     """
+    logger.error(">>> Entering product_sum(arr=%s,depth=%s)", arr, depth, extra={"event.action": "product_sum", "logrite.arr": arr, "logrite.depth": depth})
     total_sum = 0
     for ele in arr:
         total_sum += product_sum(ele, depth + 1) if isinstance(ele, list) else ele
+    logger.warning("<<< Exiting product_sum(arr=%s,depth=%s)", arr, depth, extra={"event.action": "product_sum", "logrite.arr": arr, "logrite.depth": depth})
     return total_sum * depth
 
 
@@ -89,6 +93,8 @@ def product_sum_array(array: list[int | list]) -> int:
         -1
 
     """
+    logger.error(">>> Entering product_sum_array(array=%s)", array, extra={"event.action": "product_sum_array", "logrite.array": array})
+    logger.warning("<<< Exiting product_sum_array(array=%s)", array, extra={"event.action": "product_sum_array", "logrite.array": array})
     return product_sum(array, 1)
 
 

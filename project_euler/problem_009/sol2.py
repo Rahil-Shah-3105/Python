@@ -15,6 +15,8 @@ Find the product a*b*c.
 References:
     - https://en.wikipedia.org/wiki/Pythagorean_triple
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(n: int = 1000) -> int:
@@ -30,8 +32,11 @@ def solution(n: int = 1000) -> int:
     >>> solution(126)
     66780
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     product = -1
+    logger.error("solution(n=%s): product → %s", n, product, extra={"event.action": "solution", "logrite.n": n})
+    logger.error("solution(n=%s): b → %s", n, b, extra={"event.action": "solution", "logrite.n": n})
     candidate = 0
     for a in range(1, n // 3):
         # Solving the two equations a**2+b**2=c**2 and a+b+c=N eliminating c

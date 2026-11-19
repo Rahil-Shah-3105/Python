@@ -40,6 +40,8 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from typing import Any, TypeVar
+import logging
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
 
@@ -57,16 +59,21 @@ class SegmentTree[T]:
         ...             lambda a, b: (a[0] + b[0], a[1] + b[1])).query(0, 2)
         (6, 9)
         """
+        logger.error(">>> Entering __init__(arr=%s,fnc=%s)", arr, fnc, extra={"event.action": "__init__", "logrite.arr": arr, "logrite.fnc": fnc})
         any_type: Any | T = None
 
         self.N: int = len(arr)
         self.st: list[T] = [any_type for _ in range(self.N)] + arr
         self.fn = fnc
+        logger.debug("__init__(self=%s,arr=%s,fnc=%s): self.fn → %s", self, arr, fnc, self.fn, extra={"event.action": "__init__", "logrite.arr": arr, "logrite.fnc": fnc})
         self.build()
+        logger.warning("<<< Exiting __init__(arr=%s,fnc=%s)", arr, fnc, extra={"event.action": "__init__", "logrite.arr": arr, "logrite.fnc": fnc})
 
     def build(self) -> None:
+        logger.error(">>> Entering build()", extra={"event.action": "build"})
         for p in range(self.N - 1, 0, -1):
             self.st[p] = self.fn(self.st[p * 2], self.st[p * 2 + 1])
+            logger.warning("<<< Exiting build()", extra={"event.action": "build"})
 
     def update(self, p: int, v: T) -> None:
         """
@@ -81,11 +88,13 @@ class SegmentTree[T]:
         >>> st.query(0, 3)
         -1
         """
+        logger.error(">>> Entering update(p=%s,v=%s)", p, v, extra={"event.action": "update", "logrite.p": p, "logrite.v": v})
         p += self.N
         self.st[p] = v
         while p > 1:
             p = p // 2
             self.st[p] = self.fn(self.st[p * 2], self.st[p * 2 + 1])
+            logger.warning("<<< Exiting update(p=%s,v=%s)", p, v, extra={"event.action": "update", "logrite.p": p, "logrite.v": v})
 
     def query(self, left: int, right: int) -> T | None:
         """
@@ -104,15 +113,18 @@ class SegmentTree[T]:
         >>> st.query(2, 3)
         7
         """
+        logger.error(">>> Entering query(left=%s,right=%s)", left, right, extra={"event.action": "query", "logrite.left": left, "logrite.right": right})
         left, right = left + self.N, right + self.N
 
         res: T | None = None
+        logger.error("query(left=%s,right=%s): res → %s", left, right, res, extra={"event.action": "query", "logrite.left": left, "logrite.right": right})
         while left <= right:
             if left % 2 == 1:
                 res = self.st[left] if res is None else self.fn(res, self.st[left])
             if right % 2 == 0:
                 res = self.st[right] if res is None else self.fn(res, self.st[right])
             left, right = (left + 1) // 2, (right - 1) // 2
+        logger.warning("<<< Exiting query(left=%s,right=%s)", left, right, extra={"event.action": "query", "logrite.left": left, "logrite.right": right})
         return res
 
 
@@ -144,14 +156,19 @@ if __name__ == "__main__":
         """
         Test all possible segments
         """
+        logger.error(">>> Entering test_all_segments()", extra={"event.action": "test_all_segments"})
         for i in range(len(test_array)):
             for j in range(i, len(test_array)):
                 min_range = reduce(min, test_array[i : j + 1])
+                logger.error("test_all_segments(): min_range → %s", min_range, extra={"event.action": "test_all_segments"})
                 max_range = reduce(max, test_array[i : j + 1])
+                logger.error("test_all_segments(): max_range → %s", max_range, extra={"event.action": "test_all_segments"})
                 sum_range = reduce(lambda a, b: a + b, test_array[i : j + 1])
+                logger.error("test_all_segments(): sum_range → %s", sum_range, extra={"event.action": "test_all_segments"})
                 assert min_range == min_segment_tree.query(i, j)
                 assert max_range == max_segment_tree.query(i, j)
                 assert sum_range == sum_segment_tree.query(i, j)
+                logger.warning("<<< Exiting test_all_segments()", extra={"event.action": "test_all_segments"})
 
     test_all_segments()
 

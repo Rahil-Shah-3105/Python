@@ -12,6 +12,8 @@ Following is the truth table of an AND Gate:
     ------------------------------
 Refer - https://www.geeksforgeeks.org/logic-gates-in-python/
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def or_gate(input_1: int, input_2: int) -> int:
@@ -26,6 +28,8 @@ def or_gate(input_1: int, input_2: int) -> int:
     >>> or_gate(1, 1)
     1
     """
+    logger.error(">>> Entering or_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "or_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
+    logger.warning("<<< Exiting or_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "or_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
     return int((input_1, input_2).count(1) != 0)
 
 

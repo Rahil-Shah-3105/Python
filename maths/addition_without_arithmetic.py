@@ -4,6 +4,8 @@ Author: suraj Kumar
 Time Complexity: 1
 https://en.wikipedia.org/wiki/Bitwise_operation
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def add(first: int, second: int) -> int:
@@ -22,10 +24,12 @@ def add(first: int, second: int) -> int:
     >>> add(-321, 0)
     -321
     """
+    logger.error(">>> Entering add(first=%s,second=%s)", first, second, extra={"event.action": "add", "logrite.first": first, "logrite.second": second})
     while second != 0:
         c = first & second
         first ^= second
         second = c << 1
+    logger.warning("<<< Exiting add(first=%s,second=%s)", first, second, extra={"event.action": "add", "logrite.first": first, "logrite.second": second})
     return first
 
 

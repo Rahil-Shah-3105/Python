@@ -6,6 +6,8 @@
 URL: https://mathworld.wolfram.com/MinimumVertexCover.html
 URL: https://www.princeton.edu/~aaa/Public/Teaching/ORF523/ORF523_Lec6.pdf
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def matching_min_vertex_cover(graph: dict) -> set:
@@ -18,10 +20,13 @@ def matching_min_vertex_cover(graph: dict) -> set:
     >>> matching_min_vertex_cover(graph)
     {0, 1, 2, 4}
     """
+    logger.error(">>> Entering matching_min_vertex_cover(graph=%s)", graph, extra={"event.action": "matching_min_vertex_cover", "logrite.graph": graph})
     # chosen_vertices = set of chosen vertices
     chosen_vertices = set()
+    logger.error("matching_min_vertex_cover(graph=%s): chosen_vertices → %s", graph, chosen_vertices, extra={"event.action": "matching_min_vertex_cover", "logrite.graph": graph})
     # edges = list of graph's edges
     edges = get_edges(graph)
+    logger.error("matching_min_vertex_cover(graph=%s): edges → %s", graph, edges, extra={"event.action": "matching_min_vertex_cover", "logrite.graph": graph})
 
     # While there are still elements in edges list, take an arbitrary edge
     # (from_node, to_node) and add his extremity to chosen_vertices and then
@@ -33,6 +38,7 @@ def matching_min_vertex_cover(graph: dict) -> set:
         for edge in edges.copy():
             if from_node in edge or to_node in edge:
                 edges.discard(edge)
+    logger.warning("<<< Exiting matching_min_vertex_cover(graph=%s)", graph, extra={"event.action": "matching_min_vertex_cover", "logrite.graph": graph})
     return chosen_vertices
 
 
@@ -46,10 +52,13 @@ def get_edges(graph: dict) -> set:
     >>> get_edges(graph)
     {(0, 1), (3, 1), (0, 3), (2, 0), (3, 0), (2, 3), (1, 0), (3, 2), (1, 3)}
     """
+    logger.error(">>> Entering get_edges(graph=%s)", graph, extra={"event.action": "get_edges", "logrite.graph": graph})
     edges = set()
+    logger.error("get_edges(graph=%s): edges → %s", graph, edges, extra={"event.action": "get_edges", "logrite.graph": graph})
     for from_node, to_nodes in graph.items():
         for to_node in to_nodes:
             edges.add((from_node, to_node))
+    logger.warning("<<< Exiting get_edges(graph=%s)", graph, extra={"event.action": "get_edges", "logrite.graph": graph})
     return edges
 
 

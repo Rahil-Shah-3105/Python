@@ -25,6 +25,8 @@ Credits:
 
 import sys
 import turtle
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_mid(p1: tuple[float, float], p2: tuple[float, float]) -> tuple[float, float]:
@@ -42,6 +44,8 @@ def get_mid(p1: tuple[float, float], p2: tuple[float, float]) -> tuple[float, fl
     >>> get_mid((0, 0), (0, 0))
     (0.0, 0.0)
     """
+    logger.error(">>> Entering get_mid(p1=%s,p2=%s)", p1, p2, extra={"event.action": "get_mid", "logrite.p1": p1, "logrite.p2": p2})
+    logger.warning("<<< Exiting get_mid(p1=%s,p2=%s)", p1, p2, extra={"event.action": "get_mid", "logrite.p1": p1, "logrite.p2": p2})
     return (p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2
 
 
@@ -51,6 +55,7 @@ def triangle(
     vertex3: tuple[float, float],
     depth: int,
 ) -> None:
+    logger.error(">>> Entering triangle(vertex1=%s,vertex2=%s,vertex3=%s,depth=%s)", vertex1, vertex2, vertex3, depth, extra={"event.action": "triangle", "logrite.vertex1": vertex1, "logrite.vertex2": vertex2, "logrite.vertex3": vertex3, "logrite.depth": depth})
     """
     Recursively draw the Sierpinski triangle given the vertices of the triangle
     and the recursion depth
@@ -63,6 +68,7 @@ def triangle(
     my_pen.goto(vertex1[0], vertex1[1])
 
     if depth == 0:
+        logger.warning("<<< Exiting triangle(vertex1=%s,vertex2=%s,vertex3=%s,depth=%s)", vertex1, vertex2, vertex3, depth, extra={"event.action": "triangle", "logrite.vertex1": vertex1, "logrite.vertex2": vertex2, "logrite.vertex3": vertex3, "logrite.depth": depth})
         return
 
     triangle(vertex1, get_mid(vertex1, vertex2), get_mid(vertex1, vertex3), depth - 1)

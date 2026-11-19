@@ -11,6 +11,8 @@ neighbors.
 """
 
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -23,13 +25,18 @@ class Node:
         >>> Node(3).neighbors
         []
         """
+        logger.error(">>> Entering __post_init__()", extra={"event.action": "__post_init__"})
         self.neighbors = self.neighbors or []
+        logger.warning("<<< Exiting __post_init__()", extra={"event.action": "__post_init__"})
+        logger.debug("__post_init__(self=%s): self.neighbors → %s", self, self.neighbors, extra={"event.action": "__post_init__"})
 
     def __hash__(self) -> int:
         """
         >>> hash(Node(3)) != 0
         True
         """
+        logger.error(">>> Entering __hash__()", extra={"event.action": "__hash__"})
+        logger.warning("<<< Exiting __hash__()", extra={"event.action": "__hash__"})
         return id(self)
 
 
@@ -43,6 +50,7 @@ def clone_graph(node: Node | None) -> Node | None:
     >>> clone_graph(None) is None
     True
     """
+    logger.error(">>> Entering clone_graph(node=%s)", node, extra={"event.action": "clone_graph", "logrite.node": node})
     if not node:
         return None
 
@@ -66,9 +74,11 @@ def clone_graph(node: Node | None) -> Node | None:
 
             if not clone.neighbors:
                 clone.neighbors = []
+                logger.debug("clone_graph(node=%s): clone.neighbors → %s", node, clone.neighbors, extra={"event.action": "clone_graph", "logrite.node": node})
 
             clone.neighbors.append(cloned_neighbor)
 
+    logger.warning("<<< Exiting clone_graph(node=%s)", node, extra={"event.action": "clone_graph", "logrite.node": node})
     return originals_to_clones[node]
 
 

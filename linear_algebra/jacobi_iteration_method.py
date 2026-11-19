@@ -7,6 +7,8 @@ from __future__ import annotations
 import numpy as np
 from numpy import float64
 from numpy.typing import NDArray
+import logging
+logger = logging.getLogger(__name__)
 
 
 # Method to find solution of system of linear equations
@@ -16,6 +18,7 @@ def jacobi_iteration_method(
     init_val: list[float],
     iterations: int,
 ) -> list[float]:
+    logger.error(">>> Entering jacobi_iteration_method(coefficient_matrix=%s,constant_matrix=%s,init_val=%s,iterations=%s)", coefficient_matrix, constant_matrix, init_val, iterations, extra={"event.action": "jacobi_iteration_method", "logrite.coefficient_matrix": coefficient_matrix, "logrite.constant_matrix": constant_matrix, "logrite.init_val": init_val, "logrite.iterations": iterations})
     """
     Jacobi Iteration Method:
     An iterative algorithm to determine the solutions of strictly diagonally dominant
@@ -136,6 +139,7 @@ def jacobi_iteration_method(
 
     # denominator - a list of values along the diagonal
     denominator = np.diag(coefficient_matrix)
+    logger.error("jacobi_iteration_method(coefficient_matrix=%s,constant_matrix=%s,init_val=%s,iterations=%s): denominator → %s", coefficient_matrix, constant_matrix, init_val, iterations, denominator, extra={"event.action": "jacobi_iteration_method", "logrite.coefficient_matrix": coefficient_matrix, "logrite.constant_matrix": constant_matrix, "logrite.init_val": init_val, "logrite.iterations": iterations})
 
     # val_last - values of the last column of the table array
     val_last = table[:, -1]
@@ -143,14 +147,17 @@ def jacobi_iteration_method(
     # masks - boolean mask of all strings without diagonal
     # elements array coefficient_matrix
     masks = ~np.eye(coefficient_matrix.shape[0], dtype=bool)
+    logger.error("jacobi_iteration_method(coefficient_matrix=%s,constant_matrix=%s,init_val=%s,iterations=%s): masks → %s", coefficient_matrix, constant_matrix, init_val, iterations, masks, extra={"event.action": "jacobi_iteration_method", "logrite.coefficient_matrix": coefficient_matrix, "logrite.constant_matrix": constant_matrix, "logrite.init_val": init_val, "logrite.iterations": iterations})
 
     # no_diagonals - coefficient_matrix array values without diagonal elements
     no_diagonals = coefficient_matrix[masks].reshape(-1, rows - 1)
+    logger.error("jacobi_iteration_method(coefficient_matrix=%s,constant_matrix=%s,init_val=%s,iterations=%s): no_diagonals → %s", coefficient_matrix, constant_matrix, init_val, iterations, no_diagonals, extra={"event.action": "jacobi_iteration_method", "logrite.coefficient_matrix": coefficient_matrix, "logrite.constant_matrix": constant_matrix, "logrite.init_val": init_val, "logrite.iterations": iterations})
 
     # Here we get 'i_col' - these are the column numbers, for each row
     # without diagonal elements, except for the last column.
     _i_row, i_col = np.where(masks)
     ind = i_col.reshape(-1, rows - 1)
+    logger.error("jacobi_iteration_method(coefficient_matrix=%s,constant_matrix=%s,init_val=%s,iterations=%s): ind → %s", coefficient_matrix, constant_matrix, init_val, iterations, ind, extra={"event.action": "jacobi_iteration_method", "logrite.coefficient_matrix": coefficient_matrix, "logrite.constant_matrix": constant_matrix, "logrite.init_val": init_val, "logrite.iterations": iterations})
 
     #'i_col' is converted to a two-dimensional list 'ind', which will be
     # used to make selections from 'init_val' ('arr' array see below).
@@ -158,10 +165,14 @@ def jacobi_iteration_method(
     # Iterates the whole matrix for given number of times
     for _ in range(iterations):
         arr = np.take(init_val, ind)
+        logger.error("jacobi_iteration_method(coefficient_matrix=%s,constant_matrix=%s,init_val=%s,iterations=%s): arr → %s", coefficient_matrix, constant_matrix, init_val, iterations, arr, extra={"event.action": "jacobi_iteration_method", "logrite.coefficient_matrix": coefficient_matrix, "logrite.constant_matrix": constant_matrix, "logrite.init_val": init_val, "logrite.iterations": iterations})
         sum_product_rows = np.sum((-1) * no_diagonals * arr, axis=1)
+        logger.error("jacobi_iteration_method(coefficient_matrix=%s,constant_matrix=%s,init_val=%s,iterations=%s): sum_product_rows → %s", coefficient_matrix, constant_matrix, init_val, iterations, sum_product_rows, extra={"event.action": "jacobi_iteration_method", "logrite.coefficient_matrix": coefficient_matrix, "logrite.constant_matrix": constant_matrix, "logrite.init_val": init_val, "logrite.iterations": iterations})
         new_val = (sum_product_rows + val_last) / denominator
+        logger.error("jacobi_iteration_method(coefficient_matrix=%s,constant_matrix=%s,init_val=%s,iterations=%s): new_val → %s", coefficient_matrix, constant_matrix, init_val, iterations, new_val, extra={"event.action": "jacobi_iteration_method", "logrite.coefficient_matrix": coefficient_matrix, "logrite.constant_matrix": constant_matrix, "logrite.init_val": init_val, "logrite.iterations": iterations})
         init_val = new_val
 
+    logger.warning("<<< Exiting jacobi_iteration_method(coefficient_matrix=%s,constant_matrix=%s,init_val=%s,iterations=%s)", coefficient_matrix, constant_matrix, init_val, iterations, extra={"event.action": "jacobi_iteration_method", "logrite.coefficient_matrix": coefficient_matrix, "logrite.constant_matrix": constant_matrix, "logrite.init_val": init_val, "logrite.iterations": iterations})
     return new_val.tolist()
 
 
@@ -178,6 +189,7 @@ def strictly_diagonally_dominant(table: NDArray[float64]) -> bool:
         ...
     ValueError: Coefficient matrix is not strictly diagonally dominant
     """
+    logger.error(">>> Entering strictly_diagonally_dominant(table=%s)", table, extra={"event.action": "strictly_diagonally_dominant", "logrite.table": table})
 
     rows, cols = table.shape
 
@@ -185,6 +197,7 @@ def strictly_diagonally_dominant(table: NDArray[float64]) -> bool:
 
     for i in range(rows):
         total = 0
+        logger.error("strictly_diagonally_dominant(table=%s): total → %s", table, total, extra={"event.action": "strictly_diagonally_dominant", "logrite.table": table})
         for j in range(cols - 1):
             if i == j:
                 continue
@@ -194,6 +207,7 @@ def strictly_diagonally_dominant(table: NDArray[float64]) -> bool:
         if table[i][i] <= total:
             raise ValueError("Coefficient matrix is not strictly diagonally dominant")
 
+    logger.warning("<<< Exiting strictly_diagonally_dominant(table=%s)", table, extra={"event.action": "strictly_diagonally_dominant", "logrite.table": table})
     return is_diagonally_dominant
 
 

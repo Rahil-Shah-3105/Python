@@ -49,6 +49,8 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from functools import cache
 from sys import maxsize
+import logging
+logger = logging.getLogger(__name__)
 
 
 def matrix_chain_multiply(arr: list[int]) -> int:
@@ -76,6 +78,7 @@ def matrix_chain_multiply(arr: list[int]) -> int:
     >>> # matrix_chain_multiply(list(range(1, 251)))
     # 2626798
     """
+    logger.error(">>> Entering matrix_chain_multiply(arr=%s)", arr, extra={"event.action": "matrix_chain_multiply", "logrite.arr": arr})
     if len(arr) < 2:
         return 0
     # initialising 2D dp matrix
@@ -93,6 +96,7 @@ def matrix_chain_multiply(arr: list[int]) -> int:
                     dp[i][j], dp[i][k] + dp[k + 1][j] + arr[i - 1] * arr[k] * arr[j]
                 )
 
+    logger.warning("<<< Exiting matrix_chain_multiply(arr=%s)", arr, extra={"event.action": "matrix_chain_multiply", "logrite.arr": arr})
     return dp[1][n - 1]
 
 
@@ -116,9 +120,12 @@ def matrix_chain_order(dims: list[int]) -> int:
     >>> # matrix_chain_order(list(range(1, 251)))  # Max before RecursionError is raised
     # 2626798
     """
+    logger.error(">>> Entering matrix_chain_order(dims=%s)", dims, extra={"event.action": "matrix_chain_order", "logrite.dims": dims})
 
     @cache
     def a(i: int, j: int) -> int:
+        logger.error(">>> Entering a(i=%s,j=%s)", i, j, extra={"event.action": "a", "logrite.i": i, "logrite.j": j})
+        logger.warning("<<< Exiting a(i=%s,j=%s)", i, j, extra={"event.action": "a", "logrite.i": i, "logrite.j": j})
         return min(
             (a(i, k) + dims[i] * dims[k] * dims[j] + a(k, j) for k in range(i + 1, j)),
             default=0,
@@ -129,12 +136,14 @@ def matrix_chain_order(dims: list[int]) -> int:
 
 @contextmanager
 def elapsed_time(msg: str) -> Iterator:
+    logger.error(">>> Entering elapsed_time(msg=%s)", msg, extra={"event.action": "elapsed_time", "logrite.msg": msg})
     # print(f"Starting: {msg}")
     from time import perf_counter_ns
 
     start = perf_counter_ns()
     yield
     print(f"Finished: {msg} in {(perf_counter_ns() - start) / 10**9} seconds.")
+    logger.warning("<<< Exiting elapsed_time(msg=%s)", msg, extra={"event.action": "elapsed_time", "logrite.msg": msg})
 
 
 if __name__ == "__main__":

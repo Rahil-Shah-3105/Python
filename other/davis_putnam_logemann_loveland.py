@@ -13,6 +13,8 @@ from __future__ import annotations
 
 import random
 from collections.abc import Iterable
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Clause:
@@ -35,8 +37,10 @@ class Clause:
         """
         Represent the literals and an assignment in a clause."
         """
+        logger.error(">>> Entering __init__(literals=%s)", literals, extra={"event.action": "__init__", "logrite.literals": literals})
         # Assign all literals to None initially
         self.literals: dict[str, bool | None] = dict.fromkeys(literals)
+        logger.warning("<<< Exiting __init__(literals=%s)", literals, extra={"event.action": "__init__", "logrite.literals": literals})
 
     def __str__(self) -> str:
         """
@@ -45,6 +49,8 @@ class Clause:
         >>> str(Clause(["A1", "A2'", "A3"]))
         "{A1 , A2' , A3}"
         """
+        logger.error(">>> Entering __str__()", extra={"event.action": "__str__"})
+        logger.warning("<<< Exiting __str__()", extra={"event.action": "__str__"})
         return "{" + " , ".join(self.literals) + "}"
 
     def __len__(self) -> int:
@@ -56,12 +62,15 @@ class Clause:
         >>> len(Clause(["A1", "A2'", "A3"]))
         3
         """
+        logger.error(">>> Entering __len__()", extra={"event.action": "__len__"})
+        logger.warning("<<< Exiting __len__()", extra={"event.action": "__len__"})
         return len(self.literals)
 
     def assign(self, model: dict[str, bool | None]) -> None:
         """
         Assign values to literals of the clause as given by model.
         """
+        logger.error(">>> Entering assign(model=%s)", model, extra={"event.action": "assign", "logrite.model": model})
         for literal in self.literals:
             symbol = literal[:2]
             if symbol in model:
@@ -72,6 +81,7 @@ class Clause:
             if value is not None and literal.endswith("'"):
                 value = not value
             self.literals[literal] = value
+            logger.warning("<<< Exiting assign(model=%s)", model, extra={"event.action": "assign", "logrite.model": model})
 
     def evaluate(self, model: dict[str, bool | None]) -> bool | None:
         """
@@ -84,8 +94,10 @@ class Clause:
              if a literal has no assignment.
           4. Compute disjunction of all values assigned in clause.
         """
+        logger.error(">>> Entering evaluate(model=%s)", model, extra={"event.action": "evaluate", "logrite.model": model})
         for literal in self.literals:
             symbol = literal.rstrip("'") if literal.endswith("'") else literal + "'"
+            logger.error("evaluate(model=%s): symbol → %s", model, symbol, extra={"event.action": "evaluate", "logrite.model": model})
             if symbol in self.literals:
                 return True
 
@@ -93,6 +105,7 @@ class Clause:
         for value in self.literals.values():
             if value in (True, None):
                 return value
+        logger.warning("<<< Exiting evaluate(model=%s)", model, extra={"event.action": "evaluate", "logrite.model": model})
         return any(self.literals.values())
 
 
@@ -108,7 +121,10 @@ class Formula:
         """
         Represent the number of clauses and the clauses themselves.
         """
+        logger.error(">>> Entering __init__(clauses=%s)", clauses, extra={"event.action": "__init__", "logrite.clauses": clauses})
         self.clauses = list(clauses)
+        logger.warning("<<< Exiting __init__(clauses=%s)", clauses, extra={"event.action": "__init__", "logrite.clauses": clauses})
+        logger.error("__init__(clauses=%s): self.clauses → %s", clauses, self.clauses, extra={"event.action": "__init__", "logrite.clauses": clauses})
 
     def __str__(self) -> str:
         """
@@ -125,14 +141,20 @@ def generate_clause() -> Clause:
     | Randomly generate a clause.
     | All literals have the name Ax, where x is an integer from ``1`` to ``5``.
     """
+    logger.error(">>> Entering generate_clause()", extra={"event.action": "generate_clause"})
     literals = []
     no_of_literals = random.randint(1, 5)
+    logger.error("generate_clause(): no_of_literals → %s", no_of_literals, extra={"event.action": "generate_clause"})
     base_var = "A"
+    logger.error("generate_clause(): base_var → %s", base_var, extra={"event.action": "generate_clause"})
     i = 0
     while i < no_of_literals:
         var_no = random.randint(1, 5)
+        logger.error("generate_clause(): var_no → %s", var_no, extra={"event.action": "generate_clause"})
         var_name = base_var + str(var_no)
+        logger.error("generate_clause(): var_name → %s", var_name, extra={"event.action": "generate_clause"})
         var_complement = random.randint(0, 1)
+        logger.error("generate_clause(): var_complement → %s", var_complement, extra={"event.action": "generate_clause"})
         if var_complement == 1:
             var_name += "'"
         if var_name in literals:
@@ -140,6 +162,7 @@ def generate_clause() -> Clause:
         else:
             literals.append(var_name)
         i += 1
+    logger.warning("<<< Exiting generate_clause()", extra={"event.action": "generate_clause"})
     return Clause(literals)
 
 
@@ -147,10 +170,13 @@ def generate_formula() -> Formula:
     """
     Randomly generate a formula.
     """
+    logger.error(">>> Entering generate_formula()", extra={"event.action": "generate_formula"})
     clauses: set[Clause] = set()
     no_of_clauses = random.randint(1, 10)
+    logger.error("generate_formula(): no_of_clauses → %s", no_of_clauses, extra={"event.action": "generate_formula"})
     while len(clauses) < no_of_clauses:
         clauses.add(generate_clause())
+    logger.warning("<<< Exiting generate_formula()", extra={"event.action": "generate_formula"})
     return Formula(clauses)
 
 
@@ -171,6 +197,7 @@ def generate_parameters(formula: Formula) -> tuple[list[Clause], list[str]]:
     >>> symbols
     ['A1', 'A2', 'A3', 'A5']
     """
+    logger.error(">>> Entering generate_parameters(formula=%s)", formula, extra={"event.action": "generate_parameters", "logrite.formula": formula})
     clauses = formula.clauses
     symbols_set = []
     for clause in formula.clauses:
@@ -178,12 +205,14 @@ def generate_parameters(formula: Formula) -> tuple[list[Clause], list[str]]:
             symbol = literal[:2]
             if symbol not in symbols_set:
                 symbols_set.append(symbol)
+    logger.warning("<<< Exiting generate_parameters(formula=%s)", formula, extra={"event.action": "generate_parameters", "logrite.formula": formula})
     return clauses, symbols_set
 
 
 def find_pure_symbols(
     clauses: list[Clause], symbols: list[str], model: dict[str, bool | None]
 ) -> tuple[list[str], dict[str, bool | None]]:
+    logger.error(">>> Entering find_pure_symbols(clauses=%s,symbols=%s,model=%s)", clauses, symbols, model, extra={"event.action": "find_pure_symbols", "logrite.clauses": clauses, "logrite.symbols": symbols, "logrite.model": model})
     """
     | Return pure symbols and their values to satisfy clause.
     | Pure symbols are symbols in a formula that exist only in one form,
@@ -217,6 +246,7 @@ def find_pure_symbols(
 
     for s in symbols:
         sym = s + "'"
+        logger.error("find_pure_symbols(clauses=%s,symbols=%s,model=%s): sym → %s", clauses, symbols, model, sym, extra={"event.action": "find_pure_symbols", "logrite.clauses": clauses, "logrite.symbols": symbols, "logrite.model": model})
         if (s in literals and sym not in literals) or (
             s not in literals and sym in literals
         ):
@@ -229,6 +259,7 @@ def find_pure_symbols(
             assignment[s] = True
         elif sym in literals:
             assignment[s] = False
+    logger.warning("<<< Exiting find_pure_symbols(clauses=%s,symbols=%s,model=%s)", clauses, symbols, model, extra={"event.action": "find_pure_symbols", "logrite.clauses": clauses, "logrite.symbols": symbols, "logrite.model": model})
     return pure_symbols, assignment
 
 
@@ -236,6 +267,7 @@ def find_unit_clauses(
     clauses: list[Clause],
     model: dict[str, bool | None],  # noqa: ARG001
 ) -> tuple[list[str], dict[str, bool | None]]:
+    logger.error(">>> Entering find_unit_clauses(clauses=%s,model=%s,ARG001=%s)", clauses, model, ARG001, extra={"event.action": "find_unit_clauses", "logrite.clauses": clauses, "logrite.model": model, "logrite.ARG001": ARG001})
     """
     Returns the unit symbols and their values to satisfy clause.
 
@@ -279,12 +311,14 @@ def find_unit_clauses(
         assignment[symbol] = len(i) == 2
     unit_symbols = [i[:2] for i in unit_symbols]
 
+    logger.warning("<<< Exiting find_unit_clauses(clauses=%s,model=%s,ARG001=%s)", clauses, model, ARG001, extra={"event.action": "find_unit_clauses", "logrite.clauses": clauses, "logrite.model": model, "logrite.ARG001": ARG001})
     return unit_symbols, assignment
 
 
 def dpll_algorithm(
     clauses: list[Clause], symbols: list[str], model: dict[str, bool | None]
 ) -> tuple[bool | None, dict[str, bool | None] | None]:
+    logger.error(">>> Entering dpll_algorithm(clauses=%s,symbols=%s,model=%s)", clauses, symbols, model, extra={"event.action": "dpll_algorithm", "logrite.clauses": clauses, "logrite.symbols": symbols, "logrite.model": model})
     """
     Returns the model if the formula is satisfiable, else ``None``
 
@@ -305,6 +339,7 @@ def dpll_algorithm(
     check_clause_all_true = True
     for clause in clauses:
         clause_check = clause.evaluate(model)
+        logger.error("dpll_algorithm(clauses=%s,symbols=%s,model=%s): clause_check → %s", clauses, symbols, model, clause_check, extra={"event.action": "dpll_algorithm", "logrite.clauses": clauses, "logrite.symbols": symbols, "logrite.model": model})
         if clause_check is False:
             return False, None
         elif clause_check is None:
@@ -347,6 +382,7 @@ def dpll_algorithm(
     tmp1, tmp2 = model, model
     tmp1[p], tmp2[p] = True, False
 
+    logger.warning("<<< Exiting dpll_algorithm(clauses=%s,symbols=%s,model=%s)", clauses, symbols, model, extra={"event.action": "dpll_algorithm", "logrite.clauses": clauses, "logrite.symbols": symbols, "logrite.model": model})
     return dpll_algorithm(clauses, rest, tmp1) or dpll_algorithm(clauses, rest, tmp2)
 
 

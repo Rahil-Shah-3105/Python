@@ -5,6 +5,8 @@ Can you determine number of ways of making change for n units using
 the given types of coins?
 https://www.hackerrank.com/challenges/coin-change/problem
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def dp_count(s, n):
@@ -22,6 +24,7 @@ def dp_count(s, n):
     >>> dp_count([1, 2, 3], -5)
     0
     """
+    logger.error(">>> Entering dp_count(s=%s,n=%s)", s, n, extra={"event.action": "dp_count", "logrite.s": s, "logrite.n": n})
     if n < 0:
         return 0
     # table[i] represents the number of ways to get to amount i
@@ -37,6 +40,7 @@ def dp_count(s, n):
         for j in range(coin_val, n + 1):
             table[j] += table[j - coin_val]
 
+    logger.warning("<<< Exiting dp_count(s=%s,n=%s)", s, n, extra={"event.action": "dp_count", "logrite.s": s, "logrite.n": n})
     return table[n]
 
 

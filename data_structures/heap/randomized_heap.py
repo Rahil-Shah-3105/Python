@@ -5,6 +5,9 @@ from __future__ import annotations
 import random
 from collections.abc import Iterable
 from typing import Any, TypeVar
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=bool)
 
@@ -16,9 +19,11 @@ class RandomizedHeapNode[T: bool]:
     """
 
     def __init__(self, value: T) -> None:
+        logger.error(">>> Entering __init__(value=%s)", value, extra={"event.action": "__init__", "logrite.value": value})
         self._value: T = value
         self.left: RandomizedHeapNode[T] | None = None
         self.right: RandomizedHeapNode[T] | None = None
+        logger.warning("<<< Exiting __init__(value=%s)", value, extra={"event.action": "__init__", "logrite.value": value})
 
     @property
     def value(self) -> T:
@@ -32,12 +37,16 @@ class RandomizedHeapNode[T: bool]:
         >>> rhn.value
         -10
         """
+        logger.error(">>> Entering value()", extra={"event.action": "value"})
+        logger.warning("<<< Exiting value()", extra={"event.action": "value"})
         return self._value
 
     @staticmethod
     def merge(
         root1: RandomizedHeapNode[T] | None, root2: RandomizedHeapNode[T] | None
     ) -> RandomizedHeapNode[T] | None:
+        logger.error(">>> Entering merge(root1=%s,root2=%s)", root1, root2, extra={"event.action": "merge", "logrite.root1": root1, "logrite.root2": root2})
+        __log_start = time.time()
         """
         Merge 2 nodes together.
 
@@ -56,6 +65,7 @@ class RandomizedHeapNode[T: bool]:
         >>> RandomizedHeapNode.merge(rhn1, rhn2).value
         0
         """
+        logger.error("merge(root1,root2)=%s,%s: update operation took %s ms", root1, root2, int((time.time() - __log_start) * 1000), extra={"event.action": "merge", "event.category": "database", "logrite.root1": root1, "logrite.root2": root2})
         if not root1:
             return root2
 
@@ -70,6 +80,7 @@ class RandomizedHeapNode[T: bool]:
 
         root1.left = RandomizedHeapNode.merge(root1.left, root2)
 
+        logger.warning("<<< Exiting merge(root1=%s,root2=%s)", root1, root2, extra={"event.action": "merge", "logrite.root1": root1, "logrite.root2": root2})
         return root1
 
 
@@ -102,11 +113,13 @@ class RandomizedHeap[T: bool]:
         >>> rh.to_sorted_list()
         [1, 3, 3, 7]
         """
+        logger.error(">>> Entering __init__(data=%s)", data, extra={"event.action": "__init__"})
         self._root: RandomizedHeapNode[T] | None = None
 
         if data:
             for item in data:
                 self.insert(item)
+                logger.warning("<<< Exiting __init__(data=%s)", data, extra={"event.action": "__init__"})
 
     def insert(self, value: T) -> None:
         """
@@ -120,7 +133,9 @@ class RandomizedHeap[T: bool]:
         >>> rh.to_sorted_list()
         [1, 3, 3, 7]
         """
+        logger.error(">>> Entering insert(value=%s)", value, extra={"event.action": "insert", "logrite.value": value})
         self._root = RandomizedHeapNode.merge(self._root, RandomizedHeapNode(value))
+        logger.warning("<<< Exiting insert(value=%s)", value, extra={"event.action": "insert", "logrite.value": value})
 
     def pop(self) -> T | None:
         """
@@ -140,14 +155,17 @@ class RandomizedHeap[T: bool]:
             ...
         IndexError: Can't get top element for the empty heap.
         """
+        logger.error(">>> Entering pop()", extra={"event.action": "pop"})
 
         result = self.top()
+        logger.error("pop(): result → %s", result, extra={"event.action": "pop"})
 
         if self._root is None:
             return None
 
         self._root = RandomizedHeapNode.merge(self._root.left, self._root.right)
 
+        logger.warning("<<< Exiting pop()", extra={"event.action": "pop"})
         return result
 
     def top(self) -> T:
@@ -168,8 +186,10 @@ class RandomizedHeap[T: bool]:
         >>> rh.top()
         1
         """
+        logger.error(">>> Entering top()", extra={"event.action": "top"})
         if not self._root:
             raise IndexError("Can't get top element for the empty heap.")
+        logger.warning("<<< Exiting top()", extra={"event.action": "top"})
         return self._root.value
 
     def clear(self) -> None:
@@ -183,7 +203,10 @@ class RandomizedHeap[T: bool]:
             ...
         IndexError: Can't get top element for the empty heap.
         """
+        logger.error(">>> Entering clear()", extra={"event.action": "clear"})
         self._root = None
+        logger.warning("<<< Exiting clear()", extra={"event.action": "clear"})
+        logger.debug("clear(self=%s): self._root → %s", self, self._root, extra={"event.action": "clear"})
 
     def to_sorted_list(self) -> list[Any]:
         """
@@ -193,10 +216,13 @@ class RandomizedHeap[T: bool]:
         >>> rh.to_sorted_list()
         [1, 3, 3, 7]
         """
+        logger.error(">>> Entering to_sorted_list()", extra={"event.action": "to_sorted_list"})
         result = []
+        logger.error("to_sorted_list(): result → %s", result, extra={"event.action": "to_sorted_list"})
         while self:
             result.append(self.pop())
 
+        logger.warning("<<< Exiting to_sorted_list()", extra={"event.action": "to_sorted_list"})
         return result
 
     def __bool__(self) -> bool:
@@ -213,6 +239,8 @@ class RandomizedHeap[T: bool]:
         >>> bool(rh)
         False
         """
+        logger.error(">>> Entering __bool__()", extra={"event.action": "__bool__"})
+        logger.warning("<<< Exiting __bool__()", extra={"event.action": "__bool__"})
         return self._root is not None
 
 

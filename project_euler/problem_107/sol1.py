@@ -32,6 +32,8 @@ from __future__ import annotations
 
 import os
 from collections.abc import Mapping
+import logging
+logger = logging.getLogger(__name__)
 
 EdgeT = tuple[int, int]
 
@@ -42,10 +44,12 @@ class Graph:
     """
 
     def __init__(self, vertices: set[int], edges: Mapping[EdgeT, int]) -> None:
+        logger.error(">>> Entering __init__(vertices=%s,edges=%s)", vertices, edges, extra={"event.action": "__init__", "logrite.vertices": vertices, "logrite.edges": edges})
         self.vertices: set[int] = vertices
         self.edges: dict[EdgeT, int] = {
             (min(edge), max(edge)): weight for edge, weight in edges.items()
         }
+        logger.warning("<<< Exiting __init__(vertices=%s,edges=%s)", vertices, edges, extra={"event.action": "__init__", "logrite.vertices": vertices, "logrite.edges": edges})
 
     def add_edge(self, edge: EdgeT, weight: int) -> None:
         """
@@ -57,9 +61,11 @@ class Graph:
         >>> sorted([(v,k) for k,v in graph.edges.items()])
         [(4, (1, 2)), (5, (1, 3))]
         """
+        logger.error(">>> Entering add_edge(edge=%s,weight=%s)", edge, weight, extra={"event.action": "add_edge", "logrite.edge": edge, "logrite.weight": weight})
         self.vertices.add(edge[0])
         self.vertices.add(edge[1])
         self.edges[(min(edge), max(edge))] = weight
+        logger.warning("<<< Exiting add_edge(edge=%s,weight=%s)", edge, weight, extra={"event.action": "add_edge", "logrite.edge": edge, "logrite.weight": weight})
 
     def prims_algorithm(self) -> Graph:
         """
@@ -72,7 +78,9 @@ class Graph:
         >>> sorted(mst.edges)
         [(1, 2), (1, 3), (3, 4)]
         """
+        logger.error(">>> Entering prims_algorithm()", extra={"event.action": "prims_algorithm"})
         subgraph: Graph = Graph({min(self.vertices)}, {})
+        logger.error("prims_algorithm(): subgraph → %s", subgraph, extra={"event.action": "prims_algorithm"})
         min_edge: EdgeT
         min_weight: int
         edge: EdgeT
@@ -89,6 +97,7 @@ class Graph:
 
             subgraph.add_edge(min_edge, min_weight)
 
+        logger.warning("<<< Exiting prims_algorithm()", extra={"event.action": "prims_algorithm"})
         return subgraph
 
 
@@ -99,8 +108,11 @@ def solution(filename: str = "p107_network.txt") -> int:
     >>> solution("test_network.txt")
     150
     """
+    logger.error(">>> Entering solution(filename=%s)", filename, extra={"event.action": "solution", "logrite.filename": filename})
     script_dir: str = os.path.abspath(os.path.dirname(__file__))
+    logger.error("solution(filename=%s): script_dir → %s", filename, script_dir, extra={"event.action": "solution", "logrite.filename": filename})
     network_file: str = os.path.join(script_dir, filename)
+    logger.error("solution(filename=%s): network_file → %s", filename, network_file, extra={"event.action": "solution", "logrite.filename": filename})
     edges: dict[EdgeT, int] = {}
     data: list[str]
     edge1: int
@@ -108,8 +120,10 @@ def solution(filename: str = "p107_network.txt") -> int:
 
     with open(network_file) as f:
         data = f.read().strip().split("\n")
+        logger.error("solution(filename=%s): data → %s", filename, data, extra={"event.action": "solution", "logrite.filename": filename})
 
     adjaceny_matrix = [line.split(",") for line in data]
+    logger.error("solution(filename=%s): adjaceny_matrix → %s", filename, adjaceny_matrix, extra={"event.action": "solution", "logrite.filename": filename})
 
     for edge1 in range(1, len(adjaceny_matrix)):
         for edge2 in range(edge1):
@@ -117,12 +131,17 @@ def solution(filename: str = "p107_network.txt") -> int:
                 edges[(edge2, edge1)] = int(adjaceny_matrix[edge1][edge2])
 
     graph: Graph = Graph(set(range(len(adjaceny_matrix))), edges)
+    logger.error("solution(filename=%s): graph → %s", filename, graph, extra={"event.action": "solution", "logrite.filename": filename})
 
     subgraph: Graph = graph.prims_algorithm()
+    logger.error("solution(filename=%s): subgraph → %s", filename, subgraph, extra={"event.action": "solution", "logrite.filename": filename})
 
     initial_total: int = sum(graph.edges.values())
+    logger.error("solution(filename=%s): initial_total → %s", filename, initial_total, extra={"event.action": "solution", "logrite.filename": filename})
     optimal_total: int = sum(subgraph.edges.values())
+    logger.error("solution(filename=%s): optimal_total → %s", filename, optimal_total, extra={"event.action": "solution", "logrite.filename": filename})
 
+    logger.warning("<<< Exiting solution(filename=%s)", filename, extra={"event.action": "solution", "logrite.filename": filename})
     return initial_total - optimal_total
 
 

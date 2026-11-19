@@ -5,6 +5,8 @@ https://en.wikipedia.org/wiki/Knapsack_problem
 from __future__ import annotations
 
 from functools import lru_cache
+import logging
+logger = logging.getLogger(__name__)
 
 
 def knapsack(
@@ -14,6 +16,7 @@ def knapsack(
     counter: int,
     allow_repetition=False,
 ) -> int:
+    logger.error(">>> Entering knapsack(capacity=%s,weights=%s,values=%s,counter=%s,allow_repetition=%s)", capacity, weights, values, counter, allow_repetition, extra={"event.action": "knapsack", "logrite.capacity": capacity, "logrite.weights": weights, "logrite.values": values, "logrite.counter": counter, "logrite.allow_repetition": allow_repetition})
     """
     Returns the maximum value that can be put in a knapsack of a capacity cap,
     whereby each weight w has a specific value val
@@ -39,6 +42,7 @@ def knapsack(
 
     @lru_cache
     def knapsack_recur(capacity: int, counter: int) -> int:
+        logger.error(">>> Entering knapsack_recur(capacity=%s,counter=%s)", capacity, counter, extra={"event.action": "knapsack_recur", "logrite.capacity": capacity, "logrite.counter": counter})
         # Base Case
         if counter == 0 or capacity == 0:
             return 0
@@ -57,6 +61,7 @@ def knapsack(
                 left_capacity, counter - 1 if not allow_repetition else counter
             )
             without_new_value = knapsack_recur(capacity, counter - 1)
+            logger.warning("<<< Exiting knapsack_recur(capacity=%s,counter=%s)", capacity, counter, extra={"event.action": "knapsack_recur", "logrite.capacity": capacity, "logrite.counter": counter})
             return max(new_value_included, without_new_value)
 
     return knapsack_recur(capacity, counter)

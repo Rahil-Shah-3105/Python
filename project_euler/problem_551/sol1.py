@@ -11,6 +11,8 @@ You are given a(10^6) = 31054319.
 
 Find a(10^15)
 """
+import logging
+logger = logging.getLogger(__name__)
 
 ks = range(2, 20 + 1)
 base = [10**k for k in range(ks[-1] + 1)]
@@ -39,9 +41,12 @@ def next_term(a_i, k, i, n):
     the number of terms calculated. ex. if starting term is a_0=1, and
     ending term is a_10=62, then (61, 9) is returned.
     """
+    logger.error(">>> Entering next_term(a_i=%s,k=%s,i=%s,n=%s)", a_i, k, i, n, extra={"event.action": "next_term", "logrite.a_i": a_i, "logrite.k": k, "logrite.i": i, "logrite.n": n})
     # ds_b - digitsum(b)
     ds_b = sum(a_i[j] for j in range(k, len(a_i)))
+    logger.error("next_term(a_i=%s,k=%s,i=%s,n=%s): ds_b → %s", a_i, k, i, n, ds_b, extra={"event.action": "next_term", "logrite.a_i": a_i, "logrite.k": k, "logrite.i": i, "logrite.n": n})
     c = sum(a_i[j] * base[j] for j in range(min(len(a_i), k)))
+    logger.error("next_term(a_i=%s,k=%s,i=%s,n=%s): c → %s", a_i, k, i, n, c, extra={"event.action": "next_term", "logrite.a_i": a_i, "logrite.k": k, "logrite.i": i, "logrite.n": n})
 
     diff, dn = 0, 0
     max_dn = n - i
@@ -103,6 +108,7 @@ def next_term(a_i, k, i, n):
 
     # cache the jump for this value digitsum(b) and c
     sub_memo[c].insert(j, (diff, dn, k))
+    logger.warning("<<< Exiting next_term(a_i=%s,k=%s,i=%s,n=%s)", a_i, k, i, n, extra={"event.action": "next_term", "logrite.a_i": a_i, "logrite.k": k, "logrite.i": i, "logrite.n": n})
     return (diff, dn)
 
 
@@ -110,6 +116,7 @@ def compute(a_i, k, i, n):
     """
     same as next_term(a_i, k, i, n) but computes terms without memoizing results.
     """
+    logger.error(">>> Entering compute(a_i=%s,k=%s,i=%s,n=%s)", a_i, k, i, n, extra={"event.action": "compute", "logrite.a_i": a_i, "logrite.k": k, "logrite.i": i, "logrite.n": n})
     if i >= n:
         return 0, i
     if k > len(a_i):
@@ -142,6 +149,7 @@ def compute(a_i, k, i, n):
 
     if addend > 0:
         add(a_i, k, addend)
+    logger.warning("<<< Exiting compute(a_i=%s,k=%s,i=%s,n=%s)", a_i, k, i, n, extra={"event.action": "compute", "logrite.a_i": a_i, "logrite.k": k, "logrite.i": i, "logrite.n": n})
     return diff, i - start_i
 
 
@@ -150,6 +158,7 @@ def add(digits, k, addend):
     adds addend to digit array given in digits
     starting at index k
     """
+    logger.error(">>> Entering add(digits=%s,k=%s,addend=%s)", digits, k, addend, extra={"event.action": "add", "logrite.digits": digits, "logrite.k": k, "logrite.addend": addend})
     for j in range(k, len(digits)):
         s = digits[j] + addend
         if s >= 10:
@@ -164,6 +173,7 @@ def add(digits, k, addend):
 
     while addend > 0:
         addend, digit = divmod(addend, 10)
+        logger.warning("<<< Exiting add(digits=%s,k=%s,addend=%s)", digits, k, addend, extra={"event.action": "add", "logrite.digits": digits, "logrite.k": k, "logrite.addend": addend})
         digits.append(digit)
 
 
@@ -180,6 +190,7 @@ def solution(n: int = 10**15) -> int:
     >>> solution(10**15)
     73597483551591773
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
     digits = [1]
     i = 1
@@ -193,6 +204,7 @@ def solution(n: int = 10**15) -> int:
     a_n = 0
     for j in range(len(digits)):
         a_n += digits[j] * 10**j
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return a_n
 
 

@@ -67,6 +67,8 @@ Solution:
 """
 
 from math import sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(limit: int = 1000000) -> int:
@@ -83,6 +85,7 @@ def solution(limit: int = 1000000) -> int:
     >>> solution(20000)
     288
     """
+    logger.error(">>> Entering solution(limit=%s)", limit, extra={"event.action": "solution", "logrite.limit": limit})
     num_cuboids: int = 0
     max_cuboid_size: int = 0
     sum_shortest_sides: int

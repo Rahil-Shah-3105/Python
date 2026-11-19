@@ -49,6 +49,8 @@ from __future__ import annotations
 
 from fractions import Fraction
 from math import gcd, sqrt
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_sq(number: int) -> bool:
@@ -62,13 +64,17 @@ def is_sq(number: int) -> bool:
     >>> is_sq(1000000)
     True
     """
+    logger.error(">>> Entering is_sq(number=%s)", number, extra={"event.action": "is_sq", "logrite.number": number})
     sq: int = int(number**0.5)
+    logger.error("is_sq(number=%s): sq → %s", number, sq, extra={"event.action": "is_sq", "logrite.number": number})
+    logger.warning("<<< Exiting is_sq(number=%s)", number, extra={"event.action": "is_sq", "logrite.number": number})
     return number == sq * sq
 
 
 def add_three(
     x_num: int, x_den: int, y_num: int, y_den: int, z_num: int, z_den: int
 ) -> tuple[int, int]:
+    logger.error(">>> Entering add_three(x_num=%s,x_den=%s,y_num=%s,y_den=%s,z_num=%s,z_den=%s)", x_num, x_den, y_num, y_den, z_num, z_den, extra={"event.action": "add_three", "logrite.x_num": x_num, "logrite.x_den": x_den, "logrite.y_num": y_num, "logrite.y_den": y_den, "logrite.z_num": z_num, "logrite.z_den": z_den})
     """
     Given the numerators and denominators of three fractions, return the
     numerator and denominator of their sum in lowest form.
@@ -80,8 +86,10 @@ def add_three(
     top: int = x_num * y_den * z_den + y_num * x_den * z_den + z_num * x_den * y_den
     bottom: int = x_den * y_den * z_den
     hcf: int = gcd(top, bottom)
+    logger.error("add_three(x_num=%s,x_den=%s,y_num=%s,y_den=%s,z_num=%s,z_den=%s): hcf → %s", x_num, x_den, y_num, y_den, z_num, z_den, hcf, extra={"event.action": "add_three", "logrite.x_num": x_num, "logrite.x_den": x_den, "logrite.y_num": y_num, "logrite.y_den": y_den, "logrite.z_num": z_num, "logrite.z_den": z_den})
     top //= hcf
     bottom //= hcf
+    logger.warning("<<< Exiting add_three(x_num=%s,x_den=%s,y_num=%s,y_den=%s,z_num=%s,z_den=%s)", x_num, x_den, y_num, y_den, z_num, z_den, extra={"event.action": "add_three", "logrite.x_num": x_num, "logrite.x_den": x_den, "logrite.y_num": y_num, "logrite.y_den": y_den, "logrite.z_num": z_num, "logrite.z_den": z_den})
     return top, bottom
 
 
@@ -97,9 +105,12 @@ def solution(order: int = 35) -> int:
     >>> solution(20)
     19408891927
     """
+    logger.error(">>> Entering solution(order=%s)", order, extra={"event.action": "solution", "logrite.order": order})
     unique_s: set = set()
+    logger.error("solution(order=%s): unique_s → %s", order, unique_s, extra={"event.action": "solution", "logrite.order": order})
     hcf: int
     total: Fraction = Fraction(0)
+    logger.error("solution(order=%s): total → %s", order, total, extra={"event.action": "solution", "logrite.order": order})
     fraction_sum: tuple[int, int]
 
     for x_num in range(1, order + 1):
@@ -108,8 +119,11 @@ def solution(order: int = 35) -> int:
                 for y_den in range(y_num + 1, order + 1):
                     # n=1
                     z_num = x_num * y_den + x_den * y_num
+                    logger.error("solution(order=%s): z_num → %s", order, z_num, extra={"event.action": "solution", "logrite.order": order})
                     z_den = x_den * y_den
+                    logger.error("solution(order=%s): z_den → %s", order, z_den, extra={"event.action": "solution", "logrite.order": order})
                     hcf = gcd(z_num, z_den)
+                    logger.error("solution(order=%s): hcf → %s", order, hcf, extra={"event.action": "solution", "logrite.order": order})
                     z_num //= hcf
                     z_den //= hcf
                     if 0 < z_num < z_den <= order:
@@ -167,6 +181,7 @@ def solution(order: int = 35) -> int:
     for num, den in unique_s:
         total += Fraction(num, den)
 
+    logger.warning("<<< Exiting solution(order=%s)", order, extra={"event.action": "solution", "logrite.order": order})
     return total.denominator + total.numerator
 
 

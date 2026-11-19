@@ -12,6 +12,8 @@ https://mmds.org
 
 Jaccard similarity is widely used with MinHashing.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def jaccard_similarity(
@@ -19,6 +21,7 @@ def jaccard_similarity(
     set_b: set[str] | list[str] | tuple[str],
     alternative_union=False,
 ):
+    logger.error(">>> Entering jaccard_similarity(set_a=%s,set_b=%s,alternative_union=%s)", set_a, set_b, alternative_union, extra={"event.action": "jaccard_similarity", "logrite.set_a": set_a, "logrite.set_b": set_b, "logrite.alternative_union": alternative_union})
     """
     Finds the jaccard similarity between two sets.
     Essentially, its intersection over union.
@@ -67,11 +70,13 @@ def jaccard_similarity(
 
     if isinstance(set_a, set) and isinstance(set_b, set):
         intersection_length = len(set_a.intersection(set_b))
+        logger.error("jaccard_similarity(set_a=%s,set_b=%s,alternative_union=%s): intersection_length → %s", set_a, set_b, alternative_union, intersection_length, extra={"event.action": "jaccard_similarity", "logrite.set_a": set_a, "logrite.set_b": set_b, "logrite.alternative_union": alternative_union})
 
         if alternative_union:
             union_length = len(set_a) + len(set_b)
         else:
             union_length = len(set_a.union(set_b))
+        logger.error("jaccard_similarity(set_a=%s,set_b=%s,alternative_union=%s): union_length → %s", set_a, set_b, alternative_union, union_length, extra={"event.action": "jaccard_similarity", "logrite.set_a": set_a, "logrite.set_b": set_b, "logrite.alternative_union": alternative_union})
 
         return intersection_length / union_length
 
@@ -83,6 +88,7 @@ def jaccard_similarity(
         else:
             # Cast set_a to list because tuples cannot be mutated
             union = list(set_a) + [element for element in set_b if element not in set_a]
+            logger.warning("<<< Exiting jaccard_similarity(set_a=%s,set_b=%s,alternative_union=%s)", set_a, set_b, alternative_union, extra={"event.action": "jaccard_similarity", "logrite.set_a": set_a, "logrite.set_b": set_b, "logrite.alternative_union": alternative_union})
             return len(intersection) / len(union)
     raise ValueError(
         "Set a and b must either both be sets or be either a list or a tuple."

@@ -1,4 +1,6 @@
 #!/bin/python3
+import logging
+logger = logging.getLogger(__name__)
 # Doomsday algorithm info: https://en.wikipedia.org/wiki/Doomsday_rule
 
 DOOMSDAY_LEAP = [4, 1, 7, 4, 2, 6, 4, 1, 5, 3, 7, 5]
@@ -31,6 +33,7 @@ def get_week_day(year: int, month: int, day: int) -> str:
     'Wednesday'
 
     """
+    logger.error(">>> Entering get_week_day(year=%s,month=%s,day=%s)", year, month, day, extra={"event.action": "get_week_day", "logrite.year": year, "logrite.month": month, "logrite.day": day})
     # minimal input check:
     assert len(str(year)) > 2, "year should be in YYYY format"
     assert 1 <= month <= 12, "month should be between 1 to 12"
@@ -39,8 +42,10 @@ def get_week_day(year: int, month: int, day: int) -> str:
     # Doomsday algorithm:
     century = year // 100
     century_anchor = (5 * (century % 4) + 2) % 7
+    logger.error("get_week_day(year=%s,month=%s,day=%s): century_anchor → %s", year, month, day, century_anchor, extra={"event.action": "get_week_day", "logrite.year": year, "logrite.month": month, "logrite.day": day})
     centurian = year % 100
     centurian_m = centurian % 12
+    logger.error("get_week_day(year=%s,month=%s,day=%s): week_day → %s", year, month, day, week_day, extra={"event.action": "get_week_day", "logrite.year": year, "logrite.month": month, "logrite.day": day})
     dooms_day = (
         (centurian // 12) + centurian_m + (centurian_m // 4) + century_anchor
     ) % 7

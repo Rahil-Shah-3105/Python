@@ -13,6 +13,8 @@ We iterate over the price array once, keeping track of the lowest price point
 is to either buy at the current price if it's less than our current buying price, or
 sell at the current price if the profit is more than our current maximum profit.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def max_profit(prices: list[int]) -> int:
@@ -22,6 +24,7 @@ def max_profit(prices: list[int]) -> int:
     >>> max_profit([7, 6, 4, 3, 1])
     0
     """
+    logger.error(">>> Entering max_profit(prices=%s)", prices, extra={"event.action": "max_profit", "logrite.prices": prices})
     if not prices:
         return 0
 
@@ -32,6 +35,7 @@ def max_profit(prices: list[int]) -> int:
         min_price = min(price, min_price)
         max_profit = max(price - min_price, max_profit)
 
+    logger.warning("<<< Exiting max_profit(prices=%s)", prices, extra={"event.action": "max_profit", "logrite.prices": prices})
     return max_profit
 
 

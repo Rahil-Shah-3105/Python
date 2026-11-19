@@ -45,6 +45,8 @@ Find the sum of FITs for the BOPs.
 from __future__ import annotations
 
 from collections.abc import Callable
+import logging
+logger = logging.getLogger(__name__)
 
 Matrix = list[list[float | int]]
 
@@ -60,8 +62,11 @@ def solve(matrix: Matrix, vector: Matrix) -> Matrix:
     >>> solve([[2, 1, -1],[-3, -1, 2],[-2, 1, 2]],[[8], [-11],[-3]])
     [[2.0], [3.0], [-1.0]]
     """
+    logger.error(">>> Entering solve(matrix=%s,vector=%s)", matrix, vector, extra={"event.action": "solve", "logrite.matrix": matrix, "logrite.vector": vector})
     size: int = len(matrix)
+    logger.error("solve(matrix=%s,vector=%s): size → %s", matrix, vector, size, extra={"event.action": "solve", "logrite.matrix": matrix, "logrite.vector": vector})
     augmented: Matrix = [[0 for _ in range(size + 1)] for _ in range(size)]
+    logger.error("solve(matrix=%s,vector=%s): augmented → %s", matrix, vector, augmented, extra={"event.action": "solve", "logrite.matrix": matrix, "logrite.vector": vector})
     row: int
     row2: int
     col: int
@@ -82,6 +87,7 @@ def solve(matrix: Matrix, vector: Matrix) -> Matrix:
         pivot_row = max((abs(augmented[row2][col]), row2) for row2 in range(col, size))[
             1
         ]
+        logger.error("solve(matrix=%s,vector=%s): pivot_row → %s", matrix, vector, pivot_row, extra={"event.action": "solve", "logrite.matrix": matrix, "logrite.vector": vector})
         if augmented[pivot_row][col] == 0:
             col += 1
             continue
@@ -105,6 +111,7 @@ def solve(matrix: Matrix, vector: Matrix) -> Matrix:
                 augmented[row][col2] -= augmented[col][col2] * ratio
 
     # round to get rid of numbers like 2.000000000000004
+    logger.warning("<<< Exiting solve(matrix=%s,vector=%s)", matrix, vector, extra={"event.action": "solve", "logrite.matrix": matrix, "logrite.vector": vector})
     return [
         [round(augmented[row][size] / augmented[row][row], 10)] for row in range(size)
     ]
@@ -126,10 +133,14 @@ def interpolate(y_list: list[int]) -> Callable[[int], int]:
     >>> interpolate([1, 8, 27, 64])(6)
     216
     """
+    logger.error(">>> Entering interpolate(y_list=%s)", y_list, extra={"event.action": "interpolate", "logrite.y_list": y_list})
 
     size: int = len(y_list)
+    logger.error("interpolate(y_list=%s): size → %s", y_list, size, extra={"event.action": "interpolate", "logrite.y_list": y_list})
     matrix: Matrix = [[0 for _ in range(size)] for _ in range(size)]
+    logger.error("interpolate(y_list=%s): matrix → %s", y_list, matrix, extra={"event.action": "interpolate", "logrite.y_list": y_list})
     vector: Matrix = [[0] for _ in range(size)]
+    logger.error("interpolate(y_list=%s): vector → %s", y_list, vector, extra={"event.action": "interpolate", "logrite.y_list": y_list})
     coeffs: Matrix
     x_val: int
     y_val: int
@@ -140,7 +151,9 @@ def interpolate(y_list: list[int]) -> Callable[[int], int]:
             matrix[x_val][col] = (x_val + 1) ** (size - col - 1)
         vector[x_val][0] = y_val
 
+        logger.warning("<<< Exiting interpolate(y_list=%s)", y_list, extra={"event.action": "interpolate", "logrite.y_list": y_list})
     coeffs = solve(matrix, vector)
+    logger.error("interpolate(y_list=%s): coeffs → %s", y_list, coeffs, extra={"event.action": "interpolate", "logrite.y_list": y_list})
 
     def interpolated_func(var: int) -> int:
         """
@@ -153,6 +166,8 @@ def interpolate(y_list: list[int]) -> Callable[[int], int]:
         >>> interpolate([1, 8, 27, 64])(6)
         216
         """
+        logger.error(">>> Entering interpolated_func(var=%s)", var, extra={"event.action": "interpolated_func", "logrite.var": var})
+        logger.warning("<<< Exiting interpolated_func(var=%s)", var, extra={"event.action": "interpolated_func", "logrite.var": var})
         return sum(
             round(coeffs[x_val][0]) * (var ** (size - x_val - 1))
             for x_val in range(size)
@@ -173,6 +188,8 @@ def question_function(variable: int) -> int:
     >>> question_function(10)
     9090909091
     """
+    logger.error(">>> Entering question_function(variable=%s)", variable, extra={"event.action": "question_function", "logrite.variable": variable})
+    logger.warning("<<< Exiting question_function(variable=%s)", variable, extra={"event.action": "question_function", "logrite.variable": variable})
     return (
         1
         - variable
@@ -196,6 +213,7 @@ def solution(func: Callable[[int], int] = question_function, order: int = 10) ->
     >>> solution(lambda n: n ** 3, 3)
     74
     """
+    logger.error(">>> Entering solution(func=%s,order=%s)", func, order, extra={"event.action": "solution", "logrite.func": func, "logrite.order": order})
     data_points: list[int] = [func(x_val) for x_val in range(1, order + 1)]
 
     polynomials: list[Callable[[int], int]] = [
@@ -213,6 +231,7 @@ def solution(func: Callable[[int], int] = question_function, order: int = 10) ->
 
         ret += poly(x_val)
 
+    logger.warning("<<< Exiting solution(func=%s,order=%s)", func, order, extra={"event.action": "solution", "logrite.func": func, "logrite.order": order})
     return ret
 
 

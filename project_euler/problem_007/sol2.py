@@ -13,6 +13,8 @@ References:
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -34,6 +36,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(1)
     False
     """
+    logger.error(">>> Entering is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -46,6 +49,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.warning("<<< Exiting is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
     return True
 
 
@@ -84,10 +88,12 @@ def solution(nth: int = 10001) -> int:
         ...
     TypeError: Parameter nth must be int or castable to int.
     """
+    logger.error(">>> Entering solution(nth=%s)", nth, extra={"event.action": "solution", "logrite.nth": nth})
 
     try:
         nth = int(nth)
     except TypeError, ValueError:
+        logger.error("Exception in solution(nth=%s)", nth, exc_info=True, extra={"event.action": "solution", "event.category": "process", "logrite.nth": nth})
         raise TypeError("Parameter nth must be int or castable to int.") from None
     if nth <= 0:
         raise ValueError("Parameter nth must be greater than or equal to one.")
@@ -99,6 +105,7 @@ def solution(nth: int = 10001) -> int:
             num += 1
         else:
             num += 1
+    logger.warning("<<< Exiting solution(nth=%s)", nth, extra={"event.action": "solution", "logrite.nth": nth})
     return primes[len(primes) - 1]
 
 

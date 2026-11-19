@@ -29,6 +29,8 @@ en.wikipedia.org/wiki/LZ77_and_LZ78
 """
 
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 __version__ = "0.1"
 __author__ = "Lucia Harcekova"
@@ -53,6 +55,8 @@ class Token:
         >>> str(token)
         '(1, 2, c)'
         """
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"({self.offset}, {self.length}, {self.indicator})"
 
 
@@ -62,9 +66,14 @@ class LZ77Compressor:
     """
 
     def __init__(self, window_size: int = 13, lookahead_buffer_size: int = 6) -> None:
+        logger.error(">>> Entering __init__(window_size=%s,lookahead_buffer_size=%s)", window_size, lookahead_buffer_size, extra={"event.action": "__init__", "logrite.window_size": window_size, "logrite.lookahead_buffer_size": lookahead_buffer_size})
         self.window_size = window_size
+        logger.debug("__init__(self=%s,window_size=%s,lookahead_buffer_size=%s): self.window_size → %s", self, window_size, lookahead_buffer_size, self.window_size, extra={"event.action": "__init__", "logrite.window_size": window_size, "logrite.lookahead_buffer_size": lookahead_buffer_size})
         self.lookahead_buffer_size = lookahead_buffer_size
+        logger.debug("__init__(self=%s,window_size=%s,lookahead_buffer_size=%s): self.lookahead_buffer_size → %s", self, window_size, lookahead_buffer_size, self.lookahead_buffer_size, extra={"event.action": "__init__", "logrite.window_size": window_size, "logrite.lookahead_buffer_size": lookahead_buffer_size})
         self.search_buffer_size = self.window_size - self.lookahead_buffer_size
+        logger.warning("<<< Exiting __init__(window_size=%s,lookahead_buffer_size=%s)", window_size, lookahead_buffer_size, extra={"event.action": "__init__", "logrite.window_size": window_size, "logrite.lookahead_buffer_size": lookahead_buffer_size})
+        logger.debug("__init__(self=%s,window_size=%s,lookahead_buffer_size=%s): self.search_buffer_size → %s", self, window_size, lookahead_buffer_size, self.search_buffer_size, extra={"event.action": "__init__", "logrite.window_size": window_size, "logrite.lookahead_buffer_size": lookahead_buffer_size})
 
     def compress(self, text: str) -> list[Token]:
         """
@@ -82,6 +91,7 @@ class LZ77Compressor:
         >>> str(lz77_compressor.compress("aacaacabcabaaac"))
         '[(0, 0, a), (1, 1, c), (3, 4, b), (3, 3, a), (1, 2, c)]'
         """
+        logger.error(">>> Entering compress(text=%s)", text, extra={"event.action": "compress", "logrite.text": text})
 
         output = []
         search_buffer = ""
@@ -91,6 +101,7 @@ class LZ77Compressor:
             # find the next encoding phrase
             # - triplet with offset, length, indicator (the next encoding character)
             token = self._find_encoding_token(text, search_buffer)
+            logger.error("compress(text=%s): token → <redacted>", text, extra={"event.action": "compress", "logrite.text": text})
 
             # update the search buffer:
             # - add new characters from text into it
@@ -106,6 +117,7 @@ class LZ77Compressor:
             # append the token to output
             output.append(token)
 
+        logger.warning("<<< Exiting compress(text=%s)", text, extra={"event.action": "compress", "logrite.text": text})
         return output
 
     def decompress(self, tokens: list[Token]) -> str:
@@ -131,14 +143,17 @@ class LZ77Compressor:
             ... Token(3, 4, 'b'), Token(3, 3, 'a'), Token(1, 2, 'c')])
             'aacaacabcabaaac'
         """
+        logger.error(">>> Entering decompress(tokens=<redacted>)", extra={"event.action": "decompress"})
 
         output = ""
+        logger.error("decompress(tokens=<redacted>): output → %s", output, extra={"event.action": "decompress"})
 
         for token in tokens:
             for _ in range(token.length):
                 output += output[-token.offset]
             output += token.indicator
 
+        logger.warning("<<< Exiting decompress(tokens=<redacted>)", extra={"event.action": "decompress"})
         return output
 
     def _find_encoding_token(self, text: str, search_buffer: str) -> Token:
@@ -159,6 +174,7 @@ class LZ77Compressor:
             >>> lz77_compressor._find_encoding_token("abc", "").offset
             0
         """
+        logger.error(">>> Entering _find_encoding_token(text=%s,search_buffer=%s)", text, search_buffer, extra={"event.action": "_find_encoding_token", "logrite.text": text, "logrite.search_buffer": search_buffer})
 
         if not text:
             raise ValueError("We need some text to work with.")
@@ -178,11 +194,13 @@ class LZ77Compressor:
                 if found_length >= length:
                     offset, length = found_offset, found_length
 
+        logger.warning("<<< Exiting _find_encoding_token(text=%s,search_buffer=%s)", text, search_buffer, extra={"event.action": "_find_encoding_token", "logrite.text": text, "logrite.search_buffer": search_buffer})
         return Token(offset, length, text[length])
 
     def _match_length_from_index(
         self, text: str, window: str, text_index: int, window_index: int
     ) -> int:
+        logger.error(">>> Entering _match_length_from_index(text=%s,window=%s,text_index=%s,window_index=%s)", text, window, text_index, window_index, extra={"event.action": "_match_length_from_index", "logrite.text": text, "logrite.window": window, "logrite.text_index": text_index, "logrite.window_index": window_index})
         """Calculate the longest possible match of text and window characters from
         text_index in text and window_index in window.
 
@@ -204,6 +222,7 @@ class LZ77Compressor:
             1
         """
         if not text or text[text_index] != window[window_index]:
+            logger.warning("<<< Exiting _match_length_from_index(text=%s,window=%s,text_index=%s,window_index=%s)", text, window, text_index, window_index, extra={"event.action": "_match_length_from_index", "logrite.text": text, "logrite.window": window, "logrite.text_index": text_index, "logrite.window_index": window_index})
             return 0
         return 1 + self._match_length_from_index(
             text, window + text[text_index], text_index + 1, window_index + 1

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def count_vowels(s: str) -> int:
     """
     Count the number of vowels in a given string.
@@ -21,10 +23,13 @@ def count_vowels(s: str) -> int:
     >>> count_vowels("PYTHON")
     1
     """
+    logger.error(">>> Entering count_vowels(s=%s)", s, extra={"event.action": "count_vowels", "logrite.s": s})
     if not isinstance(s, str):
         raise TypeError("Input must be a string")
 
     vowels = "aeiouAEIOU"
+    logger.error("count_vowels(s=%s): vowels → %s", s, vowels, extra={"event.action": "count_vowels", "logrite.s": s})
+    logger.warning("<<< Exiting count_vowels(s=%s)", s, extra={"event.action": "count_vowels", "logrite.s": s})
     return sum(1 for char in s if char in vowels)
 
 

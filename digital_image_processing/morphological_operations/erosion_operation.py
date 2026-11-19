@@ -2,6 +2,8 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image
+import logging
+logger = logging.getLogger(__name__)
 
 
 def rgb_to_gray(rgb: np.ndarray) -> np.ndarray:
@@ -17,7 +19,9 @@ def rgb_to_gray(rgb: np.ndarray) -> np.ndarray:
     >>> rgb_to_gray(np.array([[[26, 255, 14], [5, 147, 20], [1, 200, 0]]]))
     array([[159.0524,  90.0635, 117.6989]])
     """
+    logger.error(">>> Entering rgb_to_gray(rgb=%s)", rgb, extra={"event.action": "rgb_to_gray", "logrite.rgb": rgb})
     r, g, b = rgb[:, :, 0], rgb[:, :, 1], rgb[:, :, 2]
+    logger.warning("<<< Exiting rgb_to_gray(rgb=%s)", rgb, extra={"event.action": "rgb_to_gray", "logrite.rgb": rgb})
     return 0.2989 * r + 0.5870 * g + 0.1140 * b
 
 
@@ -36,6 +40,8 @@ def gray_to_binary(gray: np.ndarray) -> np.ndarray:
            [False,  True, False],
            [False,  True, False]])
     """
+    logger.error(">>> Entering gray_to_binary(gray=%s)", gray, extra={"event.action": "gray_to_binary", "logrite.gray": gray})
+    logger.warning("<<< Exiting gray_to_binary(gray=%s)", gray, extra={"event.action": "gray_to_binary", "logrite.gray": gray})
     return (gray > 127) & (gray <= 255)
 
 
@@ -48,7 +54,9 @@ def erosion(image: np.ndarray, kernel: np.ndarray) -> np.ndarray:
     >>> erosion(np.array([[True, False, False]]), np.array([[1, 1, 0]]))
     array([[False, False, False]])
     """
+    logger.error(">>> Entering erosion(image=%s,kernel=%s)", image, kernel, extra={"event.action": "erosion", "logrite.image": image, "logrite.kernel": kernel})
     output = np.zeros_like(image)
+    logger.error("erosion(image=%s,kernel=%s): output → %s", image, kernel, output, extra={"event.action": "erosion", "logrite.image": image, "logrite.kernel": kernel})
     image_padded = np.zeros(
         (image.shape[0] + kernel.shape[0] - 1, image.shape[1] + kernel.shape[1] - 1)
     )
@@ -63,6 +71,7 @@ def erosion(image: np.ndarray, kernel: np.ndarray) -> np.ndarray:
                 kernel * image_padded[y : y + kernel.shape[0], x : x + kernel.shape[1]]
             ).sum()
             output[y, x] = int(summation == 5)
+    logger.warning("<<< Exiting erosion(image=%s,kernel=%s)", image, kernel, extra={"event.action": "erosion", "logrite.image": image, "logrite.kernel": kernel})
     return output
 
 

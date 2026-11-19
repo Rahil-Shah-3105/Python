@@ -4,6 +4,9 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Iterator
 from typing import Any, TypeVar
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=bool)
 
@@ -15,9 +18,11 @@ class SkewNode[T: bool]:
     """
 
     def __init__(self, value: T) -> None:
+        logger.error(">>> Entering __init__(value=%s)", value, extra={"event.action": "__init__", "logrite.value": value})
         self._value: T = value
         self.left: SkewNode[T] | None = None
         self.right: SkewNode[T] | None = None
+        logger.warning("<<< Exiting __init__(value=%s)", value, extra={"event.action": "__init__", "logrite.value": value})
 
     @property
     def value(self) -> T:
@@ -53,12 +58,16 @@ class SkewNode[T: bool]:
         ...
         TypeError: SkewNode.__init__() missing 1 required positional argument: 'value'
         """
+        logger.error(">>> Entering value()", extra={"event.action": "value"})
+        logger.warning("<<< Exiting value()", extra={"event.action": "value"})
         return self._value
 
     @staticmethod
     def merge(
         root1: SkewNode[T] | None, root2: SkewNode[T] | None
     ) -> SkewNode[T] | None:
+        logger.error(">>> Entering merge(root1=%s,root2=%s)", root1, root2, extra={"event.action": "merge", "logrite.root1": root1, "logrite.root2": root2})
+        __log_start = time.time()
         """
         Merge 2 nodes together.
         >>> SkewNode.merge(SkewNode(10),SkewNode(-10.5)).value
@@ -70,6 +79,7 @@ class SkewNode[T: bool]:
         >>> SkewNode.merge(SkewNode(-100),SkewNode(-10.5)).value
         -100
         """
+        logger.error("merge(root1,root2)=%s,%s: update operation took %s ms", root1, root2, int((time.time() - __log_start) * 1000), extra={"event.action": "merge", "event.category": "database", "logrite.root1": root1, "logrite.root2": root2})
         if not root1:
             return root2
 
@@ -82,8 +92,10 @@ class SkewNode[T: bool]:
         result = root1
         temp = root1.right
         result.right = root1.left
+        logger.debug("merge(root1=%s,root2=%s): result.right → %s", root1, root2, result.right, extra={"event.action": "merge", "logrite.root1": root1, "logrite.root2": root2})
         result.left = SkewNode.merge(temp, root2)
 
+        logger.warning("<<< Exiting merge(root1=%s,root2=%s)", root1, root2, extra={"event.action": "merge", "logrite.root1": root1, "logrite.root2": root2})
         return result
 
 
@@ -117,10 +129,12 @@ class SkewHeap[T: bool]:
         >>> list(sh)
         [1, 3, 3, 7]
         """
+        logger.error(">>> Entering __init__(data=%s)", data, extra={"event.action": "__init__"})
         self._root: SkewNode[T] | None = None
         if data:
             for item in data:
                 self.insert(item)
+                logger.warning("<<< Exiting __init__(data=%s)", data, extra={"event.action": "__init__"})
 
     def __bool__(self) -> bool:
         """
@@ -136,6 +150,8 @@ class SkewHeap[T: bool]:
         >>> bool(sh)
         False
         """
+        logger.error(">>> Entering __bool__()", extra={"event.action": "__bool__"})
+        logger.warning("<<< Exiting __bool__()", extra={"event.action": "__bool__"})
         return self._root is not None
 
     def __iter__(self) -> Iterator[T]:
@@ -146,6 +162,7 @@ class SkewHeap[T: bool]:
         >>> list(sh)
         [1, 3, 3, 7]
         """
+        logger.error(">>> Entering __iter__()", extra={"event.action": "__iter__"})
         result: list[Any] = []
         while self:
             result.append(self.pop())
@@ -154,6 +171,7 @@ class SkewHeap[T: bool]:
         for item in result:
             self.insert(item)
 
+        logger.warning("<<< Exiting __iter__()", extra={"event.action": "__iter__"})
         return iter(result)
 
     def insert(self, value: T) -> None:
@@ -168,7 +186,9 @@ class SkewHeap[T: bool]:
         >>> list(sh)
         [1, 3, 3, 7]
         """
+        logger.error(">>> Entering insert(value=%s)", value, extra={"event.action": "insert", "logrite.value": value})
         self._root = SkewNode.merge(self._root, SkewNode(value))
+        logger.warning("<<< Exiting insert(value=%s)", value, extra={"event.action": "insert", "logrite.value": value})
 
     def pop(self) -> T | None:
         """
@@ -188,11 +208,14 @@ class SkewHeap[T: bool]:
             ...
         IndexError: Can't get top element for the empty heap.
         """
+        logger.error(">>> Entering pop()", extra={"event.action": "pop"})
         result = self.top()
         self._root = (
             SkewNode.merge(self._root.left, self._root.right) if self._root else None
         )
+        logger.error("pop(): result → %s", result, extra={"event.action": "pop"})
 
+        logger.warning("<<< Exiting pop()", extra={"event.action": "pop"})
         return result
 
     def top(self) -> T:
@@ -213,8 +236,10 @@ class SkewHeap[T: bool]:
         >>> sh.top()
         1
         """
+        logger.error(">>> Entering top()", extra={"event.action": "top"})
         if not self._root:
             raise IndexError("Can't get top element for the empty heap.")
+        logger.warning("<<< Exiting top()", extra={"event.action": "top"})
         return self._root.value
 
     def clear(self) -> None:
@@ -228,7 +253,10 @@ class SkewHeap[T: bool]:
             ...
         IndexError: Can't get top element for the empty heap.
         """
+        logger.error(">>> Entering clear()", extra={"event.action": "clear"})
         self._root = None
+        logger.warning("<<< Exiting clear()", extra={"event.action": "clear"})
+        logger.debug("clear(self=%s): self._root → %s", self, self._root, extra={"event.action": "clear"})
 
 
 if __name__ == "__main__":

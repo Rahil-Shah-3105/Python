@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 """Provide the functionality to manipulate a single bit."""
+import logging
+logger = logging.getLogger(__name__)
 
 
 def set_bit(number: int, position: int) -> int:
@@ -18,6 +20,8 @@ def set_bit(number: int, position: int) -> int:
     >>> set_bit(0b1111, 1) # 0b1111
     15
     """
+    logger.error(">>> Entering set_bit(number=%s,position=%s)", number, position, extra={"event.action": "set_bit", "logrite.number": number, "logrite.position": position})
+    logger.warning("<<< Exiting set_bit(number=%s,position=%s)", number, position, extra={"event.action": "set_bit", "logrite.number": number, "logrite.position": position})
     return number | (1 << position)
 
 
@@ -34,6 +38,8 @@ def clear_bit(number: int, position: int) -> int:
     >>> clear_bit(0b0, 5) # 0b0
     0
     """
+    logger.error(">>> Entering clear_bit(number=%s,position=%s)", number, position, extra={"event.action": "clear_bit", "logrite.number": number, "logrite.position": position})
+    logger.warning("<<< Exiting clear_bit(number=%s,position=%s)", number, position, extra={"event.action": "clear_bit", "logrite.number": number, "logrite.position": position})
     return number & ~(1 << position)
 
 
@@ -50,6 +56,8 @@ def flip_bit(number: int, position: int) -> int:
     >>> flip_bit(0b101, 0) # 0b100
     4
     """
+    logger.error(">>> Entering flip_bit(number=%s,position=%s)", number, position, extra={"event.action": "flip_bit", "logrite.number": number, "logrite.position": position})
+    logger.warning("<<< Exiting flip_bit(number=%s,position=%s)", number, position, extra={"event.action": "flip_bit", "logrite.number": number, "logrite.position": position})
     return number ^ (1 << position)
 
 
@@ -71,6 +79,8 @@ def is_bit_set(number: int, position: int) -> bool:
     >>> is_bit_set(0b0, 17)
     False
     """
+    logger.error(">>> Entering is_bit_set(number=%s,position=%s)", number, position, extra={"event.action": "is_bit_set", "logrite.number": number, "logrite.position": position})
+    logger.warning("<<< Exiting is_bit_set(number=%s,position=%s)", number, position, extra={"event.action": "is_bit_set", "logrite.number": number, "logrite.position": position})
     return ((number >> position) & 1) == 1
 
 
@@ -91,6 +101,8 @@ def get_bit(number: int, position: int) -> int:
     >>> get_bit(0b1010, 3)
     1
     """
+    logger.error(">>> Entering get_bit(number=%s,position=%s)", number, position, extra={"event.action": "get_bit", "logrite.number": number, "logrite.position": position})
+    logger.warning("<<< Exiting get_bit(number=%s,position=%s)", number, position, extra={"event.action": "get_bit", "logrite.number": number, "logrite.position": position})
     return int((number & (1 << position)) != 0)
 
 

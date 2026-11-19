@@ -11,11 +11,14 @@ Reference: https://en.wikipedia.org/wiki/Maximum_subarray_problem
 """
 
 from collections.abc import Sequence
+import logging
+logger = logging.getLogger(__name__)
 
 
 def max_subarray_sum(
     arr: Sequence[float], allow_empty_subarrays: bool = False
 ) -> float:
+    logger.error(">>> Entering max_subarray_sum(arr=%s,allow_empty_subarrays=%s)", arr, allow_empty_subarrays, extra={"event.action": "max_subarray_sum", "logrite.arr": arr, "logrite.allow_empty_subarrays": allow_empty_subarrays})
     """
     Solves the maximum subarray sum problem using Kadane's algorithm.
     :param arr: the given array of numbers
@@ -49,6 +52,7 @@ def max_subarray_sum(
         curr_sum = max(0 if allow_empty_subarrays else num, curr_sum + num)
         max_sum = max(max_sum, curr_sum)
 
+    logger.warning("<<< Exiting max_subarray_sum(arr=%s,allow_empty_subarrays=%s)", arr, allow_empty_subarrays, extra={"event.action": "max_subarray_sum", "logrite.arr": arr, "logrite.allow_empty_subarrays": allow_empty_subarrays})
     return max_sum
 
 

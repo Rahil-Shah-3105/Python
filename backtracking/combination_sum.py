@@ -11,11 +11,14 @@ Constraints:
 All elements of candidates are distinct.
 1 <= target <= 40
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def backtrack(
     candidates: list, path: list, answer: list, target: int, previous_index: int
 ) -> None:
+    logger.error(">>> Entering backtrack(candidates=%s,path=%s,answer=%s,target=%s,previous_index=%s)", candidates, path, answer, target, previous_index, extra={"event.action": "backtrack", "logrite.candidates": candidates, "logrite.path": path, "logrite.answer": answer, "logrite.target": target, "logrite.previous_index": previous_index})
     """
     A recursive function that searches for possible combinations. Backtracks in case
     of a bigger current combination value than the target value.
@@ -36,6 +39,7 @@ def backtrack(
                 path.append(candidates[index])
                 backtrack(candidates, path, answer, target - candidates[index], index)
                 path.pop(len(path) - 1)
+                logger.warning("<<< Exiting backtrack(candidates=%s,path=%s,answer=%s,target=%s,previous_index=%s)", candidates, path, answer, target, previous_index, extra={"event.action": "backtrack", "logrite.candidates": candidates, "logrite.path": path, "logrite.answer": answer, "logrite.target": target, "logrite.previous_index": previous_index})
 
 
 def combination_sum(candidates: list, target: int) -> list:
@@ -53,6 +57,7 @@ def combination_sum(candidates: list, target: int) -> list:
         ...
     ValueError: Candidates list should not be empty
     """
+    logger.error(">>> Entering combination_sum(candidates=%s,target=%s)", candidates, target, extra={"event.action": "combination_sum", "logrite.candidates": candidates, "logrite.target": target})
     if not candidates:
         raise ValueError("Candidates list should not be empty")
 
@@ -62,11 +67,14 @@ def combination_sum(candidates: list, target: int) -> list:
     path = []  # type: list[int]
     answer = []  # type: list[int]
     backtrack(candidates, path, answer, target, 0)
+    logger.warning("<<< Exiting combination_sum(candidates=%s,target=%s)", candidates, target, extra={"event.action": "combination_sum", "logrite.candidates": candidates, "logrite.target": target})
     return answer
 
 
 def main() -> None:
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     print(combination_sum([-8, 2.3, 0], 1))
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

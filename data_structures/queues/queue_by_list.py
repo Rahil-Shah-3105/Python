@@ -1,6 +1,8 @@
 """Queue represented by a Python list"""
 
 from collections.abc import Iterable
+import logging
+logger = logging.getLogger(__name__)
 
 
 class QueueByList[T]:
@@ -13,7 +15,9 @@ class QueueByList[T]:
         >>> QueueByList((i**2 for i in range(1, 4)))
         Queue((1, 4, 9))
         """
+        logger.error(">>> Entering __init__(iterable=%s)", iterable, extra={"event.action": "__init__", "logrite.iterable": iterable})
         self.entries: list[T] = list(iterable or [])
+        logger.warning("<<< Exiting __init__(iterable=%s)", iterable, extra={"event.action": "__init__", "logrite.iterable": iterable})
 
     def __len__(self) -> int:
         """
@@ -34,7 +38,9 @@ class QueueByList[T]:
         >>> len(queue)
         8
         """
+        logger.error(">>> Entering __len__()", extra={"event.action": "__len__"})
 
+        logger.warning("<<< Exiting __len__()", extra={"event.action": "__len__"})
         return len(self.entries)
 
     def __repr__(self) -> str:
@@ -52,7 +58,9 @@ class QueueByList[T]:
         >>> queue
         Queue((10, 20, 30))
         """
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
 
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"Queue({tuple(self.entries)})"
 
     def put(self, item: T) -> None:
@@ -66,8 +74,10 @@ class QueueByList[T]:
         >>> queue
         Queue((10, 20))
         """
+        logger.error(">>> Entering put(item=%s)", item, extra={"event.action": "put", "logrite.item": item})
 
         self.entries.append(item)
+        logger.warning("<<< Exiting put(item=%s)", item, extra={"event.action": "put", "logrite.item": item})
 
     def get(self) -> T:
         """
@@ -90,9 +100,11 @@ class QueueByList[T]:
             ...
         IndexError: Queue is empty
         """
+        logger.error(">>> Entering get()", extra={"event.action": "get"})
 
         if not self.entries:
             raise IndexError("Queue is empty")
+        logger.warning("<<< Exiting get()", extra={"event.action": "get"})
         return self.entries.pop(0)
 
     def rotate(self, rotation: int) -> None:
@@ -108,12 +120,14 @@ class QueueByList[T]:
         >>> queue
         Queue((40, 10, 20, 30))
         """
+        logger.error(">>> Entering rotate(rotation=%s)", rotation, extra={"event.action": "rotate", "logrite.rotation": rotation})
 
         put = self.entries.append
         get = self.entries.pop
 
         for _ in range(rotation):
             put(get(0))
+            logger.warning("<<< Exiting rotate(rotation=%s)", rotation, extra={"event.action": "rotate", "logrite.rotation": rotation})
 
     def get_front(self) -> T:
         """Get the front item from the Queue
@@ -128,7 +142,9 @@ class QueueByList[T]:
         >>> queue.get_front()
         20
         """
+        logger.error(">>> Entering get_front()", extra={"event.action": "get_front"})
 
+        logger.warning("<<< Exiting get_front()", extra={"event.action": "get_front"})
         return self.entries[0]
 
 

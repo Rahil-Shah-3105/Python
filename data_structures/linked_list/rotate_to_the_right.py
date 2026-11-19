@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -29,7 +31,9 @@ def print_linked_list(head: Node | None) -> None:
         >>> print_linked_list(head)
         0->2->1->4->5
     """
+    logger.error(">>> Entering print_linked_list(head=%s)", head, extra={"event.action": "print_linked_list", "logrite.head": head})
     if head is None:
+        logger.warning("<<< Exiting print_linked_list(head=%s)", head, extra={"event.action": "print_linked_list", "logrite.head": head})
         return
     while head.next_node is not None:
         print(head.data, end="->")
@@ -54,7 +58,9 @@ def insert_node(head: Node | None, data: int) -> Node:
     >>> print_linked_list(head)
     10->9->8
     """
+    logger.error(">>> Entering insert_node(head=%s,data=%s)", head, data, extra={"event.action": "insert_node", "logrite.head": head})
     new_node = Node(data)
+    logger.error("insert_node(head=%s,data=%s): new_node → %s", head, data, new_node, extra={"event.action": "insert_node", "logrite.head": head})
     # If the linked list is empty, the new_node becomes the head
     if head is None:
         return new_node
@@ -64,6 +70,8 @@ def insert_node(head: Node | None, data: int) -> Node:
         temp_node = temp_node.next_node
 
     temp_node.next_node = new_node
+    logger.debug("insert_node(head=%s,data=%s): temp_node.next_node → %s", head, data, temp_node.next_node, extra={"event.action": "insert_node", "logrite.head": head})
+    logger.warning("<<< Exiting insert_node(head=%s,data=%s)", head, data, extra={"event.action": "insert_node", "logrite.head": head})
     return head
 
 
@@ -94,6 +102,7 @@ def rotate_to_the_right(head: Node, places: int) -> Node:
     >>> print_linked_list(new_head)
     4->5->1->2->3
     """
+    logger.error(">>> Entering rotate_to_the_right(head=%s,places=%s)", head, places, extra={"event.action": "rotate_to_the_right", "logrite.head": head, "logrite.places": places})
     # Check if the list is empty or has only one element
     if not head:
         raise ValueError("The linked list is empty.")
@@ -127,12 +136,14 @@ def rotate_to_the_right(head: Node, places: int) -> Node:
     assert temp_node.next_node
     new_head = temp_node.next_node
     temp_node.next_node = None
+    logger.debug("rotate_to_the_right(head=%s,places=%s): temp_node.next_node → %s", head, places, temp_node.next_node, extra={"event.action": "rotate_to_the_right", "logrite.head": head, "logrite.places": places})
     temp_node = new_head
     while temp_node.next_node:
         temp_node = temp_node.next_node
     temp_node.next_node = head
 
     assert new_head
+    logger.warning("<<< Exiting rotate_to_the_right(head=%s,places=%s)", head, places, extra={"event.action": "rotate_to_the_right", "logrite.head": head, "logrite.places": places})
     return new_head
 
 

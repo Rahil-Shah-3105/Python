@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def get_word_pattern(word: str) -> str:
     """
     Returns numerical pattern of character appearances in given word
@@ -28,7 +30,9 @@ def get_word_pattern(word: str) -> str:
     ...
     AttributeError: 'list' object has no attribute 'upper'
     """
+    logger.error(">>> Entering get_word_pattern(word=%s)", word, extra={"event.action": "get_word_pattern", "logrite.word": word})
     word = word.upper()
+    logger.error("get_word_pattern(word=%s): word → %s", word, word, extra={"event.action": "get_word_pattern", "logrite.word": word})
     next_num = 0
     letter_nums = {}
     word_pattern = []
@@ -38,6 +42,7 @@ def get_word_pattern(word: str) -> str:
             letter_nums[letter] = str(next_num)
             next_num += 1
         word_pattern.append(letter_nums[letter])
+    logger.warning("<<< Exiting get_word_pattern(word=%s)", word, extra={"event.action": "get_word_pattern", "logrite.word": word})
     return ".".join(word_pattern)
 
 

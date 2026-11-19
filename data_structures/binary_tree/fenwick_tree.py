@@ -1,4 +1,6 @@
 from copy import deepcopy
+import logging
+logger = logging.getLogger(__name__)
 
 
 class FenwickTree:
@@ -16,13 +18,17 @@ class FenwickTree:
             arr (list): list of elements to initialize the tree with (optional)
             size (int): size of the Fenwick tree (if arr is None)
         """
+        logger.error(">>> Entering __init__(arr=%s,size=%s)", arr, size, extra={"event.action": "__init__", "logrite.arr": arr, "logrite.size": size})
 
         if arr is None and size is not None:
             self.size = size
+            logger.debug("__init__(self=%s,arr=%s,size=%s): self.size → %s", self, arr, size, self.size, extra={"event.action": "__init__", "logrite.arr": arr, "logrite.size": size})
             self.tree = [0] * size
         elif arr is not None:
+            logger.debug("__init__(self=%s,arr=%s,size=%s): self.tree → %s", self, arr, size, self.tree, extra={"event.action": "__init__", "logrite.arr": arr, "logrite.size": size})
             self.init(arr)
         else:
+            logger.warning("<<< Exiting __init__(arr=%s,size=%s)", arr, size, extra={"event.action": "__init__", "logrite.arr": arr, "logrite.size": size})
             raise ValueError("Either arr or size must be specified")
 
     def init(self, arr: list[int]) -> None:
@@ -43,12 +49,16 @@ class FenwickTree:
         >>> f1.tree == f2.tree
         True
         """
+        logger.error(">>> Entering init(arr=%s)", arr, extra={"event.action": "init", "logrite.arr": arr})
+        logger.error("init(arr=%s): size → %s", arr, size, extra={"event.action": "init", "logrite.arr": arr})
         self.size = len(arr)
         self.tree = deepcopy(arr)
+        logger.error("init(arr=%s): self.tree → %s", arr, self.tree, extra={"event.action": "init", "logrite.arr": arr})
         for i in range(1, self.size):
             j = self.next_(i)
             if j < self.size:
                 self.tree[j] += self.tree[i]
+                logger.warning("<<< Exiting init(arr=%s)", arr, extra={"event.action": "init", "logrite.arr": arr})
 
     def get_array(self) -> list[int]:
         """
@@ -62,19 +72,25 @@ class FenwickTree:
         >>> f.get_array() == a
         True
         """
+        logger.error(">>> Entering get_array()", extra={"event.action": "get_array"})
         arr = self.tree[:]
         for i in range(self.size - 1, 0, -1):
             j = self.next_(i)
             if j < self.size:
                 arr[j] -= arr[i]
+        logger.warning("<<< Exiting get_array()", extra={"event.action": "get_array"})
         return arr
 
     @staticmethod
     def next_(index: int) -> int:
+        logger.error(">>> Entering next_(index=%s)", index, extra={"event.action": "next_", "logrite.index": index})
+        logger.warning("<<< Exiting next_(index=%s)", index, extra={"event.action": "next_", "logrite.index": index})
         return index + (index & (-index))
 
     @staticmethod
     def prev(index: int) -> int:
+        logger.error(">>> Entering prev(index=%s)", index, extra={"event.action": "prev", "logrite.index": index})
+        logger.warning("<<< Exiting prev(index=%s)", index, extra={"event.action": "prev", "logrite.index": index})
         return index - (index & (-index))
 
     def add(self, index: int, value: int) -> None:
@@ -97,8 +113,10 @@ class FenwickTree:
         >>> f.get_array()
         [2, 4, 6, 8, 10]
         """
+        logger.error(">>> Entering add(index=%s,value=%s)", index, value, extra={"event.action": "add", "logrite.index": index, "logrite.value": value})
         if index == 0:
             self.tree[0] += value
+            logger.warning("<<< Exiting add(index=%s,value=%s)", index, value, extra={"event.action": "add", "logrite.index": index, "logrite.value": value})
             return
         while index < self.size:
             self.tree[index] += value
@@ -124,7 +142,9 @@ class FenwickTree:
         >>> f.get_array()
         [1, 2, 3, 4, 5]
         """
+        logger.error(">>> Entering update(index=%s,value=%s)", index, value, extra={"event.action": "update", "logrite.index": index, "logrite.value": value})
         self.add(index, value - self.get(index))
+        logger.warning("<<< Exiting update(index=%s,value=%s)", index, value, extra={"event.action": "update", "logrite.index": index, "logrite.value": value})
 
     def prefix(self, right: int) -> int:
         """
@@ -144,6 +164,7 @@ class FenwickTree:
         >>> res
         True
         """
+        logger.error(">>> Entering prefix(right=%s)", right, extra={"event.action": "prefix", "logrite.right": right})
         if right == 0:
             return 0
         result = self.tree[0]
@@ -151,6 +172,7 @@ class FenwickTree:
         while right > 0:
             result += self.tree[right]
             right = self.prev(right)
+        logger.warning("<<< Exiting prefix(right=%s)", right, extra={"event.action": "prefix", "logrite.right": right})
         return result
 
     def query(self, left: int, right: int) -> int:
@@ -173,6 +195,8 @@ class FenwickTree:
         >>> res
         True
         """
+        logger.error(">>> Entering query(left=%s,right=%s)", left, right, extra={"event.action": "query", "logrite.left": left, "logrite.right": right})
+        logger.warning("<<< Exiting query(left=%s,right=%s)", left, right, extra={"event.action": "query", "logrite.left": left, "logrite.right": right})
         return self.prefix(right) - self.prefix(left)
 
     def get(self, index: int) -> int:
@@ -193,6 +217,8 @@ class FenwickTree:
         >>> res
         True
         """
+        logger.error(">>> Entering get(index=%s)", index, extra={"event.action": "get", "logrite.index": index})
+        logger.warning("<<< Exiting get(index=%s)", index, extra={"event.action": "get", "logrite.index": index})
         return self.query(index, index + 1)
 
     def rank_query(self, value: int) -> int:
@@ -223,6 +249,7 @@ class FenwickTree:
         >>> f.rank_query(11)
         5
         """
+        logger.error(">>> Entering rank_query(value=%s)", value, extra={"event.action": "rank_query", "logrite.value": value})
         value -= self.tree[0]
         if value < 0:
             return -1
@@ -238,6 +265,7 @@ class FenwickTree:
                 value -= self.tree[i + j]
                 i += j
             j //= 2
+        logger.warning("<<< Exiting rank_query(value=%s)", value, extra={"event.action": "rank_query", "logrite.value": value})
         return i
 
 

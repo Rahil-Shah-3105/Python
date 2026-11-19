@@ -9,18 +9,25 @@ Nodes contain data and also may link to other nodes:
 from __future__ import annotations
 
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Node:
     def __init__(self, item: Any, next: Any) -> None:  # noqa: A002
+        logger.error(">>> Entering __init__(item=%s,next=%s)", item, next, extra={"event.action": "__init__", "logrite.item": item})
         self.item = item
+        logger.debug("__init__(self=%s,item=%s,next=%s): self.item → %s", self, item, next, self.item, extra={"event.action": "__init__", "logrite.item": item})
         self.next = next
+        logger.warning("<<< Exiting __init__(item=%s,next=%s)", item, next, extra={"event.action": "__init__", "logrite.item": item})
+        logger.debug("__init__(self=%s,item=%s,next=%s): self.next → %s", self, item, next, self.next, extra={"event.action": "__init__", "logrite.item": item})
 
 
 class LinkedList:
     def __init__(self) -> None:
         self.head: Node | None = None
         self.size = 0
+        logger.debug("__init__(self=%s): self.size → %s", self, self.size, extra={"event.action": "__init__"})
 
     def add(self, item: Any, position: int = 0) -> None:
         """
@@ -58,13 +65,16 @@ class LinkedList:
         >>> print(linked_list)
         3 --> 2 --> 4 --> 1 --> 5
         """
+        logger.error(">>> Entering add(item=%s,position=%s)", item, position, extra={"event.action": "add", "logrite.item": item, "logrite.position": position})
         if position < 0:
             raise ValueError("Position must be non-negative")
 
         if position == 0 or self.head is None:
             new_node = Node(item, self.head)
+            logger.error("add(item=%s,position=%s): new_node → %s", item, position, new_node, extra={"event.action": "add", "logrite.item": item, "logrite.position": position})
             self.head = new_node
         else:
+            logger.debug("add(self=%s,item=%s,position=%s): self.head → %s", self, item, position, self.head, extra={"event.action": "add", "logrite.item": item, "logrite.position": position})
             current = self.head
             for _ in range(position - 1):
                 current = current.next
@@ -72,9 +82,12 @@ class LinkedList:
                     raise ValueError("Out of bounds")
             new_node = Node(item, current.next)
             current.next = new_node
+            logger.debug("add(self=%s,item=%s,position=%s): current.next → %s", self, item, position, current.next, extra={"event.action": "add", "logrite.item": item, "logrite.position": position})
         self.size += 1
+        logger.warning("<<< Exiting add(item=%s,position=%s)", item, position, extra={"event.action": "add", "logrite.item": item, "logrite.position": position})
 
     def remove(self) -> Any:
+        logger.error(">>> Entering remove()", extra={"event.action": "remove"})
         # Switched 'self.is_empty()' to 'self.head is None'
         # because mypy was considering the possibility that 'self.head'
         # can be None in below else part and giving error
@@ -83,10 +96,14 @@ class LinkedList:
         else:
             item = self.head.item
             self.head = self.head.next
+            logger.debug("remove(self=%s): self.head → %s", self, self.head, extra={"event.action": "remove"})
             self.size -= 1
+            logger.warning("<<< Exiting remove()", extra={"event.action": "remove"})
             return item
 
     def is_empty(self) -> bool:
+        logger.error(">>> Entering is_empty()", extra={"event.action": "is_empty"})
+        logger.warning("<<< Exiting is_empty()", extra={"event.action": "is_empty"})
         return self.head is None
 
     def __str__(self) -> str:
@@ -98,6 +115,7 @@ class LinkedList:
         >>> print(linked_list)
         9 --> 14 --> 23
         """
+        logger.error(">>> Entering __str__()", extra={"event.action": "__str__"})
         if self.is_empty():
             return ""
         else:
@@ -110,6 +128,7 @@ class LinkedList:
 
             item_str = " --> ".join(item_list)
 
+            logger.warning("<<< Exiting __str__()", extra={"event.action": "__str__"})
             return item_str
 
     def __len__(self) -> int:
@@ -130,4 +149,6 @@ class LinkedList:
         >>> len(linked_list)
         0
         """
+        logger.error(">>> Entering __len__()", extra={"event.action": "__len__"})
+        logger.warning("<<< Exiting __len__()", extra={"event.action": "__len__"})
         return self.size

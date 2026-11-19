@@ -16,16 +16,21 @@ Traceback (most recent call last):
     ...
 ValueError: Non-binary value was passed to the function
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def bin_to_octal(bin_string: str) -> str:
+    logger.error(">>> Entering bin_to_octal(bin_string=%s)", bin_string, extra={"event.action": "bin_to_octal", "logrite.bin_string": bin_string})
     if not all(char in "01" for char in bin_string):
         raise ValueError("Non-binary value was passed to the function")
     if not bin_string:
         raise ValueError("Empty string was passed to the function")
     oct_string = ""
+    logger.error("bin_to_octal(bin_string=%s): oct_string → %s", bin_string, oct_string, extra={"event.action": "bin_to_octal", "logrite.bin_string": bin_string})
     while len(bin_string) % 3 != 0:
         bin_string = "0" + bin_string
+        logger.error("bin_to_octal(bin_string=%s): bin_string → %s", bin_string, bin_string, extra={"event.action": "bin_to_octal", "logrite.bin_string": bin_string})
     bin_string_in_3_list = [
         bin_string[index : index + 3]
         for index in range(len(bin_string))
@@ -36,6 +41,7 @@ def bin_to_octal(bin_string: str) -> str:
         for index, val in enumerate(bin_group):
             oct_val += int(2 ** (2 - index) * int(val))
         oct_string += str(oct_val)
+    logger.warning("<<< Exiting bin_to_octal(bin_string=%s)", bin_string, extra={"event.action": "bin_to_octal", "logrite.bin_string": bin_string})
     return oct_string
 
 

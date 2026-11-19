@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def kth_permutation(k, n):
     """
     Finds k'th lexicographic permutation (in increasing order) of
@@ -14,6 +16,7 @@ def kth_permutation(k, n):
     >>> kth_permutation(10,4)
     [1, 3, 0, 2]
     """
+    logger.error(">>> Entering kth_permutation(k=%s,n=%s)", k, n, extra={"event.action": "kth_permutation", "logrite.k": k, "logrite.n": n})
     # Factorails from 1! to (n-1)!
     factorials = [1]
     for i in range(2, n):
@@ -22,15 +25,18 @@ def kth_permutation(k, n):
 
     permutation = []
     elements = list(range(n))
+    logger.error("kth_permutation(k=%s,n=%s): elements → %s", k, n, elements, extra={"event.action": "kth_permutation", "logrite.k": k, "logrite.n": n})
 
     # Find permutation
     while factorials:
         factorial = factorials.pop()
+        logger.error("kth_permutation(k=%s,n=%s): factorial → %s", k, n, factorial, extra={"event.action": "kth_permutation", "logrite.k": k, "logrite.n": n})
         number, k = divmod(k, factorial)
         permutation.append(elements[number])
         elements.remove(elements[number])
     permutation.append(elements[0])
 
+    logger.warning("<<< Exiting kth_permutation(k=%s,n=%s)", k, n, extra={"event.action": "kth_permutation", "logrite.k": k, "logrite.n": n})
     return permutation
 
 

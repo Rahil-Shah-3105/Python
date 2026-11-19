@@ -14,6 +14,8 @@ References:
 import math
 from collections.abc import Iterator
 from itertools import takewhile
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_prime(number: int) -> bool:
@@ -35,6 +37,7 @@ def is_prime(number: int) -> bool:
     >>> is_prime(1)
     False
     """
+    logger.error(">>> Entering is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
 
     if 1 < number < 4:
         # 2 and 3 are primes
@@ -47,6 +50,7 @@ def is_prime(number: int) -> bool:
     for i in range(5, int(math.sqrt(number) + 1), 6):
         if number % i == 0 or number % (i + 2) == 0:
             return False
+    logger.warning("<<< Exiting is_prime(number=%s)", number, extra={"event.action": "is_prime", "logrite.number": number})
     return True
 
 
@@ -54,12 +58,14 @@ def prime_generator() -> Iterator[int]:
     """
     Generate a list sequence of prime numbers
     """
+    logger.error(">>> Entering prime_generator()", extra={"event.action": "prime_generator"})
 
     num = 2
     while True:
         if is_prime(num):
             yield num
         num += 1
+        logger.warning("<<< Exiting prime_generator()", extra={"event.action": "prime_generator"})
 
 
 def solution(n: int = 2000000) -> int:
@@ -75,7 +81,9 @@ def solution(n: int = 2000000) -> int:
     >>> solution(7)
     10
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
 
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return sum(takewhile(lambda x: x < n, prime_generator()))
 
 

@@ -11,6 +11,8 @@ import numpy as np
 from data_structures.kd_tree.build_kdtree import build_kdtree
 from data_structures.kd_tree.example.hypercube_points import hypercube_points
 from data_structures.kd_tree.nearest_neighbour_search import nearest_neighbour_search
+import logging
+logger = logging.getLogger(__name__)
 
 
 def main() -> None:
@@ -18,16 +20,20 @@ def main() -> None:
     Demonstrates the use of KD-Tree by building it from random points
     in a 10-dimensional hypercube and performing a nearest neighbor search.
     """
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     num_points: int = 5000
     cube_size: float = 10.0  # Size of the hypercube (edge length)
+    logger.error("main(): cube_size → %s", cube_size, extra={"event.action": "main"})
     num_dimensions: int = 10
 
     # Generate random points within the hypercube
     points: np.ndarray = hypercube_points(num_points, cube_size, num_dimensions)
     hypercube_kdtree = build_kdtree(points.tolist())
+    logger.error("main(): hypercube_kdtree → %s", hypercube_kdtree, extra={"event.action": "main"})
 
     # Generate a random query point within the same space
     rng = np.random.default_rng()
+    logger.error("main(): rng → %s", rng, extra={"event.action": "main"})
     query_point: list[float] = rng.random(num_dimensions).tolist()
 
     # Perform nearest neighbor search
@@ -40,6 +46,7 @@ def main() -> None:
     print(f"Nearest point: {nearest_point}")
     print(f"Distance: {nearest_dist:.4f}")
     print(f"Nodes visited: {nodes_visited}")
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

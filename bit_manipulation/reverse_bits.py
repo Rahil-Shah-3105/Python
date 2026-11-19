@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def get_reverse_bit_string(number: int) -> str:
     """
     Return the reverse bit string of a 32 bit integer
@@ -15,6 +17,7 @@ def get_reverse_bit_string(number: int) -> str:
         ...
     TypeError: operation can not be conducted on an object of type str
     """
+    logger.error(">>> Entering get_reverse_bit_string(number=%s)", number, extra={"event.action": "get_reverse_bit_string", "logrite.number": number})
     if not isinstance(number, int):
         msg = (
             "operation can not be conducted on an object of type "
@@ -22,9 +25,11 @@ def get_reverse_bit_string(number: int) -> str:
         )
         raise TypeError(msg)
     bit_string = ""
+    logger.error("get_reverse_bit_string(number=%s): bit_string → %s", number, bit_string, extra={"event.action": "get_reverse_bit_string", "logrite.number": number})
     for _ in range(32):
         bit_string += str(number % 2)
         number >>= 1
+    logger.warning("<<< Exiting get_reverse_bit_string(number=%s)", number, extra={"event.action": "get_reverse_bit_string", "logrite.number": number})
     return bit_string
 
 
@@ -61,12 +66,14 @@ def reverse_bit(number: int) -> int:
         ...
     TypeError: Input value must be an 'int' type
     """
+    logger.error(">>> Entering reverse_bit(number=%s)", number, extra={"event.action": "reverse_bit", "logrite.number": number})
     if not isinstance(number, int):
         raise TypeError("Input value must be an 'int' type")
     if number < 0:
         raise ValueError("The value of input must be non-negative")
 
     result = 0
+    logger.error("reverse_bit(number=%s): result → %s", number, result, extra={"event.action": "reverse_bit", "logrite.number": number})
     # iterator over [0 to 31], since we are dealing with a 32 bit integer
     for _ in range(32):
         # left shift the bits by unity
@@ -77,6 +84,7 @@ def reverse_bit(number: int) -> int:
         number >>= 1
         # add that bit to our answer
         result |= end_bit
+    logger.warning("<<< Exiting reverse_bit(number=%s)", number, extra={"event.action": "reverse_bit", "logrite.number": number})
     return result
 
 

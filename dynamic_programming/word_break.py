@@ -22,6 +22,8 @@ Space: O(n)
 
 import functools
 from typing import Any
+import logging
+logger = logging.getLogger(__name__)
 
 
 def word_break(string: str, words: list[str]) -> bool:
@@ -53,6 +55,7 @@ def word_break(string: str, words: list[str]) -> bool:
         ...
     ValueError: the words should be a list of non-empty strings
     """
+    logger.error(">>> Entering word_break(string=%s,words=%s)", string, words, extra={"event.action": "word_break", "logrite.string": string, "logrite.words": words})
 
     # Validation
     if not isinstance(string, str) or len(string) == 0:
@@ -66,6 +69,7 @@ def word_break(string: str, words: list[str]) -> bool:
     # Build trie
     trie: dict[str, Any] = {}
     word_keeper_key = "WORD_KEEPER"
+    logger.error("word_break(string=%s,words=%s): word_keeper_key → %s", string, words, word_keeper_key, extra={"event.action": "word_break", "logrite.string": string, "logrite.words": words})
 
     for word in words:
         trie_node = trie
@@ -78,6 +82,7 @@ def word_break(string: str, words: list[str]) -> bool:
         trie_node[word_keeper_key] = True
 
     len_string = len(string)
+    logger.error("word_break(string=%s,words=%s): len_string → %s", string, words, len_string, extra={"event.action": "word_break", "logrite.string": string, "logrite.words": words})
 
     # Dynamic programming method
     @functools.cache
@@ -87,6 +92,7 @@ def word_break(string: str, words: list[str]) -> bool:
         >>> is_breakable(1)
         True
         """
+        logger.error(">>> Entering is_breakable(index=%s)", index, extra={"event.action": "is_breakable", "logrite.index": index})
         if index == len_string:
             return True
 
@@ -100,6 +106,7 @@ def word_break(string: str, words: list[str]) -> bool:
             if trie_node.get(word_keeper_key, False) and is_breakable(i + 1):
                 return True
 
+        logger.warning("<<< Exiting is_breakable(index=%s)", index, extra={"event.action": "is_breakable", "logrite.index": index})
         return False
 
     return is_breakable(0)

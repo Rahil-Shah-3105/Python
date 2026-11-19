@@ -14,6 +14,8 @@ Reference: https://en.wikipedia.org/wiki/Double_hashing
 
 from .hash_table import HashTable
 from .number_theory.prime_numbers import is_prime, next_prime
+import logging
+logger = logging.getLogger(__name__)
 
 
 class DoubleHash(HashTable):
@@ -23,16 +25,22 @@ class DoubleHash(HashTable):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        logger.error(">>> Entering __init__()", extra={"event.action": "__init__"})
+        logger.warning("<<< Exiting __init__()", extra={"event.action": "__init__"})
 
     def __hash_function_2(self, value, data):
+        logger.error(">>> Entering __hash_function_2(value=<redacted>,data=%s)", data, extra={"event.action": "__hash_function_2"})
         next_prime_gt = (
             next_prime(value % self.size_table)
             if not is_prime(value % self.size_table)
             else value % self.size_table
         )  # gt = bigger than
+        logger.warning("<<< Exiting __hash_function_2(value=<redacted>,data=%s)", data, extra={"event.action": "__hash_function_2"})
         return next_prime_gt - (data % next_prime_gt)
 
     def __hash_double_function(self, key, data, increment):
+        logger.error(">>> Entering __hash_double_function(key=%s,data=%s,increment=%s)", key, data, increment, extra={"event.action": "__hash_double_function", "logrite.key": key, "logrite.increment": increment})
+        logger.warning("<<< Exiting __hash_double_function(key=%s,data=%s,increment=%s)", key, data, increment, extra={"event.action": "__hash_double_function", "logrite.key": key, "logrite.increment": increment})
         return (increment * self.__hash_function_2(key, data)) % self.size_table
 
     def _collision_resolution(self, key, data=None):
@@ -63,6 +71,7 @@ class DoubleHash(HashTable):
         >>> dh.keys()
         {9: 20, 10: 10, 8: 30}
         """
+        logger.error(">>> Entering _collision_resolution(key=%s,data=%s)", key, data, extra={"event.action": "_collision_resolution", "logrite.key": key})
         i = 1
         new_key = self.hash_function(data)
 
@@ -77,6 +86,7 @@ class DoubleHash(HashTable):
             else:
                 i += 1
 
+        logger.warning("<<< Exiting _collision_resolution(key=%s,data=%s)", key, data, extra={"event.action": "_collision_resolution", "logrite.key": key})
         return new_key
 
 

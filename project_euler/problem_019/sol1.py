@@ -19,6 +19,8 @@ unless it is divisible by 400.
 How many Sundays fell on the first of the month during the twentieth century
 (1 Jan 1901 to 31 Dec 2000)?
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution():
@@ -28,6 +30,7 @@ def solution():
     >>> solution()
     171
     """
+    logger.error(">>> Entering solution()", extra={"event.action": "solution"})
     days_per_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
     day = 6
@@ -56,6 +59,7 @@ def solution():
 
         if year < 2001 and day == 1:
             sundays += 1
+    logger.warning("<<< Exiting solution()", extra={"event.action": "solution"})
     return sundays
 
 

@@ -5,6 +5,8 @@ of the Nth powers of unique, natural numbers. For example, if X=13 and N=2.
 We have to find all combinations of unique squares adding up to 13.
 The only solution is 2^2+3^2. Constraints: 1<=X<=1000, 2<=N<=10.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def backtrack(
@@ -14,6 +16,7 @@ def backtrack(
     current_sum: int,
     solutions_count: int,
 ) -> tuple[int, int]:
+    logger.error(">>> Entering backtrack(needed_sum=%s,power=%s,current_number=%s,current_sum=%s,solutions_count=%s)", needed_sum, power, current_number, current_sum, solutions_count, extra={"event.action": "backtrack", "logrite.needed_sum": needed_sum, "logrite.power": power, "logrite.current_number": current_number, "logrite.current_sum": current_sum, "logrite.solutions_count": solutions_count})
     """
     >>> backtrack(13, 2, 1, 0, 0)
     (0, 1)
@@ -48,6 +51,7 @@ def backtrack(
         current_sum, solutions_count = backtrack(
             needed_sum, power, current_number + 1, current_sum, solutions_count
         )
+    logger.warning("<<< Exiting backtrack(needed_sum=%s,power=%s,current_number=%s,current_sum=%s,solutions_count=%s)", needed_sum, power, current_number, current_sum, solutions_count, extra={"event.action": "backtrack", "logrite.needed_sum": needed_sum, "logrite.power": power, "logrite.current_number": current_number, "logrite.current_sum": current_sum, "logrite.solutions_count": solutions_count})
     return current_sum, solutions_count
 
 
@@ -76,12 +80,14 @@ def solve(needed_sum: int, power: int) -> int:
     ValueError: Invalid input
     needed_sum must be between 1 and 1000, power between 2 and 10.
     """
+    logger.error(">>> Entering solve(needed_sum=%s,power=%s)", needed_sum, power, extra={"event.action": "solve", "logrite.needed_sum": needed_sum, "logrite.power": power})
     if not (1 <= needed_sum <= 1000 and 2 <= power <= 10):
         raise ValueError(
             "Invalid input\n"
             "needed_sum must be between 1 and 1000, power between 2 and 10."
         )
 
+    logger.warning("<<< Exiting solve(needed_sum=%s,power=%s)", needed_sum, power, extra={"event.action": "solve", "logrite.needed_sum": needed_sum, "logrite.power": power})
     return backtrack(needed_sum, power, 1, 0, 0)[1]  # Return the solutions_count
 
 

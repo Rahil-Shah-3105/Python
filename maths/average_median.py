@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def median(nums: list) -> int | float:
@@ -19,11 +21,14 @@ def median(nums: list) -> int | float:
     Returns:
         Median.
     """
+    logger.error(">>> Entering median(nums=%s)", nums, extra={"event.action": "median", "logrite.nums": nums})
     # The sorted function returns list[SupportsRichComparisonT@sorted]
     # which does not support `+`
     sorted_list: list[int] = sorted(nums)
     length = len(sorted_list)
+    logger.error("median(nums=%s): length → %s", nums, length, extra={"event.action": "median", "logrite.nums": nums})
     mid_index = length >> 1
+    logger.warning("<<< Exiting median(nums=%s)", nums, extra={"event.action": "median", "logrite.nums": nums})
     return (
         (sorted_list[mid_index] + sorted_list[mid_index - 1]) / 2
         if length % 2 == 0
@@ -32,9 +37,11 @@ def median(nums: list) -> int | float:
 
 
 def main():
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     import doctest
 
     doctest.testmod()
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

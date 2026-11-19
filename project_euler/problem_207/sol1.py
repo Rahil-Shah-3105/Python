@@ -39,6 +39,8 @@ proportion perfect partitions / total partitions drops under the given value.
 """
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def check_partition_perfect(positive_integer: int) -> bool:
@@ -54,9 +56,12 @@ def check_partition_perfect(positive_integer: int) -> bool:
     False
 
     """
+    logger.error(">>> Entering check_partition_perfect(positive_integer=%s)", positive_integer, extra={"event.action": "check_partition_perfect", "logrite.positive_integer": positive_integer})
 
     exponent = math.log2(math.sqrt(4 * positive_integer + 1) / 2 + 1 / 2)
+    logger.error("check_partition_perfect(positive_integer=%s): exponent → %s", positive_integer, exponent, extra={"event.action": "check_partition_perfect", "logrite.positive_integer": positive_integer})
 
+    logger.warning("<<< Exiting check_partition_perfect(positive_integer=%s)", positive_integer, extra={"event.action": "check_partition_perfect", "logrite.positive_integer": positive_integer})
     return exponent == int(exponent)
 
 
@@ -75,6 +80,7 @@ def solution(max_proportion: float = 1 / 12345) -> int:
     True
 
     """
+    logger.error(">>> Entering solution(max_proportion=%s)", max_proportion, extra={"event.action": "solution", "logrite.max_proportion": max_proportion})
 
     total_partitions = 0
     perfect_partitions = 0
@@ -82,6 +88,7 @@ def solution(max_proportion: float = 1 / 12345) -> int:
     integer = 3
     while True:
         partition_candidate = (integer**2 - 1) / 4
+        logger.error("solution(max_proportion=%s): partition_candidate → %s", max_proportion, partition_candidate, extra={"event.action": "solution", "logrite.max_proportion": max_proportion})
         # if candidate is an integer, then there is a partition for k
         if partition_candidate == int(partition_candidate):
             partition_candidate = int(partition_candidate)
@@ -92,6 +99,7 @@ def solution(max_proportion: float = 1 / 12345) -> int:
             perfect_partitions > 0
             and perfect_partitions / total_partitions < max_proportion
         ):
+            logger.warning("<<< Exiting solution(max_proportion=%s)", max_proportion, extra={"event.action": "solution", "logrite.max_proportion": max_proportion})
             return int(partition_candidate)
         integer += 1
 

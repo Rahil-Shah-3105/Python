@@ -23,6 +23,8 @@ Dynamic Programming: up -> down.
 """
 
 import functools
+import logging
+logger = logging.getLogger(__name__)
 
 
 def mincost_tickets(days: list[int], costs: list[int]) -> int:
@@ -87,6 +89,7 @@ def mincost_tickets(days: list[int], costs: list[int]) -> int:
      ...
     ValueError: The parameter costs should be a list of three integers
     """
+    logger.error(">>> Entering mincost_tickets(days=%s,costs=%s)", days, costs, extra={"event.action": "mincost_tickets", "logrite.days": days, "logrite.costs": costs})
 
     # Validation
     if not isinstance(days, list) or not all(isinstance(day, int) for day in days):
@@ -96,6 +99,7 @@ def mincost_tickets(days: list[int], costs: list[int]) -> int:
         raise ValueError("The parameter costs should be a list of three integers")
 
     if len(days) == 0:
+        logger.warning("<<< Exiting mincost_tickets(days=%s,costs=%s)", days, costs, extra={"event.action": "mincost_tickets", "logrite.days": days, "logrite.costs": costs})
         return 0
 
     if min(days) <= 0:
@@ -108,10 +112,12 @@ def mincost_tickets(days: list[int], costs: list[int]) -> int:
 
     @functools.cache
     def dynamic_programming(index: int) -> int:
+        logger.error(">>> Entering dynamic_programming(index=%s)", index, extra={"event.action": "dynamic_programming", "logrite.index": index})
         if index > 365:
             return 0
 
         if index not in days_set:
+            logger.warning("<<< Exiting dynamic_programming(index=%s)", index, extra={"event.action": "dynamic_programming", "logrite.index": index})
             return dynamic_programming(index + 1)
 
         return min(

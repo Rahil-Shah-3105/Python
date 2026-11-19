@@ -10,6 +10,9 @@ from datetime import UTC, datetime
 
 import httpx
 from bs4 import BeautifulSoup
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 
 def download_image(url: str) -> str:
@@ -22,14 +25,21 @@ def download_image(url: str) -> str:
     Returns:
         A message indicating the result of the operation.
     """
+    logger.error(">>> Entering download_image(url=%s)", url, extra={"event.action": "download_image", "logrite.url": url})
+    __log_start = time.time()
     try:
         response = httpx.get(url, timeout=10)
+        logger.error("download_image(url=%s): response → %s", url, response, extra={"event.action": "download_image", "logrite.url": url})
         response.raise_for_status()
     except httpx.RequestError as e:
+        logger.error("download_image(url)=%s: external service call %s took %s ms", url, url, int((time.time() - __log_start) * 1000), extra={"event.action": "download_image", "event.category": "network", "logrite.url": url})
+        logger.error("Exception in download_image(url=%s): %s", url, str(e), exc_info=True, extra={"event.action": "download_image", "event.category": "process", "logrite.url": url})
         return f"An error occurred during the HTTP request to {url}: {e!r}"
 
     soup = BeautifulSoup(response.text, "html.parser")
+    logger.error("download_image(url=%s): soup → %s", url, soup, extra={"event.action": "download_image", "logrite.url": url})
     image_meta_tag = soup.find("meta", {"property": "og:image"})
+    logger.error("download_image(url=%s): image_meta_tag → %s", url, image_meta_tag, extra={"event.action": "download_image", "logrite.url": url})
     if not image_meta_tag:
         return "No meta tag with property 'og:image' was found."
 
@@ -47,6 +57,7 @@ def download_image(url: str) -> str:
     file_name = f"{datetime.now(tz=UTC).astimezone():%Y-%m-%d_%H-%M-%S}.jpg"
     with open(file_name, "wb") as out_file:
         out_file.write(image_data)
+    logger.warning("<<< Exiting download_image(url=%s)", url, extra={"event.action": "download_image", "logrite.url": url})
     return f"Image downloaded and saved in the file {file_name}"
 
 

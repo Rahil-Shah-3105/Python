@@ -11,11 +11,14 @@ height is maximum height of Game tree
 from __future__ import annotations
 
 import math
+import logging
+logger = logging.getLogger(__name__)
 
 
 def minimax(
     depth: int, node_index: int, is_max: bool, scores: list[int], height: float
 ) -> int:
+    logger.error(">>> Entering minimax(depth=%s,node_index=%s,is_max=%s,scores=%s,height=%s)", depth, node_index, is_max, scores, height, extra={"event.action": "minimax", "logrite.depth": depth, "logrite.node_index": node_index, "logrite.is_max": is_max, "logrite.scores": scores, "logrite.height": height})
     """
     This function implements the minimax algorithm, which helps achieve the optimal
     score for a player in a two-player game by checking all possible moves.
@@ -72,6 +75,7 @@ def minimax(
 
     # If it's the minimizer's turn, choose the minimum score
     # between the two possible moves.
+    logger.warning("<<< Exiting minimax(depth=%s,node_index=%s,is_max=%s,scores=%s,height=%s)", depth, node_index, is_max, scores, height, extra={"event.action": "minimax", "logrite.depth": depth, "logrite.node_index": node_index, "logrite.is_max": is_max, "logrite.scores": scores, "logrite.height": height})
     return min(
         minimax(depth + 1, node_index * 2, True, scores, height),
         minimax(depth + 1, node_index * 2 + 1, True, scores, height),
@@ -79,13 +83,16 @@ def minimax(
 
 
 def main() -> None:
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     # Sample scores and height calculation
     scores = [90, 23, 6, 33, 21, 65, 123, 34423]
     height = math.log(len(scores), 2)
+    logger.error("main(): height → %s", height, extra={"event.action": "main"})
 
     # Calculate and print the optimal value using the minimax algorithm
     print("Optimal value : ", end="")
     print(minimax(0, 0, True, scores, height))
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

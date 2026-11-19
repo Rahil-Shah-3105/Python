@@ -19,6 +19,8 @@ Find the sum of all 0 to 9 pandigital numbers with this property.
 """
 
 from itertools import permutations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def is_substring_divisible(num: tuple) -> bool:
@@ -32,6 +34,7 @@ def is_substring_divisible(num: tuple) -> bool:
     >>> is_substring_divisible((1, 4, 0, 6, 3, 5, 7, 2, 8, 9))
     True
     """
+    logger.error(">>> Entering is_substring_divisible(num=%s)", num, extra={"event.action": "is_substring_divisible", "logrite.num": num})
     if num[3] % 2 != 0:
         return False
 
@@ -45,6 +48,7 @@ def is_substring_divisible(num: tuple) -> bool:
     for i, test in enumerate(tests):
         if (num[i + 4] * 100 + num[i + 5] * 10 + num[i + 6]) % test != 0:
             return False
+    logger.warning("<<< Exiting is_substring_divisible(num=%s)", num, extra={"event.action": "is_substring_divisible", "logrite.num": num})
     return True
 
 
@@ -55,6 +59,8 @@ def solution(n: int = 10) -> int:
     >>> solution(10)
     16695334890
     """
+    logger.error(">>> Entering solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
+    logger.warning("<<< Exiting solution(n=%s)", n, extra={"event.action": "solution", "logrite.n": n})
     return sum(
         int("".join(map(str, num)))
         for num in permutations(range(n))

@@ -1,4 +1,6 @@
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 def power_iteration(
@@ -7,6 +9,7 @@ def power_iteration(
     error_tol: float = 1e-12,
     max_iterations: int = 100,
 ) -> tuple[float, np.ndarray]:
+    logger.error(">>> Entering power_iteration(input_matrix=%s,vector=%s,error_tol=%s,max_iterations=%s)", input_matrix, vector, error_tol, max_iterations, extra={"event.action": "power_iteration", "logrite.input_matrix": input_matrix, "logrite.vector": vector, "logrite.error_tol": error_tol, "logrite.max_iterations": max_iterations})
     """
     Power Iteration.
     Find the largest eigenvalue and corresponding eigenvector
@@ -44,6 +47,7 @@ def power_iteration(
     # Ensure inputs are either both complex or both real
     assert np.iscomplexobj(input_matrix) == np.iscomplexobj(vector)
     is_complex = np.iscomplexobj(input_matrix)
+    logger.error("power_iteration(input_matrix=%s,vector=%s,error_tol=%s,max_iterations=%s): is_complex → %s", input_matrix, vector, error_tol, max_iterations, is_complex, extra={"event.action": "power_iteration", "logrite.input_matrix": input_matrix, "logrite.vector": vector, "logrite.error_tol": error_tol, "logrite.max_iterations": max_iterations})
     if is_complex:
         # Ensure complex input_matrix is Hermitian
         assert np.array_equal(input_matrix, input_matrix.conj().T)
@@ -55,16 +59,21 @@ def power_iteration(
     lambda_previous = 0
     iterations = 0
     error = 1e12
+    logger.error("power_iteration(input_matrix=%s,vector=%s,error_tol=%s,max_iterations=%s): error → %s", input_matrix, vector, error_tol, max_iterations, error, extra={"event.action": "power_iteration", "logrite.input_matrix": input_matrix, "logrite.vector": vector, "logrite.error_tol": error_tol, "logrite.max_iterations": max_iterations})
 
     while not convergence:
         # Multiple matrix by the vector.
         w = np.dot(input_matrix, vector)
+        logger.error("power_iteration(input_matrix=%s,vector=%s,error_tol=%s,max_iterations=%s): w → %s", input_matrix, vector, error_tol, max_iterations, w, extra={"event.action": "power_iteration", "logrite.input_matrix": input_matrix, "logrite.vector": vector, "logrite.error_tol": error_tol, "logrite.max_iterations": max_iterations})
         # Normalize the resulting output vector.
         vector = w / np.linalg.norm(w)
+        logger.error("power_iteration(input_matrix=%s,vector=%s,error_tol=%s,max_iterations=%s): vector → %s", input_matrix, vector, error_tol, max_iterations, vector, extra={"event.action": "power_iteration", "logrite.input_matrix": input_matrix, "logrite.vector": vector, "logrite.error_tol": error_tol, "logrite.max_iterations": max_iterations})
         # Find rayleigh quotient
         # (faster than usual b/c we know vector is normalized already)
         vector_h = vector.conj().T if is_complex else vector.T
+        logger.error("power_iteration(input_matrix=%s,vector=%s,error_tol=%s,max_iterations=%s): vector_h → %s", input_matrix, vector, error_tol, max_iterations, vector_h, extra={"event.action": "power_iteration", "logrite.input_matrix": input_matrix, "logrite.vector": vector, "logrite.error_tol": error_tol, "logrite.max_iterations": max_iterations})
         lambda_ = np.dot(vector_h, np.dot(input_matrix, vector))
+        logger.error("power_iteration(input_matrix=%s,vector=%s,error_tol=%s,max_iterations=%s): lambda_ → %s", input_matrix, vector, error_tol, max_iterations, lambda_, extra={"event.action": "power_iteration", "logrite.input_matrix": input_matrix, "logrite.vector": vector, "logrite.error_tol": error_tol, "logrite.max_iterations": max_iterations})
 
         # Check convergence.
         error = np.abs(lambda_ - lambda_previous) / lambda_
@@ -78,6 +87,7 @@ def power_iteration(
     if is_complex:
         lambda_ = np.real(lambda_)
 
+    logger.warning("<<< Exiting power_iteration(input_matrix=%s,vector=%s,error_tol=%s,max_iterations=%s)", input_matrix, vector, error_tol, max_iterations, extra={"event.action": "power_iteration", "logrite.input_matrix": input_matrix, "logrite.vector": vector, "logrite.error_tol": error_tol, "logrite.max_iterations": max_iterations})
     return float(lambda_), vector
 
 
@@ -85,13 +95,19 @@ def test_power_iteration() -> None:
     """
     >>> test_power_iteration()  # self running tests
     """
+    logger.error(">>> Entering test_power_iteration()", extra={"event.action": "test_power_iteration"})
     real_input_matrix = np.array([[41, 4, 20], [4, 26, 30], [20, 30, 50]])
+    logger.error("test_power_iteration(): real_input_matrix → %s", real_input_matrix, extra={"event.action": "test_power_iteration"})
     real_vector = np.array([41, 4, 20])
+    logger.error("test_power_iteration(): real_vector → %s", real_vector, extra={"event.action": "test_power_iteration"})
     complex_input_matrix = real_input_matrix.astype(np.complex128)
+    logger.error("test_power_iteration(): complex_input_matrix → %s", complex_input_matrix, extra={"event.action": "test_power_iteration"})
     imag_matrix = np.triu(1j * complex_input_matrix, 1)
+    logger.error("test_power_iteration(): imag_matrix → %s", imag_matrix, extra={"event.action": "test_power_iteration"})
     complex_input_matrix += imag_matrix
     complex_input_matrix += -1 * imag_matrix.T
     complex_vector = np.array([41, 4, 20]).astype(np.complex128)
+    logger.error("test_power_iteration(): complex_vector → %s", complex_vector, extra={"event.action": "test_power_iteration"})
 
     for problem_type in ["real", "complex"]:
         if problem_type == "real":
@@ -119,6 +135,7 @@ def test_power_iteration() -> None:
         # Take absolute values element wise of each eigenvector.
         # as they are only unique to a minus sign.
         assert np.linalg.norm(np.abs(eigen_vector) - np.abs(eigen_vector_max)) <= 1e-6
+        logger.warning("<<< Exiting test_power_iteration()", extra={"event.action": "test_power_iteration"})
 
 
 if __name__ == "__main__":

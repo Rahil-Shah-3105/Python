@@ -22,11 +22,14 @@ Reference : https://byjus.com/physics/derivation-of-terminal-velocity/
 """
 
 from scipy.constants import g
+import logging
+logger = logging.getLogger(__name__)
 
 
 def terminal_velocity(
     mass: float, density: float, area: float, drag_coefficient: float
 ) -> float:
+    logger.error(">>> Entering terminal_velocity(mass=%s,density=%s,area=%s,drag_coefficient=%s)", mass, density, area, drag_coefficient, extra={"event.action": "terminal_velocity", "logrite.mass": mass, "logrite.density": density, "logrite.area": area, "logrite.drag_coefficient": drag_coefficient})
     """
     >>> terminal_velocity(1, 25, 0.6, 0.77)
     1.3031197996044768
@@ -51,6 +54,7 @@ def terminal_velocity(
         raise ValueError(
             "mass, density, area and the drag coefficient all need to be positive"
         )
+    logger.warning("<<< Exiting terminal_velocity(mass=%s,density=%s,area=%s,drag_coefficient=%s)", mass, density, area, drag_coefficient, extra={"event.action": "terminal_velocity", "logrite.mass": mass, "logrite.density": density, "logrite.area": area, "logrite.drag_coefficient": drag_coefficient})
     return ((2 * mass * g) / (density * area * drag_coefficient)) ** 0.5
 
 

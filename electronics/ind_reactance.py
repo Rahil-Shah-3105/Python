@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 from math import pi
+import logging
+logger = logging.getLogger(__name__)
 
 
 def ind_reactance(
     inductance: float, frequency: float, reactance: float
 ) -> dict[str, float]:
+    logger.error(">>> Entering ind_reactance(inductance=%s,frequency=%s,reactance=%s)", inductance, frequency, reactance, extra={"event.action": "ind_reactance", "logrite.inductance": inductance, "logrite.frequency": frequency, "logrite.reactance": reactance})
     """
     Calculate inductive reactance, frequency or inductance from two given electrical
     properties then return name/value pair of the zero value in a Python dict.
@@ -60,6 +63,7 @@ def ind_reactance(
     elif reactance == 0:
         return {"reactance": 2 * pi * frequency * inductance}
     else:
+        logger.warning("<<< Exiting ind_reactance(inductance=%s,frequency=%s,reactance=%s)", inductance, frequency, reactance, extra={"event.action": "ind_reactance", "logrite.inductance": inductance, "logrite.frequency": frequency, "logrite.reactance": reactance})
         raise ValueError("Exactly one argument must be 0")
 
 

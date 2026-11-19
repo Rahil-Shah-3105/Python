@@ -7,6 +7,8 @@ linearly, meaning that the score is reduced by a fixed amount for each gap intro
 in the alignment. However, it's important to note that the Smith-Waterman algorithm
 supports other gap penalty methods as well.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def score_function(
@@ -16,6 +18,7 @@ def score_function(
     mismatch: int = -1,
     gap: int = -2,
 ) -> int:
+    logger.error(">>> Entering score_function(source_char=%s,target_char=%s,match=%s,mismatch=%s,gap=%s)", source_char, target_char, match, mismatch, gap, extra={"event.action": "score_function", "logrite.source_char": source_char, "logrite.target_char": target_char, "logrite.match": match, "logrite.mismatch": mismatch, "logrite.gap": gap})
     """
     Calculate the score for a character pair based on whether they match or mismatch.
     Returns 1 if the characters match, -1 if they mismatch, and -2 if either of the
@@ -33,6 +36,7 @@ def score_function(
     """
     if "-" in (source_char, target_char):
         return gap
+    logger.warning("<<< Exiting score_function(source_char=%s,target_char=%s,match=%s,mismatch=%s,gap=%s)", source_char, target_char, match, mismatch, gap, extra={"event.action": "score_function", "logrite.source_char": source_char, "logrite.target_char": target_char, "logrite.match": match, "logrite.mismatch": mismatch, "logrite.gap": gap})
     return match if source_char == target_char else mismatch
 
 
@@ -43,6 +47,7 @@ def smith_waterman(
     mismatch: int = -1,
     gap: int = -2,
 ) -> list[list[int]]:
+    logger.error(">>> Entering smith_waterman(query=%s,subject=%s,match=%s,mismatch=%s,gap=%s)", subject, match, mismatch, gap, extra={"event.action": "smith_waterman", "logrite.query": query, "user.name": str(subject), "logrite.match": match, "logrite.mismatch": mismatch, "logrite.gap": gap})
     """
     Perform the Smith-Waterman local sequence alignment algorithm.
     Returns a 2D list representing the score matrix. Each value in the matrix
@@ -103,13 +108,19 @@ def smith_waterman(
     """
     # make both query and subject uppercase
     query = query.upper()
+    logger.error("smith_waterman(query=%s,subject=%s,match=%s,mismatch=%s,gap=%s): query → %s", query, subject, match, mismatch, gap, query, extra={"event.action": "smith_waterman", "logrite.query": query, "user.name": str(subject), "logrite.match": match, "logrite.mismatch": mismatch, "logrite.gap": gap})
     subject = subject.upper()
+    logger.error("smith_waterman(query=%s,subject=%s,match=%s,mismatch=%s,gap=%s): subject → %s", query, subject, match, mismatch, gap, subject, extra={"event.action": "smith_waterman", "logrite.query": query, "user.name": str(subject), "logrite.match": match, "logrite.mismatch": mismatch, "logrite.gap": gap})
 
     # Initialize score matrix
     m = len(query)
+    logger.error("smith_waterman(query=%s,subject=%s,match=%s,mismatch=%s,gap=%s): m → %s", query, subject, match, mismatch, gap, m, extra={"event.action": "smith_waterman", "logrite.query": query, "user.name": str(subject), "logrite.match": match, "logrite.mismatch": mismatch, "logrite.gap": gap})
     n = len(subject)
+    logger.error("smith_waterman(query=%s,subject=%s,match=%s,mismatch=%s,gap=%s): n → %s", query, subject, match, mismatch, gap, n, extra={"event.action": "smith_waterman", "logrite.query": query, "user.name": str(subject), "logrite.match": match, "logrite.mismatch": mismatch, "logrite.gap": gap})
     score = [[0] * (n + 1) for _ in range(m + 1)]
+    logger.error("smith_waterman(query=%s,subject=%s,match=%s,mismatch=%s,gap=%s): score → %s", query, subject, match, mismatch, gap, score, extra={"event.action": "smith_waterman", "logrite.query": query, "user.name": str(subject), "logrite.match": match, "logrite.mismatch": mismatch, "logrite.gap": gap})
     kwargs = {"match": match, "mismatch": mismatch, "gap": gap}
+    logger.error("smith_waterman(query=%s,subject=%s,match=%s,mismatch=%s,gap=%s): kwargs → %s", query, subject, match, mismatch, gap, kwargs, extra={"event.action": "smith_waterman", "logrite.query": query, "user.name": str(subject), "logrite.match": match, "logrite.mismatch": mismatch, "logrite.gap": gap})
 
     for i in range(1, m + 1):
         for j in range(1, n + 1):
@@ -123,6 +134,7 @@ def smith_waterman(
             # Take maximum score
             score[i][j] = max(0, match, delete, insert)
 
+    logger.warning("<<< Exiting smith_waterman(query=%s,subject=%s,match=%s,mismatch=%s,gap=%s)", subject, match, mismatch, gap, extra={"event.action": "smith_waterman", "logrite.query": query, "user.name": str(subject), "logrite.match": match, "logrite.mismatch": mismatch, "logrite.gap": gap})
     return score
 
 
@@ -142,9 +154,12 @@ def traceback(score: list[list[int]], query: str, subject: str) -> str:
     >>> traceback([[0, 0, 0]], 'ACAC', '')
     ''
     """
+    logger.error(">>> Entering traceback(score=%s,query=%s,subject=%s)", score, query, subject, extra={"event.action": "traceback", "logrite.score": score, "logrite.query": query, "user.name": str(subject)})
     # make both query and subject uppercase
     query = query.upper()
+    logger.error("traceback(score=%s,query=%s,subject=%s): query → %s", score, query, subject, query, extra={"event.action": "traceback", "logrite.score": score, "logrite.query": query, "user.name": str(subject)})
     subject = subject.upper()
+    logger.error("traceback(score=%s,query=%s,subject=%s): subject → %s", score, query, subject, subject, extra={"event.action": "traceback", "logrite.score": score, "logrite.query": query, "user.name": str(subject)})
     # find the indices of the maximum value in the score matrix
     max_value = float("-inf")
     i_max = j_max = 0
@@ -157,8 +172,10 @@ def traceback(score: list[list[int]], query: str, subject: str) -> str:
     i = i_max
     j = j_max
     align1 = ""
+    logger.error("traceback(score=%s,query=%s,subject=%s): align1 → %s", score, query, subject, align1, extra={"event.action": "traceback", "logrite.score": score, "logrite.query": query, "user.name": str(subject)})
     align2 = ""
     gap = score_function("-", "-")
+    logger.error("traceback(score=%s,query=%s,subject=%s): gap → %s", score, query, subject, gap, extra={"event.action": "traceback", "logrite.score": score, "logrite.query": query, "user.name": str(subject)})
     # guard against empty query or subject
     if i == 0 or j == 0:
         return ""
@@ -182,6 +199,7 @@ def traceback(score: list[list[int]], query: str, subject: str) -> str:
             align2 = subject[j - 1] + align2
             j -= 1
 
+    logger.warning("<<< Exiting traceback(score=%s,query=%s,subject=%s)", score, subject, extra={"event.action": "traceback", "logrite.score": score, "logrite.query": query, "user.name": str(subject)})
     return f"{align1}\n{align2}"
 
 

@@ -1,6 +1,8 @@
 """Queue implementation using two stacks"""
 
 from collections.abc import Iterable
+import logging
+logger = logging.getLogger(__name__)
 
 
 class QueueByTwoStacks[T]:
@@ -13,8 +15,10 @@ class QueueByTwoStacks[T]:
         >>> QueueByTwoStacks((i**2 for i in range(1, 4)))
         Queue((1, 4, 9))
         """
+        logger.error(">>> Entering __init__(iterable=%s)", iterable, extra={"event.action": "__init__", "logrite.iterable": iterable})
         self._stack1: list[T] = list(iterable or [])
         self._stack2: list[T] = []
+        logger.warning("<<< Exiting __init__(iterable=%s)", iterable, extra={"event.action": "__init__", "logrite.iterable": iterable})
 
     def __len__(self) -> int:
         """
@@ -36,7 +40,9 @@ class QueueByTwoStacks[T]:
         >>> len(queue)
         8
         """
+        logger.error(">>> Entering __len__()", extra={"event.action": "__len__"})
 
+        logger.warning("<<< Exiting __len__()", extra={"event.action": "__len__"})
         return len(self._stack1) + len(self._stack2)
 
     def __repr__(self) -> str:
@@ -54,6 +60,8 @@ class QueueByTwoStacks[T]:
         >>> queue
         Queue((10, 20, 30))
         """
+        logger.error(">>> Entering __repr__()", extra={"event.action": "__repr__"})
+        logger.warning("<<< Exiting __repr__()", extra={"event.action": "__repr__"})
         return f"Queue({tuple(self._stack2[::-1] + self._stack1)})"
 
     def put(self, item: T) -> None:
@@ -68,8 +76,10 @@ class QueueByTwoStacks[T]:
         >>> queue
         Queue((10, 20))
         """
+        logger.error(">>> Entering put(item=%s)", item, extra={"event.action": "put", "logrite.item": item})
 
         self._stack1.append(item)
+        logger.warning("<<< Exiting put(item=%s)", item, extra={"event.action": "put", "logrite.item": item})
 
     def get(self) -> T:
         """
@@ -92,6 +102,7 @@ class QueueByTwoStacks[T]:
             ...
         IndexError: Queue is empty
         """
+        logger.error(">>> Entering get()", extra={"event.action": "get"})
 
         # To reduce number of attribute look-ups in `while` loop.
         stack1_pop = self._stack1.pop
@@ -103,6 +114,7 @@ class QueueByTwoStacks[T]:
 
         if not self._stack2:
             raise IndexError("Queue is empty")
+        logger.warning("<<< Exiting get()", extra={"event.action": "get"})
         return self._stack2.pop()
 
 

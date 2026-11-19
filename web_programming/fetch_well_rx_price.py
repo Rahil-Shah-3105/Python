@@ -7,6 +7,9 @@ after providing the drug name and zipcode.
 
 import httpx
 from bs4 import BeautifulSoup
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 BASE_URL = "https://www.wellrx.com/prescriptions/{}/{}/?freshSearch=true"
 
@@ -33,14 +36,17 @@ def fetch_pharmacy_and_price_list(drug_name: str, zip_code: str) -> list | None:
     >>> print(fetch_pharmacy_and_price_list("eliquis", None))
     None
     """
+    logger.error(">>> Entering fetch_pharmacy_and_price_list(drug_name=%s,zip_code=<redacted>)", drug_name, extra={"event.action": "fetch_pharmacy_and_price_list", "logrite.drug_name": drug_name})
 
     try:
         # Has user provided both inputs?
+        __log_start = time.time()
         if not drug_name or not zip_code:
             return None
 
         request_url = BASE_URL.format(drug_name, zip_code)
         response = httpx.get(request_url, timeout=10).raise_for_status()
+        logger.error("fetch_pharmacy_and_price_list(drug_name,zip_code)=%s,<redacted>: external service call %s took %s ms", drug_name, request_url, int((time.time() - __log_start) * 1000), extra={"event.action": "fetch_pharmacy_and_price_list", "event.category": "network", "logrite.drug_name": drug_name})
 
         # Scrape the data using bs4
         soup = BeautifulSoup(response.text, "html.parser")
@@ -68,6 +74,8 @@ def fetch_pharmacy_and_price_list(drug_name: str, zip_code: str) -> list | None:
         return pharmacy_price_list
 
     except httpx.HTTPError, ValueError:
+        logger.error("Exception in fetch_pharmacy_and_price_list(drug_name=%s,zip_code=<redacted>)", drug_name, exc_info=True, extra={"event.action": "fetch_pharmacy_and_price_list", "event.category": "process", "logrite.drug_name": drug_name})
+        logger.warning("<<< Exiting fetch_pharmacy_and_price_list(drug_name=%s,zip_code=<redacted>)", drug_name, extra={"event.action": "fetch_pharmacy_and_price_list", "logrite.drug_name": drug_name})
         return None
 
 

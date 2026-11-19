@@ -2,10 +2,14 @@
 Problem Description:
 Given a binary tree, return its mirror.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def binary_tree_mirror_dict(binary_tree_mirror_dictionary: dict, root: int):
+    logger.error(">>> Entering binary_tree_mirror_dict(binary_tree_mirror_dictionary=%s,root=%s)", binary_tree_mirror_dictionary, root, extra={"event.action": "binary_tree_mirror_dict", "logrite.binary_tree_mirror_dictionary": binary_tree_mirror_dictionary, "logrite.root": root})
     if not root or root not in binary_tree_mirror_dictionary:
+        logger.warning("<<< Exiting binary_tree_mirror_dict(binary_tree_mirror_dictionary=%s,root=%s)", binary_tree_mirror_dictionary, root, extra={"event.action": "binary_tree_mirror_dict", "logrite.binary_tree_mirror_dictionary": binary_tree_mirror_dictionary, "logrite.root": root})
         return
     left_child, right_child = binary_tree_mirror_dictionary[root][:2]
     binary_tree_mirror_dictionary[root] = [right_child, left_child]
@@ -28,13 +32,17 @@ def binary_tree_mirror(binary_tree: dict, root: int = 1) -> dict:
         ...
     ValueError: binary tree cannot be empty
     """
+    logger.error(">>> Entering binary_tree_mirror(binary_tree=%s,root=%s)", binary_tree, root, extra={"event.action": "binary_tree_mirror", "logrite.binary_tree": binary_tree, "logrite.root": root})
     if not binary_tree:
         raise ValueError("binary tree cannot be empty")
     if root not in binary_tree:
         msg = f"root {root} is not present in the binary_tree"
+        logger.error("binary_tree_mirror(binary_tree=%s,root=%s): msg → %s", binary_tree, root, msg, extra={"event.action": "binary_tree_mirror", "logrite.binary_tree": binary_tree, "logrite.root": root})
         raise ValueError(msg)
     binary_tree_mirror_dictionary = dict(binary_tree)
+    logger.error("binary_tree_mirror(binary_tree=%s,root=%s): binary_tree_mirror_dictionary → %s", binary_tree, root, binary_tree_mirror_dictionary, extra={"event.action": "binary_tree_mirror", "logrite.binary_tree": binary_tree, "logrite.root": root})
     binary_tree_mirror_dict(binary_tree_mirror_dictionary, root)
+    logger.warning("<<< Exiting binary_tree_mirror(binary_tree=%s,root=%s)", binary_tree, root, extra={"event.action": "binary_tree_mirror", "logrite.binary_tree": binary_tree, "logrite.root": root})
     return binary_tree_mirror_dictionary
 
 

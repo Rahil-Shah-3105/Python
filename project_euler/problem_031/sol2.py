@@ -30,6 +30,8 @@ Example:
       1,2,2
       5
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def solution(pence: int = 200) -> int:
@@ -45,13 +47,16 @@ def solution(pence: int = 200) -> int:
     >>> solution(10)
     11
     """
+    logger.error(">>> Entering solution(pence=%s)", pence, extra={"event.action": "solution", "logrite.pence": pence})
     coins = [1, 2, 5, 10, 20, 50, 100, 200]
     number_of_ways = [0] * (pence + 1)
+    logger.error("solution(pence=%s): number_of_ways → %s", pence, number_of_ways, extra={"event.action": "solution", "logrite.pence": pence})
     number_of_ways[0] = 1  # base case: 1 way to make 0 pence
 
     for coin in coins:
         for i in range(coin, pence + 1, 1):
             number_of_ways[i] += number_of_ways[i - coin]
+    logger.warning("<<< Exiting solution(pence=%s)", pence, extra={"event.action": "solution", "logrite.pence": pence})
     return number_of_ways[pence]
 
 

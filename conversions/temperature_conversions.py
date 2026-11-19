@@ -1,4 +1,6 @@
 """Convert between different units of temperature"""
+import logging
+logger = logging.getLogger(__name__)
 
 
 def celsius_to_fahrenheit(celsius: float, ndigits: int = 2) -> float:
@@ -26,6 +28,8 @@ def celsius_to_fahrenheit(celsius: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'celsius'
     """
+    logger.error(">>> Entering celsius_to_fahrenheit(celsius=%s,ndigits=%s)", celsius, ndigits, extra={"event.action": "celsius_to_fahrenheit", "logrite.celsius": celsius, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting celsius_to_fahrenheit(celsius=%s,ndigits=%s)", celsius, ndigits, extra={"event.action": "celsius_to_fahrenheit", "logrite.celsius": celsius, "logrite.ndigits": ndigits})
     return round((float(celsius) * 9 / 5) + 32, ndigits)
 
 
@@ -50,6 +54,8 @@ def celsius_to_kelvin(celsius: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'celsius'
     """
+    logger.error(">>> Entering celsius_to_kelvin(celsius=%s,ndigits=%s)", celsius, ndigits, extra={"event.action": "celsius_to_kelvin", "logrite.celsius": celsius, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting celsius_to_kelvin(celsius=%s,ndigits=%s)", celsius, ndigits, extra={"event.action": "celsius_to_kelvin", "logrite.celsius": celsius, "logrite.ndigits": ndigits})
     return round(float(celsius) + 273.15, ndigits)
 
 
@@ -74,6 +80,8 @@ def celsius_to_rankine(celsius: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'celsius'
     """
+    logger.error(">>> Entering celsius_to_rankine(celsius=%s,ndigits=%s)", celsius, ndigits, extra={"event.action": "celsius_to_rankine", "logrite.celsius": celsius, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting celsius_to_rankine(celsius=%s,ndigits=%s)", celsius, ndigits, extra={"event.action": "celsius_to_rankine", "logrite.celsius": celsius, "logrite.ndigits": ndigits})
     return round((float(celsius) * 9 / 5) + 491.67, ndigits)
 
 
@@ -104,6 +112,8 @@ def fahrenheit_to_celsius(fahrenheit: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'fahrenheit'
     """
+    logger.error(">>> Entering fahrenheit_to_celsius(fahrenheit=%s,ndigits=%s)", fahrenheit, ndigits, extra={"event.action": "fahrenheit_to_celsius", "logrite.fahrenheit": fahrenheit, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting fahrenheit_to_celsius(fahrenheit=%s,ndigits=%s)", fahrenheit, ndigits, extra={"event.action": "fahrenheit_to_celsius", "logrite.fahrenheit": fahrenheit, "logrite.ndigits": ndigits})
     return round((float(fahrenheit) - 32) * 5 / 9, ndigits)
 
 
@@ -134,6 +144,8 @@ def fahrenheit_to_kelvin(fahrenheit: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'fahrenheit'
     """
+    logger.error(">>> Entering fahrenheit_to_kelvin(fahrenheit=%s,ndigits=%s)", fahrenheit, ndigits, extra={"event.action": "fahrenheit_to_kelvin", "logrite.fahrenheit": fahrenheit, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting fahrenheit_to_kelvin(fahrenheit=%s,ndigits=%s)", fahrenheit, ndigits, extra={"event.action": "fahrenheit_to_kelvin", "logrite.fahrenheit": fahrenheit, "logrite.ndigits": ndigits})
     return round(((float(fahrenheit) - 32) * 5 / 9) + 273.15, ndigits)
 
 
@@ -164,6 +176,8 @@ def fahrenheit_to_rankine(fahrenheit: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'fahrenheit'
     """
+    logger.error(">>> Entering fahrenheit_to_rankine(fahrenheit=%s,ndigits=%s)", fahrenheit, ndigits, extra={"event.action": "fahrenheit_to_rankine", "logrite.fahrenheit": fahrenheit, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting fahrenheit_to_rankine(fahrenheit=%s,ndigits=%s)", fahrenheit, ndigits, extra={"event.action": "fahrenheit_to_rankine", "logrite.fahrenheit": fahrenheit, "logrite.ndigits": ndigits})
     return round(float(fahrenheit) + 459.67, ndigits)
 
 
@@ -188,6 +202,8 @@ def kelvin_to_celsius(kelvin: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'kelvin'
     """
+    logger.error(">>> Entering kelvin_to_celsius(kelvin=%s,ndigits=%s)", kelvin, ndigits, extra={"event.action": "kelvin_to_celsius", "logrite.kelvin": kelvin, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting kelvin_to_celsius(kelvin=%s,ndigits=%s)", kelvin, ndigits, extra={"event.action": "kelvin_to_celsius", "logrite.kelvin": kelvin, "logrite.ndigits": ndigits})
     return round(float(kelvin) - 273.15, ndigits)
 
 
@@ -212,6 +228,8 @@ def kelvin_to_fahrenheit(kelvin: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'kelvin'
     """
+    logger.error(">>> Entering kelvin_to_fahrenheit(kelvin=%s,ndigits=%s)", kelvin, ndigits, extra={"event.action": "kelvin_to_fahrenheit", "logrite.kelvin": kelvin, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting kelvin_to_fahrenheit(kelvin=%s,ndigits=%s)", kelvin, ndigits, extra={"event.action": "kelvin_to_fahrenheit", "logrite.kelvin": kelvin, "logrite.ndigits": ndigits})
     return round(((float(kelvin) - 273.15) * 9 / 5) + 32, ndigits)
 
 
@@ -236,6 +254,8 @@ def kelvin_to_rankine(kelvin: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'kelvin'
     """
+    logger.error(">>> Entering kelvin_to_rankine(kelvin=%s,ndigits=%s)", kelvin, ndigits, extra={"event.action": "kelvin_to_rankine", "logrite.kelvin": kelvin, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting kelvin_to_rankine(kelvin=%s,ndigits=%s)", kelvin, ndigits, extra={"event.action": "kelvin_to_rankine", "logrite.kelvin": kelvin, "logrite.ndigits": ndigits})
     return round((float(kelvin) * 9 / 5), ndigits)
 
 
@@ -260,6 +280,8 @@ def rankine_to_celsius(rankine: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'rankine'
     """
+    logger.error(">>> Entering rankine_to_celsius(rankine=%s,ndigits=%s)", rankine, ndigits, extra={"event.action": "rankine_to_celsius", "logrite.rankine": rankine, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting rankine_to_celsius(rankine=%s,ndigits=%s)", rankine, ndigits, extra={"event.action": "rankine_to_celsius", "logrite.rankine": rankine, "logrite.ndigits": ndigits})
     return round((float(rankine) - 491.67) * 5 / 9, ndigits)
 
 
@@ -280,6 +302,8 @@ def rankine_to_fahrenheit(rankine: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'rankine'
     """
+    logger.error(">>> Entering rankine_to_fahrenheit(rankine=%s,ndigits=%s)", rankine, ndigits, extra={"event.action": "rankine_to_fahrenheit", "logrite.rankine": rankine, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting rankine_to_fahrenheit(rankine=%s,ndigits=%s)", rankine, ndigits, extra={"event.action": "rankine_to_fahrenheit", "logrite.rankine": rankine, "logrite.ndigits": ndigits})
     return round(float(rankine) - 459.67, ndigits)
 
 
@@ -300,6 +324,8 @@ def rankine_to_kelvin(rankine: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'rankine'
     """
+    logger.error(">>> Entering rankine_to_kelvin(rankine=%s,ndigits=%s)", rankine, ndigits, extra={"event.action": "rankine_to_kelvin", "logrite.rankine": rankine, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting rankine_to_kelvin(rankine=%s,ndigits=%s)", rankine, ndigits, extra={"event.action": "rankine_to_kelvin", "logrite.rankine": rankine, "logrite.ndigits": ndigits})
     return round((float(rankine) * 5 / 9), ndigits)
 
 
@@ -319,6 +345,8 @@ def reaumur_to_kelvin(reaumur: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'reaumur'
     """
+    logger.error(">>> Entering reaumur_to_kelvin(reaumur=%s,ndigits=%s)", reaumur, ndigits, extra={"event.action": "reaumur_to_kelvin", "logrite.reaumur": reaumur, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting reaumur_to_kelvin(reaumur=%s,ndigits=%s)", reaumur, ndigits, extra={"event.action": "reaumur_to_kelvin", "logrite.reaumur": reaumur, "logrite.ndigits": ndigits})
     return round((float(reaumur) * 1.25 + 273.15), ndigits)
 
 
@@ -338,6 +366,8 @@ def reaumur_to_fahrenheit(reaumur: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'reaumur'
     """
+    logger.error(">>> Entering reaumur_to_fahrenheit(reaumur=%s,ndigits=%s)", reaumur, ndigits, extra={"event.action": "reaumur_to_fahrenheit", "logrite.reaumur": reaumur, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting reaumur_to_fahrenheit(reaumur=%s,ndigits=%s)", reaumur, ndigits, extra={"event.action": "reaumur_to_fahrenheit", "logrite.reaumur": reaumur, "logrite.ndigits": ndigits})
     return round((float(reaumur) * 2.25 + 32), ndigits)
 
 
@@ -357,6 +387,8 @@ def reaumur_to_celsius(reaumur: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'reaumur'
     """
+    logger.error(">>> Entering reaumur_to_celsius(reaumur=%s,ndigits=%s)", reaumur, ndigits, extra={"event.action": "reaumur_to_celsius", "logrite.reaumur": reaumur, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting reaumur_to_celsius(reaumur=%s,ndigits=%s)", reaumur, ndigits, extra={"event.action": "reaumur_to_celsius", "logrite.reaumur": reaumur, "logrite.ndigits": ndigits})
     return round((float(reaumur) * 1.25), ndigits)
 
 
@@ -376,6 +408,8 @@ def reaumur_to_rankine(reaumur: float, ndigits: int = 2) -> float:
         ...
     ValueError: could not convert string to float: 'reaumur'
     """
+    logger.error(">>> Entering reaumur_to_rankine(reaumur=%s,ndigits=%s)", reaumur, ndigits, extra={"event.action": "reaumur_to_rankine", "logrite.reaumur": reaumur, "logrite.ndigits": ndigits})
+    logger.warning("<<< Exiting reaumur_to_rankine(reaumur=%s,ndigits=%s)", reaumur, ndigits, extra={"event.action": "reaumur_to_rankine", "logrite.reaumur": reaumur, "logrite.ndigits": ndigits})
     return round((float(reaumur) * 2.25 + 32 + 459.67), ndigits)
 
 

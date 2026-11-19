@@ -24,6 +24,8 @@ References:
     - The original Project Euler project page:
       https://projecteuler.net/problem=191
 """
+import logging
+logger = logging.getLogger(__name__)
 
 cache: dict[tuple[int, int, int], int] = {}
 
@@ -45,6 +47,7 @@ def _calculate(days: int, absent: int, late: int) -> int:
     >>> _calculate(days=30, absent=1, late=0)
     98950096
     """
+    logger.error(">>> Entering _calculate(days=%s,absent=%s,late=%s)", days, absent, late, extra={"event.action": "_calculate", "logrite.days": days, "logrite.absent": absent, "logrite.late": late})
 
     # if we are absent twice, or late 3 consecutive days,
     # no further prize strings are possible
@@ -83,6 +86,7 @@ def _calculate(days: int, absent: int, late: int) -> int:
     prizestrings = state_late + state_absent + state_ontime
 
     cache[key] = prizestrings
+    logger.warning("<<< Exiting _calculate(days=%s,absent=%s,late=%s)", days, absent, late, extra={"event.action": "_calculate", "logrite.days": days, "logrite.absent": absent, "logrite.late": late})
     return prizestrings
 
 
@@ -96,7 +100,9 @@ def solution(days: int = 30) -> int:
     >>> solution(4)
     43
     """
+    logger.error(">>> Entering solution(days=%s)", days, extra={"event.action": "solution", "logrite.days": days})
 
+    logger.warning("<<< Exiting solution(days=%s)", days, extra={"event.action": "solution", "logrite.days": days})
     return _calculate(days, absent=0, late=0)
 
 

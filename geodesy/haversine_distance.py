@@ -1,4 +1,6 @@
 from math import asin, atan, cos, radians, sin, sqrt, tan
+import logging
+logger = logging.getLogger(__name__)
 
 AXIS_A = 6378137.0
 AXIS_B = 6356752.314245
@@ -33,22 +35,32 @@ def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
     >>> f"{haversine_distance(*SAN_FRANCISCO, *YOSEMITE):0,.0f} meters"
     '254,352 meters'
     """
+    logger.error(">>> Entering haversine_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s)", lat1, lon1, lat2, lon2, extra={"event.action": "haversine_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     # CONSTANTS per WGS84 https://en.wikipedia.org/wiki/World_Geodetic_System
     # Distance in metres(m)
     # Equation parameters
     # Equation https://en.wikipedia.org/wiki/Haversine_formula#Formulation
     flattening = (AXIS_A - AXIS_B) / AXIS_A
+    logger.error("haversine_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): flattening → %s", lat1, lon1, lat2, lon2, flattening, extra={"event.action": "haversine_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     phi_1 = atan((1 - flattening) * tan(radians(lat1)))
+    logger.error("haversine_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): phi_1 → %s", lat1, lon1, lat2, lon2, phi_1, extra={"event.action": "haversine_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     phi_2 = atan((1 - flattening) * tan(radians(lat2)))
+    logger.error("haversine_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): phi_2 → %s", lat1, lon1, lat2, lon2, phi_2, extra={"event.action": "haversine_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     lambda_1 = radians(lon1)
+    logger.error("haversine_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): lambda_1 → %s", lat1, lon1, lat2, lon2, lambda_1, extra={"event.action": "haversine_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     lambda_2 = radians(lon2)
+    logger.error("haversine_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): lambda_2 → %s", lat1, lon1, lat2, lon2, lambda_2, extra={"event.action": "haversine_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     # Equation
     sin_sq_phi = sin((phi_2 - phi_1) / 2)
+    logger.error("haversine_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): sin_sq_phi → %s", lat1, lon1, lat2, lon2, sin_sq_phi, extra={"event.action": "haversine_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     sin_sq_lambda = sin((lambda_2 - lambda_1) / 2)
+    logger.error("haversine_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): sin_sq_lambda → %s", lat1, lon1, lat2, lon2, sin_sq_lambda, extra={"event.action": "haversine_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     # Square both values
     sin_sq_phi *= sin_sq_phi
     sin_sq_lambda *= sin_sq_lambda
     h_value = sqrt(sin_sq_phi + (cos(phi_1) * cos(phi_2) * sin_sq_lambda))
+    logger.error("haversine_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): h_value → %s", lat1, lon1, lat2, lon2, h_value, extra={"event.action": "haversine_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
+    logger.warning("<<< Exiting haversine_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s)", lat1, lon1, lat2, lon2, extra={"event.action": "haversine_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     return 2 * RADIUS * asin(h_value)
 
 

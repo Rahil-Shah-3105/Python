@@ -1,6 +1,8 @@
 from math import atan, cos, radians, sin, tan
 
 from .haversine_distance import haversine_distance
+import logging
+logger = logging.getLogger(__name__)
 
 AXIS_A = 6378137.0
 AXIS_B = 6356752.314245
@@ -10,6 +12,7 @@ EQUATORIAL_RADIUS = 6378137
 def lamberts_ellipsoidal_distance(
     lat1: float, lon1: float, lat2: float, lon2: float
 ) -> float:
+    logger.error(">>> Entering lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s)", lat1, lon1, lat2, lon2, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     """
     Calculate the shortest distance along the surface of an ellipsoid between
     two points on the surface of earth given longitudes and latitudes
@@ -79,31 +82,44 @@ def lamberts_ellipsoidal_distance(
     # Equation Parameters
     # https://en.wikipedia.org/wiki/Geographical_distance#Lambert's_formula_for_long_lines
     flattening = (AXIS_A - AXIS_B) / AXIS_A
+    logger.error("lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): flattening → %s", lat1, lon1, lat2, lon2, flattening, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     # Parametric latitudes
     # https://en.wikipedia.org/wiki/Latitude#Parametric_(or_reduced)_latitude
     b_lat1 = atan((1 - flattening) * tan(radians(lat1)))
+    logger.error("lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): b_lat1 → %s", lat1, lon1, lat2, lon2, b_lat1, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     b_lat2 = atan((1 - flattening) * tan(radians(lat2)))
+    logger.error("lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): b_lat2 → %s", lat1, lon1, lat2, lon2, b_lat2, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
 
     # Compute central angle between two points
     # using haversine theta. sigma =  haversine_distance / equatorial radius
     sigma = haversine_distance(lat1, lon1, lat2, lon2) / EQUATORIAL_RADIUS
+    logger.error("lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): sigma → %s", lat1, lon1, lat2, lon2, sigma, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
 
     # Intermediate P and Q values
     p_value = (b_lat1 + b_lat2) / 2
+    logger.error("lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): p_value → %s", lat1, lon1, lat2, lon2, p_value, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     q_value = (b_lat2 - b_lat1) / 2
+    logger.error("lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): q_value → %s", lat1, lon1, lat2, lon2, q_value, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
 
     # Intermediate X value
     # X = (sigma - sin(sigma)) * sin^2Pcos^2Q / cos^2(sigma/2)
     x_numerator = (sin(p_value) ** 2) * (cos(q_value) ** 2)
+    logger.error("lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): x_numerator → %s", lat1, lon1, lat2, lon2, x_numerator, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     x_demonimator = cos(sigma / 2) ** 2
+    logger.error("lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): x_demonimator → %s", lat1, lon1, lat2, lon2, x_demonimator, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     x_value = (sigma - sin(sigma)) * (x_numerator / x_demonimator)
+    logger.error("lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): x_value → %s", lat1, lon1, lat2, lon2, x_value, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
 
     # Intermediate Y value
     # Y = (sigma + sin(sigma)) * cos^2Psin^2Q / sin^2(sigma/2)
     y_numerator = (cos(p_value) ** 2) * (sin(q_value) ** 2)
+    logger.error("lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): y_numerator → %s", lat1, lon1, lat2, lon2, y_numerator, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     y_denominator = sin(sigma / 2) ** 2
+    logger.error("lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): y_denominator → %s", lat1, lon1, lat2, lon2, y_denominator, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     y_value = (sigma + sin(sigma)) * (y_numerator / y_denominator)
+    logger.error("lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s): y_value → %s", lat1, lon1, lat2, lon2, y_value, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
 
+    logger.warning("<<< Exiting lamberts_ellipsoidal_distance(lat1=%s,lon1=%s,lat2=%s,lon2=%s)", lat1, lon1, lat2, lon2, extra={"event.action": "lamberts_ellipsoidal_distance", "logrite.lat1": lat1, "logrite.lon1": lon1, "logrite.lat2": lat2, "logrite.lon2": lon2})
     return EQUATORIAL_RADIUS * (sigma - ((flattening / 2) * (x_value + y_value)))
 
 

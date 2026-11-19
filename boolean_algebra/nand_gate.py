@@ -13,6 +13,8 @@ Following is the truth table of a NAND Gate:
     ------------------------------
 Refer - https://www.geeksforgeeks.org/logic-gates-in-python/
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def nand_gate(input_1: int, input_2: int) -> int:
@@ -27,6 +29,8 @@ def nand_gate(input_1: int, input_2: int) -> int:
     >>> nand_gate(1, 1)
     0
     """
+    logger.error(">>> Entering nand_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "nand_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
+    logger.warning("<<< Exiting nand_gate(input_1=%s,input_2=%s)", input_1, input_2, extra={"event.action": "nand_gate", "logrite.input_1": input_1, "logrite.input_2": input_2})
     return int(not (input_1 and input_2))
 
 

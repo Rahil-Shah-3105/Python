@@ -8,6 +8,8 @@ Leetcode reference: https://leetcode.com/problems/symmetric-tree/
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -58,13 +60,16 @@ def make_symmetric_tree() -> Node:
     >>> tree.left.left.data == tree.right.right.data
     True
     """
+    logger.error(">>> Entering make_symmetric_tree()", extra={"event.action": "make_symmetric_tree"})
     root = Node(1)
+    logger.error("make_symmetric_tree(): root → %s", root, extra={"event.action": "make_symmetric_tree"})
     root.left = Node(2)
     root.right = Node(2)
     root.left.left = Node(3)
     root.left.right = Node(4)
     root.right.left = Node(4)
     root.right.right = Node(3)
+    logger.warning("<<< Exiting make_symmetric_tree()", extra={"event.action": "make_symmetric_tree"})
     return root
 
 
@@ -91,13 +96,16 @@ def make_asymmetric_tree() -> Node:
     >>> tree.left.left.data == tree.right.right.data
     False
     """
+    logger.error(">>> Entering make_asymmetric_tree()", extra={"event.action": "make_asymmetric_tree"})
     root = Node(1)
+    logger.error("make_asymmetric_tree(): root → %s", root, extra={"event.action": "make_asymmetric_tree"})
     root.left = Node(2)
     root.right = Node(2)
     root.left.left = Node(3)
     root.left.right = Node(4)
     root.right.left = Node(3)
     root.right.right = Node(4)
+    logger.warning("<<< Exiting make_asymmetric_tree()", extra={"event.action": "make_asymmetric_tree"})
     return root
 
 
@@ -117,8 +125,10 @@ def is_symmetric_tree(tree: Node) -> bool:
     >>> is_symmetric_tree(make_asymmetric_tree())
     False
     """
+    logger.error(">>> Entering is_symmetric_tree(tree=%s)", tree, extra={"event.action": "is_symmetric_tree", "logrite.tree": tree})
     if tree:
         return is_mirror(tree.left, tree.right)
+    logger.warning("<<< Exiting is_symmetric_tree(tree=%s)", tree, extra={"event.action": "is_symmetric_tree", "logrite.tree": tree})
     return True  # An empty tree is considered symmetric.
 
 
@@ -141,6 +151,7 @@ def is_mirror(left: Node | None, right: Node | None) -> bool:
     >>> is_mirror(tree2.left, tree2.right)
     False
     """
+    logger.error(">>> Entering is_mirror(left=%s,right=%s)", left, right, extra={"event.action": "is_mirror", "logrite.left": left, "logrite.right": right})
     if left is None and right is None:
         # Both sides are empty, which is symmetric.
         return True
@@ -150,6 +161,7 @@ def is_mirror(left: Node | None, right: Node | None) -> bool:
     if left.data == right.data:
         # The values match, so check the subtrees recursively.
         return is_mirror(left.left, right.right) and is_mirror(left.right, right.left)
+    logger.warning("<<< Exiting is_mirror(left=%s,right=%s)", left, right, extra={"event.action": "is_mirror", "logrite.left": left, "logrite.right": right})
     return False
 
 

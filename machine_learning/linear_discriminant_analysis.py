@@ -47,6 +47,8 @@ from collections.abc import Callable
 from math import log
 from os import name, system
 from random import gauss, seed
+import logging
+logger = logging.getLogger(__name__)
 
 
 # Make a training dataset drawn from a gaussian distribution
@@ -66,7 +68,9 @@ def gaussian_distribution(mean: float, std_dev: float, instance_count: int) -> l
        5.005005283626573, 4.935258239627312, 3.494170998739258, 5.537997178661033,
         5.320711100998849, 7.3891120432406865, 5.202969177309964, 4.855297691835079]
     """
+    logger.error(">>> Entering gaussian_distribution(mean=%s,std_dev=%s,instance_count=%s)", mean, std_dev, instance_count, extra={"event.action": "gaussian_distribution", "logrite.mean": mean, "logrite.std_dev": std_dev, "logrite.instance_count": instance_count})
     seed(1)
+    logger.warning("<<< Exiting gaussian_distribution(mean=%s,std_dev=%s,instance_count=%s)", mean, std_dev, instance_count, extra={"event.action": "gaussian_distribution", "logrite.mean": mean, "logrite.std_dev": std_dev, "logrite.instance_count": instance_count})
     return [gauss(mean, std_dev) for _ in range(instance_count)]
 
 
@@ -86,7 +90,9 @@ def y_generator(class_count: int, instance_count: list) -> list:
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
      2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
     """
+    logger.error(">>> Entering y_generator(class_count=%s,instance_count=%s)", class_count, instance_count, extra={"event.action": "y_generator", "logrite.class_count": class_count, "logrite.instance_count": instance_count})
 
+    logger.warning("<<< Exiting y_generator(class_count=%s,instance_count=%s)", class_count, instance_count, extra={"event.action": "y_generator", "logrite.class_count": class_count, "logrite.instance_count": instance_count})
     return [k for k in range(class_count) for _ in range(instance_count[k])]
 
 
@@ -102,7 +108,9 @@ def calculate_mean(instance_count: int, items: list) -> float:
     >>> calculate_mean(len(items), items)
     5.011267842911003
     """
+    logger.error(">>> Entering calculate_mean(instance_count=%s,items=%s)", instance_count, items, extra={"event.action": "calculate_mean", "logrite.instance_count": instance_count, "logrite.items": items})
     # the sum of all items divided by number of instances
+    logger.warning("<<< Exiting calculate_mean(instance_count=%s,items=%s)", instance_count, items, extra={"event.action": "calculate_mean", "logrite.instance_count": instance_count, "logrite.items": items})
     return sum(items) / instance_count
 
 
@@ -119,7 +127,9 @@ def calculate_probabilities(instance_count: int, total_count: int) -> float:
     >>> calculate_probabilities(30, 100)
     0.3
     """
+    logger.error(">>> Entering calculate_probabilities(instance_count=%s,total_count=%s)", instance_count, total_count, extra={"event.action": "calculate_probabilities", "logrite.instance_count": instance_count, "logrite.total_count": total_count})
     # number of instances in specific class divided by number of all instances
+    logger.warning("<<< Exiting calculate_probabilities(instance_count=%s,total_count=%s)", instance_count, total_count, extra={"event.action": "calculate_probabilities", "logrite.instance_count": instance_count, "logrite.total_count": total_count})
     return instance_count / total_count
 
 
@@ -138,6 +148,7 @@ def calculate_variance(items: list, means: list, total_count: int) -> float:
     >>> calculate_variance([items], means, total_count)
     0.9618530973487491
     """
+    logger.error(">>> Entering calculate_variance(items=%s,means=%s,total_count=%s)", items, means, total_count, extra={"event.action": "calculate_variance", "logrite.items": items, "logrite.means": means, "logrite.total_count": total_count})
     squared_diff = []  # An empty list to store all squared differences
     # iterate over number of elements in items
     for i in range(len(items)):
@@ -149,6 +160,8 @@ def calculate_variance(items: list, means: list, total_count: int) -> float:
     # one divided by (the number of all instances - number of classes) multiplied by
     # sum of all squared differences
     n_classes = len(means)  # Number of classes in dataset
+    logger.error("calculate_variance(items=%s,means=%s,total_count=%s): n_classes → %s", items, means, total_count, n_classes, extra={"event.action": "calculate_variance", "logrite.items": items, "logrite.means": means, "logrite.total_count": total_count})
+    logger.warning("<<< Exiting calculate_variance(items=%s,means=%s,total_count=%s)", items, means, total_count, extra={"event.action": "calculate_variance", "logrite.items": items, "logrite.means": means, "logrite.total_count": total_count})
     return 1 / (total_count - n_classes) * sum(squared_diff)
 
 
@@ -156,6 +169,7 @@ def calculate_variance(items: list, means: list, total_count: int) -> float:
 def predict_y_values(
     x_items: list, means: list, variance: float, probabilities: list
 ) -> list:
+    logger.error(">>> Entering predict_y_values(x_items=%s,means=%s,variance=%s,probabilities=%s)", x_items, means, variance, probabilities, extra={"event.action": "predict_y_values", "logrite.x_items": x_items, "logrite.means": means, "logrite.variance": variance, "logrite.probabilities": probabilities})
     """This function predicts new indexes(groups for our data)
     :param x_items: a list containing all items(gaussian distribution of all classes)
     :param means: a list containing real mean values of each class
@@ -197,6 +211,7 @@ def predict_y_values(
     # An empty list to store generated discriminant values of all items in dataset for
     # each class
     results = []
+    logger.error("predict_y_values(x_items=%s,means=%s,variance=%s,probabilities=%s): results → %s", x_items, means, variance, probabilities, results, extra={"event.action": "predict_y_values", "logrite.x_items": x_items, "logrite.means": means, "logrite.variance": variance, "logrite.probabilities": probabilities})
     # for loop iterates over number of elements in list
     for i in range(len(x_items)):
         # for loop iterates over number of inner items of each element
@@ -213,6 +228,7 @@ def predict_y_values(
             # appending discriminant values of each item to 'results' list
             results.append(temp)
 
+    logger.warning("<<< Exiting predict_y_values(x_items=%s,means=%s,variance=%s,probabilities=%s)", x_items, means, variance, probabilities, extra={"event.action": "predict_y_values", "logrite.x_items": x_items, "logrite.means": means, "logrite.variance": variance, "logrite.probabilities": probabilities})
     return [result.index(max(result)) for result in results]
 
 
@@ -240,11 +256,14 @@ def accuracy(actual_y: list, predicted_y: list) -> float:
     >>> accuracy(actual_y, predicted_y)
     100.0
     """
+    logger.error(">>> Entering accuracy(actual_y=%s,predicted_y=%s)", actual_y, predicted_y, extra={"event.action": "accuracy", "logrite.actual_y": actual_y, "logrite.predicted_y": predicted_y})
     # iterate over one element of each list at a time (zip mode)
     # prediction is correct if actual Y value equals to predicted Y value
     correct = sum(1 for i, j in zip(actual_y, predicted_y) if i == j)
+    logger.error("accuracy(actual_y=%s,predicted_y=%s): correct → %s", actual_y, predicted_y, correct, extra={"event.action": "accuracy", "logrite.actual_y": actual_y, "logrite.predicted_y": predicted_y})
     # percentage of accuracy equals to number of correct predictions divided by number
     # of all data and multiplied by 100
+    logger.warning("<<< Exiting accuracy(actual_y=%s,predicted_y=%s)", actual_y, predicted_y, extra={"event.action": "accuracy", "logrite.actual_y": actual_y, "logrite.predicted_y": predicted_y})
     return (correct / len(actual_y)) * 100
 
 
@@ -282,6 +301,7 @@ def valid_input[num](
 # Main Function
 def main():
     """This function starts execution phase"""
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     while True:
         print(" Linear Discriminant Analysis ".center(50, "*"))
         print("*" * 50, "\n")
@@ -294,6 +314,8 @@ def main():
             input_msg="Enter the number of classes (Data Groupings): ",
             err_msg="Number of classes should be positive!",
         )
+        logger.error("main(): input_msg → %s", input_msg, extra={"event.action": "main"})
+        logger.error("main(): err_msg → %s", err_msg, extra={"event.action": "main"})
 
         print("-" * 100)
 
@@ -310,6 +332,7 @@ def main():
         )
 
         print("-" * 100)
+        logger.error("main(): default → %s", default, extra={"event.action": "main"})
 
         # Trying to get number of instances in classes and theirs means to generate
         # dataset
@@ -356,11 +379,13 @@ def main():
 
         # Generating Ys to detecting corresponding classes
         y = y_generator(n_classes, counts)
+        logger.error("main(): y → %s", y, extra={"event.action": "main"})
         print("Generated Corresponding Ys: \n", y)
         print("-" * 100)
 
         # Calculating the value of actual mean for each class
         actual_means = [calculate_mean(counts[k], x[k]) for k in range(n_classes)]
+        logger.error("main(): actual_means → %s", actual_means, extra={"event.action": "main"})
         # for loop iterates over number of elements in 'actual_means' list and print
         # out them in separated line
         for i, actual_mean in enumerate(actual_means, 1):
@@ -380,12 +405,14 @@ def main():
 
         # Calculating the values of variance for each class
         variance = calculate_variance(x, actual_means, sum(counts))
+        logger.error("main(): variance → %s", variance, extra={"event.action": "main"})
         print("Variance: ", variance)
         print("-" * 100)
 
         # Predicting Y values
         # storing predicted Y values in 'pre_indexes' variable
         pre_indexes = predict_y_values(x, actual_means, variance, probabilities)
+        logger.error("main(): pre_indexes → %s", pre_indexes, extra={"event.action": "main"})
         print("-" * 100)
 
         # Calculating Accuracy of the model
@@ -397,6 +424,7 @@ def main():
             print("\n" + "GoodBye!".center(100, "-") + "\n")
             break
         system("cls" if name == "nt" else "clear")  # noqa: S605
+        logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

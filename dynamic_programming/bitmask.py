@@ -10,25 +10,34 @@ Find the total no of ways in which the tasks can be distributed.
 """
 
 from collections import defaultdict
+import logging
+logger = logging.getLogger(__name__)
 
 
 class AssignmentUsingBitmask:
     def __init__(self, task_performed, total):
+        logger.error(">>> Entering __init__(task_performed=%s,total=%s)", task_performed, total, extra={"event.action": "__init__", "logrite.task_performed": task_performed, "logrite.total": total})
         self.total_tasks = total  # total no of tasks (N)
+        logger.error("__init__(task_performed=%s,total=%s): self.total_tasks → %s", task_performed, total, self.total_tasks, extra={"event.action": "__init__", "logrite.task_performed": task_performed, "logrite.total": total})
 
         # DP table will have a dimension of (2^M)*N
         # initially all values are set to -1
         self.dp = [
             [-1 for i in range(total + 1)] for j in range(2 ** len(task_performed))
         ]
+        logger.debug("__init__(self=%s,task_performed=%s,total=%s): self.dp → %s", self, task_performed, total, self.dp, extra={"event.action": "__init__", "logrite.task_performed": task_performed, "logrite.total": total})
 
         self.task = defaultdict(list)  # stores the list of persons for each task
+        logger.error("__init__(task_performed=%s,total=%s): self.task → %s", task_performed, total, self.task, extra={"event.action": "__init__", "logrite.task_performed": task_performed, "logrite.total": total})
 
         # final_mask is used to check if all persons are included by setting all bits
         # to 1
+        logger.warning("<<< Exiting __init__(task_performed=%s,total=%s)", task_performed, total, extra={"event.action": "__init__", "logrite.task_performed": task_performed, "logrite.total": total})
         self.final_mask = (1 << len(task_performed)) - 1
+        logger.error("__init__(task_performed=%s,total=%s): self.final_mask → %s", task_performed, total, self.final_mask, extra={"event.action": "__init__", "logrite.task_performed": task_performed, "logrite.total": total})
 
     def count_ways_until(self, mask, task_no):
+        logger.error(">>> Entering count_ways_until(mask=%s,task_no=%s)", mask, task_no, extra={"event.action": "count_ways_until", "logrite.mask": mask, "logrite.task_no": task_no})
         # if mask == self.finalmask all persons are distributed tasks, return 1
         if mask == self.final_mask:
             return 1
@@ -59,15 +68,18 @@ class AssignmentUsingBitmask:
         # save the value.
         self.dp[mask][task_no] = total_ways_until
 
+        logger.warning("<<< Exiting count_ways_until(mask=%s,task_no=%s)", mask, task_no, extra={"event.action": "count_ways_until", "logrite.mask": mask, "logrite.task_no": task_no})
         return self.dp[mask][task_no]
 
     def count_no_of_ways(self, task_performed):
+        logger.error(">>> Entering count_no_of_ways(task_performed=%s)", task_performed, extra={"event.action": "count_no_of_ways", "logrite.task_performed": task_performed})
         # Store the list of persons for each task
         for i in range(len(task_performed)):
             for j in task_performed[i]:
                 self.task[j].append(i)
 
         # call the function to fill the DP table, final answer is stored in dp[0][1]
+        logger.warning("<<< Exiting count_no_of_ways(task_performed=%s)", task_performed, extra={"event.action": "count_no_of_ways", "logrite.task_performed": task_performed})
         return self.count_ways_until(0, 1)
 
 

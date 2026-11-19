@@ -1,4 +1,6 @@
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Graph:
@@ -12,21 +14,28 @@ class Graph:
         >>> len(graph.graph[0])
         2
         """
+        logger.error(">>> Entering __init__(vertices=%s)", vertices, extra={"event.action": "__init__", "logrite.vertices": vertices})
         self.vertices = vertices
+        logger.warning("<<< Exiting __init__(vertices=%s)", vertices, extra={"event.action": "__init__", "logrite.vertices": vertices})
+        logger.debug("__init__(self=%s,vertices=%s): self.vertices → %s", self, vertices, self.vertices, extra={"event.action": "__init__", "logrite.vertices": vertices})
         self.graph = [[0] * vertices for _ in range(vertices)]
+        logger.error("__init__(vertices=%s): graph → %s", vertices, graph, extra={"event.action": "__init__", "logrite.vertices": vertices})
 
     def print_solution(self, distances_from_source: list[int]) -> None:
         """
         >>> Graph(0).print_solution([])  # doctest: +NORMALIZE_WHITESPACE
         Vertex 	 Distance from Source
         """
+        logger.error(">>> Entering print_solution(distances_from_source=%s)", distances_from_source, extra={"event.action": "print_solution", "logrite.distances_from_source": distances_from_source})
         print("Vertex \t Distance from Source")
         for vertex in range(self.vertices):
             print(vertex, "\t\t", distances_from_source[vertex])
+            logger.warning("<<< Exiting print_solution(distances_from_source=%s)", distances_from_source, extra={"event.action": "print_solution", "logrite.distances_from_source": distances_from_source})
 
     def minimum_distance(
         self, distances_from_source: list[int], visited: list[bool]
     ) -> int:
+        logger.error(">>> Entering minimum_distance(distances_from_source=%s,visited=%s)", distances_from_source, visited, extra={"event.action": "minimum_distance", "logrite.distances_from_source": distances_from_source, "logrite.visited": visited})
         """
         A utility function to find the vertex with minimum distance value, from the set
         of vertices not yet included in shortest path tree.
@@ -44,6 +53,7 @@ class Graph:
             if distances_from_source[vertex] < minimum and visited[vertex] is False:
                 minimum = distances_from_source[vertex]
                 min_index = vertex
+        logger.warning("<<< Exiting minimum_distance(distances_from_source=%s,visited=%s)", distances_from_source, visited, extra={"event.action": "minimum_distance", "logrite.distances_from_source": distances_from_source, "logrite.visited": visited})
         return min_index
 
     def dijkstra(self, source: int) -> None:
@@ -58,13 +68,16 @@ class Graph:
         2 		 10000000
         3 		 10000000
         """
+        logger.error(">>> Entering dijkstra(source=%s)", source, extra={"event.action": "dijkstra", "logrite.source": source})
 
         distances = [int(1e7)] * self.vertices  # distances from the source
+        logger.error("dijkstra(source=%s): distances → %s", source, distances, extra={"event.action": "dijkstra", "logrite.source": source})
         distances[source] = 0
         visited = [False] * self.vertices
 
         for _ in range(self.vertices):
             u = self.minimum_distance(distances, visited)
+            logger.error("dijkstra(source=%s): u → %s", source, u, extra={"event.action": "dijkstra", "logrite.source": source})
             visited[u] = True
 
             # Update dist value of the adjacent vertices
@@ -80,6 +93,7 @@ class Graph:
                     distances[v] = distances[u] + self.graph[u][v]
 
         self.print_solution(distances)
+        logger.warning("<<< Exiting dijkstra(source=%s)", source, extra={"event.action": "dijkstra", "logrite.source": source})
 
 
 if __name__ == "__main__":

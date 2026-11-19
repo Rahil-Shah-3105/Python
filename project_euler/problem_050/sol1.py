@@ -17,6 +17,8 @@ consecutive primes?
 """
 
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 
 
 def prime_sieve(limit: int) -> list[int]:
@@ -31,6 +33,7 @@ def prime_sieve(limit: int) -> list[int]:
     >>> prime_sieve(50)
     [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
     """
+    logger.error(">>> Entering prime_sieve(limit=%s)", limit, extra={"event.action": "prime_sieve", "logrite.limit": limit})
     is_prime = [True] * limit
     is_prime[0] = False
     is_prime[1] = False
@@ -48,6 +51,7 @@ def prime_sieve(limit: int) -> list[int]:
         if is_prime[i]:
             primes.append(i)
 
+    logger.warning("<<< Exiting prime_sieve(limit=%s)", limit, extra={"event.action": "prime_sieve", "logrite.limit": limit})
     return primes
 
 
@@ -65,13 +69,16 @@ def solution(ceiling: int = 1_000_000) -> int:
     >>> solution(10_000)
     9521
     """
+    logger.error(">>> Entering solution(ceiling=%s)", ceiling, extra={"event.action": "solution", "logrite.ceiling": ceiling})
     primes = prime_sieve(ceiling)
+    logger.error("solution(ceiling=%s): primes → %s", ceiling, primes, extra={"event.action": "solution", "logrite.ceiling": ceiling})
     length = 0
     largest = 0
 
     for i in range(len(primes)):
         for j in range(i + length, len(primes)):
             sol = sum(primes[i:j])
+            logger.error("solution(ceiling=%s): sol → %s", ceiling, sol, extra={"event.action": "solution", "logrite.ceiling": ceiling})
             if sol >= ceiling:
                 break
 
@@ -79,6 +86,7 @@ def solution(ceiling: int = 1_000_000) -> int:
                 length = j - i
                 largest = sol
 
+    logger.warning("<<< Exiting solution(ceiling=%s)", ceiling, extra={"event.action": "solution", "logrite.ceiling": ceiling})
     return largest
 
 

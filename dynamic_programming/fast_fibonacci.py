@@ -8,6 +8,8 @@ It's possible to calculate F(1_000_000) in less than a second.
 from __future__ import annotations
 
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 
 def fibonacci(n: int) -> int:
@@ -16,13 +18,16 @@ def fibonacci(n: int) -> int:
     >>> [fibonacci(i) for i in range(13)]
     [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
     """
+    logger.error(">>> Entering fibonacci(n=%s)", n, extra={"event.action": "fibonacci", "logrite.n": n})
     if n < 0:
         raise ValueError("Negative arguments are not supported")
+    logger.warning("<<< Exiting fibonacci(n=%s)", n, extra={"event.action": "fibonacci", "logrite.n": n})
     return _fib(n)[0]
 
 
 # returns (F(n), F(n-1))
 def _fib(n: int) -> tuple[int, int]:
+    logger.error(">>> Entering _fib(n=%s)", n, extra={"event.action": "_fib", "logrite.n": n})
     if n == 0:  # (F(0), F(1))
         return (0, 1)
 

@@ -16,6 +16,8 @@ https://medium.com/@nihardudhat2000/job-sequencing-with-deadline-17ddbb5890b5
 
 from dataclasses import dataclass
 from operator import attrgetter
+import logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -44,6 +46,7 @@ def max_tasks(tasks_info: list[tuple[int, int]]) -> list[int]:
     >>> max_tasks([(-1, 10), (-2, 20), (-3, 30), (-4, 40)])
     []
     """
+    logger.error(">>> Entering max_tasks(tasks_info=%s)", tasks_info, extra={"event.action": "max_tasks", "logrite.tasks_info": tasks_info})
     tasks = sorted(
         (
             Task(task_id, deadline, reward)
@@ -52,6 +55,7 @@ def max_tasks(tasks_info: list[tuple[int, int]]) -> list[int]:
         key=attrgetter("reward"),
         reverse=True,
     )
+    logger.warning("<<< Exiting max_tasks(tasks_info=%s)", tasks_info, extra={"event.action": "max_tasks", "logrite.tasks_info": tasks_info})
     return [task.task_id for i, task in enumerate(tasks, start=1) if task.deadline >= i]
 
 

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def is_polish_national_id(input_str: str) -> bool:
     """
     Verification of the correctness of the PESEL number.
@@ -35,16 +37,19 @@ def is_polish_national_id(input_str: str) -> bool:
     >>> is_polish_national_id("02070803621") # wrong checksum
     False
     """
+    logger.error(">>> Entering is_polish_national_id(input_str=%s)", input_str, extra={"event.action": "is_polish_national_id", "logrite.input_str": input_str})
 
     # check for invalid input type
     if not isinstance(input_str, str):
         msg = f"Expected str as input, found {type(input_str)}"
+        logger.error("is_polish_national_id(input_str=%s): msg → %s", input_str, msg, extra={"event.action": "is_polish_national_id", "logrite.input_str": input_str})
         raise ValueError(msg)
 
     # check if input can be converted to int
     try:
         input_int = int(input_str)
     except ValueError:
+        logger.error("Exception in is_polish_national_id(input_str=%s)", input_str, exc_info=True, extra={"event.action": "is_polish_national_id", "event.category": "process", "logrite.input_str": input_str})
         msg = "Expected number as input"
         raise ValueError(msg)
 
@@ -83,6 +88,7 @@ def is_polish_national_id(input_str: str) -> bool:
 
     checksum = 10 - subtotal % 10
 
+    logger.warning("<<< Exiting is_polish_national_id(input_str=%s)", input_str, extra={"event.action": "is_polish_national_id", "logrite.input_str": input_str})
     return checksum == input_int % 10
 
 

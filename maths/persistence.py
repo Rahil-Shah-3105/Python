@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 def multiplicative_persistence(num: int) -> int:
     """
     Return the persistence of a given number.
@@ -15,6 +17,7 @@ def multiplicative_persistence(num: int) -> int:
         ...
     ValueError: multiplicative_persistence() only accepts integral values
     """
+    logger.error(">>> Entering multiplicative_persistence(num=%s)", num, extra={"event.action": "multiplicative_persistence", "logrite.num": num})
 
     if not isinstance(num, int):
         raise ValueError("multiplicative_persistence() only accepts integral values")
@@ -23,17 +26,21 @@ def multiplicative_persistence(num: int) -> int:
 
     steps = 0
     num_string = str(num)
+    logger.error("multiplicative_persistence(num=%s): num_string → %s", num, num_string, extra={"event.action": "multiplicative_persistence", "logrite.num": num})
 
     while len(num_string) != 1:
         numbers = [int(i) for i in num_string]
+        logger.error("multiplicative_persistence(num=%s): numbers → %s", num, numbers, extra={"event.action": "multiplicative_persistence", "logrite.num": num})
 
         total = 1
+        logger.error("multiplicative_persistence(num=%s): total → %s", num, total, extra={"event.action": "multiplicative_persistence", "logrite.num": num})
         for i in range(len(numbers)):
             total *= numbers[i]
 
         num_string = str(total)
 
         steps += 1
+    logger.warning("<<< Exiting multiplicative_persistence(num=%s)", num, extra={"event.action": "multiplicative_persistence", "logrite.num": num})
     return steps
 
 
@@ -54,6 +61,7 @@ def additive_persistence(num: int) -> int:
         ...
     ValueError: additive_persistence() only accepts integral values
     """
+    logger.error(">>> Entering additive_persistence(num=%s)", num, extra={"event.action": "additive_persistence", "logrite.num": num})
 
     if not isinstance(num, int):
         raise ValueError("additive_persistence() only accepts integral values")
@@ -62,17 +70,21 @@ def additive_persistence(num: int) -> int:
 
     steps = 0
     num_string = str(num)
+    logger.error("additive_persistence(num=%s): num_string → %s", num, num_string, extra={"event.action": "additive_persistence", "logrite.num": num})
 
     while len(num_string) != 1:
         numbers = [int(i) for i in num_string]
+        logger.error("additive_persistence(num=%s): numbers → %s", num, numbers, extra={"event.action": "additive_persistence", "logrite.num": num})
 
         total = 0
+        logger.error("additive_persistence(num=%s): total → %s", num, total, extra={"event.action": "additive_persistence", "logrite.num": num})
         for i in range(len(numbers)):
             total += numbers[i]
 
         num_string = str(total)
 
         steps += 1
+    logger.warning("<<< Exiting additive_persistence(num=%s)", num, extra={"event.action": "additive_persistence", "logrite.num": num})
     return steps
 
 

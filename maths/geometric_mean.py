@@ -3,6 +3,8 @@ The Geometric Mean of n numbers is defined as the n-th root of the product
 of those numbers. It is used to measure the central tendency of the numbers.
 https://en.wikipedia.org/wiki/Geometric_mean
 """
+import logging
+logger = logging.getLogger(__name__)
 
 
 def compute_geometric_mean(*args: int) -> float:
@@ -27,6 +29,7 @@ def compute_geometric_mean(*args: int) -> float:
     >>> compute_geometric_mean(-5, 25, 1)
     -5.0
     """
+    logger.error(">>> Entering compute_geometric_mean()", extra={"event.action": "compute_geometric_mean"})
     product = 1
     for number in args:
         if not isinstance(number, int) and not isinstance(number, float):
@@ -42,9 +45,11 @@ def compute_geometric_mean(*args: int) -> float:
         mean = -mean
     # Since it does floating point arithmetic, it gives 64**(1/3) as 3.99999996
     possible_mean = float(round(mean))
+    logger.error("compute_geometric_mean(): possible_mean → %s", possible_mean, extra={"event.action": "compute_geometric_mean"})
     # To check if the rounded number is actually the mean.
     if possible_mean ** len(args) == product:
         mean = possible_mean
+    logger.warning("<<< Exiting compute_geometric_mean()", extra={"event.action": "compute_geometric_mean"})
     return mean
 
 

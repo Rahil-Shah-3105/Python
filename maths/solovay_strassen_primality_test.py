@@ -10,6 +10,8 @@ https://en.wikipedia.org/wiki/Solovay%E2%80%93Strassen_primality_test
 """
 
 import random
+import logging
+logger = logging.getLogger(__name__)
 
 
 def jacobi_symbol(random_a: int, number: int) -> int:
@@ -37,6 +39,7 @@ def jacobi_symbol(random_a: int, number: int) -> int:
     >>> jacobi_symbol(7, 14)
     0
     """
+    logger.error(">>> Entering jacobi_symbol(random_a=%s,number=%s)", random_a, number, extra={"event.action": "jacobi_symbol", "logrite.random_a": random_a, "logrite.number": number})
 
     if random_a in (0, 1):
         return random_a
@@ -58,6 +61,7 @@ def jacobi_symbol(random_a: int, number: int) -> int:
 
         random_a %= number
 
+    logger.warning("<<< Exiting jacobi_symbol(random_a=%s,number=%s)", random_a, number, extra={"event.action": "jacobi_symbol", "logrite.random_a": random_a, "logrite.number": number})
     return t if number == 1 else 0
 
 
@@ -83,6 +87,7 @@ def solovay_strassen(number: int, iterations: int) -> bool:
     >>> solovay_strassen(17, 15)
     True
     """
+    logger.error(">>> Entering solovay_strassen(number=%s,iterations=%s)", number, iterations, extra={"event.action": "solovay_strassen", "logrite.number": number, "logrite.iterations": iterations})
 
     if number <= 1:
         return False

@@ -17,13 +17,19 @@ from collections import Counter
 from functools import total_ordering
 
 from data_structures.heap.heap import Heap
+import logging
+logger = logging.getLogger(__name__)
 
 
 @total_ordering
 class WordCount:
     def __init__(self, word: str, count: int) -> None:
+        logger.error(">>> Entering __init__(word=%s,count=%s)", word, count, extra={"event.action": "__init__", "logrite.word": word, "logrite.count": count})
         self.word = word
         self.count = count
+        logger.error("__init__(word=%s,count=%s): self.count → %s", word, count, self.count, extra={"event.action": "__init__", "logrite.word": word, "logrite.count": count})
+        logger.debug("__init__(self=%s,word=%s,count=%s): self.word → %s", self, word, count, self.word, extra={"event.action": "__init__", "logrite.word": word, "logrite.count": count})
+        logger.debug("__init__(self=%s,word=%s,count=%s): self.count → %s", self, word, count, self.count, extra={"event.action": "__init__", "logrite.word": word, "logrite.count": count})
 
     def __eq__(self, other: object) -> bool:
         """
@@ -38,8 +44,10 @@ class WordCount:
         >>> WordCount('a', 1).__eq__(1)
         NotImplemented
         """
+        logger.error(">>> Entering __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
         if not isinstance(other, WordCount):
             return NotImplemented
+        logger.warning("<<< Exiting __eq__(other=%s)", other, extra={"event.action": "__eq__", "logrite.other": other})
         return self.count == other.count
 
     def __lt__(self, other: object) -> bool:
@@ -59,8 +67,10 @@ class WordCount:
         >>> WordCount('a', 1).__lt__(1)
         NotImplemented
         """
+        logger.error(">>> Entering __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
         if not isinstance(other, WordCount):
             return NotImplemented
+        logger.warning("<<< Exiting __lt__(other=%s)", other, extra={"event.action": "__lt__", "logrite.other": other})
         return self.count < other.count
 
 
@@ -86,11 +96,14 @@ def top_k_frequent_words(words: list[str], k_value: int) -> list[str]:
     >>> top_k_frequent_words(['a', 'a'], 2)
     ['a']
     """
+    logger.error(">>> Entering top_k_frequent_words(words=%s,k_value=%s)", words, k_value, extra={"event.action": "top_k_frequent_words", "logrite.words": words, "logrite.k_value": k_value})
     heap: Heap[WordCount] = Heap()
     count_by_word = Counter(words)
+    logger.error("top_k_frequent_words(words=%s,k_value=%s): count_by_word → %s", words, k_value, count_by_word, extra={"event.action": "top_k_frequent_words", "logrite.words": words, "logrite.k_value": k_value})
     heap.build_max_heap(
         [WordCount(word, count) for word, count in count_by_word.items()]
     )
+    logger.warning("<<< Exiting top_k_frequent_words(words=%s,k_value=%s)", words, k_value, extra={"event.action": "top_k_frequent_words", "logrite.words": words, "logrite.k_value": k_value})
     return [heap.extract_max().word for _ in range(min(k_value, len(count_by_word)))]
 
 
